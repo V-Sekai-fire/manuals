@@ -482,18 +482,75 @@ List these follow-ups in PERT order.
    support: statically link every GDExtension a CastSpell instance needs
    at guest-build time instead.
 
-   Gate the actual implementation on a short, time-boxed spike, not on
-   more source-reading, since two things could not be settled from source
-   alone: (1) build `fabric-godot-core`'s `v2026.06.27.1907-multiplayer-fabric`
-   tag headless, `arch=rv64`, `threads=no`, `modules/sandbox` disabled per
-   above, and confirm it boots and runs a minimal scene correctly under
-   `libriscv`'s `setup_linux_syscalls` tier, audio included via the polled
-   `mix_audio()` path above, a real end-to-end run, not a compile-only
-   check; (2) measure real boot time and per-`iteration()` cost against
-   the actual budget (10Hz, 200 entities/zone, many zones/process), since
-   no performance numbers for this exist anywhere, in Godot's own docs or
-   in `libriscv`'s own benchmarks (which measure tiny guest calls, not an
-   engine-sized binary).
+   The spike this item gates on ran, on real hardware, against real
+   toolchains, not just source-reading. Part (1), boot and run
+   correctly under `libriscv`, is resolved: achieved. A minimal host
+   program, calling `libgodot_create_godot_instance()` directly, casting
+   the result to a real `GodotInstance*`, then `start()` and a manual
+   loop of `iteration()` calls, exactly matching the shape this RFD
+   already commits to (`zone-server-h2o`'s own tick loop driving the
+   engine, not Godot's own `main()`), booted the pinned
+   `fabric-godot-core` tag for real inside `libriscv`'s actual sandbox
+   (`rvlinux`, not `qemu-riscv64`): real `_ready()`/`_process()` script
+   output, five real `iteration()` calls, a clean shutdown, confirmed
+   byte for byte via a host-level `strace -f` capture.
+
+   Getting there needed switching the embedded engine's own guest libc
+   from glibc to musl, and seven fixes to `libriscv` itself (all real,
+   all upstream-worthy, none of them changes to Godot's own code): a
+   genuine glibc `tcache` heap-consistency defect blocked every attempt
+   under glibc specifically (confirmed via disassembly down to the exact
+   faulting instruction, and confirmed independent of `threads=yes` vs
+   `threads=no`); switching to musl, which has no comparable `tcache`
+   mechanism, sidesteps that defect entirely, at the cost of needing musl
+   to reach real POSIX-completeness parity with glibc as CastSpell's
+   actual requirements grow. The `libriscv` fixes: guest pipes forced
+   non-blocking (a real host-level block on one syscall would otherwise
+   stall `libriscv`'s single-threaded cooperative scheduler
+   indefinitely); the real host fds 0/1/2 permanently reserved at
+   startup (a coincidental fd-number collision was silently swallowing
+   `libriscv`'s own crash reports at exactly the moment they mattered);
+   `mkdirat`/`chdir` implemented, previously entirely missing, which
+   Godot's own `user://` data-directory setup needs; and a real,
+   load-bearing bug fixed in `libriscv`'s own fd-translation layer,
+   which collapsed the `AT_FDCWD` sentinel to an invalid `-1` instead of
+   passing it through, breaking every relative-path `*at()` call while
+   leaving absolute-path calls (the only ones exercised until this spike)
+   unaffected. One of `libriscv`'s own open, unresolved upstream issues,
+   `libriscv/libriscv#296`, independently reports the same underlying
+   symptom class this spike's fixes resolve.
+
+   Part (2), performance measurement against the real 10Hz/200-entity/
+   many-zones budget, is not yet done. No performance numbers exist yet
+   for this exact configuration, in Godot's own docs, in `libriscv`'s own
+   benchmarks (which measure tiny guest calls, not an engine-sized
+   binary), or from this spike (which validated correctness, not speed,
+   under an interpreted, non-JIT `libriscv` configuration throughout).
+   This stays the actual gate before real implementation work starts.
+
+   `fwsgonzo` (`libriscv`/`godot-sandbox`'s maintainer) confirmed this
+   direction directly: technically achievable, and open to a real PR,
+   conditioned on care and an explicit disable option, matching "the
+   ethos of `godot-sandbox`." Three concrete implications for the
+   eventual implementation, not yet built: virtual filesystem access
+   should default-deny, scoped per `Sandbox` instance, building on
+   `libriscv`'s existing `-A/--allow <file>` allowlist and its
+   `sandbox_libdir`/`real_libdir` restriction pattern
+   (`emulator/src/main.cpp`), not a broad proxy to the real host
+   filesystem; networking should stay off by default, reachable only
+   through an explicit host-side opt-in via `ADD_API_FUNCTION`-style
+   host-mediated calls, matching `godot-sandbox`'s own existing pattern,
+   not raw guest-visible socket syscalls; and the embedded-engine mode
+   should be a distinct, explicitly opt-in mode layered on top of
+   `godot-sandbox`'s existing narrow API, not a change to that default,
+   giving it a real off switch. Signal handling already has real,
+   working coverage (`sigaction`, `sigaltstack`, `tkill`, `tgkill`,
+   confirmed via direct source read), stronger than expected going in,
+   worth a focused review rather than a rewrite. This spike's own
+   `mkdirat`/`chdir` fixes above are real host-filesystem passthrough,
+   the opposite of this default-deny direction; expect them to become
+   virtualized, allowlist-gated calls in the real implementation, not to
+   stay a direct proxy to the real host filesystem.
 
    Keep two options ranked below this one:
 
@@ -575,16 +632,30 @@ assembly issuing `ecall`, and `Basis`/`Quaternion`/`Transform3D` have zero
 local computation at all. This settles the question the prior draft of
 this RFD flagged as suggestive, not conclusive.
 
-Open questions, item 6, the `libgodot`-in-sandbox spike: (1) build Godot
-headless, `arch=rv64`, `threads=no`, and confirm it boots and runs a
-minimal scene correctly under `libriscv`'s `setup_linux_syscalls` tier,
-audio included via `AudioDriverDummy`'s polled, non-threaded `mix_audio()`
-path, a real end-to-end run, not a compile-only check; (2) measure real
-boot time and per-`iteration()` cost against the actual budget (10Hz, 200
-entities/zone, many zones/process), and confirm the
-one-`GodotInstance`-per-`libriscv`-`Machine`-per-zone shape holds up at
-that cadence. Fall back to vendoring `godot-cpp`'s math/`Variant` subset
-if either gate fails.
+Resolved, item 6, part (1) of the `libgodot`-in-sandbox spike: a real
+host program, calling `libgodot_create_godot_instance()` directly and
+driving `GodotInstance::iteration()` in a manual loop, booted the pinned
+`fabric-godot-core` tag for real inside `libriscv`'s actual sandbox
+(`rvlinux`), not just `qemu-riscv64`: real script output, five real
+`iteration()` calls, a clean shutdown, confirmed via `strace -f`. Getting
+there needed switching the guest libc from glibc to musl (a real,
+unresolved glibc `tcache` heap-consistency defect blocked every glibc
+attempt) and seven fixes to `libriscv` itself. Full detail, the
+reproducible spike script, and the `libriscv` patch itself live at
+`v-sekai-multiplayer-fabric/godot-riscv-spike`, a separate repository
+this RFD points to rather than duplicates. Audio (`AudioDriverDummy`'s
+polled `mix_audio()` path) was not exercised in this specific spike,
+since the harness used a headless-with-no-audio-driver-needed test
+scene; that remains to confirm separately once real implementation
+starts.
+
+Open, item 6, part (2): measure real boot time and per-`iteration()`
+cost against the actual budget (10Hz, 200 entities/zone, many
+zones/process), and confirm the one-`GodotInstance`-per-`libriscv`-
+`Machine`-per-zone shape holds up at that cadence. Not yet measured;
+this spike validated correctness under an interpreted, non-JIT
+`libriscv` configuration, not speed. Fall back to vendoring `godot-cpp`'s
+math/`Variant` subset if this gate fails.
 
 Resolved: item 4 decides the manifest lives inside a single `.elf` file,
 as embedded metadata, not a separate side-car file, matching how
