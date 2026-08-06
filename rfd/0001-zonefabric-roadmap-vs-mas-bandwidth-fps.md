@@ -41,6 +41,16 @@ optimization. A future eBPF or effect-scripting task starts a new design
 from zero, instead of reusing tooling the project already built and
 accepted.
 
+One decision driver runs through every item 4 choice explicitly: keep
+`zone-server-h2o` itself, the deployed process, down to the fewest
+components possible. This is why the CastSpell FFI reuses `RFD 0010`'s
+existing bitpacked struct instead of adding FlatBuffers or protobuf, why
+the manifest's JSON-LD processing runs in an offline authoring tool and
+never inside the deployed server, and why the server-side manifest
+mechanism stays a small, purpose-built ELF section rather than an
+imported convenience API. Read every encoding and tooling choice below
+against this driver first.
+
 ## Proposal
 
 Adopt the existing PERT critical path — task A, task B, task C, task F,
@@ -150,11 +160,32 @@ List these follow-ups in PERT order.
    loads a single `.elf` per package for its own Godot-side use, so this
    keeps `zone-server-h2o`'s loader shaped the same way, rather than add
    a second file the host must locate, version, and keep paired with the
-   right ELF. Confirm, before task I lands, the exact mechanism the
-   existing `libriscv`/`godot-sandbox` and
-   `godot-sandbox-gdscript-compiler` code already uses to carry metadata
-   inside an ELF, a custom section or an ELF note, most likely, and reuse
-   that mechanism rather than invent a second one.
+   right ELF.
+
+   `libriscv`/`godot-sandbox` itself carries no existing static,
+   pre-execution ELF metadata to reuse, confirmed by reading its own
+   `program/cpp/docker/api/api.hpp`. Its `ADD_API_FUNCTION` and
+   `SANDBOXED_PROPERTIES` macros do not write to a custom ELF section or
+   an ELF note at build time. `ADD_API_FUNCTION` expands to
+   `add_sandbox_api_function`, which calls `sys_sandbox_add`, a syscall
+   the guest program issues to the host at runtime, during its own
+   initialization, after the host already started running it.
+   `SANDBOXED_PROPERTIES` expands to a plain exported symbol, an
+   `extern "C" const Property properties[]` array, which still needs the
+   host to run the program (or at minimum resolve its symbol table) to
+   read.
+
+   Neither mechanism fits `zone-server-h2o`'s manifest. Both require the
+   host to already trust and run, or at least link against, the guest
+   program before learning what it declares, so a hostile package could
+   misreport its own capabilities through `sys_sandbox_add`, or skip the
+   call outright, and the host would have already started executing it
+   by then. `zone-server-h2o`'s manifest exists specifically to let the
+   host decide whether to run a package at all, before any guest code
+   runs, so it needs its own genuinely static mechanism, a real custom
+   ELF section or an ELF note the host parses before the sandbox ever
+   starts the program, not a design borrowed from `godot-sandbox`'s
+   trusted-content, Godot-side convenience API.
    `zone-server-h2o` treats the embedded manifest, not the ELF's code
    alone, as the unit the host validates and grants capabilities to.
 
@@ -391,14 +422,16 @@ and a server-side one running under load. File that follow-up RFD once
 `libriscv` integration work actually starts in `zone-server-h2o`, not
 before; this RFD only commits to writing it, not to its content.
 
-Narrowed open question: item 4 now decides the manifest lives inside a
-single `.elf` file, as embedded metadata, not a separate side-car file,
-matching how `libriscv`/`godot-sandbox` already ships one `.elf` per
-package. What remains open is the exact mechanism: confirm, before task I
-lands, whether the existing `libriscv`/`godot-sandbox` and
-`godot-sandbox-gdscript-compiler` code already embeds package metadata
-via a custom ELF section, an ELF note, or some other means, and reuse
-that mechanism rather than invent a second one.
+Resolved: item 4 decides the manifest lives inside a single `.elf` file,
+as embedded metadata, not a separate side-car file, matching how
+`libriscv`/`godot-sandbox` already ships one `.elf` per package. Item 4
+also now records that `libriscv`/`godot-sandbox` itself has no existing
+static ELF metadata mechanism to reuse: its `ADD_API_FUNCTION` and
+`SANDBOXED_PROPERTIES` macros both need the host to run or link the guest
+program first, a syscall and a resolved symbol respectively, neither
+usable for a manifest meant to gate execution before any guest code runs.
+`zone-server-h2o` designs its own static ELF section or ELF note for
+this, rather than reuse either godot-sandbox mechanism.
 
 Resolved: manifests need write-once, content-addressed storage, not
 hypothetically. Packages and their manifests land in `aria-storage`, this
@@ -408,11 +441,17 @@ project's own `casync`-based content-addressed store. RFC 8949 section
 fuller, hash-over-fields pattern solves a different problem, proving a
 credential's signature, and this RFD does not adopt it here.
 
-Open question: confirm, before task I lands, that `jsonld-cpp` still
-builds and maintains cleanly as an offline authoring-tool dependency, and
-design the offline tool's own build so it never becomes part of
-`zone-server-h2o`'s own CMake target, per `RFD 0010`'s and item 4's other
-tradeoffs above.
+Studied: `jsonld-cpp` (`dcdpr/jsonld-cpp` on GitHub) is a real, standard
+CMake C++ project, BSD-3-Clause licensed, depending only on a normal
+toolchain (`make`, `cmake`, `g++`, `libssl-dev`). It carries a real
+maintenance risk, though: 8 stars, 1 open issue, 0 open pull requests, and
+no push since May 2024. Accept this risk, since the offline authoring
+tool keeps `jsonld-cpp` fully isolated from `zone-server-h2o`'s own
+runtime and build, so a stale or eventually-abandoned dependency here
+costs a build-tool maintenance burden, not a deployed-server one. Confirm
+the offline tool's own `CMakeLists.txt` never becomes part of
+`zone-server-h2o`'s own CMake target, and revisit `jsonld-cpp` if it goes
+fully unmaintained before task I lands.
 
 Recorded, not resolved: the offline authoring tool may deserve sandboxing
 itself someday, the same protection CastSpell effects get, but doing so
