@@ -384,59 +384,117 @@ List these follow-ups in PERT order.
    and everything under `node.hpp`/`node2d.hpp`/`node3d.hpp`/`object.hpp`,
    expands through the `METHOD`/`VMETHOD` macros into a named,
    string-dispatched syscall (`operator()`) that calls back into a live,
-   running Godot process on the host side to actually execute. No
-   `vector3.cpp` exists in the tree backing `Vector3`'s own math, so even
-   basic vector operations most likely resolve through this same
-   syscall path, not local computation.
+   running Godot process on the host side to actually execute. Confirmed
+   directly in `program/cpp/docker/api/vector.cpp`: `Vector3::dot()`,
+   `cross()`, `length()`, and similar are hand-written inline RISC-V
+   assembly issuing `ecall` (syscall `ECALL_VEC3_OPS`), not local
+   computation. `Basis`, `Quaternion`, and `Transform3D` are entirely
+   syscall-based too, with zero locally-computed math at all: every
+   method routes through a `MAKE_SYSCALL(...)`-generated call carrying an
+   opaque host-side registry index, confirming these types are thin
+   remote handles in `godot-sandbox`'s own design, not real local value
+   types.
 
-   `zone-server-h2o` runs no live Godot process at all, so it cannot
-   answer these syscalls the way a real Godot host does. Matching this
-   API surface exactly, for a pinned Godot version and the
-   double-precision build `fabric-godot-core` uses, would mean either
-   running a real Godot engine instance alongside the server, or
-   hand-reimplementing Godot's Variant, Object, and math semantics from
-   scratch well enough to answer every syscall correctly. Neither is
-   affordable, and CastSpell effects never touch a live Node or scene
-   tree in the first place; they only read and write zonefabric's own
-   entity data, position, velocity, health, so nothing here needs
-   `Node`/`Node2D`/`Node3D`/`Object`/`Callable`/`Timer` at all.
+   `zone-server-h2o` runs no live Godot process outside the sandbox
+   itself, so it cannot answer these syscalls the way a real Godot host
+   does. CastSpell effects never touch a live Node or scene tree in the
+   first place; they only read and write zonefabric's own entity data,
+   position, velocity, health, so nothing here needs
+   `Node`/`Node2D`/`Node3D`/`Object`/`Callable`/`Timer` at all, narrowing
+   what any runtime choice below actually needs to cover.
 
-   Narrow CastSpell's surface to Godot's math and `Variant` scalar value
-   types only, `Vector2`/`Vector3`/`Vector4`, `Basis`, `Transform2D`,
-   `Transform3D`, `Quaternion`, and the primitive `Variant` cases `RFD
-   0010`'s primitive-versus-reference split (item 5 above) already
-   covers, and drop `Node`/`Object`/`Callable`/`Timer`/ClassDB reflection
-   from scope entirely; CastSpell has no use for them.
+   Decide the runtime this way: embed a real, headless Godot engine
+   instance, via `libgodot` (`core/extension/libgodot.h`,
+   `GodotInstance`, merged in Godot 4.6), inside each CastSpell
+   `libriscv` sandbox `Machine`, one instance per zone, matching
+   `libriscv`'s Linux syscall emulation ABI rather than
+   `godot-sandbox`'s own narrow API. `GodotInstance`'s documented
+   "only one per process" constraint maps cleanly onto one `libriscv`
+   `Machine` per zone, since each sandboxed guest is already its own
+   isolated process-like boundary.
 
-   Rank the remaining options for that narrowed surface, from best fit to
-   worst:
+   Build headless (`DisplayServerHeadless`, a real, shipped dummy
+   display backend, removing the X11/Wayland/D-Bus/fontconfig/
+   speech-dispatcher dependencies `platform/linuxbsd` otherwise pulls in
+   via `dlopen`), for `arch=rv64`. `rv64` is already a first-class,
+   existing Godot Linux architecture target, confirmed directly in
+   `platform/linuxbsd/detect.py`: `supported_arches` already lists
+   `"rv64"` alongside `x86_32`/`x86_64`/`arm32`/`arm64`/`ppc64`/
+   `loongarch64`, with real RISC-V compiler flags (`-march=rv64gc`)
+   already wired in. This is the same `platform/linuxbsd` code every
+   other Linux architecture uses; it needs building the existing,
+   already-supported headless target for `arch=rv64`, not designing a
+   new platform backend.
 
-   1. Cross-compile real Godot core math and `Variant` source
-      (`core/math/`, the relevant `core/variant/` translation units) for
-      RISC-V, built with the same double-precision define
-      `fabric-godot-core` uses, and link it directly into each CastSpell
-      guest binary, so `Vector3::dot()` and similar run as real, local
-      Godot code inside the sandbox, not a syscall to a host that does
-      not exist. This gives exact version-and-precision fidelity by
-      construction, since it is the real source, not a hand-matched
-      approximation, and stays bounded to math/Variant, never approaching
-      the full engine, so it does not conflict with the minimal-components
-      driver above.
-   2. Hand-reimplement the same small, closed set of math types, matching
-      Godot's memory layout and semantics without vendoring real Godot
-      source. Cheaper to set up than option 1, but carries an ongoing
-      drift risk against the real implementation (subtle bugs in
-      `slerp`, `bezier_interpolate`, and similar), and needs manual
-      re-verification on every Godot version bump, for no clear savings
-      once Godot's own math source is already public and directly
-      embeddable.
-   3. Run an actual Godot engine process alongside `zone-server-h2o`,
-      backing the full `godot-sandbox` syscall surface the way a real
-      Godot client does. This directly contradicts the minimal-components
-      driver above, and adds the entire engine, GDExtension host
-      included, as a dependency to a project built specifically to avoid
-      exactly that. Reject.
-   4. Hand-reimplement the full `godot-sandbox` API surface,
+   Build with `threads=no`, Godot's own single-thread build mode, already
+   proven in production via the Web/WASM export, since `libriscv`'s
+   thread model, confirmed by reading `lib/libriscv/threads.hpp` and both
+   `native_threads.cpp` and the fuller `posix/threads.cpp`, is
+   single-host-thread, cooperative, register-swapping microthreading in
+   both cases, not real concurrent host threads, and Godot's default
+   build assumes genuine parallel execution (`WorkerThreadPool` behind
+   physics and rendering).
+
+   Run real audio headless, not silence: confirmed by reading
+   `servers/audio/audio_driver_dummy.cpp` directly, `AudioDriverDummy` is
+   not a stub. Its `mix_audio()` calls the real `audio_server_process()`
+   pipeline, genuine bus mixing, effects, panning, producing real PCM.
+   The driver already exposes `set_use_threads(bool)`, and when threading
+   is off, `mix_audio()` is the documented, guarded synchronous path
+   (`ERR_FAIL_COND(use_threads == true)` inside it) meant to be polled
+   directly by the embedding host, not run on a background thread. Call
+   `set_use_threads(false)`, and poll `mix_audio()` from the same tick
+   loop that calls `iteration()`, to get real mixed audio headless. The
+   Web export's documented audio glitching traces to that platform's
+   real-time `AudioWorklet` output driver, not to this already-synchronous
+   `Dummy` driver path, so it does not carry over here.
+
+   Virtualize filesystem access, and stub or virtualize networking,
+   through `libriscv`'s own broad Linux syscall-emulation tier,
+   `Machine<W>::setup_linux_syscalls(filesystem, sockets)`
+   (`lib/libriscv/linux/system_calls.cpp`), not through
+   `godot-sandbox`'s own narrow API. This gives real, host-mediated
+   `openat`/`read`/`mmap`-backed file access (with host-side path
+   whitelisting) and full socket calls, already proven against a real
+   statically linked `riscv64-unknown-linux-gnu` binary in
+   `libriscv/libriscv`'s own `binaries/linux64/` example.
+
+   Avoid runtime `dlopen`, since `libriscv`'s own docs state dynamic
+   library loading needs extra host-side whitelisting, not out-of-the-box
+   support: statically link every GDExtension a CastSpell instance needs
+   at guest-build time instead.
+
+   Gate the actual implementation on a short, time-boxed spike, not on
+   more source-reading, since two things could not be settled from source
+   alone: (1) build Godot headless, `arch=rv64`, `threads=no`, and confirm
+   it boots and runs a minimal scene correctly under `libriscv`'s
+   `setup_linux_syscalls` tier, audio included via the polled
+   `mix_audio()` path above, a real end-to-end run, not a compile-only
+   check; (2) measure real boot time and per-`iteration()` cost against
+   the actual budget (10Hz, 200 entities/zone, many zones/process), since
+   no performance numbers for this exist anywhere, in Godot's own docs or
+   in `libriscv`'s own benchmarks (which measure tiny guest calls, not an
+   engine-sized binary).
+
+   Keep two options ranked below this one:
+
+   1. Fall back to vendoring `godot-cpp`'s (`godotengine/godot-cpp`, MIT)
+      `Vector3`/`Basis`/`Quaternion`/`Transform3D` and relevant `Variant`
+      scalar sources, hand-written and purely local (no engine
+      round-trip), `REAL_T_IS_DOUBLE`-compatible, if the spike's
+      threading or performance gate fails. Confirmed buildable via
+      `godot-sandbox`'s existing `add_sandbox_library` CMake helper, and
+      confirmed as materially less integration work than vendoring raw
+      Godot engine `core/math/` source directly, since `godot-cpp`'s
+      dependency graph already terminates at a handful of small,
+      self-contained headers rather than the full `core/` monolith.
+   2. Run an actual Godot engine process alongside `zone-server-h2o`
+      itself, as a separate host process, backing the full
+      `godot-sandbox` syscall surface the way a real Godot client does.
+      This directly contradicts the minimal-components driver above, and
+      adds the entire engine, GDExtension host included, as a dependency
+      to a project built specifically to avoid exactly that. Reject.
+   3. Hand-reimplement the full `godot-sandbox` API surface,
       `Node`/`Object`/`Callable`/ClassDB reflection included, from
       scratch, version-matched, with no live engine and no vendored
       source to check against. This is the option this RFD's own concern
@@ -489,15 +547,25 @@ and a server-side one running under load. File that follow-up RFD once
 `libriscv` integration work actually starts in `zone-server-h2o`, not
 before; this RFD only commits to writing it, not to its content.
 
-Open question, item 6: confirm, by reading `program/cpp/docker/api/`
-source directly rather than assuming from its headers alone, exactly
-which `Vector3`/`Basis`/`Transform3D`/`Quaternion` operations already
-compute locally in the guest versus which route through the
-`METHOD`/`VMETHOD` syscall proxy, before committing to cross-compiling
-real Godot math/`Variant` source into the CastSpell sandbox. This RFD's
-own reading found no `vector3.cpp` backing `Vector3`'s math, which is
-suggestive, not conclusive, and the follow-up RFD item 4 already commits
-to should settle this with certainty.
+Resolved, item 6: which `Vector3`/`Basis`/`Transform3D`/`Quaternion`
+operations compute locally in `godot-sandbox`'s guest versus which route
+through the `METHOD`/`VMETHOD` syscall proxy. Reading
+`program/cpp/docker/api/vector.cpp` directly confirmed this with
+certainty: `Vector3`'s named math methods are hand-written inline RISC-V
+assembly issuing `ecall`, and `Basis`/`Quaternion`/`Transform3D` have zero
+local computation at all. This settles the question the prior draft of
+this RFD flagged as suggestive, not conclusive.
+
+Open questions, item 6, the `libgodot`-in-sandbox spike: (1) build Godot
+headless, `arch=rv64`, `threads=no`, and confirm it boots and runs a
+minimal scene correctly under `libriscv`'s `setup_linux_syscalls` tier,
+audio included via `AudioDriverDummy`'s polled, non-threaded `mix_audio()`
+path, a real end-to-end run, not a compile-only check; (2) measure real
+boot time and per-`iteration()` cost against the actual budget (10Hz, 200
+entities/zone, many zones/process), and confirm the
+one-`GodotInstance`-per-`libriscv`-`Machine`-per-zone shape holds up at
+that cadence. Fall back to vendoring `godot-cpp`'s math/`Variant` subset
+if either gate fails.
 
 Resolved: item 4 decides the manifest lives inside a single `.elf` file,
 as embedded metadata, not a separate side-car file, matching how

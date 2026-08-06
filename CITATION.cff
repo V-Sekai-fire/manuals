@@ -767,3 +767,18 @@ references:
       - name: "Khronos Group"
     year: 2026
     url: "https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_interactivity"
+
+  - type: software
+    title: "godot-cpp: C++ Bindings for the Godot Script API"
+    authors:
+      - name: "Godot Engine contributors"
+    year: 2026
+    url: "https://github.com/godotengine/godot-cpp"
+
+  - type: software-code
+    title: "LibGodot: Embed a Godot Instance in an External Codebase"
+    authors:
+      - name: "Godot Engine contributors"
+      - name: Migeran
+    year: 2026
+    url: "https://github.com/godotengine/godot/pull/90510"
