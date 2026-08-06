@@ -141,12 +141,22 @@ List these follow-ups in PERT order.
    Generalize this pattern beyond CastSpell: any non-core code the server
    runs, generated behavior, CastSpell effects, and future mod or
    third-party content alike, loads as a sandboxed `libriscv` ELF binary,
-   never as code the host process links or interprets directly. Package
-   each ELF with a manifest that declares what the package needs before
-   the host loads it: which helper functions and host capabilities it
-   calls, its entry points, and a version. `zone-server-h2o` treats the
-   manifest, not the ELF alone, as the unit the host validates and grants
-   capabilities to.
+   never as code the host process links or interprets directly.
+
+   Keep the package a single `.elf` file, not an ELF plus a side-car
+   manifest file. Embed the manifest, the declared helper functions and
+   host capabilities a package needs, its entry points, and a version, as
+   metadata inside the ELF itself. `libriscv`/`godot-sandbox` already
+   loads a single `.elf` per package for its own Godot-side use, so this
+   keeps `zone-server-h2o`'s loader shaped the same way, rather than add
+   a second file the host must locate, version, and keep paired with the
+   right ELF. Confirm, before task I lands, the exact mechanism the
+   existing `libriscv`/`godot-sandbox` and
+   `godot-sandbox-gdscript-compiler` code already uses to carry metadata
+   inside an ELF, a custom section or an ELF note, most likely, and reuse
+   that mechanism rather than invent a second one.
+   `zone-server-h2o` treats the embedded manifest, not the ELF's code
+   alone, as the unit the host validates and grants capabilities to.
 
    The sandbox FFI boundary between the host and each loaded package
    reuses the same manually written, bitpacked struct format
@@ -185,20 +195,25 @@ List these follow-ups in PERT order.
    of CBOR-LD; it does not touch the entity or effect data itself, which
    stays bitpacked-struct-encoded for the reasons above.
 
-   Record one determinism note on CBOR-LD, since a manifest is a natural
-   candidate for content-addressed or write-once storage, and the base
-   CBOR-LD 1.0 specification itself does not define canonical or
-   deterministic encoding. It reuses JSON-LD's own processing determinism
-   for term mapping, not RFC 8949's byte-level deterministic CBOR rules
-   (shortest-form integers, no indefinite lengths, lexicographically
-   sorted map keys). If a manifest ever needs a stable hash, for a
-   content-addressed package store or an append-only audit trail, encode
-   it under RFC 8949 section 4.2's deterministic CBOR rules on top of
-   CBOR-LD's compression, the same layering `w3c.github.io/vc-barcodes`
-   already ships: a fixed, non-negotiated term registry, plus an explicit
-   hash computed over a defined set of fields, rather than CBOR-LD's base
-   spec alone. This note matters once a manifest needs permanent storage;
-   it does not block landing task I without one.
+   Record this determinism requirement as settled, not hypothetical:
+   packages, and their embedded manifests, land in `aria-storage`, this
+   project's own casync-based content-addressed store. Content-addressed
+   storage needs a stable hash for the same logical package every time it
+   builds, so the base CBOR-LD 1.0 specification is not enough by itself;
+   it defines no canonical or deterministic encoding of its own, and
+   reuses JSON-LD's processing determinism for term mapping only, not RFC
+   8949's byte-level deterministic CBOR rules (shortest-form integers, no
+   indefinite lengths, lexicographically sorted map keys).
+
+   RFC 8949 section 4.2's deterministic CBOR rules, layered on top of
+   CBOR-LD's compression, already give `aria-storage` what it needs:
+   identical bytes in, identical `casync` chunks out, for the same
+   manifest. `w3c.github.io/vc-barcodes`'s fuller pattern, a fixed term
+   registry plus an explicit hash computed over a defined set of fields,
+   solves a different problem, proving a credential's signature to a
+   verifier, not deduplicating stored content, so this RFD does not adopt
+   that fuller pattern here. RFC 8949 determinism alone is the
+   requirement for `aria-storage`.
 
    Record one implementation constraint alongside the encoding choice:
    `zone-server-h2o` builds under Fil-C, a memory-safe C toolchain, not
@@ -222,20 +237,39 @@ List these follow-ups in PERT order.
    pure-C runtime process. At package-build time, alongside
    `godot-sandbox-gdscript-compiler`'s own compile step, a separate
    authoring tool assembles `jsonld-cpp` (a C++14, spec-compliant W3C
-   JSON-LD 1.1 processor) with `zcbor` or `QCBOR`, writing the W3C
-   CBOR-LD compression algorithm's term-mapping step by hand on top of
+   JSON-LD 1.1 processor) with `QCBOR`, writing the W3C CBOR-LD
+   compression algorithm's term-mapping step by hand on top of
    `jsonld-cpp`'s real context processing, and produces a genuinely
    spec-compliant CBOR-LD manifest as build output. This tool runs
    offline, outside the deployed server, so its C++ dependency never
    touches `zone-server-h2o`'s own build or runtime.
 
+   Pick `QCBOR` over `zcbor` for both the authoring tool and the in-host
+   decoder, on production track record: Qualcomm open-sourced `QCBOR` in
+   2018, its stable 1.x line stayed production-stable for years, and
+   Arm's `t_cose` and `ctoken` already run it in COSE, CWT, and EAT
+   attestation-token implementations, with a Trusted Firmware-M port.
+   `zcbor` sees real production use too, in MCUboot, Zephyr's `mcumgr`
+   and LwM2M stacks, and the nRF Connect SDK, but stays newer and more
+   confined to the Nordic/Zephyr ecosystem specifically. Given a choice,
+   pick the option with more hours of production usage behind it.
+
+   Resolve `QCBOR`'s earlier-noted determinism gap, that its stable 1.x
+   release does not sort map keys, without waiting on `QCBOR`'s
+   development branch: the manifest comes from a fixed, hand-written
+   schema, not a runtime-built, unordered map, so the authoring tool
+   always writes fields in the same fixed order in code, the same
+   manual-discipline pattern `RFD 0010` already accepted for the zone
+   tick's struct layout, instead of a self-describing format. Fixed field
+   order in code gives deterministic bytes without needing `QCBOR`'s own
+   generic map-key-sorting feature at all.
+
    At load time, inside `zone-server-h2o` itself, the host only decodes
    already-produced CBOR-LD bytes; it never re-runs JSON-LD context
    resolution. Decoding plain CBOR back out needs no JSON-LD processor at
-   all, so the pure-C runtime constraint holds here: use `QCBOR` (or
-   `zcbor`'s generated decoder) inside the host process, in pure C under
-   Fil-C, to read the manifest's fields once a package build already
-   produced them.
+   all, so the pure-C runtime constraint holds here: use `QCBOR` inside
+   the host process, in pure C under Fil-C, to read the manifest's fields
+   once a package build already produced them.
 
    This keeps the manifest genuinely CBOR-LD, keeps the C++ dependency
    confined to an offline authoring tool this project's deployed binaries
@@ -249,8 +283,17 @@ List these follow-ups in PERT order.
    which conflicts with this project's preference for permissive
    licensing elsewhere (see the `iovisor/ubpf` note above). It also reads
    as a research and embedded prototype rather than a vetted production
-   dependency. Revisit it only if `jsonld-cpp` plus `zcbor`/`QCBOR` turns
-   out not to fit the offline authoring tool well in practice.
+   dependency. Revisit it only if `jsonld-cpp` plus `QCBOR` turns out not
+   to fit the offline authoring tool well in practice.
+
+   One further risk on the offline authoring tool, recorded rather than
+   resolved: it may make sense for that tool itself to run inside a
+   sandbox someday, the same protection CastSpell effects get. Doing so
+   now would create a chicken-and-egg problem, though: the tool exists to
+   produce the packages the sandbox infrastructure loads, so sandboxing
+   the tool first needs the sandbox infrastructure the tool has not
+   finished producing yet. Leave the authoring tool unsandboxed for now,
+   and revisit this once task I's sandbox path is itself proven.
 
    Name the design principle behind the bitpacked-struct-versus-CBOR-LD
    split, rather than leave it implicit: the "Cheap or Nasty" pattern
@@ -342,27 +385,28 @@ wiring work in item 1 above happened. Check `zf_kv.h`'s own scoping
 comment, and confirm whether the `zf/zone_state/`, `zf/effect/`, and
 `zf/fanout/` keys exist yet.
 
-Open question: does the sandboxed-CastSpell approach in item 4 above need
-its own follow-up RFD once `libriscv` integration work starts in
-`zone-server-h2o`, given the scope difference between a client-side sandbox
-and a server-side one running under load. This RFD does not resolve that
-question, and records it here for whoever picks up task I.
+Resolved: the sandboxed-CastSpell approach in item 4 does need its own
+follow-up RFD, given the scope difference between a client-side sandbox
+and a server-side one running under load. File that follow-up RFD once
+`libriscv` integration work actually starts in `zone-server-h2o`, not
+before; this RFD only commits to writing it, not to its content.
 
-Open question: item 4's manifest format needs an actual schema, a
-concrete list of declarable capabilities and host helper functions, an ABI
-version field, and a validation step the host runs before granting those
-capabilities to a loaded package. This RFD decides the manifest's
-encoding, CBOR-LD, and reuses `RFD 0010`'s bitpacked struct format for the
-FFI data, but does not design the schema itself. Confirm, before task I
-lands, whether `godot-sandbox-gdscript-compiler`'s own ELF output already
-carries any manifest-like metadata this project can reuse, rather than
-build a second one alongside it.
+Narrowed open question: item 4 now decides the manifest lives inside a
+single `.elf` file, as embedded metadata, not a separate side-car file,
+matching how `libriscv`/`godot-sandbox` already ships one `.elf` per
+package. What remains open is the exact mechanism: confirm, before task I
+lands, whether the existing `libriscv`/`godot-sandbox` and
+`godot-sandbox-gdscript-compiler` code already embeds package metadata
+via a custom ELF section, an ELF note, or some other means, and reuse
+that mechanism rather than invent a second one.
 
-Open question: if a manifest ever needs write-once or content-addressed
-storage, confirm whether RFC 8949 section 4.2's deterministic CBOR rules,
-layered on top of CBOR-LD, give a sufficient canonical form, or whether
-the project needs `w3c.github.io/vc-barcodes`'s fuller pattern instead, a
-fixed term registry plus an explicit hash over a defined field set.
+Resolved: manifests need write-once, content-addressed storage, not
+hypothetically. Packages and their manifests land in `aria-storage`, this
+project's own `casync`-based content-addressed store. RFC 8949 section
+4.2's deterministic CBOR rules, layered on top of CBOR-LD, already give
+`aria-storage` what it needs for stable dedup; `w3c.github.io/vc-barcodes`'s
+fuller, hash-over-fields pattern solves a different problem, proving a
+credential's signature, and this RFD does not adopt it here.
 
 Open question: confirm, before task I lands, that `jsonld-cpp` still
 builds and maintains cleanly as an offline authoring-tool dependency, and
@@ -370,10 +414,17 @@ design the offline tool's own build so it never becomes part of
 `zone-server-h2o`'s own CMake target, per `RFD 0010`'s and item 4's other
 tradeoffs above.
 
-Open question: confirm whether QCBOR's development branch has landed full
-RFC 8949 section 4.2 map-key-sorting support by the time this project
-needs a hashable manifest encoding, since QCBOR's current stable 1.x
-release does not sort map keys yet; `zcbor`'s generated decoder gives
-deterministic key order regardless, from the schema, and stays the
-preferred choice for the in-host decode step if that QCBOR work has not
-landed.
+Recorded, not resolved: the offline authoring tool may deserve sandboxing
+itself someday, the same protection CastSpell effects get, but doing so
+before task I's own sandbox path is proven creates a chicken-and-egg
+problem, the tool would need to run inside the very sandbox
+infrastructure it exists to produce packages for. Leave it unsandboxed
+until task I's sandbox path is itself proven, then revisit.
+
+Resolved: `QCBOR` is the pick over `zcbor`, for both the authoring tool and
+the in-host decoder, on production track record (Qualcomm, 2018;
+Arm's `t_cose`/`ctoken`, Trusted Firmware-M). The manifest's fixed,
+hand-written schema resolves `QCBOR`'s map-key-sorting gap without
+waiting on its development branch: the authoring tool always writes
+fields in the same fixed order in code, giving deterministic bytes
+without needing a generic sorting feature at all.
