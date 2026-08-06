@@ -376,7 +376,74 @@ List these follow-ups in PERT order.
    the project already uses elsewhere, instead of a new one built from
    scratch.
 
-6. Defer these tasks, per the PERT slack analysis: task E, zstd (11.1 days
+6. Scope how much of `libriscv`/`godot-sandbox`'s own API surface
+   CastSpell effects actually need, rather than assume the whole thing.
+   Reading `program/cpp/docker/api/` directly settles this: most of that
+   API, `Vector3`'s own named methods (`abs`, `bezier_interpolate`,
+   `lerp`, `slerp`, and similar), all of `Array`, `Dictionary`, `String`,
+   and everything under `node.hpp`/`node2d.hpp`/`node3d.hpp`/`object.hpp`,
+   expands through the `METHOD`/`VMETHOD` macros into a named,
+   string-dispatched syscall (`operator()`) that calls back into a live,
+   running Godot process on the host side to actually execute. No
+   `vector3.cpp` exists in the tree backing `Vector3`'s own math, so even
+   basic vector operations most likely resolve through this same
+   syscall path, not local computation.
+
+   `zone-server-h2o` runs no live Godot process at all, so it cannot
+   answer these syscalls the way a real Godot host does. Matching this
+   API surface exactly, for a pinned Godot version and the
+   double-precision build `fabric-godot-core` uses, would mean either
+   running a real Godot engine instance alongside the server, or
+   hand-reimplementing Godot's Variant, Object, and math semantics from
+   scratch well enough to answer every syscall correctly. Neither is
+   affordable, and CastSpell effects never touch a live Node or scene
+   tree in the first place; they only read and write zonefabric's own
+   entity data, position, velocity, health, so nothing here needs
+   `Node`/`Node2D`/`Node3D`/`Object`/`Callable`/`Timer` at all.
+
+   Narrow CastSpell's surface to Godot's math and `Variant` scalar value
+   types only, `Vector2`/`Vector3`/`Vector4`, `Basis`, `Transform2D`,
+   `Transform3D`, `Quaternion`, and the primitive `Variant` cases `RFD
+   0010`'s primitive-versus-reference split (item 5 above) already
+   covers, and drop `Node`/`Object`/`Callable`/`Timer`/ClassDB reflection
+   from scope entirely; CastSpell has no use for them.
+
+   Rank the remaining options for that narrowed surface, from best fit to
+   worst:
+
+   1. Cross-compile real Godot core math and `Variant` source
+      (`core/math/`, the relevant `core/variant/` translation units) for
+      RISC-V, built with the same double-precision define
+      `fabric-godot-core` uses, and link it directly into each CastSpell
+      guest binary, so `Vector3::dot()` and similar run as real, local
+      Godot code inside the sandbox, not a syscall to a host that does
+      not exist. This gives exact version-and-precision fidelity by
+      construction, since it is the real source, not a hand-matched
+      approximation, and stays bounded to math/Variant, never approaching
+      the full engine, so it does not conflict with the minimal-components
+      driver above.
+   2. Hand-reimplement the same small, closed set of math types, matching
+      Godot's memory layout and semantics without vendoring real Godot
+      source. Cheaper to set up than option 1, but carries an ongoing
+      drift risk against the real implementation (subtle bugs in
+      `slerp`, `bezier_interpolate`, and similar), and needs manual
+      re-verification on every Godot version bump, for no clear savings
+      once Godot's own math source is already public and directly
+      embeddable.
+   3. Run an actual Godot engine process alongside `zone-server-h2o`,
+      backing the full `godot-sandbox` syscall surface the way a real
+      Godot client does. This directly contradicts the minimal-components
+      driver above, and adds the entire engine, GDExtension host
+      included, as a dependency to a project built specifically to avoid
+      exactly that. Reject.
+   4. Hand-reimplement the full `godot-sandbox` API surface,
+      `Node`/`Object`/`Callable`/ClassDB reflection included, from
+      scratch, version-matched, with no live engine and no vendored
+      source to check against. This is the option this RFD's own concern
+      names directly as unaffordable, the largest and most drift-prone
+      of the four. Reject.
+
+7. Defer these tasks, per the PERT slack analysis: task E, zstd (11.1 days
    of slack), task L, Macaroon plus XDP (7.5 days of slack, and this task
    can run in parallel with other work), task J, EntityMigration (stub this
    as "stay in the birth zone" at first), and task K, ZoneSplit.
@@ -397,14 +464,14 @@ List these follow-ups in PERT order.
    Windows hosts, and this project targets Linux and `libh2o`. Treat this
    as a licensing note to carry forward, not a task to start now.
 
-7. Fix the stale claim in `docs/0001-defer-nogod-gossip-authority.md`, in
+8. Fix the stale claim in `docs/0001-defer-nogod-gossip-authority.md`, in
    `zone-server-h2o`. That doc still describes the zone ID as hardcoded.
    Commit `a36bc8a` and the current `main.c` already contradict that claim.
-8. Replace the stale, TPC-C-flavored `test/verification/README.md` with
+9. Replace the stale, TPC-C-flavored `test/verification/README.md` with
    zonefabric-specific invariants: entity migration, ghost consistency, and
    journal replay. Add these as those features land, per task M.
-9. Wire real TLS certificate and key material before any real
-   client-handshake test runs. `main.c` still passes `NULL` for both today.
+10. Wire real TLS certificate and key material before any real
+    client-handshake test runs. `main.c` still passes `NULL` for both today.
 
 ## Open questions and verification
 
@@ -421,6 +488,16 @@ follow-up RFD, given the scope difference between a client-side sandbox
 and a server-side one running under load. File that follow-up RFD once
 `libriscv` integration work actually starts in `zone-server-h2o`, not
 before; this RFD only commits to writing it, not to its content.
+
+Open question, item 6: confirm, by reading `program/cpp/docker/api/`
+source directly rather than assuming from its headers alone, exactly
+which `Vector3`/`Basis`/`Transform3D`/`Quaternion` operations already
+compute locally in the guest versus which route through the
+`METHOD`/`VMETHOD` syscall proxy, before committing to cross-compiling
+real Godot math/`Variant` source into the CastSpell sandbox. This RFD's
+own reading found no `vector3.cpp` backing `Vector3`'s math, which is
+suggestive, not conclusive, and the follow-up RFD item 4 already commits
+to should settle this with certainty.
 
 Resolved: item 4 decides the manifest lives inside a single `.elf` file,
 as embedded metadata, not a separate side-car file, matching how
