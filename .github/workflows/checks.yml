@@ -4,6 +4,16 @@ on:
   pull_request:
   merge_group:
 
+# One run per PR (or merge-group entry) at a time. A new push cancels
+# any run still in progress for the same ref, instead of queuing behind
+# it -- confirmed as the cause of a 6-run backlog on PR #126 when
+# several pushes landed close together during a GitHub Actions
+# incident (2026-08-06). group includes github.workflow so this does
+# not collide with publish.yml's own runs on the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prek:
     runs-on: ubuntu-latest
