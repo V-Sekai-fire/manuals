@@ -18,9 +18,9 @@ effects that talk to zone-server-h2o."
 
 This session raised and closed two designs before this one.
 
-1. **`godot-sandbox`'s own `Sandbox` Node and `vmcall` API.** This
-   needs its own full native Godot host process, a separate engine
-   instance from the one `godot-riscv-spike` already proved working.
+1. `godot-sandbox`'s own `Sandbox` Node and `vmcall` API needs its
+   own full native Godot host process, a separate engine instance
+   from the one `godot-riscv-spike` already proved working.
    `taskweft/taskweft`'s own RFD 0004 independently rejects this
    option for the identical reason. Its own words: "bound to a live
    Godot process." This confirms the concern is real, not unique to
@@ -55,7 +55,7 @@ separate process, not combined into one binary.
   later need, confirmed real, not stubs, per `syscalls.jsonld`. This
   integration does not use them. All real networking stays in
   `zone-server-h2o`'s own process.
-- **Data format**: CBOR, with JSON-LD framing for anything
+- The data format is CBOR, with JSON-LD framing for anything
   self-describing. This covers `godot_boot`'s one-time config and any
   other control message. One real hot path stays bitpacked instead:
   the per-tick entity buffer that crosses the boundary on every
