@@ -667,3 +667,103 @@ references:
     year: 2018
     url: "https://www.semanticscholar.org/paper/bbcb5ed4d1d26f9767dbdffb9bb4b60b668a49cb"
     journal: "Human-Computer Interaction"
+
+  # ── Zonefabric roadmap: fps comparison, protocol layering, encodings ─────
+
+  - type: software-code
+    title: "fps: Example source code for Creating a First Person Shooter That Scales to Millions of Players"
+    authors:
+      - name: "mas-bandwidth"
+    year: 2026
+    url: "https://github.com/mas-bandwidth/fps"
+
+  - type: manual
+    title: "ZeroMQ - The Guide: Chapter 7, Advanced Pub-Sub Patterns (The Cheap or Nasty Pattern)"
+    authors:
+      - family-names: Hintjens
+        given-names: Pieter
+    year: 2026
+    url: "https://zguide.zeromq.org/docs/chapter7/#The-Cheap-or-Nasty-Pattern"
+
+  - type: report
+    title: "Concise Binary Object Representation (CBOR)"
+    authors:
+      - family-names: Bormann
+        given-names: Carsten
+      - family-names: Hoffman
+        given-names: Paul
+    year: 2020
+    doi: 10.17487/RFC8949
+    institution:
+      name: IETF
+
+  - type: manual
+    title: "CBOR-LD 1.0"
+    authors:
+      - name: "W3C"
+    year: 2026
+    url: "https://w3c.github.io/cbor-ld/"
+
+  - type: manual
+    title: "Verifiable Credential Barcodes v1.0"
+    authors:
+      - name: "W3C"
+    year: 2026
+    url: "https://w3c.github.io/vc-barcodes/"
+
+  - type: software
+    title: "ubpf: Userspace eBPF VM"
+    authors:
+      - name: "IO Visor Project"
+    year: 2026
+    url: "https://github.com/iovisor/ubpf"
+
+  - type: software
+    title: "zcbor: CDDL to Code Generator for Constrained Devices"
+    authors:
+      - name: "Nordic Semiconductor"
+    year: 2026
+    url: "https://github.com/NordicSemiconductor/zcbor"
+
+  - type: software
+    title: "QCBOR: A Comprehensive, Powerful, Commercial-Quality CBOR Encoder/Decoder"
+    authors:
+      - family-names: Lundblade
+        given-names: Laurence
+    year: 2026
+    url: "https://github.com/laurencelundblade/QCBOR"
+
+  - type: software
+    title: "jsonld-cpp: A C++14 Implementation of the JSON-LD 1.1 Specification"
+    authors:
+      - name: "jsonld-cpp contributors"
+    year: 2026
+    url: "https://github.com/dcdan/jsonld-cpp"
+
+  - type: software
+    title: "cborld-c: A C Library for Encoding JSON-LD into CBOR-LD"
+    authors:
+      - name: "CoSWoT"
+    year: 2026
+    url: "https://gitlab.com/coswot/cborld-c"
+
+  - type: software
+    title: "Godot Sandbox: Safe, Low-Latency Sandbox for the Godot Game Engine"
+    authors:
+      - name: "libriscv"
+    year: 2026
+    url: "https://github.com/libriscv/godot-sandbox"
+
+  - type: software
+    title: "godot-sandbox-gdscript-compiler: A GDScript-to-RISC-V Compiler for Godot Sandbox"
+    authors:
+      - name: "V-Sekai Multiplayer Fabric"
+    year: 2026
+    url: "https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler"
+
+  - type: generic
+    title: "KHR_interactivity: glTF Interactivity Extension"
+    authors:
+      - name: "Khronos Group"
+    year: 2026
+    url: "https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_interactivity"
