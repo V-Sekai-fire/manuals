@@ -51,3 +51,4 @@ accepts the direction, `committed` once the work described is done.
 | RFD                                                     | Title                                                                      | State      |
 | ------------------------------------------------------- | -------------------------------------------------------------------------- | ---------- |
 | [0001](0001-zonefabric-roadmap-vs-mas-bandwidth-fps.md) | Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes | discussion |
+| [0002](0002-taskweft-value-narrowing-primitives-and-refs.md) | taskweft/nif's value narrowing: primitives, and refs as pointer strings | discussion |
