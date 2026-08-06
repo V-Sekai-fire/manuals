@@ -48,7 +48,10 @@ accepts the direction, `committed` once the work described is done.
 
 ## Index
 
-| RFD                                                     | Title                                                                      | State      |
-| ------------------------------------------------------- | -------------------------------------------------------------------------- | ---------- |
-| [0001](0001-zonefabric-roadmap-vs-mas-bandwidth-fps.md) | Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes | discussion |
-| [0002](0002-taskweft-value-narrowing-primitives-and-refs.md) | taskweft/nif's value narrowing: primitives, and refs as pointer strings | discussion |
+| RFD                                                               | Title                                                                      | State      |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------- |
+| [0001](0001-zonefabric-roadmap-vs-mas-bandwidth-fps.md)           | Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes | discussion |
+| [0002](0002-taskweft-value-narrowing-primitives-and-refs.md)      | taskweft/nif's value narrowing: primitives, and refs as pointer strings    | discussion |
+| [0003](0003-castspell-sandbox-package-and-manifest-encoding.md)   | CastSpell sandbox package format and manifest encoding                     | discussion |
+| [0004](0004-castspell-libgodot-sandbox-runtime-scope.md)          | CastSpell's sandboxed runtime: embed `libgodot`, not `godot-sandbox`'s API | discussion |
+| [0005](0005-gltf-interactivity-value-type-taxonomy-correction.md) | `gltf_interactivity`'s value types: primitive, `ref`, and `custom`         | discussion |
