@@ -413,18 +413,36 @@ List these follow-ups in PERT order.
    `Machine` per zone, since each sandboxed guest is already its own
    isolated process-like boundary.
 
+   Build this from `fabric-godot-core`'s own pinned release tag,
+   `v2026.06.27.1907-multiplayer-fabric` (Godot 4.7.0-beta per that tag's
+   own `version.py`), not upstream `godotengine/godot` generically. All
+   three load-bearing pieces this decision needs are confirmed present at
+   that exact tag, read directly: `core/extension/libgodot.h`, `rv64` in
+   `platform/linuxbsd/detect.py`'s `supported_arches`, and
+   `modules/sandbox` (vendored as its own subrepo). None of this is a
+   "does our fork have this yet" open question; it already does.
+
    Build headless (`DisplayServerHeadless`, a real, shipped dummy
    display backend, removing the X11/Wayland/D-Bus/fontconfig/
    speech-dispatcher dependencies `platform/linuxbsd` otherwise pulls in
    via `dlopen`), for `arch=rv64`. `rv64` is already a first-class,
-   existing Godot Linux architecture target, confirmed directly in
-   `platform/linuxbsd/detect.py`: `supported_arches` already lists
-   `"rv64"` alongside `x86_32`/`x86_64`/`arm32`/`arm64`/`ppc64`/
-   `loongarch64`, with real RISC-V compiler flags (`-march=rv64gc`)
-   already wired in. This is the same `platform/linuxbsd` code every
-   other Linux architecture uses; it needs building the existing,
-   already-supported headless target for `arch=rv64`, not designing a
-   new platform backend.
+   existing Godot Linux architecture target in this exact pinned tag, not
+   a new platform port: `supported_arches` already lists `"rv64"`
+   alongside `x86_32`/`x86_64`/`arm32`/`arm64`/`ppc64`/`loongarch64`, with
+   real RISC-V compiler flags (`-march=rv64gc`) already wired in. This is
+   the same `platform/linuxbsd` code every other Linux architecture uses;
+   it needs building the existing, already-supported headless target for
+   `arch=rv64`, not designing a new platform backend.
+
+   Disable `modules/sandbox` for this one embedded-build target
+   specifically, even though the fork's normal client build keeps it
+   enabled. That module lets a normally-running Godot client host further
+   `libriscv`-sandboxed guest programs; the embedded CastSpell instance
+   already runs as a `libriscv` guest itself, so compiling
+   `modules/sandbox` into it would nest a second sandboxing layer inside
+   the first, adding binary size and surface for no requirement that
+   calls for it. Exclude it via SCons `disable_modules=sandbox` or an
+   equivalent `custom.py`/`modules.cfg` entry for this target only.
 
    Build with `threads=no`, Godot's own single-thread build mode, already
    proven in production via the Web/WASM export, since `libriscv`'s
@@ -466,9 +484,10 @@ List these follow-ups in PERT order.
 
    Gate the actual implementation on a short, time-boxed spike, not on
    more source-reading, since two things could not be settled from source
-   alone: (1) build Godot headless, `arch=rv64`, `threads=no`, and confirm
-   it boots and runs a minimal scene correctly under `libriscv`'s
-   `setup_linux_syscalls` tier, audio included via the polled
+   alone: (1) build `fabric-godot-core`'s `v2026.06.27.1907-multiplayer-fabric`
+   tag headless, `arch=rv64`, `threads=no`, `modules/sandbox` disabled per
+   above, and confirm it boots and runs a minimal scene correctly under
+   `libriscv`'s `setup_linux_syscalls` tier, audio included via the polled
    `mix_audio()` path above, a real end-to-end run, not a compile-only
    check; (2) measure real boot time and per-`iteration()` cost against
    the actual budget (10Hz, 200 entities/zone, many zones/process), since
