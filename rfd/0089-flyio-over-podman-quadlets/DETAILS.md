@@ -39,7 +39,7 @@ momentum.
    release for `uro`, verified locally (a genuine static ELF binary
    that boots `Uro.Endpoint`, `Uro.Repo`, and `Uro.Repo.Migration`
    correctly).
-3. **Run both, service by service.** Avoids picking a single target,
+3. Running both, service by service, avoids picking a single target
    but doubles the real ops surface `rfd/0061`'s own problem
    statement (Harvester's "full virtualization tier" wraps the same
    workloads twice) already argued against, for a different reason.
@@ -63,8 +63,8 @@ The concrete evidence this decision is grounded in, not asserted:
   bootstrapped, confirmed live.
 - `multiplayer-fabric-uro`: a real Burrito-wrapped `mix release`
   replaces the dev-shaped root `Dockerfile` (`iex -S mix do
-  ecto.create, ecto.migrate, run priv/repo/test_seeds.exs,
-  phx.server`, which seeded dummy test data on every boot). Verified
+ecto.create, ecto.migrate, run priv/repo/test_seeds.exs,
+phx.server`, which seeded dummy test data on every boot). Verified
   locally: the release build genuinely produces a static, ~20MB ELF
   binary, and both its `start` and `eval` commands boot
   `Uro.Application` for real (`Uro.Repo`, `Uro.Repo.Migration`, and
