@@ -51,16 +51,16 @@ flushes the cache rather than growing without limit.
 
 The same three moves apply here:
 
-1. **Compile once.** A named definition in `TwReBACGraph::definitions`
+1. Compile once. A named definition in `TwReBACGraph::definitions`
    compiles to an automaton over relation labels, by a Thompson
    construction. `union` becomes an alternation. Concatenation comes
    from `tuple_to_userset`'s pivot. `IS_MEMBER_OF` inheritance becomes
    a Kleene star on that one label.
-2. **Simulate, do not search.** Evaluation runs the product of
+2. Simulate, do not search. Evaluation runs the product of
    automaton state and graph node. States times edges bounds the work.
-   Nothing copies a visited set, because the product state *is* the
+   Nothing copies a visited set, because the product state _is_ the
    visited marker.
-3. **Bound the cache.** Hold the lazy deterministic states in a fixed
+3. Bound the cache. Hold the lazy deterministic states in a fixed
    budget, and flush when full.
 
 `p_fuel` then disappears. It exists only because a backtracking search
@@ -143,7 +143,7 @@ takes the same position for taskweft's own definitions.
 **`tuple_to_userset` moves the object.** A plain regular path query
 fixes its target and varies the path. `tuple_to_userset` pivots
 through one relation and then evaluates an inner expression against a
-*different* subject, as `check_expr` shows:
+_different_ subject, as `check_expr` shows:
 
 ```
 for (size_t idx : sit->second) {
@@ -172,15 +172,15 @@ edges.
 
 The same obligation applies, at a larger scale:
 
-- **Compilation equivalence.** The compiled automaton accepts exactly
+- Compilation equivalence. The compiled automaton accepts exactly
   the subject and object pairs `check_expr` grants. This is
   `rfd/0092`'s resolution-equivalence theorem, and this RFD supplies
   its mechanism.
-- **Termination without fuel.** The product simulation halts on every
+- Termination without fuel. The product simulation halts on every
   input, with no fuel parameter.
-- **A cache flush changes no answer.** Flushing lazy deterministic
+- A cache flush changes no answer. Flushing lazy deterministic
   states affects speed only, never a grant or a denial.
-- **Differential test.** Run the compiled evaluator and the existing
+- Differential test. Run the compiled evaluator and the existing
   `check_expr` against the same graphs, and compare every answer, in
   the same shape `test/unit/test_xr_grid_entity_packet.c` compares a
   generated codec against golden vectors.
