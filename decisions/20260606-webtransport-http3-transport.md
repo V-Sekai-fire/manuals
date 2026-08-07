@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0023](../rfd/0023-webtransport-http3-transport/README.md).
+
 ## Context and Problem Statement
 
 The stack needs a client/server transport that carries reliable control messages

@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0030](../rfd/0030-cicd-runners-as-queueing-system/README.md).
+
 ## Context and Problem Statement
 
 The organization shares one GitHub Actions runner pool across every repository,

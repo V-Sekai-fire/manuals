@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0026](../rfd/0026-commit-messages-sentence-case/README.md).
+
 ## Context and Problem Statement
 
 A commit subject is the first line a reader meets in `git log`, a blame, or a release

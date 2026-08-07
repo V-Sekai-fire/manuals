@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0022](../rfd/0022-spatial-audio-patched-resonance-audio/README.md).
+
 ## Context and Problem Statement
 
 The zone server renders shared social-VR scenes where sound sources need to be
