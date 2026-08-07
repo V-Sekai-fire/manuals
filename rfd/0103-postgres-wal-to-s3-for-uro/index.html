@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>RFD 0103: PostgreSQL with WAL to S3 for Uro, and DuckDB only for analytics – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../pages/changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/rfd.html"> 
+    <a class="nav-link" href="../../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/references.html"> 
+    <a class="nav-link" href="../../pages/references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,23 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#why-not-neon" id="toc-why-not-neon" class="nav-link" data-scroll-target="#why-not-neon">Why not Neon</a></li>
+  <li><a href="#foundationdbs-relational-layer-and-why-it-is-not-decided-here" id="toc-foundationdbs-relational-layer-and-why-it-is-not-decided-here" class="nav-link" data-scroll-target="#foundationdbs-relational-layer-and-why-it-is-not-decided-here">FoundationDB’s Relational Layer, and why it is not decided here</a></li>
+  <li><a href="#why-not-duckdb-for-this" id="toc-why-not-duckdb-for-this" class="nav-link" data-scroll-target="#why-not-duckdb-for-this">Why not DuckDB for this</a></li>
+  <li><a href="#why-postgresql-rather-than-cockroachdb" id="toc-why-postgresql-rather-than-cockroachdb" class="nav-link" data-scroll-target="#why-postgresql-rather-than-cockroachdb">Why PostgreSQL rather than CockroachDB</a></li>
+  <li><a href="#recovery" id="toc-recovery" class="nav-link" data-scroll-target="#recovery">Recovery</a></li>
+  <li><a href="#open" id="toc-open" class="nav-link" data-scroll-target="#open">Open</a></li>
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0103-postgres-wal-to-s3-for-uro/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +308,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">RFD 0103: PostgreSQL with WAL to S3 for Uro, and DuckDB only for analytics</h1>
 </div>
 
 
@@ -370,109 +325,177 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
+<p><em><a href="../../index.html">Manuals</a> › RFD 0103: PostgreSQL with WAL to S3 for Uro, and DuckDB only for analytics</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-backend, aria-storage</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0006</code> puts Uro on CockroachDB with mTLS role separation. That predates the 15 USD Fly budget in <code>rfd/0102</code>.</p>
+<p>CockroachDB Cloud Basic is on the blocklist. Self-hosting costs RAM at about 5 USD per GB per month on Fly, and CockroachDB wants gigabytes.</p>
+<p>The requirement is to keep Ecto and Postgrex, and to checkpoint to S3.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>Every figure below is measured in a 256 MB container, or taken from a published price.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 10%">
+<col style="width: 24%">
+<col style="width: 18%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
+<tr class="header">
+<th>Option</th>
+<th>Fixed USD</th>
+<th>Concurrent at 4 h/day</th>
+<th>Keeps Ecto</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="../changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>DuckDB embedded in Uro</td>
+<td>4.19</td>
+<td>39.1</td>
+<td>no, rewrite</td>
 </tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="../changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
+<tr class="even">
+<td>FRL, server colocated at 512 MB</td>
+<td>5.49</td>
+<td>34.4</td>
+<td>yes, new adapter</td>
 </tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="../changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
+<tr class="odd">
+<td><strong>PostgreSQL colocated, Uro at 512 MB</strong></td>
+<td><strong>5.64</strong></td>
+<td><strong>33.9</strong></td>
+<td><strong>yes</strong></td>
 </tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="../changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
+<tr class="even">
+<td>PostgreSQL on its own 256 MB machine</td>
+<td>6.36</td>
+<td>31.2</td>
+<td>yes</td>
 </tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="../changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
+<tr class="odd">
+<td>FRL, server on its own 512 MB machine</td>
+<td>7.51</td>
+<td>27.1</td>
+<td>yes, new adapter</td>
 </tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="../changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
+<tr class="even">
+<td>FRL, server on its own 1 GB machine</td>
+<td>10.11</td>
+<td>17.7</td>
+<td>yes, new adapter</td>
 </tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="../changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
+<tr class="odd">
+<td>Self-hosted CockroachDB, 1 GB</td>
+<td>10.26</td>
+<td>17.1</td>
+<td>yes</td>
 </tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="../changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
+<tr class="even">
+<td>Neon, paid, always on at 1 CU</td>
+<td>81.59</td>
+<td>over budget</td>
+<td>yes</td>
 </tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1786132931845" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="../changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<p>The colocated FRL row is MEASURED. See below.</p>
+<p>Point-read latency, both measured in 256 MB:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Engine</th>
+<th>Point SELECT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PostgreSQL 16</td>
+<td><strong>0.084 ms</strong></td>
+</tr>
+<tr class="even">
+<td>DuckDB</td>
+<td>0.919 ms</td>
+</tr>
+</tbody>
+</table>
+<p>PostgreSQL is approximately 11 times faster at point reads, in the same memory, and it needs no change to Uro’s data layer.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Uro runs on <strong>PostgreSQL</strong>, self-hosted on Fly, with WAL archived to Tigris for point-in-time recovery.</p>
+<p>DuckDB stays, and only for analytics and telemetry, writing ETNF Parquet. That is the workload it is good at, and <code>lean-duckdb</code> already writes that format here.</p>
+</section>
+<section id="why-not-neon" class="level2">
+<h2 class="anchored" data-anchor-id="why-not-neon">Why not Neon</h2>
+<p>Neon’s free plan forces scale-to-zero. The database suspends after 5 minutes of inactivity, and the plan cannot be kept always on.</p>
+<p>A game backend cannot accept a cold start on the first login after an idle period. The free plan also gives 100 CU-hours per month, which is 4.2 days of always-on running.</p>
+<p>Paid compute is 0.106 USD per CU-hour. One CU held for a month is about 77 USD, which is five times the whole budget.</p>
+<p>The same reasoning applies to any serverless Postgres that bills by active compute. Scale-to-zero suits bursty web apps. It does not suit a service that must answer a login immediately.</p>
+</section>
+<section id="foundationdbs-relational-layer-and-why-it-is-not-decided-here" class="level2">
+<h2 class="anchored" data-anchor-id="foundationdbs-relational-layer-and-why-it-is-not-decided-here">FoundationDB’s Relational Layer, and why it is not decided here</h2>
+<p><code>weftspun/ecto-fdb-relational</code> is an Ecto adapter for FoundationDB Record Layer’s Relational Layer. It speaks gRPC to <code>fdb-relational-server</code>’s JDBCService, with no JDBC, JVM or NIF bridge on the Elixir side. <code>weftspun/ecto-bench-tpcc</code> benchmarks it.</p>
+<p>The architectural argument is real and it is the strongest of any option here. <code>rfd/0102</code> already runs FoundationDB on the zone machine. Using it for Uro removes a second datastore, and the adapter belongs to this organization.</p>
+<p>The memory objection is now measured away. <code>fdb-relational-server</code> 4.3.6.0 from Maven Central, on JDK 21, in a 512 MB container that also ran <code>fdbserver</code>:</p>
+<pre><code>RSS 157.0 MB
+Started on grpcPort=1111/httpPort=1112 with services:
+  grpc.health.v1.Health, grpc.reflection.v1alpha.ServerReflection,
+  grpc.relational.jdbc.v1.JDBCService</code></pre>
+<p>157 MB fits beside Uro on one 512 MB machine, at 34.4 concurrent users. That beats PostgreSQL colocated, which reaches 33.9, and it removes a datastore rather than adding one.</p>
+<p>Latency decides it, and the measurement is not close.</p>
+<pre><code>FRL insert 20000 rows          198901.8 ms total
+FRL point SELECT               median=  45.259 ms  p99=  66.866 ms  n=1000</code></pre>
+<p>45.259 ms per point read is 539 times PostgreSQL’s 0.084 ms. Inserts ran at approximately 10 ms per row.</p>
+<p>For scale, <code>rfd/0100</code> measured a raw FoundationDB commit at 2396.6 us on the same storage engine. FRL adds roughly 19 times on top of the database underneath it.</p>
+<p>At 45 ms a login of five queries costs 225 ms before any other work. Single-threaded throughput is about 22 queries per second.</p>
+<p>Three caveats, because one measurement should not close a door permanently. This used the JDBC driver. The adapter’s own ADR 0001 records that FoundationDB marks that interface experimental, and <code>ecto-fdb-relational</code> speaks gRPC directly instead. The measurement also ran against a single-node FoundationDB that shared a container. An UPDATE probe failed on an FRL dialect type mismatch, so it is unmeasured.</p>
+<p>Even so, a 539 times gap does not close with tuning. Re-measure through the gRPC adapter before treating FRL as permanently unsuitable, and do not block on it.</p>
+<p>FRL’s dialect is also “close to but not standard SQL”, by its own README. Uro’s migrations need porting either way, and this port targets a dialect with one implementation.</p>
+</section>
+<section id="why-not-duckdb-for-this" class="level2">
+<h2 class="anchored" data-anchor-id="why-not-duckdb-for-this">Why not DuckDB for this</h2>
+<p>DuckDB measured well, and it is the wrong shape for Uro’s OLTP.</p>
+<p>Point reads are 0.919 ms against PostgreSQL’s 0.084 ms. DuckDB permits one writing process. And moving Uro off Ecto and Postgrex is unestimated work, spent to reach a slower result.</p>
+<p>DuckDB is 1.45 USD per month cheaper, which is 5.2 concurrent users. That is not worth a data-layer rewrite.</p>
+</section>
+<section id="why-postgresql-rather-than-cockroachdb" class="level2">
+<h2 class="anchored" data-anchor-id="why-postgresql-rather-than-cockroachdb">Why PostgreSQL rather than CockroachDB</h2>
+<p>CockroachDB earns its cost with distribution and multi-region. Neither is in <code>rfd/0102</code>’s topology, which is one region and one Uro node.</p>
+<p>PostgreSQL runs the same wire protocol, so <code>Ecto.Adapters.Postgres</code> and Postgrex are unchanged. Uro’s migrations need review for CockroachDB-specific SQL, and that review is not done.</p>
+<p><code>rfd/0006</code>’s mTLS role separation carries over. PostgreSQL supports client-certificate authentication and per-role privileges, so <code>gateway_writer</code> and <code>gateway_admin</code> keep their shape.</p>
+</section>
+<section id="recovery" class="level2">
+<h2 class="anchored" data-anchor-id="recovery">Recovery</h2>
+<p>WAL archives continuously to Tigris, which charges 0 USD egress. A base backup plus WAL gives point-in-time recovery.</p>
+<p>This matches what <code>rfd/0100</code> does for FoundationDB. Live data sits on the Fly volume, and recovery data sits in the object store.</p>
+</section>
+<section id="open" class="level2">
+<h2 class="anchored" data-anchor-id="open">Open</h2>
+<p>FRL through the gRPC adapter is unmeasured. The 45.259 ms figure came through JDBC, which the adapter deliberately avoids.</p>
+<p>Uro’s migrations are not audited for CockroachDB-specific SQL.</p>
+<p>Whether PostgreSQL and Phoenix fit together in 512 MB is unmeasured. The separate-machine row costs 2.7 concurrent users and removes that risk.</p>
+<p>Uro’s real row counts and request rate are unmeasured.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li>Measurements above, PostgreSQL 16 and DuckDB in 256 MB containers</li>
+<li><a href="https://fly.io/docs/about/pricing/">Fly pricing</a>, about 5 USD per GB of RAM per month</li>
+<li><a href="https://neon.com/pricing">Neon pricing</a>, free plan scale-to-zero and 0.106 USD per CU-hour</li>
+<li><a href="https://github.com/weftspun/ecto-fdb-relational">weftspun/ecto-fdb-relational</a>, the FRL adapter</li>
+<li><a href="https://github.com/weftspun/ecto-bench-tpcc">weftspun/ecto-bench-tpcc</a>, the benchmark harness</li>
+<li><code>rfd/0006</code>, CockroachDB with mTLS role separation</li>
+<li><code>rfd/0102</code>, the 15 USD deployment budget</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -894,7 +917,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/pages/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0103-postgres-wal-to-s3-for-uro/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

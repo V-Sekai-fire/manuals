@@ -10,7 +10,190 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 19:25:16 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 20:03:28 GMT</lastBuildDate>
+<item>
+  <title>RFD 0103: PostgreSQL with WAL to S3 for Uro, and DuckDB only for analytics</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0103-postgres-wal-to-s3-for-uro/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0103: PostgreSQL with WAL to S3 for Uro, and DuckDB only for analytics</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-backend, aria-storage</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0006</code> puts Uro on CockroachDB with mTLS role separation. That predates the 15 USD Fly budget in <code>rfd/0102</code>.</p>
+<p>CockroachDB Cloud Basic is on the blocklist. Self-hosting costs RAM at about 5 USD per GB per month on Fly, and CockroachDB wants gigabytes.</p>
+<p>The requirement is to keep Ecto and Postgrex, and to checkpoint to S3.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>Every figure below is measured in a 256 MB container, or taken from a published price.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 10%">
+<col style="width: 24%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Fixed USD</th>
+<th>Concurrent at 4 h/day</th>
+<th>Keeps Ecto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DuckDB embedded in Uro</td>
+<td>4.19</td>
+<td>39.1</td>
+<td>no, rewrite</td>
+</tr>
+<tr class="even">
+<td>FRL, server colocated at 512 MB</td>
+<td>5.49</td>
+<td>34.4</td>
+<td>yes, new adapter</td>
+</tr>
+<tr class="odd">
+<td><strong>PostgreSQL colocated, Uro at 512 MB</strong></td>
+<td><strong>5.64</strong></td>
+<td><strong>33.9</strong></td>
+<td><strong>yes</strong></td>
+</tr>
+<tr class="even">
+<td>PostgreSQL on its own 256 MB machine</td>
+<td>6.36</td>
+<td>31.2</td>
+<td>yes</td>
+</tr>
+<tr class="odd">
+<td>FRL, server on its own 512 MB machine</td>
+<td>7.51</td>
+<td>27.1</td>
+<td>yes, new adapter</td>
+</tr>
+<tr class="even">
+<td>FRL, server on its own 1 GB machine</td>
+<td>10.11</td>
+<td>17.7</td>
+<td>yes, new adapter</td>
+</tr>
+<tr class="odd">
+<td>Self-hosted CockroachDB, 1 GB</td>
+<td>10.26</td>
+<td>17.1</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td>Neon, paid, always on at 1 CU</td>
+<td>81.59</td>
+<td>over budget</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>The colocated FRL row is MEASURED. See below.</p>
+<p>Point-read latency, both measured in 256 MB:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Engine</th>
+<th>Point SELECT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PostgreSQL 16</td>
+<td><strong>0.084 ms</strong></td>
+</tr>
+<tr class="even">
+<td>DuckDB</td>
+<td>0.919 ms</td>
+</tr>
+</tbody>
+</table>
+<p>PostgreSQL is approximately 11 times faster at point reads, in the same memory, and it needs no change to Uro’s data layer.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Uro runs on <strong>PostgreSQL</strong>, self-hosted on Fly, with WAL archived to Tigris for point-in-time recovery.</p>
+<p>DuckDB stays, and only for analytics and telemetry, writing ETNF Parquet. That is the workload it is good at, and <code>lean-duckdb</code> already writes that format here.</p>
+</section>
+<section id="why-not-neon" class="level2">
+<h2 class="anchored" data-anchor-id="why-not-neon">Why not Neon</h2>
+<p>Neon’s free plan forces scale-to-zero. The database suspends after 5 minutes of inactivity, and the plan cannot be kept always on.</p>
+<p>A game backend cannot accept a cold start on the first login after an idle period. The free plan also gives 100 CU-hours per month, which is 4.2 days of always-on running.</p>
+<p>Paid compute is 0.106 USD per CU-hour. One CU held for a month is about 77 USD, which is five times the whole budget.</p>
+<p>The same reasoning applies to any serverless Postgres that bills by active compute. Scale-to-zero suits bursty web apps. It does not suit a service that must answer a login immediately.</p>
+</section>
+<section id="foundationdbs-relational-layer-and-why-it-is-not-decided-here" class="level2">
+<h2 class="anchored" data-anchor-id="foundationdbs-relational-layer-and-why-it-is-not-decided-here">FoundationDB’s Relational Layer, and why it is not decided here</h2>
+<p><code>weftspun/ecto-fdb-relational</code> is an Ecto adapter for FoundationDB Record Layer’s Relational Layer. It speaks gRPC to <code>fdb-relational-server</code>’s JDBCService, with no JDBC, JVM or NIF bridge on the Elixir side. <code>weftspun/ecto-bench-tpcc</code> benchmarks it.</p>
+<p>The architectural argument is real and it is the strongest of any option here. <code>rfd/0102</code> already runs FoundationDB on the zone machine. Using it for Uro removes a second datastore, and the adapter belongs to this organization.</p>
+<p>The memory objection is now measured away. <code>fdb-relational-server</code> 4.3.6.0 from Maven Central, on JDK 21, in a 512 MB container that also ran <code>fdbserver</code>:</p>
+<pre><code>RSS 157.0 MB
+Started on grpcPort=1111/httpPort=1112 with services:
+  grpc.health.v1.Health, grpc.reflection.v1alpha.ServerReflection,
+  grpc.relational.jdbc.v1.JDBCService</code></pre>
+<p>157 MB fits beside Uro on one 512 MB machine, at 34.4 concurrent users. That beats PostgreSQL colocated, which reaches 33.9, and it removes a datastore rather than adding one.</p>
+<p>Latency decides it, and the measurement is not close.</p>
+<pre><code>FRL insert 20000 rows          198901.8 ms total
+FRL point SELECT               median=  45.259 ms  p99=  66.866 ms  n=1000</code></pre>
+<p>45.259 ms per point read is 539 times PostgreSQL’s 0.084 ms. Inserts ran at approximately 10 ms per row.</p>
+<p>For scale, <code>rfd/0100</code> measured a raw FoundationDB commit at 2396.6 us on the same storage engine. FRL adds roughly 19 times on top of the database underneath it.</p>
+<p>At 45 ms a login of five queries costs 225 ms before any other work. Single-threaded throughput is about 22 queries per second.</p>
+<p>Three caveats, because one measurement should not close a door permanently. This used the JDBC driver. The adapter’s own ADR 0001 records that FoundationDB marks that interface experimental, and <code>ecto-fdb-relational</code> speaks gRPC directly instead. The measurement also ran against a single-node FoundationDB that shared a container. An UPDATE probe failed on an FRL dialect type mismatch, so it is unmeasured.</p>
+<p>Even so, a 539 times gap does not close with tuning. Re-measure through the gRPC adapter before treating FRL as permanently unsuitable, and do not block on it.</p>
+<p>FRL’s dialect is also “close to but not standard SQL”, by its own README. Uro’s migrations need porting either way, and this port targets a dialect with one implementation.</p>
+</section>
+<section id="why-not-duckdb-for-this" class="level2">
+<h2 class="anchored" data-anchor-id="why-not-duckdb-for-this">Why not DuckDB for this</h2>
+<p>DuckDB measured well, and it is the wrong shape for Uro’s OLTP.</p>
+<p>Point reads are 0.919 ms against PostgreSQL’s 0.084 ms. DuckDB permits one writing process. And moving Uro off Ecto and Postgrex is unestimated work, spent to reach a slower result.</p>
+<p>DuckDB is 1.45 USD per month cheaper, which is 5.2 concurrent users. That is not worth a data-layer rewrite.</p>
+</section>
+<section id="why-postgresql-rather-than-cockroachdb" class="level2">
+<h2 class="anchored" data-anchor-id="why-postgresql-rather-than-cockroachdb">Why PostgreSQL rather than CockroachDB</h2>
+<p>CockroachDB earns its cost with distribution and multi-region. Neither is in <code>rfd/0102</code>’s topology, which is one region and one Uro node.</p>
+<p>PostgreSQL runs the same wire protocol, so <code>Ecto.Adapters.Postgres</code> and Postgrex are unchanged. Uro’s migrations need review for CockroachDB-specific SQL, and that review is not done.</p>
+<p><code>rfd/0006</code>’s mTLS role separation carries over. PostgreSQL supports client-certificate authentication and per-role privileges, so <code>gateway_writer</code> and <code>gateway_admin</code> keep their shape.</p>
+</section>
+<section id="recovery" class="level2">
+<h2 class="anchored" data-anchor-id="recovery">Recovery</h2>
+<p>WAL archives continuously to Tigris, which charges 0 USD egress. A base backup plus WAL gives point-in-time recovery.</p>
+<p>This matches what <code>rfd/0100</code> does for FoundationDB. Live data sits on the Fly volume, and recovery data sits in the object store.</p>
+</section>
+<section id="open" class="level2">
+<h2 class="anchored" data-anchor-id="open">Open</h2>
+<p>FRL through the gRPC adapter is unmeasured. The 45.259 ms figure came through JDBC, which the adapter deliberately avoids.</p>
+<p>Uro’s migrations are not audited for CockroachDB-specific SQL.</p>
+<p>Whether PostgreSQL and Phoenix fit together in 512 MB is unmeasured. The separate-machine row costs 2.7 concurrent users and removes that risk.</p>
+<p>Uro’s real row counts and request rate are unmeasured.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li>Measurements above, PostgreSQL 16 and DuckDB in 256 MB containers</li>
+<li><a href="https://fly.io/docs/about/pricing/">Fly pricing</a>, about 5 USD per GB of RAM per month</li>
+<li><a href="https://neon.com/pricing">Neon pricing</a>, free plan scale-to-zero and 0.106 USD per CU-hour</li>
+<li><a href="https://github.com/weftspun/ecto-fdb-relational">weftspun/ecto-fdb-relational</a>, the FRL adapter</li>
+<li><a href="https://github.com/weftspun/ecto-bench-tpcc">weftspun/ecto-bench-tpcc</a>, the benchmark harness</li>
+<li><code>rfd/0006</code>, CockroachDB with mTLS role separation</li>
+<li><code>rfd/0102</code>, the 15 USD deployment budget</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0103-postgres-wal-to-s3-for-uro/</guid>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0102-the-whole-deployment-on-15-usd/</link>
@@ -30,7 +213,7 @@
 </section>
 <section id="the-parts-that-were-missing" class="level2">
 <h2 class="anchored" data-anchor-id="the-parts-that-were-missing">The parts that were missing</h2>
-<p><code>zone-backend</code>, which is Uro, is a Phoenix and Elixir service for identity, the zone directory, and the planner. It runs on PostgreSQL through Ecto, with separate DML and DDL roles.</p>
+<p><code>zone-backend</code>, which is Uro, is a Phoenix and Elixir service for identity, the zone directory, and the planner. It runs on <strong>CockroachDB</strong>, with separate DML and DDL roles over mTLS client certificates, per <code>rfd/0006</code>.</p>
 <p><code>aria-storage</code> is the Elixir casync and desync library that <code>zone-backend</code> already uses.</p>
 <p>Neither appears in <code>rfd/0100</code>. Nor does any relational store, and <code>rfd/0095</code> depends on Uro for <code>/acl/check</code>, <code>/auth/script_key</code> and <code>/storage/manifest</code>.</p>
 </section>
@@ -46,14 +229,17 @@
 Fly machine 2, shared-cpu-1x 256 MB, iad          2.02 USD
   |- zone-backend (Uro): identity, zone directory,
   |    planner, /acl/check, /storage/manifest
-  |- aria-storage: casync chunking on publish
-  +- 1 GB volume, PostgreSQL                      0.15 USD
+  +- aria-storage: casync chunking on publish
+
+  +- PostgreSQL, WAL to Tigris (see rfd/0103)   +1.45 USD
 
 Tigris object storage                             0 USD
   |- casync chunks and .caibx indexes             5 GB free
   |- fdbbackup target (disaster recovery)
   +- auto-replicated to Fly edge: this IS the CDN</code></pre>
-<p>FoundationDB holds zone state. PostgreSQL holds identity and the directory. <code>rfd/0075</code> chose FoundationDB over CockroachDB for zone state, and it did not remove Uro’s relational store.</p>
+<p>FoundationDB holds zone state. CockroachDB holds identity and the directory. <code>rfd/0075</code> chose FoundationDB over CockroachDB <strong>for zone state</strong>, and that scope never removed Uro’s own relational store.</p>
+<p>CockroachDB does not run on Fly here. Fly charges about 5 USD per GB of RAM per month. A <code>shared-cpu-1x</code> at 2 GB is therefore 11.11 USD, which is 74 percent of the budget for the database alone. That leaves nothing.</p>
+<p>CockroachDB Cloud Basic is on the blocklist, so the managed free tier is not available either. <code>rfd/0103</code> moves Uro to PostgreSQL for that reason, and it carries the measurements.</p>
 </section>
 <section id="assets-never-pass-through-the-zone-server" class="level2">
 <h2 class="anchored" data-anchor-id="assets-never-pass-through-the-zone-server">Assets never pass through the zone server</h2>
@@ -128,16 +314,71 @@ Tigris object storage                             0 USD
 <h2 class="anchored" data-anchor-id="what-is-unbuilt">What is unbuilt</h2>
 <p><code>ZONE_OBJ_GET</code> and <code>ZONE_OBJ_PUT</code> return <code>-ENOSYS</code>. See <code>zone-server-h2o</code> issues 32, 33 and 34.</p>
 <p><code>modules/multiplayer_fabric_asset</code> holds the C++ casync client and is not extracted from the Godot build.</p>
-<p>Neither <code>zone-backend</code> nor PostgreSQL is deployed on Fly, so both cost lines are estimates rather than measurements.</p>
+<p><code>zone-backend</code> is not deployed on Fly, so its 2.02 USD line is an estimate rather than a measurement.</p>
+<p>Uro’s move from CockroachDB to PostgreSQL is not done. <code>rfd/0103</code> decides it, and Uro’s migrations are not yet audited for CockroachDB-specific SQL.</p>
+</section>
+<section id="which-record-owns-which-fact" class="level2">
+<h2 class="anchored" data-anchor-id="which-record-owns-which-fact">Which record owns which fact</h2>
+<p>This RFD owns the deployment topology and its cost. It restates nothing else, because restating is what caused the error above.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Fact</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Repository and capability inventory</td>
+<td><code>rfd/0062</code></td>
+</tr>
+<tr class="even">
+<td>CockroachDB and mTLS role separation</td>
+<td><code>rfd/0006</code></td>
+</tr>
+<tr class="odd">
+<td>FoundationDB for zone state</td>
+<td><code>rfd/0075</code></td>
+</tr>
+<tr class="even">
+<td>Fly as the deployment target</td>
+<td><code>rfd/0089</code></td>
+</tr>
+<tr class="odd">
+<td>Uro packaging</td>
+<td><code>rfd/0090</code></td>
+</tr>
+<tr class="even">
+<td>Guest classes and the two stores</td>
+<td><code>rfd/0095</code></td>
+</tr>
+<tr class="odd">
+<td>Per-client bandwidth cap</td>
+<td><code>rfd/0100</code></td>
+</tr>
+<tr class="even">
+<td>Wire format and compression</td>
+<td><code>rfd/0101</code></td>
+</tr>
+<tr class="odd">
+<td>Deployment topology and cost</td>
+<td>this record</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="a-correction" class="level2">
+<h2 class="anchored" data-anchor-id="a-correction">A correction</h2>
+<p>An earlier revision of this RFD said Uro runs on PostgreSQL. It does not. It runs on CockroachDB.</p>
+<p>The error came from reading <code>config/runtime.exs</code>, seeing <code>adapter: Ecto.Adapters.Postgres</code>, and concluding the server from the adapter. CockroachDB speaks the PostgreSQL wire protocol, so that adapter is what an Elixir application uses to reach it.</p>
+<p>The same file names <code>CRDB_SNI</code>, <code>CRDB_CA_CERT</code>, <code>CRDB_CLIENT_CERT</code> and <code>CRDB_ADMIN_CERT</code>, which <code>rfd/0006</code> already documents. The evidence was present and was not read.</p>
 </section>
 <section id="sources" class="level2">
 <h2 class="anchored" data-anchor-id="sources">Sources</h2>
 <ul>
-<li><code>rfd/0062</code> and its <code>DETAILS.md</code>, the capability inventory</li>
-<li><code>rfd/0075</code>, FoundationDB over CockroachDB for zone state</li>
-<li><code>rfd/0090</code>, Uro as a Burrito-wrapped release</li>
+<li><a href="https://fly.io/docs/about/pricing/">Fly pricing</a>, about 5 USD per GB of RAM per month</li>
 <li><a href="https://www.tigrisdata.com/pricing/">Tigris pricing</a>, 0.02 USD per GB, 0 egress, 5 GB free</li>
-<li><code>zone-backend</code> <code>config/runtime.exs</code>, for <code>Ecto.Adapters.Postgres</code></li>
+<li><code>zone-backend</code> <code>config/runtime.exs</code>, for the <code>CRDB_*</code> variables</li>
 </ul>
 
 
@@ -145,7 +386,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -312,7 +553,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -535,7 +776,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -690,7 +931,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -849,7 +1090,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -1019,7 +1260,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -1211,7 +1452,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -1433,7 +1674,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -1520,7 +1761,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -1654,7 +1895,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -1900,7 +2141,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -1966,7 +2207,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -2122,7 +2363,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -2200,7 +2441,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -2240,7 +2481,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -2281,7 +2522,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -2321,7 +2562,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -2677,7 +2918,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -3085,88 +3326,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone server implementation</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The Godot <code>FabricZone</code> engine ran the zone server side. <code>FabricZone</code>/<code>FabricZoneJournal</code> stored its journal in local SQLite, so state did not share across zone-server processes. The project also needed memory safety against untrusted client input, which the existing engine did not give.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Build <code>zone-server-h2o</code>, a native <code>libh2o</code> and FoundationDB zone server. Build it with Fil-C for memory safety against untrusted client input. It fully replaces the Godot <code>FabricZone</code> engine on the server side. The client stays Godot, unchanged. Scope carries over from <code>FabricZone</code>/<code>FabricZoneJournal</code>, not a blank-slate design: entity slots, zone-to-zone migration, ghost/AOI state, and a durable journal. The team reimplements these against FDB instead of local SQLite, so they share state across zone-server processes.</p>
-<p>Physics and IK port from <code>sinew-mocap/solve</code>. Entity and ReBAC types generate from <code>lean-entity-packet</code> and <code>lean-rebac-core</code>, instead of hand-duplicating them across the retired engine, the new code, and any client-facing schema. The first working milestone is a WebTransport datagram round-trip plus a bare <code>ZoneTick</code>. The team builds everything else after that milestone works. <code>weftspun/h2o-bench-tpcc</code> gets archived once its reusable infrastructure and zonefabric design get ported. Its accepted TPC-C benchmark work stays unaffected, read-only, in place.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full context, consequences, and the list of ported RFDs: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-zone-server-h2o-replaces-godot-fabriczone.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>rfd/0082-zonefabric-scaling</code>, <code>rfd/0072-actor-lite-worker-pool</code>, and the other <code>rfd/0073</code>-<code>0081</code>, <code>0084</code> records carried forward from <code>weftspun/h2o-bench-tpcc</code>.</p>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The production zone server (<code>zone-server</code>, deployed as <code>multiplayer-fabric-zone</code> on Fly.io) is a boot scaffold today — OpenTelemetry init only, no WebTransport listener, no game logic (<code>project/main.gd</code>’s own <code>TODO(cycle-5)</code> comment). The real entity/simulation engine, <code>FabricZone</code>/<code>FabricZoneJournal</code>/<code>FabricMMOGZone</code>, exists as a working Godot C++ module in <code>V-Sekai-fire/multiplayer-fabric-build</code> (<code>godot/modules/multiplayer_fabric/</code>) but has never been wired into a deployed zone server. Separately, <code>weftspun/h2o-bench-tpcc</code> designed (RFD 0002, <code>discussion</code> state, never implemented) a <code>libh2o</code> + FoundationDB “zonefabric” scenario modeling the same hub/instanced-zone shape — entity authority via a Hilbert-curve partition, ghost/AOI interest management — independently of this org’s actual zone-server work.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>The Godot zone-server deployment (<code>zone-server</code> repo, Fly app <code>multiplayer-fabric-zone</code>) is retired once <code>zone-server-h2o</code> passes equivalent verification, in favor of the new implementation.</li>
-<li><code>zone-backend</code> (Uro) is unaffected: it still only does identity, zone directory, asset storage, and ReBAC, and still never sees per-entity data in the live session.</li>
-<li>CockroachDB’s scope stays account-level (identity, zones directory, avatars). The one exception under discussion — inventory/profile commits, previously headed toward CockroachDB via the progression hexagon’s SQLite “commit valve” — targets FDB instead, as the single write path for everything the zone server owns.</li>
-<li>The related, previously-unimplemented <code>weftspun/h2o-bench-tpcc</code> RFDs this decision carries forward are filed alongside this entry, dated the same day: zonefabric scaling, actor-lite worker pool, FDB selection, verification strategy, binary value encoding, async FDB callback chain, zstd compression, slotmap entity storage, macaroon/XDP security, feature ablation, and the PERT critical path.</li>
-</ul>
-</section>
-<section id="ported-rfds" class="level2">
-<h2 class="anchored" data-anchor-id="ported-rfds">Ported RFDs</h2>
-<p>The following RFDs in this repo carry forward <code>weftspun/h2o-bench-tpcc</code>’s zonefabric design, filed the same day as this decision:</p>
-<ul>
-<li><code>rfd/0082-zonefabric-scaling</code></li>
-<li><code>rfd/0072-actor-lite-worker-pool</code></li>
-<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
-<li><code>rfd/0081-three-layer-verification-strategy</code></li>
-<li><code>rfd/0074-binary-value-encoding-for-fdb</code></li>
-<li><code>rfd/0073-async-fdb-callback-chain</code></li>
-<li><code>rfd/0084-zstd-compression-for-zone-state</code></li>
-<li><code>rfd/0080-slotmap-entity-storage</code></li>
-<li><code>rfd/0076-macaroon-xdp-security</code></li>
-<li><code>rfd/0078-plausible-witness-dag-feature-ablation</code></li>
-<li><code>rfd/0077-pert-critical-path-zonefabric</code></li>
-</ul>
-</section>
-<section id="related-1" class="level2">
-<h2 class="anchored" data-anchor-id="related-1">Related</h2>
-<ul>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-<li><code>V-Sekai-fire/multiplayer-fabric-build</code>, <code>godot/modules/multiplayer_fabric/</code></li>
-<li><code>sinew-mocap/solve</code>, <code>lean-humanoid-rom</code>, <code>swing-twist-kusudama</code></li>
-<li><code>lean-entity-packet</code>, <code>lean-rebac-core</code></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:25:16 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 20:03:28 GMT</pubDate>
 </item>
 </channel>
 </rss>

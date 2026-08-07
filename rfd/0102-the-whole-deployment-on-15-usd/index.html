@@ -297,6 +297,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#the-default-map-ships-in-the-image" id="toc-the-default-map-ships-in-the-image" class="nav-link" data-scroll-target="#the-default-map-ships-in-the-image">The default map ships in the image</a></li>
   <li><a href="#upload-path" id="toc-upload-path" class="nav-link" data-scroll-target="#upload-path">Upload path</a></li>
   <li><a href="#what-is-unbuilt" id="toc-what-is-unbuilt" class="nav-link" data-scroll-target="#what-is-unbuilt">What is unbuilt</a></li>
+  <li><a href="#which-record-owns-which-fact" id="toc-which-record-owns-which-fact" class="nav-link" data-scroll-target="#which-record-owns-which-fact">Which record owns which fact</a></li>
+  <li><a href="#a-correction" id="toc-a-correction" class="nav-link" data-scroll-target="#a-correction">A correction</a></li>
   <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0102-the-whole-deployment-on-15-usd/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -334,7 +336,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="the-parts-that-were-missing" class="level2">
 <h2 class="anchored" data-anchor-id="the-parts-that-were-missing">The parts that were missing</h2>
-<p><code>zone-backend</code>, which is Uro, is a Phoenix and Elixir service for identity, the zone directory, and the planner. It runs on PostgreSQL through Ecto, with separate DML and DDL roles.</p>
+<p><code>zone-backend</code>, which is Uro, is a Phoenix and Elixir service for identity, the zone directory, and the planner. It runs on <strong>CockroachDB</strong>, with separate DML and DDL roles over mTLS client certificates, per <code>rfd/0006</code>.</p>
 <p><code>aria-storage</code> is the Elixir casync and desync library that <code>zone-backend</code> already uses.</p>
 <p>Neither appears in <code>rfd/0100</code>. Nor does any relational store, and <code>rfd/0095</code> depends on Uro for <code>/acl/check</code>, <code>/auth/script_key</code> and <code>/storage/manifest</code>.</p>
 </section>
@@ -350,14 +352,17 @@ ul.task-list li input[type="checkbox"] {
 Fly machine 2, shared-cpu-1x 256 MB, iad          2.02 USD
   |- zone-backend (Uro): identity, zone directory,
   |    planner, /acl/check, /storage/manifest
-  |- aria-storage: casync chunking on publish
-  +- 1 GB volume, PostgreSQL                      0.15 USD
+  +- aria-storage: casync chunking on publish
+
+  +- PostgreSQL, WAL to Tigris (see rfd/0103)   +1.45 USD
 
 Tigris object storage                             0 USD
   |- casync chunks and .caibx indexes             5 GB free
   |- fdbbackup target (disaster recovery)
   +- auto-replicated to Fly edge: this IS the CDN</code></pre>
-<p>FoundationDB holds zone state. PostgreSQL holds identity and the directory. <code>rfd/0075</code> chose FoundationDB over CockroachDB for zone state, and it did not remove Uro’s relational store.</p>
+<p>FoundationDB holds zone state. CockroachDB holds identity and the directory. <code>rfd/0075</code> chose FoundationDB over CockroachDB <strong>for zone state</strong>, and that scope never removed Uro’s own relational store.</p>
+<p>CockroachDB does not run on Fly here. Fly charges about 5 USD per GB of RAM per month. A <code>shared-cpu-1x</code> at 2 GB is therefore 11.11 USD, which is 74 percent of the budget for the database alone. That leaves nothing.</p>
+<p>CockroachDB Cloud Basic is on the blocklist, so the managed free tier is not available either. <code>rfd/0103</code> moves Uro to PostgreSQL for that reason, and it carries the measurements.</p>
 </section>
 <section id="assets-never-pass-through-the-zone-server" class="level2">
 <h2 class="anchored" data-anchor-id="assets-never-pass-through-the-zone-server">Assets never pass through the zone server</h2>
@@ -432,16 +437,71 @@ Tigris object storage                             0 USD
 <h2 class="anchored" data-anchor-id="what-is-unbuilt">What is unbuilt</h2>
 <p><code>ZONE_OBJ_GET</code> and <code>ZONE_OBJ_PUT</code> return <code>-ENOSYS</code>. See <code>zone-server-h2o</code> issues 32, 33 and 34.</p>
 <p><code>modules/multiplayer_fabric_asset</code> holds the C++ casync client and is not extracted from the Godot build.</p>
-<p>Neither <code>zone-backend</code> nor PostgreSQL is deployed on Fly, so both cost lines are estimates rather than measurements.</p>
+<p><code>zone-backend</code> is not deployed on Fly, so its 2.02 USD line is an estimate rather than a measurement.</p>
+<p>Uro’s move from CockroachDB to PostgreSQL is not done. <code>rfd/0103</code> decides it, and Uro’s migrations are not yet audited for CockroachDB-specific SQL.</p>
+</section>
+<section id="which-record-owns-which-fact" class="level2">
+<h2 class="anchored" data-anchor-id="which-record-owns-which-fact">Which record owns which fact</h2>
+<p>This RFD owns the deployment topology and its cost. It restates nothing else, because restating is what caused the error above.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Fact</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Repository and capability inventory</td>
+<td><code>rfd/0062</code></td>
+</tr>
+<tr class="even">
+<td>CockroachDB and mTLS role separation</td>
+<td><code>rfd/0006</code></td>
+</tr>
+<tr class="odd">
+<td>FoundationDB for zone state</td>
+<td><code>rfd/0075</code></td>
+</tr>
+<tr class="even">
+<td>Fly as the deployment target</td>
+<td><code>rfd/0089</code></td>
+</tr>
+<tr class="odd">
+<td>Uro packaging</td>
+<td><code>rfd/0090</code></td>
+</tr>
+<tr class="even">
+<td>Guest classes and the two stores</td>
+<td><code>rfd/0095</code></td>
+</tr>
+<tr class="odd">
+<td>Per-client bandwidth cap</td>
+<td><code>rfd/0100</code></td>
+</tr>
+<tr class="even">
+<td>Wire format and compression</td>
+<td><code>rfd/0101</code></td>
+</tr>
+<tr class="odd">
+<td>Deployment topology and cost</td>
+<td>this record</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="a-correction" class="level2">
+<h2 class="anchored" data-anchor-id="a-correction">A correction</h2>
+<p>An earlier revision of this RFD said Uro runs on PostgreSQL. It does not. It runs on CockroachDB.</p>
+<p>The error came from reading <code>config/runtime.exs</code>, seeing <code>adapter: Ecto.Adapters.Postgres</code>, and concluding the server from the adapter. CockroachDB speaks the PostgreSQL wire protocol, so that adapter is what an Elixir application uses to reach it.</p>
+<p>The same file names <code>CRDB_SNI</code>, <code>CRDB_CA_CERT</code>, <code>CRDB_CLIENT_CERT</code> and <code>CRDB_ADMIN_CERT</code>, which <code>rfd/0006</code> already documents. The evidence was present and was not read.</p>
 </section>
 <section id="sources" class="level2">
 <h2 class="anchored" data-anchor-id="sources">Sources</h2>
 <ul>
-<li><code>rfd/0062</code> and its <code>DETAILS.md</code>, the capability inventory</li>
-<li><code>rfd/0075</code>, FoundationDB over CockroachDB for zone state</li>
-<li><code>rfd/0090</code>, Uro as a Burrito-wrapped release</li>
+<li><a href="https://fly.io/docs/about/pricing/">Fly pricing</a>, about 5 USD per GB of RAM per month</li>
 <li><a href="https://www.tigrisdata.com/pricing/">Tigris pricing</a>, 0.02 USD per GB, 0 egress, 5 GB free</li>
-<li><code>zone-backend</code> <code>config/runtime.exs</code>, for <code>Ecto.Adapters.Postgres</code></li>
+<li><code>zone-backend</code> <code>config/runtime.exs</code>, for the <code>CRDB_*</code> variables</li>
 </ul>
 
 
