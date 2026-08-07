@@ -13,6 +13,11 @@ lives in its own folder, `rfd/NNNN-kebab-title/`, not a single flat
 file. Each RFD has a state: prediscussion, ideation, discussion,
 published, committed, abandoned, or moved.
 
+Each RFD's `README.md` has a `## Problem` section before `## Decision`.
+The `## Problem` section states, in one short paragraph, what is wrong
+or missing today, and why that matters. A reader must understand the
+problem before they read the decision.
+
 The repository writes prose in ASD-STE100 Simplified Technical
 English. Code and identifiers do not follow STE. STE applies to
 documents, comments, and user-visible text.
