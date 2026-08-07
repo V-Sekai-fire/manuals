@@ -19,14 +19,14 @@ Splitting by fact type removes that. Each relation below has a key that
 determines every non-key attribute, and none decomposes further without
 losing a join dependency.
 
-| Relation | Key | Determines |
-| --- | --- | --- |
-| `run` | `run_id` | host class, region, machine type, vcpus, memory, kernel |
-| `run_software` | `run_id, component` | version |
-| `latency` | `run_id, subject, operation` | median, p99, min, samples |
-| `throughput` | `run_id, concurrency` | ops, aborts, seconds |
-| `size` | `run_id, subject, metric` | bytes |
-| `capability` | `run_id, probe` | result, detail |
+| Relation       | Key                          | Determines                                              |
+| -------------- | ---------------------------- | ------------------------------------------------------- |
+| `run`          | `run_id`                     | host class, region, machine type, vcpus, memory, kernel |
+| `run_software` | `run_id, component`          | version                                                 |
+| `latency`      | `run_id, subject, operation` | median, p99, min, samples                               |
+| `throughput`   | `run_id, concurrency`        | ops, aborts, seconds                                    |
+| `size`         | `run_id, subject, metric`    | bytes                                                   |
+| `capability`   | `run_id, probe`              | result, detail                                          |
 
 `build.py` checks that no child row references a missing `run_id`, and
 fails rather than writing if one does.
@@ -67,13 +67,13 @@ ORDER BY median_ns;
 
 ## What each run is
 
-| `run_id` | What |
-| --- | --- |
+| `run_id`            | What                                                               |
+| ------------------- | ------------------------------------------------------------------ |
 | `fly-shared-1x-256` | Fly `shared-cpu-1x` 256 MB, `iad`, transport and capability probes |
-| `fly-shared-1x-1g` | Fly `shared-cpu-1x` 1 GB, `iad`, TPC-C scaling |
-| `fly-6pn-pair` | Two Fly machines in `iad` over 6PN |
-| `local-16core` | 16-core workstation, container on WSL2 |
-| `ci-container` | `zsh2o-ci` image, FoundationDB colocated |
+| `fly-shared-1x-1g`  | Fly `shared-cpu-1x` 1 GB, `iad`, TPC-C scaling                     |
+| `fly-6pn-pair`      | Two Fly machines in `iad` over 6PN                                 |
+| `local-16core`      | 16-core workstation, container on WSL2                             |
+| `ci-container`      | `zsh2o-ci` image, FoundationDB colocated                           |
 
 Every Fly app was destroyed after its run.
 
