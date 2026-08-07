@@ -265,10 +265,6 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../decisions.html"> 
-<span class="menu-text">Decisions</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
@@ -326,10 +322,13 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o game content, web client</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The Gyre is content, not a new architecture. It reskins the existing Hub-to-Field-to-Hub loop from <code>rfd/0045</code>: the Under-Market and the Commons stand in for the Hub, and each contract (mostly a scavenge, a hack, or an exploration run, occasionally a short combat) is a Field instance. The five hexagonal cores stay the systems of record; The Gyre supplies rooms, NPCs, items, and a Debt Clock framing.</p>
-<p>Target tone and party shape: exploration-forward, fewer combat encounters per session than a typical D&amp;D-paced game, a party of 2-4 Sparks, and recruitable NPC companions filling out a party below 4 humans. See “Party composition and tone” in <code>DETAILS.md</code>.</p>
-<p>The target client is a website, not the current SteamVR build, with GitHub OAuth login carrying save data. That needs a new Progression persistence adapter, not a change to the Combat, Loot, or Budgeter cores. This RFD does not commit to the OAuth/web design yet.</p>
-<p><code>zone-server-h2o</code> PR #5 lands the smallest slice of this loop as real code: a <code>the_gyre</code> MUD domain and a website mode selector. See “Smallest-loop implementation status” in <code>DETAILS.md</code> for what is verified and what is not. This RFD, not <code>zone-server-h2o</code> issue #4 (closed), is the design’s source of truth.</p>
+<p>The Gyre is game content. It is not a new game architecture.</p>
+<p>RFD 0045 defines a loop with two areas: a Hub area and a Field area. Players start in the Hub area. They travel to a Field area to do one task. Then they return to the Hub area. The Gyre reuses this same loop.</p>
+<p>In The Gyre, two Hub locations stand in for the Hub area: the Under-Market and the Commons. Each contract stands in for a Field task. A contract is one of these: a scavenge run, a hack run, an exploration run, or (sometimes) a short combat run.</p>
+<p>RFD 0045 also defines five core systems: Budgeter, Combat, Loot, Presence, and Progression. These five core systems stay as they are. The Gyre adds new content on top of them: rooms, non-player characters (NPCs), items, and a story frame called the Debt Clock.</p>
+<p>Party shape and tone: players explore more than they fight. Combat happens less often than in a typical Dungeons &amp; Dragons session. A party has 2 to 4 players. The RFD calls each player a Spark. If a party has fewer than 4 players, NPC companions can fill the empty spots. See “Party composition and tone” in <code>DETAILS.md</code> for more detail.</p>
+<p>Target client: the target client is a website, not the current SteamVR build. Players log in with GitHub OAuth. GitHub OAuth carries each player’s save data between sessions. This design needs one new part: a save-data adapter for the Progression core. It does not need changes to the Combat core, the Loot core, or the Budgeter core. This RFD does not yet decide the OAuth design or the website design.</p>
+<p>Implementation status: <code>zone-server-h2o</code> pull request #5 builds the smallest part of this loop as real code. It adds a <code>the_gyre</code> MUD domain. (A MUD is a multi-user, text-based game.) It also adds a mode selector on the website. See “Smallest-loop implementation status” in <code>DETAILS.md</code> for which parts are complete and which parts are not complete. This RFD is the source of truth for the design, not <code>zone-server-h2o</code> issue #4 (closed).</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -341,8 +340,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>: the Hub/Field loop and the five cores this content reuses.</li>
-<li><code>rfd/0028-hexagonal-core-ports-adapters</code>, <code>rfd/0043-hexagon-progression-core</code>: the shape a web/OAuth save adapter would follow.</li>
+<li><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>: defines the Hub/Field loop and the five core systems that The Gyre reuses.</li>
+<li><code>rfd/0028-hexagonal-core-ports-adapters</code>, <code>rfd/0043-hexagon-progression-core</code>: describe the shape a future web/OAuth save adapter would follow.</li>
 </ul>
 
 
