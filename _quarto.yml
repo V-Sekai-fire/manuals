@@ -1,6 +1,16 @@
 project:
   type: website
   output-dir: _site
+  # Quarto excludes README.md from rendering by default (it assumes a
+  # GitHub-viewed readme, not a site page). rfd/ uses README.md as each
+  # RFD's actual page, matching weftspun/request-for-discussion's own
+  # folder-per-RFD convention, so re-include those specifically.
+  render:
+    - "**/*.qmd"
+    - "**/*.ipynb"
+    - "**/*.md"
+    - "!**/README.md"
+    - "rfd/**/README.md"
 
 resources:
   - decisions/attachments
