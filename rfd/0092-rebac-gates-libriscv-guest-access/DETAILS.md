@@ -123,9 +123,10 @@ rather than inventing it.
 - **Fuel soundness.** If `check_expr` grants at fuel `n`, it grants at
   fuel `n + 1`. More search never reverses a grant, and a fuel-zero
   denial is therefore always conservative. This closes open question 4.
-- **Append-only monotonicity.** Adding an edge never turns a grant
-  into a denial. This is what makes a resolved capability table safe
-  to cache.
+- **Snapshot soundness.** A resolved capability table, built at read
+  version `V`, answers exactly as a graph walk at read version `V`
+  answers. This replaces an earlier append-only monotonicity theorem,
+  which `difference` makes false. See `rfd/0093`.
 - **Resolution equivalence.** The flat capability table, built at bind
   time, answers exactly as a full graph walk answers. This is the same
   theorem shape as `expand_index_equiv`, and it is what makes the
@@ -240,15 +241,34 @@ Resolve the graph once, at guest boot time and again at each grant,
 into a flat capability table. The hot path then reads that table by
 index. It never walks the graph.
 
-Two existing properties make this sound:
+Key that table by snapshot version, the way Zanzibar keys its cache.
+An earlier draft of this RFD justified the table with an append-only
+monotonicity argument, where a resolved grant stays valid forever.
+Google's own system rejects that argument, and `rfd/0093` records why:
+Zanzibar supports exclusion, so a later edge can revoke a grant.
 
-- The graph is append-only (open question 3). Authorization is
-  therefore monotonic. A resolved allow stays valid. Only a resolved
-  deny needs invalidation, and only when a grant adds an edge.
-- `godot-sandbox` already documents the same shape from the other
-  direction. Its trace-mode workaround produces a static allow-list
-  by hand. This design produces the same artifact from the graph
-  instead, which removes the manual review step.
+Zanzibar's answer is a timestamp, not a monotonicity claim:
+
+```
+We avoid reusing results evaluated from a different snapshot by
+encoding snapshot timestamps in cache keys.
+```
+
+`zone-server-h2o` already has the equivalent. FoundationDB is
+multi-version, and `zf_zonetick.c` already opens one transaction per
+tick, so every tick carries a read version. Key the resolved table by
+that read version. Correctness then rests on multi-version reads, not
+on a monotonicity property that `difference` breaks.
+
+Zanzibar also quantizes its timestamps to "a coarse granularity, such
+as one or ten seconds" so that recent checks share cache entries. A
+per-tick read version already gives this design the same effect, with
+no extra rounding.
+
+`godot-sandbox` documents the same artifact from the other direction.
+Its trace-mode workaround produces a static allow-list by hand. This
+design produces that artifact from the graph instead, which removes
+the manual review step.
 
 This also reframes open question 6. `godot-sandbox` documents that
 "Objects passed as function arguments remain accessible regardless of
@@ -274,7 +294,20 @@ are design work.
    `remove`, `revoke`, `erase`, and `delete` in that header returns
    nothing. The graph is append-only. Nobody can revoke a capability
    mid-session, and no rule covers a guest paused inside a `vmcall`
-   when its access disappears. Every over-broad grant stays permanent.
+   when its access disappears.
+
+   Zanzibar shows the shape of the fix. Leopard's incremental layer
+   stores each update as a `(T, s, e, t, d)` tuple. The paper defines
+   the last two fields:
+
+   ```
+   t is the timestamp of the update and d is a deletion marker
+   ```
+
+   A query merges every update at or below its own timestamp on top
+   of the offline index. So revocation is a tombstone plus a version
+   merge, and the Lean migration above must carry both. An
+   append-only graph is not the design. It is the current gap.
 4. **Fuel has no owner.** `check_expr` and `check_base` return `false`
    at zero fuel. That fails closed, which is correct. But a legitimate
    deep delegation chain then denies silently, and authorization
