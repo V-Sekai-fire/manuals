@@ -34,6 +34,10 @@ existing MADR files into `rfd/` gradually; a MADR file gains a
 one-line pointer to its new `rfd/NNNN` home once migrated, instead of
 being deleted.
 
+A new RFD takes the next unused four-digit number under `rfd/`; check
+`rfd.html`'s live listing (sorted newest first), not any other repo's
+own numbering, for what is already taken.
+
 ## References
 
 - RFD style: `weftspun/request-for-discussion`, `0000-conventions`
@@ -42,4 +46,4 @@ being deleted.
 
 ## Related
 
-See `rfd/README.md` for the index and the numbering rule.
+See `rfd.qmd` (rendered as `rfd.html`) for the live, sortable index.
