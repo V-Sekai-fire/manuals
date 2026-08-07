@@ -18,7 +18,7 @@ exists either. `zone-backend` needs its own real production build,
 not a dev image and not a dependency on an archived repo.
 
 `config/config.exs` used a `COMPILE_PHASE` environment flag
-(`Uro.Config.Helpers.get_env/2`) so the Docker *build* step could run
+(`Uro.Config.Helpers.get_env/2`) so the Docker _build_ step could run
 `mix compile` without real secrets present: `iex -S mix` re-evaluates
 `config.exs` on every invocation, so the container's actual boot
 command re-ran `mix` a second time with `COMPILE_PHASE=false` and real
