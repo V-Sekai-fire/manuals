@@ -1,7 +1,7 @@
 ---
 title: "RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell"
 rfd: "0085"
-state: prediscussion
+state: discussion
 scope: zone-server-h2o game content, web client
 ---
 
@@ -24,14 +24,18 @@ GitHub OAuth login carrying save data. That needs a new Progression
 persistence adapter, not a change to the Combat, Loot, or Budgeter
 cores. This RFD does not commit to the OAuth/web design yet.
 
-This RFD does not change any code in `zone-server-h2o`; its working
-copy is that repo's issue [#4](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o/issues/4).
+`zone-server-h2o` PR #5 lands the smallest slice of this loop as real
+code: a `the_gyre` MUD domain and a website mode selector. See
+"Smallest-loop implementation status" in `DETAILS.md` for what is
+verified and what is not. This RFD, not `zone-server-h2o` issue #4
+(closed), is the design's source of truth.
 
 ## References
 
 - Room graph, NPCs, contract catalog, item table, session pacing,
-  party/tone detail, and open questions: `DETAILS.md`
-- Source design: `zone-server-h2o` issue #4
+  party/tone detail, implementation status, and open questions:
+  `DETAILS.md`
+- Implementation: `zone-server-h2o` PR #5
 
 ## Related
 

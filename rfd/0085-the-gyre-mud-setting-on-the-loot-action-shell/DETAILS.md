@@ -218,6 +218,37 @@ A session that skips Drone Decommission entirely, or takes its
 bypass, sees zero required combat encounters across the full 120
 minutes. A session that takes it head-on sees exactly one.
 
+## Smallest-loop implementation status
+
+`zone-server-h2o` PR #5 lands the smallest real slice of this loop:
+two rooms only (Decanting Floor, Splicer's Den), pure exploration, no
+items or NPCs. Not the full room graph or contract catalog above;
+those stay design, not yet built.
+
+The MUD engine (`mud/guest/mud_guest.cpp`) previously served one
+hardcoded setting, Middleham. The PR adds a `domain` boot field
+(`"middleham"` default, `"the_gyre"` new) rather than a new engine:
+`MiddlehamStateMachine` keeps its Middleham behavior unchanged for the
+default domain, and a `gyre_room_templates()` table plus a
+`DOMAIN_THE_GYRE` branch in the constructor, `clone_rooms()`, and
+`objective_complete()` cover the new one. `mud/web/index.html`/`mud.js`
+get a mode selector, one `localStorage` session id per mode.
+
+Verified: a native (non-riscv64) link of `mud_guest.cpp` driving
+`mud_boot()`/`mud_step()` through the whole Gyre loop, real narration
+text, `objective_complete()` true after both rooms are visited
+(`mud/guest/test/gyre_smoke_test.cpp`). The client change (mode
+selector, per-domain session id, `domain` field on the wire) was
+driven with real Playwright, both Chromium and Camoufox, against a
+throwaway local stub, before the real spec (`mud/web/test/gyre.spec.ts`)
+was written.
+
+Not verified: a `riscv64-musl` + `libriscv` build/run of the guest
+code (no cross toolchain available when this was written). No real
+FDB/H2O build or deploy. `gyre.spec.ts` needs a real `MUD_BASE_URL`
+deployment to go green, matching `mud.spec.ts`'s own red-first
+convention; it has not run against one.
+
 ## Open questions
 
 - How does GitHub OAuth login map to a player profile the Progression
