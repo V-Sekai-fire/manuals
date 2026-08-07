@@ -1,22 +1,9 @@
 [
   {
-    "listing": "/pages/changelog.html",
-    "items": [
-      "/changelog/2026/20260630-deck-log.html",
-      "/changelog/2026/20260629-deck-log.html",
-      "/changelog/2026/20260622-deck-log.html",
-      "/changelog/2026/20260612-deck-log.html",
-      "/changelog/2026/20260606-deck-log.html",
-      "/changelog/2026/20260507-deck-log.html",
-      "/changelog/2026/20260506-deck-log.html",
-      "/changelog/2026/20260425-deck-log.html",
-      "/changelog/2026/20260421-deck-log.html"
-    ]
-  },
-  {
     "listing": "/pages/rfd.html",
     "items": [
-      "/rfd/0103-postgres-wal-to-s3-for-uro/index.html",
+      "/rfd/0104-hypothesis-1000-concurrent/index.html",
+      "/rfd/0103-uro-on-ecto-foundationdb/index.html",
       "/rfd/0102-the-whole-deployment-on-15-usd/index.html",
       "/rfd/0101-zstd-delta-on-the-wire/index.html",
       "/rfd/0100-tick-rate-send-rate-and-the-bone-budget/index.html",
@@ -120,6 +107,20 @@
       "/rfd/0002-taskweft-value-narrowing-primitives-and-refs/index.html",
       "/rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.html",
       "/rfd/0000-conventions/index.html"
+    ]
+  },
+  {
+    "listing": "/pages/changelog.html",
+    "items": [
+      "/changelog/2026/20260630-deck-log.html",
+      "/changelog/2026/20260629-deck-log.html",
+      "/changelog/2026/20260622-deck-log.html",
+      "/changelog/2026/20260612-deck-log.html",
+      "/changelog/2026/20260606-deck-log.html",
+      "/changelog/2026/20260507-deck-log.html",
+      "/changelog/2026/20260506-deck-log.html",
+      "/changelog/2026/20260425-deck-log.html",
+      "/changelog/2026/20260421-deck-log.html"
     ]
   }
 ]
