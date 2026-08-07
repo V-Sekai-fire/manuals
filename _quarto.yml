@@ -102,6 +102,13 @@ project:
     - "rfd/0090-uro-burrito-release/README.md"
     - "rfd/0091-the-gyre-mud-domain-and-mode-selector/README.md"
     - "rfd/0092-rebac-gates-libriscv-guest-access/README.md"
+    - "rfd/0093-compile-taskweft-to-linear-automata/README.md"
+    - "rfd/0094-minimum-ugc-game-loop-guest-composition/README.md"
+    - "rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/README.md"
+    - "rfd/0096-guest-transport-measured-on-fly/README.md"
+    - "rfd/0097-pubsub-belongs-in-userspace/README.md"
+    - "rfd/0098-rollback-snapshot-budget/README.md"
+    - "rfd/0099-server-authority-on-fly/README.md"
 
 resources:
   - decisions/attachments
