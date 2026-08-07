@@ -22,29 +22,41 @@ reason or a path a reviewer could audit later.
 ## Decision
 
 Gate guest access through ReBAC, not five separate callbacks, and not
-a two-tier core/user split like `godot-luau-script`'s. Reuse the
-working ReBAC engine already vendored in this ecosystem:
-`thirdparty/taskweft-nif/standalone/tw_rebac.hpp`'s `TwReBACGraph`, or
-its Lean-proved cousin, `lean-rebac-core`'s `ReBAC.lean`.
+a two-tier core/user split like `godot-luau-script`'s.
+
+Neither existing engine fits as it stands. `lean-rebac-core`'s
+`rebacCheck` carries real Lean proofs, but it is a five-rank total
+order, which is a tier model. `tw_rebac.hpp` has the right
+relationship-graph shape, but it carries no proofs.
+
+So extend `lean-rebac-core` in Lean to the relationship-graph shape,
+and generate the C from it. This keeps `rfd/0083`'s existing rule:
+ReBAC types generate from `lean-rebac-core`, not hand-duplicated per
+language. `tw_rebac.hpp` becomes the reference shape and the
+differential-test oracle, not the shipped engine. `DETAILS.md` lists
+the theorems this migration must carry.
 
 Model each guest `libriscv::Machine` instance as a ReBAC subject.
 Model each of `godot-sandbox`'s five gated things (a class, an object,
 a method, a property, a resource path) as a ReBAC object. Replace each
 boolean callback with one `check_expr`/`can()` call: does this guest
 subject have `HAS_CAPABILITY` (or a defined computed relation) to this
-object. Grant access by adding edges (`HAS_CAPABILITY`, `CONTROLS`,
-`DELEGATED_TO`), not by writing a new callback per axis.
+object.
+
+Split the graph into a use plane and an admin plane. On the use plane
+a guest asks whether it may reach a capability. On the admin plane a
+principal asks whether it may add an edge. A `CAN_GRANT` relation
+governs the admin plane. The orchestrator runs every admin check, and
+a guest never reaches that plane.
 
 Also gate `libriscv`'s own execution-budget primitives (instruction-
 counted timeout, pause/resume) as ReBAC actions, not hardcoded
-constants. Budget extension becomes an authorized relationship: a
-supervisor or owner grants more gas, checked the same way as any
-other capability.
+constants. Budget extension becomes an authorized relationship.
 
 ## References
 
-- Full mapping table, the `godot-sandbox` API this replaces, and open
-  gaps: `DETAILS.md`
+- Engine comparison, mapping table, the `godot-sandbox` API this
+  replaces, and ten open questions: `DETAILS.md`
 - `v-sekai-multiplayer-fabric/zone-server-h2o`,
   `thirdparty/taskweft-nif/standalone/tw_rebac.hpp`
 - `sinew-mocap/solve` org's `lean-rebac-core`, `Rebac/core/ReBAC.lean`
