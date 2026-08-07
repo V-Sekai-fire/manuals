@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>RFD 0101: zstd delta on the wire, and the packet stays as it is – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../pages/changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/rfd.html"> 
+    <a class="nav-link" href="../../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/references.html"> 
+    <a class="nav-link" href="../../pages/references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,27 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#prior-art-in-this-project" id="toc-prior-art-in-this-project" class="nav-link" data-scroll-target="#prior-art-in-this-project">Prior art in this project</a></li>
+  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#decisions" id="toc-decisions" class="nav-link" data-scroll-target="#decisions">Decisions</a>
+  <ul class="collapse">
+  <li><a href="#do-not-change-the-packet" id="toc-do-not-change-the-packet" class="nav-link" data-scroll-target="#do-not-change-the-packet">1. Do not change the packet</a></li>
+  <li><a href="#delta-against-the-last-acked-tick-not-the-previous-tick" id="toc-delta-against-the-last-acked-tick-not-the-previous-tick" class="nav-link" data-scroll-target="#delta-against-the-last-acked-tick-not-the-previous-tick">2. Delta against the last acked tick, not the previous tick</a></li>
+  <li><a href="#level-1-for-the-send-path" id="toc-level-1-for-the-send-path" class="nav-link" data-scroll-target="#level-1-for-the-send-path">3. Level 1 for the send path</a></li>
+  <li><a href="#the-cpu-cost-fits-and-it-is-per-client" id="toc-the-cpu-cost-fits-and-it-is-per-client" class="nav-link" data-scroll-target="#the-cpu-cost-fits-and-it-is-per-client">4. The CPU cost fits, and it is per client</a></li>
+  </ul></li>
+  <li><a href="#what-this-does-not-fix" id="toc-what-this-does-not-fix" class="nav-link" data-scroll-target="#what-this-does-not-fix">What this does not fix</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0101-zstd-delta-on-the-wire/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +312,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">RFD 0101: zstd delta on the wire, and the packet stays as it is</h1>
 </div>
 
 
@@ -370,109 +329,161 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
+<p><em><a href="../../index.html">Manuals</a> › RFD 0101: zstd delta on the wire, and the packet stays as it is</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0100</code> found that a rotation-only bone carries 24 bytes of unused position in <code>xr_grid_entity_packet_t</code>. Only the root and the hips use translation, so 54 of 56 entities per avatar pay for a field they never set.</p>
+<p>It left the fix open, as either a second packet type or a flag on the existing one. Both are format changes, and a format change costs <code>lean-entity-packet</code>’s generated codec and its golden vectors.</p>
+<p>There is a third option that <code>rfd/0100</code> did not consider. Compress the frame, and use earlier state as a dictionary. Unused position bytes are identical on every tick, so a delta should remove them without any format change at all.</p>
+<p>This RFD measures that option.</p>
+</section>
+<section id="prior-art-in-this-project" class="level2">
+<h2 class="anchored" data-anchor-id="prior-art-in-this-project">Prior art in this project</h2>
+<p>Godot took the same decision, and the comparison is already recorded.</p>
+<p><code>godotengine/godot-proposals#13404</code> proposed delta encoding for patch PCK files, first with bsdiff plus zstd. The author then compared it against zstd’s own <code>--patch-from</code>, which is dictionary delta.</p>
+<p>zstd won, and <code>godotengine/godot#112011</code> shipped it in Godot 4.6. The stated reasons were 2 to 3 percent better size, far lower compression memory, and no vendored bsdiff fork to maintain.</p>
+<p>One detail in that thread is worth repeating. The first measurement showed zstd was slower, and it was wrong. <code>CryptoCore::md5</code> checksumming dominated the timing and ran through the whole file again, which also hurt the cache. Switching to zstd’s own checksum reversed the result.</p>
+<p>The project already runs zstd for casync chunk compression, so this adds no dependency.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>A probe built one tick of realistic state and compressed it.</p>
+<ul>
+<li>8 avatars, 56 entities each, 100 bytes per <code>XR_PACKET_SIZE</code>, so 44800 bytes raw per tick.</li>
+<li>Root and hips translate, walking forward with a vertical bob.</li>
+<li>The other 54 bones rotate only, and their position never changes.</li>
+<li>400 ticks, sent at 20 Hz.</li>
+</ul>
+<p>Three dictionary strategies were compared: none, the previous tick, and a baseline that lags by 2, 4 or 8 ticks. The lagging baseline models delta against the last ACKED tick, which is what an unreliable datagram transport requires.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 19%">
+<col style="width: 18%">
+<col style="width: 16%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
+<tr class="header">
+<th>Strategy</th>
+<th>Bytes per tick</th>
+<th>Rate at 20 Hz</th>
+<th>Compress CPU</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="../changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>Raw, no compression</td>
+<td>44800</td>
+<td>7168.0 kbps</td>
+<td>none</td>
 </tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="../changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
+<tr class="even">
+<td>zstd level 1, no dictionary</td>
+<td>3727</td>
+<td>596.3 kbps</td>
+<td>42.4 us</td>
 </tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="../changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
+<tr class="odd">
+<td>zstd level 3, no dictionary</td>
+<td>3239</td>
+<td>518.3 kbps</td>
+<td>44.8 us</td>
 </tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="../changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
+<tr class="even">
+<td>zstd L1, prefix is previous tick</td>
+<td>2980</td>
+<td>476.9 kbps</td>
+<td>63.3 us</td>
 </tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="../changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
+<tr class="odd">
+<td>zstd L3, prefix is previous tick</td>
+<td>2774</td>
+<td>443.9 kbps</td>
+<td>66.5 us</td>
 </tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="../changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
+<tr class="even">
+<td>zstd L1, prefix is acked minus 2</td>
+<td>3014</td>
+<td>482.3 kbps</td>
+<td>68.0 us</td>
 </tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="../changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
+<tr class="odd">
+<td>zstd L1, prefix is acked minus 4</td>
+<td>3015</td>
+<td>482.5 kbps</td>
+<td>68.2 us</td>
 </tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1786130643039" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="../changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
+<tr class="even">
+<td>zstd L1, prefix is acked minus 8</td>
+<td>3006</td>
+<td>480.9 kbps</td>
+<td>63.9 us</td>
 </tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1786130643038" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="../changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<p>Client-side decompression is 17.3 us, and the result verifies as exact.</p>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="do-not-change-the-packet" class="level3">
+<h3 class="anchored" data-anchor-id="do-not-change-the-packet">1. Do not change the packet</h3>
+<p>zstd at level 3 with a previous-tick prefix takes 44800 bytes to 2774, which is 16.1 times smaller.</p>
+<p>Compare that against <code>rfd/0100</code>’s hand-packed alternative. That design sends 384 bytes per avatar, so 8 avatars at 20 Hz cost 491.5 kbps. Compressing the unmodified 100-byte packets costs 443.9 kbps.</p>
+<p>So compression beats hand-packing, and it needs no format change. The second packet type and the flag are both unnecessary.</p>
+<p><code>lean-entity-packet</code>’s generated codec and its golden vectors stay untouched. That is the point.</p>
+</section>
+<section id="delta-against-the-last-acked-tick-not-the-previous-tick" class="level3">
+<h3 class="anchored" data-anchor-id="delta-against-the-last-acked-tick-not-the-previous-tick">2. Delta against the last acked tick, not the previous tick</h3>
+<p>An unreliable datagram can be lost. A delta against the previous tick cannot be decoded when the previous tick never arrived.</p>
+<p>The standard answer is to delta against a baseline that the client acknowledges. The concern is that an older baseline produces a bigger delta.</p>
+<p>Measurement says the concern is small. A baseline lagging 2, 4 or 8 ticks costs 3014, 3015 and 3006 bytes, against 2980 bytes for the previous tick. That is approximately 1 percent.</p>
+<p>So loss tolerance is close to free. Use the acked baseline.</p>
+<p>The lag does not grow the delta because the redundancy this exploits is mostly WITHIN a frame, not between frames. 54 bones times 24 zero bytes repeat inside one tick, and they repeat whether the baseline is 1 tick old or 8.</p>
+</section>
+<section id="level-1-for-the-send-path" class="level3">
+<h3 class="anchored" data-anchor-id="level-1-for-the-send-path">3. Level 1 for the send path</h3>
+<p>Level 3 saves 206 bytes per tick against level 1, which is 33 kbps, and costs 3.2 us more.</p>
+<p>Take level 1 for now. Revisit it only with a CPU measurement on <code>shared-cpu-1x</code>, because <code>rfd/0096</code> showed that machine shape punishes CPU-bound choices in ways a workstation does not show.</p>
+</section>
+<section id="the-cpu-cost-fits-and-it-is-per-client" class="level3">
+<h3 class="anchored" data-anchor-id="the-cpu-cost-fits-and-it-is-per-client">4. The CPU cost fits, and it is per client</h3>
+<p>Each client acknowledges different ticks, so each client needs its own delta. The cost is per client, not per zone.</p>
+<p>At 68 us per tick and 20 Hz, one client costs 1.36 ms of CPU per second, which is 0.14 percent of a core. Thirteen concurrent clients cost 1.8 percent.</p>
+<p>That fits on <code>shared-cpu-1x</code>. Confirm it there before relying on it, since every number in this RFD came from a development machine.</p>
+</section>
+</section>
+<section id="what-this-does-not-fix" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-fix">What this does not fix</h2>
+<p>Compression does not solve the cost cap in <code>rfd/0100</code>.</p>
+<p>At 443.9 kbps a client uses 0.1997 GB per hour. A 548 GB monthly budget then buys 2744 client-hours, which is 3.8 concurrent users running continuously.</p>
+<p><code>rfd/0100</code> measured 2.6 concurrent users at 648.6 kbps. Compression moves that to 3.8. It does not reach 40.</p>
+<p>So interest management, the send rate, and the voice bitrate all remain load-bearing. zstd is a large constant-factor win, and the cost problem needs an order of magnitude.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p><code>rfd/0100</code>’s open question is closed. The wire format does not change.</p>
+<p>The send path gains a compression step with a per-client baseline, and the acknowledgement of that baseline becomes part of the protocol.</p>
+<p>The server holds one baseline frame per client. At 44800 bytes per frame and 13 clients that is 582400 bytes, which is small against <code>rfd/0096</code>’s measured 212188 kB of usable memory.</p>
+<p>Compression runs per client, so its cost grows with client count rather than with zone size.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<p>Probe source is <code>wire.c</code> beside this RFD.</p>
+<ul>
+<li><a href="https://github.com/godotengine/godot-proposals/issues/13404">godotengine/godot-proposals#13404</a>, the bsdiff against zstd comparison</li>
+<li><a href="https://github.com/godotengine/godot/pull/112011">godotengine/godot#112011</a>, which shipped zstd delta in Godot 4.6</li>
+<li><code>src/gen/xr_grid_entity_packet.h</code>, for <code>XR_PACKET_SIZE</code> and the field layout</li>
+<li><code>rfd/0100</code>, for the 56-entity avatar and the cost cap</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -894,7 +905,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/pages/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0101-zstd-delta-on-the-wire/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

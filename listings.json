@@ -2,6 +2,8 @@
   {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0102-the-whole-deployment-on-15-usd/index.html",
+      "/rfd/0101-zstd-delta-on-the-wire/index.html",
       "/rfd/0100-tick-rate-send-rate-and-the-bone-budget/index.html",
       "/rfd/0099-server-authority-on-fly/index.html",
       "/rfd/0098-rollback-snapshot-budget/index.html",
