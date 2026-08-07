@@ -6,6 +6,8 @@ tier: proof of concept
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0039](../rfd/0039-hexagon-budgeter-core/README.md).
+
 ## Context and Problem Statement
 
 The slice needs graceful degradation under load on the mobile floor, dialing quality knobs per frame so the player stays inside the experience during a burst.

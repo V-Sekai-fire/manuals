@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0033](../rfd/0033-core-contract-pure-reducer-byte-state/README.md).
+
 ## Context and Problem Statement
 
 Every hexagonal core ([the hexagonal decision](20260610-hexagonal-core-ports-adapters.md)) needs to be replayable, snapshot-able, fixture-testable, and transport-agnostic. A core that hides mutable state behind methods defeats all four.

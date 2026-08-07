@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0038](../rfd/0038-genre-generic-naming-no-trademarks/README.md).
+
 ## Context and Problem Statement
 
 The core loop draws on a trademarked action RPG. The project reuses none of that game's trademarks, so the docs and the game need a neutral vocabulary that carries the mechanics without the marks.

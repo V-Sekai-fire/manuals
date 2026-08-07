@@ -6,6 +6,8 @@ tier: proof of concept
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0040](../rfd/0040-hexagon-combat-core/README.md).
+
 ## Context and Problem Statement
 
 The combat concern — combo timing, hit validation, the enemy spawn-invulnerability window, and damage — needs to be deterministic and testable with no server and no headset. Per [the hexagonal decision](20260610-hexagonal-core-ports-adapters.md) it becomes a core behind narrow ports.

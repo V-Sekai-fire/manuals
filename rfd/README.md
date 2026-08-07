@@ -83,3 +83,16 @@ elsewhere.
 | [0029](0029-cassie-desktop-curvenet-authoring/README.md)                 | CASSIE desktop curvenet authoring for content, no Blender                     | published     |
 | [0030](0030-cicd-runners-as-queueing-system/README.md)                   | CI/CD runners operate as a finite queueing system                             | published     |
 | [0031](0031-content-build-merged-double-precision-mcp/README.md)         | Content creation in a single merged double-precision build via the editor MCP | published     |
+| [0032](0032-core-codegen-lean-slang/README.md)                           | Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)                  | published     |
+| [0033](0033-core-contract-pure-reducer-byte-state/README.md)             | Cores as pure reducers over byte-serialized state                             | published     |
+| [0034](0034-deterministic-cores-integer-seeded-rng/README.md)            | Deterministic cores via r128 fixed-point and seeded RNG                       | published     |
+| [0035](0035-first-party-curated-content-zone-baker-budgets/README.md)    | First-party curated content with zone-baker budgets                           | published     |
+| [0036](0036-forward-renderer-baked-light/README.md)                      | Forward renderer with baked light for the mobile floor                        | published     |
+| [0037](0037-generated-behavior-sandboxed-riscv/README.md)                | Generated behavior runs as sandboxed RISC-V                                   | published     |
+| [0038](0038-genre-generic-naming-no-trademarks/README.md)                | Genre-generic naming, no trademarked proper nouns                             | published     |
+| [0039](0039-hexagon-budgeter-core/README.md)                             | Budgeter hexagon — core, ports, and adapters                                  | published     |
+| [0040](0040-hexagon-combat-core/README.md)                               | Combat hexagon — core, ports, and adapters                                    | published     |
+| [0041](0041-hexagon-loot-core/README.md)                                 | Loot hexagon — core, ports, and adapters                                      | published     |
+| [0042](0042-hexagon-presence-core/README.md)                             | Presence hexagon — wrapping the existing presence stack                       | published     |
+| [0043](0043-hexagon-progression-core/README.md)                          | Progression hexagon — core, ports, and adapters                               | published     |
+| [0044](0044-lean4-kernel-cores-flat-c-host-adapters/README.md)           | Lean 4 build-time kernel cores with flat-C host adapters                      | published     |

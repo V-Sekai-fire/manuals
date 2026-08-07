@@ -6,6 +6,8 @@ tier: proof of concept
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0041](../rfd/0041-hexagon-loot-core/README.md).
+
 ## Context and Problem Statement
 
 Loot generation and first-touch contention need to be deterministic and replayable, so a drop and its winner reproduce from the seed and the receipt order.

@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0037](../rfd/0037-generated-behavior-sandboxed-riscv/README.md).
+
 ## Context and Problem Statement
 
 Enemy and ability behavior may be generated, and running generated logic in-process risks the whole instance. The combat hexagon's `behavior_source` port needs a safe implementation.
