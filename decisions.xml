@@ -23,7 +23,7 @@
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Actor-lite worker pool architecture for zone-server-h2o</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0072-actor-lite-worker-pool/README.md">rfd/0072</a>.</p>
+<p>Moved to <a href="../rfd/0072-actor-lite-worker-pool/README.html">rfd/0072</a>.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0005-actor-lite-architecture.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
@@ -233,7 +233,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Async FDB callback chain on the libh2o event loop</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0073-async-fdb-callback-chain/README.md">rfd/0073</a>.</p>
+<p>Moved to <a href="../rfd/0073-async-fdb-callback-chain/README.html">rfd/0073</a>.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0011-async-fdb-callback-chain.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
@@ -303,7 +303,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Binary value encoding for FDB values</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0074-binary-value-encoding-for-fdb/README.md">rfd/0074</a>.</p>
+<p>Moved to <a href="../rfd/0074-binary-value-encoding-for-fdb/README.html">rfd/0074</a>.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0010-binary-value-encoding.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
@@ -362,7 +362,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › FoundationDB selection over CockroachDB for zone-server-h2o state</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.md">rfd/0075</a>.</p>
+<p>Moved to <a href="../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html">rfd/0075</a>.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0006-fdb-selection.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
@@ -429,7 +429,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Macaroon + eBPF/XDP security fabric</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0076-macaroon-xdp-security/README.md">rfd/0076</a>.</p>
+<p>Moved to <a href="../rfd/0076-macaroon-xdp-security/README.html">rfd/0076</a>.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0018-macaroon-xdp-security.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
@@ -830,7 +830,7 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › PERT critical path for zonefabric implementation</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0077-pert-critical-path-zonefabric/README.md">rfd/0077</a>.</p>
+<p>Moved to <a href="../rfd/0077-pert-critical-path-zonefabric/README.html">rfd/0077</a>.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0020-pert-critical-path.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
@@ -1391,7 +1391,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.md">rfd/0083</a>.</p>
+<p>Moved to <a href="../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html">rfd/0083</a>.</p>
 </blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
@@ -1440,7 +1440,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.md">rfd/0079</a>.</p>
+<p>Moved to <a href="../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html">rfd/0079</a>.</p>
 </blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
@@ -1505,7 +1505,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Budgeter hexagon — core, ports, and adapters</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0039-hexagon-budgeter-core/README.md">rfd/0039</a>.</p>
+<p>Moved to <a href="../rfd/0039-hexagon-budgeter-core/README.html">rfd/0039</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1556,7 +1556,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › CASSIE desktop curvenet authoring for content, no Blender</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0029-cassie-desktop-curvenet-authoring/README.md">rfd/0029</a>.</p>
+<p>Moved to <a href="../rfd/0029-cassie-desktop-curvenet-authoring/README.html">rfd/0029</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1605,7 +1605,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › CI/CD runners operate as a finite queueing system</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0030-cicd-runners-as-queueing-system/README.md">rfd/0030</a>.</p>
+<p>Moved to <a href="../rfd/0030-cicd-runners-as-queueing-system/README.html">rfd/0030</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1683,7 +1683,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Combat hexagon — core, ports, and adapters</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0040-hexagon-combat-core/README.md">rfd/0040</a>.</p>
+<p>Moved to <a href="../rfd/0040-hexagon-combat-core/README.html">rfd/0040</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1738,7 +1738,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Content creation in a single merged double-precision build via the editor MCP</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0031-content-build-merged-double-precision-mcp/README.md">rfd/0031</a>.</p>
+<p>Moved to <a href="../rfd/0031-content-build-merged-double-precision-mcp/README.html">rfd/0031</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1789,7 +1789,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0032-core-codegen-lean-slang/README.md">rfd/0032</a>.</p>
+<p>Moved to <a href="../rfd/0032-core-codegen-lean-slang/README.html">rfd/0032</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1857,7 +1857,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Cores as pure reducers over byte-serialized state</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0033-core-contract-pure-reducer-byte-state/README.md">rfd/0033</a>.</p>
+<p>Moved to <a href="../rfd/0033-core-contract-pure-reducer-byte-state/README.html">rfd/0033</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1919,7 +1919,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Deterministic cores via r128 fixed-point and seeded RNG</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0034-deterministic-cores-integer-seeded-rng/README.md">rfd/0034</a>.</p>
+<p>Moved to <a href="../rfd/0034-deterministic-cores-integer-seeded-rng/README.html">rfd/0034</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -1971,7 +1971,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › First-party curated content with zone-baker budgets</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0035-first-party-curated-content-zone-baker-budgets/README.md">rfd/0035</a>.</p>
+<p>Moved to <a href="../rfd/0035-first-party-curated-content-zone-baker-budgets/README.html">rfd/0035</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -2021,7 +2021,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Forward renderer with baked light for the mobile floor</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0036-forward-renderer-baked-light/README.md">rfd/0036</a>.</p>
+<p>Moved to <a href="../rfd/0036-forward-renderer-baked-light/README.html">rfd/0036</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -2076,7 +2076,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Generated behavior runs as sandboxed RISC-V</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0037-generated-behavior-sandboxed-riscv/README.md">rfd/0037</a>.</p>
+<p>Moved to <a href="../rfd/0037-generated-behavior-sandboxed-riscv/README.html">rfd/0037</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
@@ -2125,7 +2125,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Genre-generic naming, no trademarked proper nouns</em></p>
 <p><strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0038-genre-generic-naming-no-trademarks/README.md">rfd/0038</a>.</p>
+<p>Moved to <a href="../rfd/0038-genre-generic-naming-no-trademarks/README.html">rfd/0038</a>.</p>
 </blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>

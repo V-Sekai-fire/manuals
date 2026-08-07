@@ -311,7 +311,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p>The fabric’s reliability classes (<a href="../0049-fabric-channels-as-reliability-classes/README.md">fabric channels</a>) run over ENet for the local slice. WebTransport carries the same classes for the browser and Quest paths over one QUIC connection per client. The picoquic WebTransport server goes silent within seconds once four or more sessions connect: some clients never finish the extended-CONNECT handshake, and once a few sessions are open every client stops sending and receiving while the network thread stays alive in <code>poll()</code>.</p>
+<p>The fabric’s reliability classes (<a href="../../rfd/0049-fabric-channels-as-reliability-classes/README.html">fabric channels</a>) run over ENet for the local slice. WebTransport carries the same classes for the browser and Quest paths over one QUIC connection per client. The picoquic WebTransport server goes silent within seconds once four or more sessions connect: some clients never finish the extended-CONNECT handshake, and once a few sessions are open every client stops sending and receiving while the network thread stays alive in <code>poll()</code>.</p>
 </section>
 <section id="decision-drivers" class="level2">
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
