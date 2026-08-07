@@ -46,9 +46,7 @@ Neither appears in `rfd/0100`. Nor does any relational store, and
       |    planner, /acl/check, /storage/manifest
       +- aria-storage: casync chunking on publish
 
-    CockroachDB Cloud Basic                           0 USD
-      |- Uro's relational store, mTLS DML and DDL roles
-      +- inside the free monthly resource benefit
+      +- DuckDB embedded, ETNF Parquet (see rfd/0103)  0 USD
 
     Tigris object storage                             0 USD
       |- casync chunks and .caibx indexes             5 GB free
@@ -64,12 +62,9 @@ RAM per month. A `shared-cpu-1x` at 2 GB is therefore 11.11 USD, which
 is 74 percent of the budget for the database alone. That leaves
 nothing.
 
-CockroachDB Cloud Basic gives each organization a free monthly resource
-benefit of 15 USD, which is 50 million request units and 10 GiB of
-storage. Uro fits inside it, and that bill is separate from Fly's.
-
-Do not confuse the two 15 USD figures. One is the Fly budget. The other
-is Cockroach Labs' free allowance.
+CockroachDB Cloud Basic is on the blocklist, so the managed free tier
+is not available either. `rfd/0103` moves Uro to DuckDB and Parquet for
+that reason, and it carries the measurements.
 
 ## Assets never pass through the zone server
 
@@ -135,10 +130,8 @@ not extracted from the Godot build.
 `zone-backend` is not deployed on Fly, so its 2.02 USD line is an
 estimate rather than a measurement.
 
-Uro's request-unit consumption against CockroachDB Cloud Basic's 50
-million monthly allowance is unmeasured. Overage costs about 0.20 USD
-per million request units and 0.50 USD per GiB-month. It lands on a
-different bill than Fly's.
+Uro's move from CockroachDB to DuckDB is not done. `rfd/0103` decides
+it and states the migration cost as unestimated.
 
 ## Which record owns which fact
 
@@ -174,6 +167,5 @@ present and was not read.
 ## Sources
 
 - [Fly pricing](https://fly.io/docs/about/pricing/), about 5 USD per GB of RAM per month
-- [Plan a CockroachDB Basic Cluster](https://www.cockroachlabs.com/docs/cockroachcloud/plan-your-cluster-basic), the free monthly resource benefit
 - [Tigris pricing](https://www.tigrisdata.com/pricing/), 0.02 USD per GB, 0 egress, 5 GB free
 - `zone-backend` `config/runtime.exs`, for the `CRDB_*` variables
