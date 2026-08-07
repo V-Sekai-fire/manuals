@@ -1,5 +1,6 @@
 ---
 title: "RFD 0025: Comments and docs use a tenseless continuous-present voice"
+rfd: "0025"
 state: published
 scope: prose style for comments, docs, and decision records
 ---

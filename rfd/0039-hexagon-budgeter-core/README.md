@@ -1,5 +1,6 @@
 ---
 title: "RFD 0039: Budgeter hexagon — core, ports, and adapters"
+rfd: "0039"
 state: published
 scope: budgeter hexagon (proof of concept)
 ---

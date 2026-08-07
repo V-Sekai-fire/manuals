@@ -6,3 +6,8 @@ __pycache__/
 .uv/
 .obsidian/
 .claude/
+.jupyter_cache/
+*_files/
+
+/.quarto/
+**/*.quarto_ipynb

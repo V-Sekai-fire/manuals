@@ -1,5 +1,6 @@
 ---
 title: "RFD 0022: Spatial audio via a patched Resonance Audio (HRTF and audio probes)"
+rfd: "0022"
 state: published
 scope: engine audio module (feat/module-resonance-audio)
 ---

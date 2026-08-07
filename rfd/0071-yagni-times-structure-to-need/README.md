@@ -1,5 +1,6 @@
 ---
 title: "RFD 0071: YAGNI times structure to the need, in code and in the record"
+rfd: "0071"
 state: published
 scope: decision records and build scripts
 ---

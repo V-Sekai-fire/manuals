@@ -1,5 +1,6 @@
 ---
 title: "RFD 0028: Hexagonal core/ports/adapters as the component convention"
+rfd: "0028"
 state: published
 scope: cross-language component architecture
 ---

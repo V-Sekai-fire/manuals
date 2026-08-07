@@ -1,5 +1,6 @@
 ---
 title: "RFD 0047: webtransportd as the out-of-process core transport adapter"
+rfd: "0047"
 state: published
 scope: transport adapter for the event-driven hexagonal cores
 ---

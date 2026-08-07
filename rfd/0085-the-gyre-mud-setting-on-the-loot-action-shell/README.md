@@ -1,5 +1,6 @@
 ---
 title: "RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell"
+rfd: "0085"
 state: prediscussion
 scope: zone-server-h2o game content, web client
 ---

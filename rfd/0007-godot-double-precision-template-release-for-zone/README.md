@@ -1,5 +1,6 @@
 ---
 title: "RFD 0007: Godot double precision template_release for zone servers"
+rfd: "0007"
 state: published
 scope: zone-server
 ---

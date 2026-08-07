@@ -1,5 +1,6 @@
 ---
 title: "RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)"
+rfd: "0083"
 state: published
 scope: zone server implementation
 ---

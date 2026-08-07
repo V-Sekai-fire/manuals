@@ -1,5 +1,6 @@
 ---
 title: "RFD 0002: taskweft/nif's value narrowing: primitives, and refs as pointer strings"
+rfd: "0002"
 state: discussion
 scope: zf_kv.c / mud_kv.c FDB value encoding
 ---

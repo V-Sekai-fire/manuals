@@ -1,5 +1,6 @@
 ---
 title: "RFD 0019: Cut gitassembly tag releases for the assembled engine"
+rfd: "0019"
 state: published
 scope: merge repo / assembled-engine release tagging
 ---

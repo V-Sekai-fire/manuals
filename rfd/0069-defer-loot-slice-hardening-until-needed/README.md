@@ -1,5 +1,6 @@
 ---
 title: "RFD 0069: Defer the loot-slice hardening scope until its need arrives"
+rfd: "0069"
 state: published
 scope: loot-action vertical slice deferred hardening scope
 ---

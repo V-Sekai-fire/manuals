@@ -1,5 +1,6 @@
 ---
 title: "RFD 0000: Conventions"
+rfd: "0000"
 state: published
 scope: all files
 ---

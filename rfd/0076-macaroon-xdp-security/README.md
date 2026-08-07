@@ -1,5 +1,6 @@
 ---
 title: "RFD 0076: Macaroon + eBPF/XDP security fabric"
+rfd: "0076"
 state: published
 scope: zone-server-h2o network security
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0068: sccache with GitHub Actions cache for Godot container builds"
+rfd: "0068"
 state: published
 scope: fabric-godot-images CI build cache
 ---

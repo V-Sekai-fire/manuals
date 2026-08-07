@@ -1,5 +1,6 @@
 ---
 title: "RFD 0072: Actor-lite worker pool architecture for zone-server-h2o"
+rfd: "0072"
 state: published
 scope: zone-server-h2o worker dispatch
 ---

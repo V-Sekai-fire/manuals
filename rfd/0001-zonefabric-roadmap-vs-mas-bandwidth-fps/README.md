@@ -1,5 +1,6 @@
 ---
 title: "RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes"
+rfd: "0001"
 state: discussion
 scope: zone-server-h2o
 ---

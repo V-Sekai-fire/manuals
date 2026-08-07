@@ -1,5 +1,6 @@
 ---
 title: "RFD 0015: Bound the LLM steering queue to avoid context overflow"
+rfd: "0015"
 state: published
 scope: process
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0042: Presence hexagon — wrapping the existing presence stack"
+rfd: "0042"
 state: published
 scope: presence hexagon (proof of concept)
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0016: Checking the sccache build cache"
+rfd: "0016"
 state: published
 scope: build
 ---

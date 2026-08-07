@@ -1,5 +1,6 @@
 ---
 title: "RFD 0034: Deterministic cores via r128 fixed-point and seeded RNG"
+rfd: "0034"
 state: published
 scope: authoritative-core numerics (fixed-point, RNG)
 ---

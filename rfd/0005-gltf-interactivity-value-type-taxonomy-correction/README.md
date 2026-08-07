@@ -1,5 +1,6 @@
 ---
 title: "RFD 0005: gltf_interactivity's value types: primitive, ref, and custom"
+rfd: "0005"
 state: discussion
 scope: zone-server-h2o CastSpell
 ---

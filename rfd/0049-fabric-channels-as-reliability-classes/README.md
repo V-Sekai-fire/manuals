@@ -1,5 +1,6 @@
 ---
 title: "RFD 0049: Fabric channels as reliability classes, control in payload"
+rfd: "0049"
 state: published
 scope: fabric wire protocol (entity packet and channel layout)
 ---

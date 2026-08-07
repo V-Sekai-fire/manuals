@@ -1,5 +1,6 @@
 ---
 title: "RFD 0035: First-party curated content with zone-baker budgets"
+rfd: "0035"
 state: published
 scope: content pipeline (zone-baker budget enforcement)
 ---

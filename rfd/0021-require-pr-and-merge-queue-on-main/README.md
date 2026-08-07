@@ -1,5 +1,6 @@
 ---
 title: "RFD 0021: Require pull requests and a merge queue on main"
+rfd: "0021"
 state: published
 scope: repo branch protection and CI gating
 ---

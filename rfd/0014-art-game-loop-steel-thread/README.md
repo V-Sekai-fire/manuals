@@ -1,5 +1,6 @@
 ---
 title: "RFD 0014: Recursive art-game loop and its minimal steel thread"
+rfd: "0014"
 state: prediscussion
 scope: friends-art-game-loop
 ---

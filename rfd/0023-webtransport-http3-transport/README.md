@@ -1,5 +1,6 @@
 ---
 title: "RFD 0023: WebTransport over HTTP/3 transport"
+rfd: "0023"
 state: published
 scope: engine network transport (modules/http3)
 ---

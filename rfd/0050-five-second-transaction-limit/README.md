@@ -1,5 +1,6 @@
 ---
 title: "RFD 0050: Five-second transaction limit (bounded operations)"
+rfd: "0050"
 state: published
 scope: connection recovery and blocking operations across the fabric
 ---

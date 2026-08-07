@@ -1,5 +1,6 @@
 ---
 title: "RFD 0056: Verification smokes as a systemd podman quadlet queue"
+rfd: "0056"
 state: published
 scope: CI/local verification queue for the loop smokes
 ---

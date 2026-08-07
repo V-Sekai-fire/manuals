@@ -1,5 +1,6 @@
 ---
 title: "RFD 0008: Use WebTransport over QUIC for game traffic"
+rfd: "0008"
 state: published
 scope: gateway/zone-server
 ---

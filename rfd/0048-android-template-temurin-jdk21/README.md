@@ -1,5 +1,6 @@
 ---
 title: "RFD 0048: Android template builds with Temurin JDK 21 and config.gradle-pinned SDK"
+rfd: "0048"
 state: published
 scope: Android export template build toolchain
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0010: Godot client transport handshake against the authoritative server"
+rfd: "0010"
 state: published
 scope: zone-server-h2o
 ---

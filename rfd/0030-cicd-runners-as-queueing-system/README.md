@@ -1,5 +1,6 @@
 ---
 title: "RFD 0030: CI/CD runners operate as a finite queueing system"
+rfd: "0030"
 state: published
 scope: GitHub Actions runner pool operating discipline
 ---

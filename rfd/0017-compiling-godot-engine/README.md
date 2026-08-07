@@ -1,5 +1,6 @@
 ---
 title: "RFD 0017: Compiling the Godot engine"
+rfd: "0017"
 state: published
 scope: build
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0006: CockroachDB with mTLS and role-separated access"
+rfd: "0006"
 state: published
 scope: gateway/db
 ---

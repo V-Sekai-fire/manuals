@@ -1,5 +1,6 @@
 ---
 title: "RFD 0055: r128 Q64.64 fixed-point as a Lean library for the cores"
+rfd: "0055"
 state: published
 scope: fixed-point math library for the Lean kernel cores
 ---

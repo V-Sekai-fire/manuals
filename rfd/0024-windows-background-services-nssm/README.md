@@ -1,5 +1,6 @@
 ---
 title: "RFD 0024: Running background services on Windows with nssm"
+rfd: "0024"
 state: published
 scope: Windows workstation service supervision
 ---

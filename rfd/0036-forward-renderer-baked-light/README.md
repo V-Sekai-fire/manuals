@@ -1,5 +1,6 @@
 ---
 title: "RFD 0036: Forward renderer with baked light for the mobile floor"
+rfd: "0036"
 state: published
 scope: rendering pipeline (mobile VR floor)
 ---
