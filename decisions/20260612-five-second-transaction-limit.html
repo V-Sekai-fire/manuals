@@ -333,6 +333,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Five-second transaction limit (bounded operations)</em></p>
 <p><strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0050-five-second-transaction-limit/README.md">rfd/0050</a>.</p>
+</blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>A connection that silently desyncs wastes a player’s time: the loop bug had a client believe it was joined while the server had dropped it, and it waited forever. FoundationDB bounds every transaction to five seconds and aborts past that, so a stuck operation fails fast instead of hanging. The slice wants the same guarantee across the operations that can block — connection recovery, the runtime MCP round trips, and any commit.</p>
@@ -359,6 +362,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
+<li><p><a href="../rfd/0050-five-second-transaction-limit/README.html">RFD 0050: Five-second transaction limit (bounded operations)</a></p></li>
 </ul>
 </section>
 
