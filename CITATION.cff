@@ -788,11 +788,4 @@ references:
     authors:
       - name: "v-sekai-multiplayer-fabric"
     year: 2026
-    url: "https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike"
-
-  - type: generic
-    title: "sqlite3 not work with libriscv (libriscv/libriscv#296)"
-    authors:
-      - name: fwsgonzo
-    year: 2026
-    url: "https://github.com/libriscv/libriscv/issues/296"
+    url: "https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spik
