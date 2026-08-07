@@ -1,5 +1,23 @@
 [
   {
+    "listing": "/rfd.html",
+    "items": []
+  },
+  {
+    "listing": "/changelog.html",
+    "items": [
+      "/changelog/2026/20260630-deck-log.html",
+      "/changelog/2026/20260629-deck-log.html",
+      "/changelog/2026/20260622-deck-log.html",
+      "/changelog/2026/20260612-deck-log.html",
+      "/changelog/2026/20260606-deck-log.html",
+      "/changelog/2026/20260507-deck-log.html",
+      "/changelog/2026/20260506-deck-log.html",
+      "/changelog/2026/20260425-deck-log.html",
+      "/changelog/2026/20260421-deck-log.html"
+    ]
+  },
+  {
     "listing": "/decisions.html",
     "items": [
       "/decisions/20260806-actor-lite-worker-pool.html",
@@ -83,23 +101,5 @@
       "/decisions/20260611-webtransportd-core-transport-adapter.html",
       "/decisions/20260501-webtransport-over-quic-for-game-traffic.html"
     ]
-  },
-  {
-    "listing": "/changelog.html",
-    "items": [
-      "/changelog/2026/20260630-deck-log.html",
-      "/changelog/2026/20260629-deck-log.html",
-      "/changelog/2026/20260622-deck-log.html",
-      "/changelog/2026/20260612-deck-log.html",
-      "/changelog/2026/20260606-deck-log.html",
-      "/changelog/2026/20260507-deck-log.html",
-      "/changelog/2026/20260506-deck-log.html",
-      "/changelog/2026/20260425-deck-log.html",
-      "/changelog/2026/20260421-deck-log.html"
-    ]
-  },
-  {
-    "listing": "/rfd.html",
-    "items": []
   }
 ]

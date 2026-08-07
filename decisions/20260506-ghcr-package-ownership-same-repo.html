@@ -48,9 +48,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -297,6 +297,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context">Context</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260506-ghcr-package-ownership-same-repo.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -331,6 +332,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › GHCR packages must be built by the repo that consumes them</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0009-ghcr-package-ownership-same-repo/README.md">rfd/0009</a>.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>The zone server binary was built by <code>multiplayer-fabric-baker</code> and pushed to <code>ghcr.io/v-sekai-fire/godot-zone-double</code>. The zone deploy workflow (in <code>multiplayer-fabric-zone</code>) used <code>--local-only</code> with <code>docker/login-action</code> to pull that image, but received 403 Forbidden.</p>
@@ -354,6 +358,12 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0009-ghcr-package-ownership-same-repo/README.html">RFD 0009: GHCR packages must be built by the repo that consumes them</a></p></li>
+</ul>
 </section>
 
 </main> <!-- /main -->

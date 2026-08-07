@@ -83,9 +83,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -377,6 +377,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Compiling the Godot engine</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0017-compiling-godot-engine/README.md">rfd/0017</a>.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: <strong>Windows (PowerShell + MinGW)</strong> and <strong>WSL / Linux (<code>linuxbsd</code>)</strong>. Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed.</p>
@@ -554,6 +557,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="20260606-checking-sccache.html">Checking the sccache build cache</a></p></li>
 <li><p><a href="20260606-windows-background-services-nssm.html">Running background services on Windows with nssm</a></p></li>
 <li><p><a href="20260611-content-build-merged-double-precision-mcp.html">Content creation in a single merged double-precision build via the editor MCP</a></p></li>
+<li><p><a href="../rfd/0017-compiling-godot-engine/README.html">RFD 0017: Compiling the Godot engine</a></p></li>
 </ul>
 </section>
 
