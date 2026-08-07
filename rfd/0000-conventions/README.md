@@ -13,6 +13,11 @@ lives in its own folder, `rfd/NNNN-kebab-title/`, not a single flat
 file. Each RFD has a state: prediscussion, ideation, discussion,
 published, committed, abandoned, or moved.
 
+Each RFD's `README.md` has a `## Problem` section before `## Decision`.
+The `## Problem` section states, in one short paragraph, what is wrong
+or missing today, and why that matters. A reader must understand the
+problem before they read the decision.
+
 The repository writes prose in ASD-STE100 Simplified Technical
 English. Code and identifiers do not follow STE. STE applies to
 documents, comments, and user-visible text.
@@ -30,9 +35,10 @@ the same RFD folder. The `README.md` names that file in one line.
 `decisions/` (MADR, `YYYYMMDD-title.md`) still records a single point
 decision. `rfd/` records a longer-lived design that can carry a
 proposal forward and get amended over time. The project migrates
-existing MADR files into `rfd/` gradually; a MADR file gains a
-one-line pointer to its new `rfd/NNNN` home once migrated, instead of
-being deleted.
+existing MADR files into `rfd/` gradually. Once a MADR file has a
+matching `rfd/NNNN` folder, delete the MADR file. Do not keep a
+pointer stub. Git history still holds the deleted file's content and
+its old path.
 
 A new RFD takes the next unused four-digit number under `rfd/`; check
 `rfd.html`'s live listing (sorted newest first), not any other repo's
