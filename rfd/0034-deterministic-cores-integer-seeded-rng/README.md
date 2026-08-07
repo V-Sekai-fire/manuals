@@ -5,6 +5,15 @@ state: published
 scope: authoritative-core numerics (fixed-point, RNG)
 ---
 
+## Problem
+
+Replay, recorded fixtures, and the future rollback adapter need the
+authoritative cores to be bit-exact across the RTX 4090 workstation
+and the Steam Deck. IEEE-754 floating point diverges across
+platforms, through fused multiply-add, instruction reordering, and
+transcendental functions. A float value in the authoritative path
+breaks replay silently.
+
 ## Decision
 
 Replay, recorded fixtures, and the future rollback adapter need the

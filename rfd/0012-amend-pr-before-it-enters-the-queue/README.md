@@ -5,6 +5,15 @@ state: published
 scope: CI
 ---
 
+## Problem
+
+Enqueueing a pull request marks its current head commit ready to
+merge. The merge queue snapshots that head commit the instant it
+enters the queue. A push made after enqueueing can race the merge and
+get orphaned. A correction pushed seconds after enqueueing once merged
+the earlier commit and orphaned the fix, and the fix then needed a
+second PR to land.
+
 ## Decision
 
 Do not enqueue a pull request until it is final. Enqueueing

@@ -5,6 +5,14 @@ state: published
 scope: zone-server-h2o / h2o-bench-tpcc verification
 ---
 
+## Problem
+
+CBMC proves C implementation invariants for bounded inputs, but it
+does not prove the specification is sound. Lean 4 proves the
+specification is sound, but it does not verify the C code itself.
+plausible-witness-dag searches for runtime invariant violations, but
+it does not prove their absence.
+
 ## Decision
 
 Verify h2o-bench-tpcc with three complementary tools. Each tool

@@ -5,6 +5,13 @@ state: published
 scope: content pipeline authoring (feat/module-cassie)
 ---
 
+## Problem
+
+The content pipeline needs budget-bounded geometry for the Hub, the
+Field, and the enemy content slice. Standing up Blender for this work
+adds a dependency the one-week build does not need. In-headset
+sketching ergonomics also were not ready in time for this build.
+
 ## Decision
 
 The content pipeline needs budget-bounded geometry for the slice

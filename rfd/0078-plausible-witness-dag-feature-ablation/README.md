@@ -5,6 +5,15 @@ state: published
 scope: zone-server-h2o feature scoping
 ---
 
+## Problem
+
+The team needed to know, before writing implementation code, which
+zonefabric game features are load-bearing and which are safe to
+defer. Building a feature the wrong way once, then rebuilding it
+correctly, pays for that feature twice. The team also needed a
+dependency-ordered build order, so no feature would build on an
+unverified foundation.
+
 ## Decision
 
 Use plausible-witness-dag to ablate zonefabric game features before

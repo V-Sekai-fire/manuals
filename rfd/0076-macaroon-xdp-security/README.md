@@ -5,6 +5,15 @@ state: published
 scope: zone-server-h2o network security
 ---
 
+## Problem
+
+The packet path needs to check every packet at the NIC, inside a
+sub-10-microsecond packet budget. XDP itself cannot validate a
+chained-HMAC Macaroon, because the BPF verifier rejects the
+instruction count and variable-length parsing HMAC needs. A full
+Macaroon validation also costs 50 to 100 microseconds, far above that
+budget.
+
 ## Decision
 
 Use a two-tier security architecture. Macaroon-based authentication

@@ -5,6 +5,14 @@ state: published
 scope: content pipeline (zone-baker budget enforcement)
 ---
 
+## Problem
+
+A user-generated-content runtime carries arbitrary, unpredictable
+per-frame cost. This cost is fatal on a mobile GPU holding a stereo
+VR frame. The MVP needs predictable cost, and the freedom to
+co-optimize content against the engine, and an unpredictable runtime
+gives neither.
+
 ## Decision
 
 A user-generated-content runtime carries arbitrary, unpredictable

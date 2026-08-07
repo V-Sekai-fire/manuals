@@ -5,6 +5,14 @@ state: published
 scope: hexagonal core contract (state, replay, snapshots)
 ---
 
+## Problem
+
+Every hexagonal core needs to be replayable, snapshot-able,
+fixture-testable, and transport-agnostic. A stateful object that
+hides mutation behind its own methods defeats all four needs. The
+project had no shared contract that gave a core all four properties
+at once.
+
 ## Decision
 
 Every hexagonal core (`rfd/0028-hexagonal-core-ports-adapters`) needs

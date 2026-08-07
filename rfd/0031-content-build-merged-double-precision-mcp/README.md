@@ -5,6 +5,13 @@ state: published
 scope: content authoring build and editor MCP
 ---
 
+## Problem
+
+Content creation needs the full engine, every `feat/*` capability, at
+double precision. The team can budget only one such build for the
+content slice. The pipeline also needs to avoid a Blender dependency,
+and a content tool needs a way to drive the editor directly.
+
 ## Decision
 
 Content creation needs the full engine, every `feat/*` capability at

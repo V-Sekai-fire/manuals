@@ -5,6 +5,13 @@ state: published
 scope: hexagonal core language boundary (Lean at build time, flat C at run time)
 ---
 
+## Problem
+
+The hexagonal cores hold dependency-free domain logic that Godot, the
+Elixir backend, and a CLI all bind. The team wants strong spec and
+proof guarantees on that logic. Linking a heavy language runtime into
+every host would work against this goal.
+
 ## Decision
 
 The hexagonal cores (`rfd/0028-hexagonal-core-ports-adapters`) hold

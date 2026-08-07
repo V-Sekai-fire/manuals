@@ -5,6 +5,13 @@ state: published
 scope: Field-instance authority model (zone-server)
 ---
 
+## Problem
+
+The loop needs one authority over combat state and loot contention.
+An earlier geometric Hilbert-zone authority attempt, the Maglev
+intercept smoke test, did not work. The one-week slice needed a
+simpler model that still resists client tampering.
+
 ## Decision
 
 The loop needs one authority over combat state and loot contention.

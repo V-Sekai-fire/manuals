@@ -5,6 +5,14 @@ state: prediscussion
 scope: friends-art-game-loop
 ---
 
+## Problem
+
+The friends-art-game-loop workspace had no proof that its recursive
+loop worked end to end. Building the full tool-chain first, or running
+the loop by hand with no tooling, both skip that proof. The project
+needed a minimal way to test every link in the loop once, before the
+workspace grew further.
+
 ## Decision
 
 Before the friends-art-game-loop workspace grows, the project proves the

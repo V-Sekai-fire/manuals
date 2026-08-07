@@ -5,6 +5,14 @@ state: published
 scope: repository ownership index for the whole fabric organization
 ---
 
+## Problem
+
+The loot-action core-loop slice spans more than a dozen repositories
+in the organization. Without an index, a contributor cannot tell
+which repository owns which concern, or which name is current. A
+contributor also cannot tell whether the playable slice imports the
+cores or carries its own copies.
+
 ## Decision
 
 The loot-action core-loop slice spans more than a dozen repositories

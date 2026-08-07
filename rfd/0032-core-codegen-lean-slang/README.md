@@ -5,6 +5,13 @@ state: published
 scope: GPU compute kernel codegen for the hexagonal cores
 ---
 
+## Problem
+
+The hexagonal cores carry compute kernels, such as hit raycasts, the
+budgeter solve, and geometry costing. These kernels need one verified
+source. A hand-ported shader, written from a separate specification,
+can drift from that source with no way to detect the drift.
+
 ## Decision
 
 The cores carry compute kernels, such as hit raycasts, the budgeter

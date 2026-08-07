@@ -5,6 +5,13 @@ state: published
 scope: project-state record keeping across agent sessions
 ---
 
+## Problem
+
+Project state lived in an agent's private auto-memory. A fact in
+private auto-memory desyncs silently, because no diff reviews it and
+it does not travel with the code. The project had no single,
+versioned home for decisions, open work, and dead ends.
+
 ## Decision
 
 Project state lives in three versioned repo-root markdown files, not

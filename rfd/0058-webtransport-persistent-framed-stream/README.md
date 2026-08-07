@@ -5,6 +5,14 @@ state: published
 scope: webtransportd WebTransport transport adapter
 ---
 
+## Problem
+
+The picoquic WebTransport server goes silent once four or more
+sessions connect. A fresh bidirectional stream per reliable message
+uses up the connection's stream credit. The used-up credit blocks the
+connect-accepted response on the control stream, so a late session
+never finishes its handshake.
+
 ## Decision
 
 The picoquic WebTransport server goes silent once four or more sessions

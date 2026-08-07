@@ -5,6 +5,13 @@ state: published
 scope: loot hexagon (proof of concept)
 ---
 
+## Problem
+
+Loot generation and first-touch contention need to be deterministic
+and replayable. A drop and its winner must reproduce from the seed
+and the receipt order. Loot generation had no structure that gave it
+this property.
+
 ## Decision
 
 Loot generation and first-touch contention need to be deterministic

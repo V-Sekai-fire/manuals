@@ -5,6 +5,14 @@ state: published
 scope: presence hexagon (proof of concept)
 ---
 
+## Problem
+
+Remote-avatar presence is already decided in depth, through the orb
+demo, the marker decision, and the body-model decision. The loop
+needs presence behind ports, the same way the other cores sit behind
+ports. Presence had no such structure yet, and redeciding its
+representation was not needed.
+
 ## Decision
 
 Remote-avatar presence is already decided in depth: head and hand orbs

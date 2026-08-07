@@ -5,6 +5,15 @@ state: discussion
 scope: zone-server-h2o CastSpell
 ---
 
+## Problem
+
+CastSpell needed a sandboxed runtime for each zone. The existing
+`godot-sandbox` project exposes only a narrow, syscall-proxied API.
+Reimplementing that narrow API inside `libriscv` risked missing needed
+engine functionality. No RFD proved that a real `libgodot` instance
+could run inside a `libriscv` sandbox, or measured its performance
+against the project's 10Hz/200-entity/many-zones budget.
+
 ## Decision
 
 Embed a real, headless `libgodot` instance per zone inside each

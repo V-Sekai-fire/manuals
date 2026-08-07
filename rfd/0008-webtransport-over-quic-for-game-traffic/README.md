@@ -5,6 +5,13 @@ state: published
 scope: gateway/zone-server
 ---
 
+## Problem
+
+TCP-based transports, including HTTP/1.1 and WebSocket, suffer
+head-of-line blocking on packet loss. This blocking degraded real-time
+game state each time a packet was lost. The project needed a transport
+for game traffic that did not carry this problem.
+
 ## Decision
 
 All game traffic uses WebTransport, which runs HTTP/3 over QUIC. Clients

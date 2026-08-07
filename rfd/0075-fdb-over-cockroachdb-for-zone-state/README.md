@@ -5,6 +5,13 @@ state: published
 scope: zone-server-h2o database backend
 ---
 
+## Problem
+
+TPC-C is 88 percent writes. CockroachDB's Raft consensus path gives
+higher write latency than a log-structured MVCC store for a
+write-heavy load. The project's CockroachDB fork also carries no
+upstream activity.
+
 ## Decision
 
 Use the raw FoundationDB C API (`libfdb_c`) as the database for

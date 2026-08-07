@@ -5,6 +5,14 @@ state: published
 scope: build
 ---
 
+## Problem
+
+The project had no reliable way to confirm that sccache used the
+shared remote bucket and was healthy. A misconfigured cache degrades
+silently. The build still succeeds even when the shared cache is not
+in use. Inferring health from build time or a debug log needs secrets
+or log parsing.
+
 ## Decision
 
 To confirm sccache is using the shared remote bucket and is healthy, run

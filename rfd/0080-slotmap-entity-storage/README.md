@@ -5,6 +5,13 @@ state: published
 scope: zone-server-h2o in-memory entity storage
 ---
 
+## Problem
+
+In-memory entity storage per zone used a hash map or a linked list
+approach. A hash map of 200 entities touches about 8 random cache
+lines per iteration. A linked list needs pointer-chasing, and both
+approaches cost more than a sequential scan.
+
 ## Decision
 
 Use a slotmap for in-memory entity storage per zone, replacing hash

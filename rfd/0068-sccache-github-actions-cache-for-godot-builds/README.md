@@ -5,6 +5,14 @@ state: published
 scope: fabric-godot-images CI build cache
 ---
 
+## Problem
+
+The `fabric-godot-images` CI build lost its `docker/build-push-action`
+layer cache when the build moved to plain `podman build`. Every push
+then recompiled the Godot engine from scratch, spending 30 to 60
+minutes each run. An earlier Tigris S3 sccache bucket also needed an
+external account, five repo secrets, and ongoing cost.
+
 ## Decision
 
 The `fabric-godot-images` CI build gets a compiler-output cache back

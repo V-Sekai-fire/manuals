@@ -5,6 +5,13 @@ state: published
 scope: loop-slice server OpenTelemetry export
 ---
 
+## Problem
+
+The loop-slice server already emits spans, counters, gauges, and logs
+through its `OpenTelemetry` engine module. Export stays idle with no
+endpoint set. A deployed server with no configured endpoint stays
+unobservable.
+
 ## Decision
 
 The loop-slice deploy exports OpenTelemetry over HTTP to the

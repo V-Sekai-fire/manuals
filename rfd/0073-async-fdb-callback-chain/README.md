@@ -5,6 +5,13 @@ state: published
 scope: zone-server-h2o FDB transaction handling
 ---
 
+## Problem
+
+FDB's C API is callback-based by design. A worker that blocks on
+`fdb_future_block_until_ready` cannot process the next request from
+its SPSC ring. Each TPC-C transaction needed a way to chain FDB
+futures without blocking the worker.
+
 ## Decision
 
 Implement TPC-C transactions as async callback chains over FDB

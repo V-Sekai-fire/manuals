@@ -5,6 +5,14 @@ state: published
 scope: fabric-godot-packaging release tag convention
 ---
 
+## Problem
+
+Plain lexicographic sort, and `--sort=version:refname`, both give the
+wrong cross-stage order for release tags. The `beta` string sorts
+before `dev` alphabetically, even though `beta` comes later in the
+pipeline. A bare `v0.1.0` also sorts before every suffixed
+pre-release form, as a string prefix.
+
 ## Decision
 
 Release tags for `fabric-godot-packaging` use semver pre-release

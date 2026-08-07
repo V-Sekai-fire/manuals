@@ -5,6 +5,14 @@ state: published
 scope: delivery sequencing across the loot-action concerns
 ---
 
+## Problem
+
+Four other concerns, uiux-polish, cassie-pen-mesh, shop-economy, and
+openUSD-i/o, all need a verified game loop as their integration
+target. None of them tests end to end without one. Advancing another
+concern in parallel risks landing work on a loop that is still
+changing.
+
 ## Decision
 
 The team stabilizes the game loop first, ahead of uiux-polish,

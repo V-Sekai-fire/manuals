@@ -5,6 +5,13 @@ state: published
 scope: zone-server-h2o build order
 ---
 
+## Problem
+
+The zonefabric implementation spans many RFDs with dependencies
+between them. The team had no critical path or task order for the
+remaining build work. Without that order, the team could not tell
+which tasks carry slack and which tasks block the whole build.
+
 ## Decision
 
 Model the zonefabric implementation as a PERT network. Each RFD's

@@ -5,6 +5,13 @@ state: published
 scope: Android export template build toolchain
 ---
 
+## Problem
+
+The project needs an Android export template of the merged
+double-precision assembly for OpenXR builds. The build box carries no
+Android SDK. Fedora 44 packages only JDK 25 and 26, and Gradle rejects
+Java 25 with an "Unsupported class file major version 69" error.
+
 ## Decision
 
 The Android export template of the merged double-precision assembly

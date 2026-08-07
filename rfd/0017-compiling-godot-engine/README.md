@@ -5,6 +5,14 @@ state: published
 scope: build
 ---
 
+## Problem
+
+Developers build the V-Sekai multiplayer-fabric Godot engine on two
+different hosts from one workstation. Without a shared build cache,
+each host recompiles the same objects, wasting time. The project also
+needed a way to share cache objects across hosts without committing
+access keys or other secrets.
+
 ## Decision
 
 Developers build the V-Sekai multiplayer-fabric Godot engine on two

@@ -5,6 +5,13 @@ state: published
 scope: cross-language component architecture
 ---
 
+## Problem
+
+Components in the stack span several languages and run as separate
+processes. Each component binds to hardware, a GPU, the network, or
+an engine runtime. A shared monolith or one in-memory object model
+cannot hold across these boundaries.
+
 ## Decision
 
 Components in the stack span several languages, run as separate

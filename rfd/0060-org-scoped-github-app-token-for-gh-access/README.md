@@ -5,6 +5,14 @@ state: published
 scope: gh CLI authentication for v-sekai-multiplayer-fabric
 ---
 
+## Problem
+
+`gh` ran on a personal OAuth token with the `repo` scope. That scope
+grants read, write, admin, and delete access on every repository the
+personal account can reach, across every org. A leaked personal token
+could then reach far more than the one org's repositories this
+project needs.
+
 ## Decision
 
 `gh` used to run on a personal OAuth token with the `repo` scope. That

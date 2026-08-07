@@ -5,6 +5,15 @@ state: published
 scope: engine network transport (modules/http3)
 ---
 
+## Problem
+
+The stack needs one client/server transport that carries reliable
+control messages and high-rate unreliable state, over one connection,
+on both native and web clients. The standard `MultiplayerPeer`
+transports, ENet, WebSocket, and WebRTC, give none of this
+combination. None of them give one connection with both datagram and
+stream semantics across native and browser clients.
+
 ## Decision
 
 The stack needs one client/server transport that carries reliable

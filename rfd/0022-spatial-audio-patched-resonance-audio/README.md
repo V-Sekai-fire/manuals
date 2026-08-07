@@ -5,6 +5,13 @@ state: published
 scope: engine audio module (feat/module-resonance-audio)
 ---
 
+## Problem
+
+The zone server needs binaural HRTF rendering and audio probes for
+occlusion. Godot's built-in `AudioServer` gives neither feature.
+Google also archived the Resonance Audio project upstream, so no
+maintained upstream source remained to build this on.
+
 ## Decision
 
 The zone server needs binaural HRTF rendering and audio probes for

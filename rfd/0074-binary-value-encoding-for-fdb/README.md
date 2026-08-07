@@ -5,6 +5,13 @@ state: published
 scope: zone-server-h2o FDB value format
 ---
 
+## Problem
+
+A warehouse row costs roughly 350 bytes in JSON. A protobuf or JSON
+payload also needs a parsing step before code can use FDB's returned
+value pointer. The project needed a value format that avoids both
+costs.
+
 ## Decision
 
 Encode TPC-C row values as packed C structs with network byte order

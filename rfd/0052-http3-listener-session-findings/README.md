@@ -5,6 +5,15 @@ state: published
 scope: WebTransport/HTTP3 module, multi-session routing
 ---
 
+## Problem
+
+The four-player contention smoke test drives one
+`WebTransportPeer.create_server` listener with four concurrent client
+sessions. Replies reach only one session, regardless of
+`set_target_peer` or `get_packet_peer`. A session teardown during
+traffic also aborts the process with a double free, and a second
+`create_server` call in the same process fails.
+
 ## Decision
 
 The four-player contention smoke drives one

@@ -5,6 +5,13 @@ state: published
 scope: combat hexagon (proof of concept)
 ---
 
+## Problem
+
+The combat concern, combo timing, hit validation, the enemy
+spawn-invulnerability window, and damage, needs to be deterministic
+and testable with no server and no headset. Combat had no structure
+that gave it this property.
+
 ## Decision
 
 The combat concern — combo timing, hit validation, the enemy

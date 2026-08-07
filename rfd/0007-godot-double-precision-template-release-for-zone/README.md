@@ -5,6 +5,14 @@ state: published
 scope: zone-server
 ---
 
+## Problem
+
+Zone servers needed a Godot engine build that matches the physics and
+networking precision the rest of the stack uses. An editor build
+carries import and export tools a zone server does not need, making it
+larger and slower to start. Without a fixed build target, the headless
+zone server role had no matching binary.
+
 ## Decision
 
 Zone servers build the Godot engine as `target=template_release

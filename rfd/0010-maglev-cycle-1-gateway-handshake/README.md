@@ -5,6 +5,15 @@ state: published
 scope: zone-server-h2o
 ---
 
+## Problem
+
+The project had no proof that a real Godot client could complete a
+transport handshake against the authoritative server. A non-Godot
+ping, such as curl or a Python script, tests only the wire. It does
+not test Godot's own multiplayer peer, thread model, and datagram
+path. Engine-specific bugs could then surface later, deep in a
+gameplay scene, where they are harder to isolate.
+
 ## Decision
 
 A minimal headless Godot client proves the client side of the network

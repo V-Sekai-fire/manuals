@@ -5,6 +5,14 @@ state: published
 scope: CI/local verification queue for the loop smokes
 ---
 
+## Problem
+
+The slice has four smokes: headless OpenXR, loot wire parity, combat
+wire parity, and four-player contention. They need to run as a
+repeatable queue on the workstation and on self-hosted runners. The
+queue also needs ordering, logs, and per-job status. No orchestrator gave this
+yet, on top of the project's podman quadlet deployment choice.
+
 ## Decision
 
 The slice's smokes — headless OpenXR, loot wire parity, combat wire

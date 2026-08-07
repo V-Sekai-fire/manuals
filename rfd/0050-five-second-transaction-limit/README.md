@@ -5,6 +5,13 @@ state: published
 scope: connection recovery and blocking operations across the fabric
 ---
 
+## Problem
+
+A connection that silently desyncs wastes a player's time. A past
+loop bug let a client believe it joined while the server dropped it,
+and the client waited forever with no bound. No operation across the
+fabric carried a fixed time limit before this.
+
 ## Decision
 
 A connection that silently desyncs wastes a player's time: a past

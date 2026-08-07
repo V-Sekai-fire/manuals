@@ -5,6 +5,13 @@ state: published
 scope: progression hexagon (proof of concept)
 ---
 
+## Problem
+
+The profile, the valid inventory transitions, and the affinity gate
+on arts need to be durable across a session. They also need to be
+testable with no database. Progression had no structure that gave it
+these properties.
+
 ## Decision
 
 The profile and inventory rules — the profile, the valid inventory

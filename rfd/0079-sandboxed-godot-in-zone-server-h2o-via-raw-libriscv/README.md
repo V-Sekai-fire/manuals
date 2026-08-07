@@ -5,6 +5,14 @@ state: published
 scope: zone-server-h2o CastSpell sandboxing
 ---
 
+## Problem
+
+CastSpell needs to run sandboxed Godot game logic inside
+`zone-server-h2o`. `godot-sandbox`'s `Sandbox` Node API needs its own
+separate live Godot process. Linking the guest directly into
+`zone-server-h2o`'s binary would tie two unrelated build systems
+together for no benefit.
+
 ## Decision
 
 Use `godot-riscv-spike`'s proven whole-engine-in-`rvlinux` approach

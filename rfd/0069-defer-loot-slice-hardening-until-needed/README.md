@@ -5,6 +5,15 @@ state: published
 scope: loot-action vertical slice deferred hardening scope
 ---
 
+## Problem
+
+The loot-action vertical slice's decided scope goes beyond its stated
+goal, a slice complete enough to exercise every integration seam. The
+running `godot-loop-slice` already meets that integration goal. The
+rest of the decided scope risks conflating the shipped deliverable
+with pending work, and building structure ahead of a demonstrated
+need.
+
 ## Decision
 
 The loot-action vertical slice's decided scope goes beyond its stated
