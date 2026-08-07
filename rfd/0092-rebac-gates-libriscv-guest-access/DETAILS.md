@@ -18,7 +18,7 @@ grant a narrow exception:
   instantiation. Checked with `is_allowed_class(name)`.
 - `add_allowed_object(obj)` / `remove_allowed_object(obj)` /
   `clear_allowed_objects()`, plus `set_object_allowed_callback(func(sandbox,
-  obj): ...)` for anything not in the explicit list.
+obj): ...)` for anything not in the explicit list.
 - `set_method_allowed_callback(func(sandbox, obj, method): ...)` —
   gates method calls.
 - `set_property_allowed_callback(func(sandbox, obj, prop): ...)` —
@@ -120,23 +120,23 @@ rather than inventing it.
 
 - `rebac_empty_denied`, generalized: an empty graph denies every
   request. The rank version already proves this.
-- **Fuel soundness.** If `check_expr` grants at fuel `n`, it grants at
+- Fuel soundness. If `check_expr` grants at fuel `n`, it grants at
   fuel `n + 1`. More search never reverses a grant, and a fuel-zero
   denial is therefore always conservative. This closes open question 4.
-- **Snapshot soundness.** A resolved capability table, built at read
+- Snapshot soundness. A resolved capability table, built at read
   version `V`, answers exactly as a graph walk at read version `V`
   answers. This replaces an earlier append-only monotonicity theorem,
   which `difference` makes false. See `rfd/0093`.
-- **Resolution equivalence.** The flat capability table, built at bind
+- Resolution equivalence. The flat capability table, built at bind
   time, answers exactly as a full graph walk answers. This is the same
   theorem shape as `expand_index_equiv`, and it is what makes the
   enforcement path trustworthy.
-- **Plane separation.** No use-plane derivation grants `CAN_GRANT`. A
+- Plane separation. No use-plane derivation grants `CAN_GRANT`. A
   guest therefore cannot reach the admin plane. This closes open
   question 2.
-- **Non-delegability**, if the team takes that fork: no derivation
-  grants `CAN_GRANT` to a subject that does not already hold a
-  host-seeded `CAN_GRANT`.
+- Non-delegability, if the team takes that fork. No derivation grants
+  `CAN_GRANT` to a subject that does not already hold a host-seeded
+  `CAN_GRANT`.
 
 ## Administrative relations: who may write edges
 
@@ -148,10 +148,10 @@ relations.
 
 Every check belongs to one of two planes:
 
-| Plane | Question | Relations |
-|---|---|---|
-| Use | May this guest call `X`? | `HAS_CAPABILITY`, `CONTROLS`, `OWNS` |
-| Admin | May this principal add edge `(S, O, R)`? | `CAN_GRANT` |
+| Plane | Question                                 | Relations                            |
+| ----- | ---------------------------------------- | ------------------------------------ |
+| Use   | May this guest call `X`?                 | `HAS_CAPABILITY`, `CONTROLS`, `OWNS` |
+| Admin | May this principal add edge `(S, O, R)`? | `CAN_GRANT`                          |
 
 A guest lives only on the use plane. Each grant request runs a
 `check_expr` on the admin plane first, and the orchestrator runs that
@@ -164,17 +164,17 @@ deliberate decision, because `check_base` already gives
 
 Three sub-decisions stay open:
 
-- **Bootstrap.** If edge-writing authority is itself an edge, some
+- Bootstrap. If edge-writing authority is itself an edge, some
   agent must write the first edge. That seed grant belongs outside the
   graph, host-side, before any guest runs. `godot-luau-script` seeds
   at `SandboxService` in `init.lua`. The equivalent here is the
   orchestrator at `mud_boot` time.
-- **Delegability.** May a `CAN_GRANT` holder grant `CAN_GRANT` itself?
+- Delegability. May a `CAN_GRANT` holder grant `CAN_GRANT` itself?
   A yes makes the relation viral, and one compromised administrator
   then owns the graph. Open question 3 below records that no
   revocation exists, so that capture stays permanent. Recommendation:
   make `CAN_GRANT` non-delegable in the first version.
-- **Scope.** A global admin right and a scoped one differ completely.
+- Scope. A global admin right and a scoped one differ completely.
   A scoped admin edge must name what it governs, such as one relation
   type or an object prefix. `tuple_to_userset` already expresses
   scoped administration, because it pivots through one relation to
@@ -182,13 +182,13 @@ Three sub-decisions stay open:
 
 ## Proposed mapping
 
-| `godot-sandbox` axis | ReBAC subject | ReBAC object | Relation |
-|---|---|---|---|
-| Class instantiation | the guest `Machine` | the class name | `HAS_CAPABILITY` |
-| Object access | the guest `Machine` | the object instance | `HAS_CAPABILITY` or `CONTROLS` |
-| Method call | the guest `Machine` | `<object>.<method>` | `HAS_CAPABILITY` |
-| Property access | the guest `Machine` | `<object>.<property>` | `HAS_CAPABILITY` |
-| Resource load | the guest `Machine` | the resource path | `HAS_CAPABILITY` |
+| `godot-sandbox` axis         | ReBAC subject       | ReBAC object          | Relation                               |
+| ---------------------------- | ------------------- | --------------------- | -------------------------------------- |
+| Class instantiation          | the guest `Machine` | the class name        | `HAS_CAPABILITY`                       |
+| Object access                | the guest `Machine` | the object instance   | `HAS_CAPABILITY` or `CONTROLS`         |
+| Method call                  | the guest `Machine` | `<object>.<method>`   | `HAS_CAPABILITY`                       |
+| Property access              | the guest `Machine` | `<object>.<property>` | `HAS_CAPABILITY`                       |
+| Resource load                | the guest `Machine` | the resource path     | `HAS_CAPABILITY`                       |
 | Instruction-budget extension | the guest `Machine` | the "more gas" action | `DELEGATED_TO` from a supervisor/owner |
 
 Delegation, membership, and capability inheritance fall out of the
@@ -282,14 +282,14 @@ fast. It needs a decision here, not an accident.
 Ten questions stay open. Items 1 to 3 block implementation. The rest
 are design work.
 
-1. **Engine choice.** Resolved above: extend `lean-rebac-core` to the
+1. Engine choice. Resolved above: extend `lean-rebac-core` to the
    graph shape and generate the C, with `tw_rebac.hpp` as the
    reference shape and test oracle. Recorded here because an earlier
    draft called the two engines interchangeable, which is wrong.
-2. **Who may write edges.** Answered above by the use/admin plane
+2. Who may write edges. Answered above by the use/admin plane
    split, but its three sub-decisions (bootstrap, delegability,
    scope) stay open.
-3. **Revocation does not exist.** `tw_rebac.hpp` defines `add_edge`
+3. Revocation does not exist. `tw_rebac.hpp` defines `add_edge`
    and `define`, and no counterpart that removes either. A search for
    `remove`, `revoke`, `erase`, and `delete` in that header returns
    nothing. The graph is append-only. Nobody can revoke a capability
@@ -308,32 +308,33 @@ are design work.
    of the offline index. So revocation is a tombstone plus a version
    merge, and the Lean migration above must carry both. An
    append-only graph is not the design. It is the current gap.
-4. **Fuel has no owner.** `check_expr` and `check_base` return `false`
+
+4. Fuel has no owner. `check_expr` and `check_base` return `false`
    at zero fuel. That fails closed, which is correct. But a legitimate
    deep delegation chain then denies silently, and authorization
    depends on graph depth. Only `tw_expand` carries a default
    (`p_fuel = 3`). `check_expr`, `check_base`, and `rebac_can_json`
    each require the caller to supply one. No rule says who picks it.
-5. **Identity and ID reuse.** Subjects and objects are `std::string`.
+5. Identity and ID reuse. Subjects and objects are `std::string`.
    Godot recycles object instance IDs after a free. A stale
    `HAS_CAPABILITY` edge plus a recycled ID grants access to a
    different object than the authorized one. This RFD names no stable
    identity scheme.
-6. **An inherited bypass.** `godot-sandbox`'s own restrictions page
+6. An inherited bypass. `godot-sandbox`'s own restrictions page
    states this: "Objects passed as function arguments remain
    accessible regardless of restrictions." A check at the call
    boundary misses handles the guest already holds. No rule covers
    re-checking a held handle on a later tick.
-7. **Cost on the 64 Hz path.** `_rebac_dfs` copies the visited set at
+7. Cost on the 64 Hz path. `_rebac_dfs` copies the visited set at
    every branch (`sub_visited = p_visited`). A graph search per host
    call, on the zone tick, has no budget in this RFD.
-8. **Gas checking is circular.** If budget extension is itself a ReBAC
+8. Gas checking is circular. If budget extension is itself a ReBAC
    check, and that check costs time, no rule says whose budget pays.
-9. **Denial leaks the graph.** `rebac_can_json` returns
+9. Denial leaks the graph. `rebac_can_json` returns
    `{"authorized":bool,"path":[...]}`. That path is the audit-trail
    advantage over `godot-sandbox`. Returning it to untrusted guest
    code leaks capability-graph structure.
-10. **Which process may answer.** `src/gen/rebac.h`'s own comment
+10. Which process may answer. `src/gen/rebac.h`'s own comment
     quotes the Lean source: only the authority zone evaluates
     `.interact` and `.modify`, and interest zones may evaluate
     `.observe` locally. `rfd/0086` defers that authority mechanism.
