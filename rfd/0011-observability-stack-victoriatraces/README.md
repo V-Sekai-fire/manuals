@@ -35,3 +35,7 @@ the Fly-specific details below predate that move.
 - Port map, deployment path, and consequences: `DETAILS.md`
 - Original record: `decisions/20260506-observability-stack-victoriatraces.md`
 - Supersedes: `decisions/20260506-observability-stack-victoriametrics-jaeger.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

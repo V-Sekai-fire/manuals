@@ -42,3 +42,7 @@ cleanly with no orphaned process or open port.
 ## Related
 
 `rfd/0008-webtransport-over-quic-for-game-traffic/README.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

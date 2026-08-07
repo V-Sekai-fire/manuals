@@ -39,3 +39,7 @@ code.
 - `rfd/0025-tenseless-continuous-present-voice`: the voice
   `OPEN_GAPS.md` and `TOMBSTONES.md` state current truth in, while
   `CHANGELOG.md` reads like commit messages.
+
+## Detail
+
+{{< include DETAILS.md >}}

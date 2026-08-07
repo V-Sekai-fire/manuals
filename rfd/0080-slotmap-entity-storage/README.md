@@ -46,3 +46,7 @@ stores by `memcpy`), `rfd/0076-macaroon-xdp-security` (the
 `entity_id` caveat maps to a slotmap handle), and
 `rfd/0072-actor-lite-worker-pool` (each worker owns its zone's slotmap
 thread-locally).
+
+## Detail
+
+{{< include DETAILS.md >}}

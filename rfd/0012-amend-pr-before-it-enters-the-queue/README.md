@@ -41,3 +41,7 @@ needed a second PR to land.
 
 Refines `decisions/20260606-require-pr-and-merge-queue-on-main.md`;
 supports `rfd/0015-bounded-llm-steering-queue/README.md`.
+
+## Detail
+
+{{< include DETAILS.md >}}

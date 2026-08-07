@@ -40,3 +40,7 @@ table from that record, and Harvester HCI joins it.
 
 - `rfd/0056-systemd-quadlet-verification-queue`: the verification
   smokes that already run as a quadlet queue on the same convention.
+
+## Detail
+
+{{< include DETAILS.md >}}

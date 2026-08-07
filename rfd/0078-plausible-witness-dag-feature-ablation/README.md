@@ -47,3 +47,7 @@ are independent of the core loop, so the team may defer or stub them.
   verifies as foundational.
 - `rfd/0076-macaroon-xdp-security`: security features ablated
   independently of game logic.
+
+## Detail
+
+{{< include DETAILS.md >}}

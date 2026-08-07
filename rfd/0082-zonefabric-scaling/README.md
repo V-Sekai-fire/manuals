@@ -45,3 +45,7 @@ cross-zone conflicts.
 `rfd/0080-slotmap-entity-storage`, `rfd/0084-zstd-compression-for-zone-state`
 (the batched blob's two layers), `rfd/0076-macaroon-xdp-security`
 (unmeasured transport layer), `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps`.
+
+## Detail
+
+{{< include DETAILS.md >}}

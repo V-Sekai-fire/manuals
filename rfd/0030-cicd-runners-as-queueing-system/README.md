@@ -37,3 +37,7 @@ concurrency cap would only block urgent work behind stale work.
 - Original record:
   `decisions/20260611-cicd-runners-as-queueing-system.md`
 - `gh run list`, `gh run view --json jobs`
+
+## Detail
+
+{{< include DETAILS.md >}}

@@ -45,3 +45,7 @@ applied after delta encoding.
   zstd compresses.
 - `rfd/0082-zonefabric-scaling`: the batched `zf/zone_state/` blob
   this compression targets.
+
+## Detail
+
+{{< include DETAILS.md >}}

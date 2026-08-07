@@ -41,3 +41,7 @@ the protocol.
 
 - `rfd/0011-observability-stack-victoriatraces`: the collector and
   Victoria backends this export reaches.
+
+## Detail
+
+{{< include DETAILS.md >}}

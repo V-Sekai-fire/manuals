@@ -39,3 +39,7 @@ On Windows this is wrapped as a `sccheck` PowerShell function (alias
 
 `rfd/0017-compiling-godot-engine/README.md` sets up the sccache backend
 this check verifies.
+
+## Detail
+
+{{< include DETAILS.md >}}

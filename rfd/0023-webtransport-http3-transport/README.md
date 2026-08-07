@@ -45,3 +45,7 @@ across native and browser clients.
 ## Related
 
 - `rfd/0020-pin-engine-to-frozen-godot-4-7`
+
+## Detail
+
+{{< include DETAILS.md >}}

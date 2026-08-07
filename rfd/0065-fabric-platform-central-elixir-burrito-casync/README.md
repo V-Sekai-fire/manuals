@@ -44,3 +44,7 @@ wrapped a shell invocation.
 
 - `rfd/0067-release-tag-progression-dev-beta-rc`: the version tags this
   release workflow produces.
+
+## Detail
+
+{{< include DETAILS.md >}}

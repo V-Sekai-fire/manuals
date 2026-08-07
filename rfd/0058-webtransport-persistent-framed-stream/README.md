@@ -45,3 +45,7 @@ open state.
   reliability-class model this stream carries.
 - `rfd/0052-http3-listener-session-findings`: other http3
   multi-session findings.
+
+## Detail
+
+{{< include DETAILS.md >}}

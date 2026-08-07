@@ -38,3 +38,7 @@ pass.
 ## Related
 
 - `rfd/0012-amend-pr-before-it-enters-the-queue`
+
+## Detail
+
+{{< include DETAILS.md >}}

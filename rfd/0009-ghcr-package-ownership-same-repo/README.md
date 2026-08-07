@@ -36,3 +36,7 @@ same repo as the deploy it triggers.
 
 `rfd/0017-compiling-godot-engine/README.md` covers the engine build this
 packaging wraps.
+
+## Detail
+
+{{< include DETAILS.md >}}

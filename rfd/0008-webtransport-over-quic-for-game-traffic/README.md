@@ -36,3 +36,7 @@ round trip.
 
 `rfd/0010-maglev-cycle-1-gateway-handshake/README.md` exercises this
 transport from a real Godot client.
+
+## Detail
+
+{{< include DETAILS.md >}}

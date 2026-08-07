@@ -31,3 +31,7 @@ migrating the existing, already-deployed `zf_zone_val_t`,
   open questions: `DETAILS.md`
 - `taskweft/nif`: `standalone/tw_value.hpp`, `tw_loader.hpp`,
   `tw_state.hpp`
+
+## Detail
+
+{{< include DETAILS.md >}}

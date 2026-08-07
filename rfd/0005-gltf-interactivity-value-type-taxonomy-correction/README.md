@@ -35,3 +35,7 @@ rejected, until a CastSpell parameter needs an extension-defined type.
 
 `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md` (item 5),
 `rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

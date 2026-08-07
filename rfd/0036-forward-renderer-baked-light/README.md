@@ -37,3 +37,7 @@ otherwise tune by hand.
 
 - `rfd/0035-first-party-curated-content-zone-baker-budgets`: the
   bake-time budget this renderer relies on.
+
+## Detail
+
+{{< include DETAILS.md >}}

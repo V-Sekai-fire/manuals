@@ -36,3 +36,7 @@ need that ordering.
   memory, `memcpy` from FDB value to slotmap entry.
 - `rfd/0084-zstd-compression-for-zone-state`: compresses the packed
   byte stream this RFD produces.
+
+## Detail
+
+{{< include DETAILS.md >}}

@@ -44,3 +44,7 @@ per concern.
 
 - `rfd/0045-loot-action-core-loop-mvp-vertical-slice`: the slice this
   map indexes.
+
+## Detail
+
+{{< include DETAILS.md >}}

@@ -36,3 +36,7 @@ boundary.
 
 - Full consequences and deployment notes: `DETAILS.md`
 - Original record: `decisions/20260501-cockroachdb-with-mtls-role-separation.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

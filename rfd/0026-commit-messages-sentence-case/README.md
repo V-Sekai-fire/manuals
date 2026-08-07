@@ -37,3 +37,7 @@ which type applies.
 - `rfd/0025-tenseless-continuous-present-voice`: a commit body states
   what the change makes true of the system, the same way comments and
   docs do.
+
+## Detail
+
+{{< include DETAILS.md >}}

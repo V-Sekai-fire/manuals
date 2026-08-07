@@ -39,3 +39,7 @@ service log reports the null compositor and a simulated HMD.
 
 - `rfd/0056-systemd-quadlet-verification-queue`: the quadlet queue
   that runs this Monado smoke.
+
+## Detail
+
+{{< include DETAILS.md >}}

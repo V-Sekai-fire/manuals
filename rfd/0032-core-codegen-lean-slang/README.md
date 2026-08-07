@@ -41,3 +41,7 @@ output stays deterministic across conformant devices.
   determinism rule these kernels follow.
 - `rfd/0044-lean4-kernel-cores-flat-c-host-adapters`: the flat C ABI
   these kernels dispatch behind.
+
+## Detail
+
+{{< include DETAILS.md >}}

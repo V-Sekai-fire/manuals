@@ -39,3 +39,7 @@ the delay.
 
 - `rfd/0045-loot-action-core-loop-mvp-vertical-slice`: the vertical
   slice this sequencing decision prioritizes.
+
+## Detail
+
+{{< include DETAILS.md >}}

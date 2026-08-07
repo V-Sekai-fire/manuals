@@ -46,3 +46,7 @@ ranged and caster land after the gate.
 
 - `rfd/0037-generated-behavior-sandboxed-riscv`: the `behavior_source`
   adapter for generated enemy behavior.
+
+## Detail
+
+{{< include DETAILS.md >}}

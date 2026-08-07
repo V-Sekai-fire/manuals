@@ -44,3 +44,7 @@ fails a test, and every adapter shares the same `step`, so
   rule that makes replay byte-exact.
 - `rfd/0032-core-codegen-lean-slang`: the compute kernels this
   contract's cores dispatch on the GPU.
+
+## Detail
+
+{{< include DETAILS.md >}}

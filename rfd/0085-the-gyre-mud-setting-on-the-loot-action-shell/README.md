@@ -45,3 +45,7 @@ spots.
 - `rfd/0028-hexagonal-core-ports-adapters`,
   `rfd/0043-hexagon-progression-core`: describe the shape a future
   web/OAuth save adapter would follow.
+
+## Detail
+
+{{< include DETAILS.md >}}

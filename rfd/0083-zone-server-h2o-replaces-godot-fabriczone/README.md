@@ -46,3 +46,7 @@ in place.
 `rfd/0082-zonefabric-scaling`, `rfd/0072-actor-lite-worker-pool`, and
 the other `rfd/0073`-`0081`, `0084` records carried forward from
 `weftspun/h2o-bench-tpcc`.
+
+## Detail
+
+{{< include DETAILS.md >}}

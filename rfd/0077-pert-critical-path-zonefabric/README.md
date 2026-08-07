@@ -41,3 +41,7 @@ parallel without shortening the sequential critical path itself.
 
 `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps`: adopts this task
 order (A, B, C, F, then I, then M) as the current build plan.
+
+## Detail
+
+{{< include DETAILS.md >}}
