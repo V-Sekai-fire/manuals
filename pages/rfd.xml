@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 14:22:50 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 14:39:04 GMT</lastBuildDate>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/README.html</link>
@@ -255,7 +255,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -321,7 +321,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -477,7 +477,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -555,7 +555,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -595,7 +595,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -636,7 +636,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -676,7 +676,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -1032,7 +1032,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -1440,7 +1440,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -1521,7 +1521,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -2037,7 +2037,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -2147,7 +2147,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -2430,7 +2430,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -2509,7 +2509,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -2847,7 +2847,7 @@ def slotmap_gen_invariant (s : GameState) : Prop :=
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -3417,7 +3417,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -3831,7 +3831,7 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -3906,7 +3906,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -3976,7 +3976,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -4054,7 +4054,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 14:22:50 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 14:39:04 GMT</pubDate>
 </item>
 </channel>
 </rss>
