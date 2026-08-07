@@ -93,17 +93,36 @@ MB container that also ran `fdbserver`:
 That beats PostgreSQL colocated, which reaches 33.9, and it removes a
 datastore rather than adding one.
 
-One gap remains, and it is query latency. PostgreSQL measured 0.084 ms
-per point read. There is no equivalent figure for FRL, and neither
-repository publishes `ecto-bench-tpcc` results.
+Latency decides it, and the measurement is not close.
+
+    FRL insert 20000 rows          198901.8 ms total
+    FRL point SELECT               median=  45.259 ms  p99=  66.866 ms  n=1000
+
+45.259 ms per point read is 539 times PostgreSQL's 0.084 ms. Inserts
+ran at approximately 10 ms per row.
+
+For scale, `rfd/0100` measured a raw FoundationDB commit at 2396.6 us
+on the same storage engine. FRL adds roughly 19 times on top of the
+database underneath it.
+
+At 45 ms a login of five queries costs 225 ms before any other work.
+Single-threaded throughput is about 22 queries per second.
+
+Three caveats, because one measurement should not close a door
+permanently. This used the JDBC driver. The adapter's own ADR 0001
+records that FoundationDB marks that interface experimental, and
+`ecto-fdb-relational` speaks gRPC directly instead. The measurement
+also ran against a single-node FoundationDB that shared a container.
+An UPDATE probe failed on an FRL dialect type mismatch, so it is
+unmeasured.
+
+Even so, a 539 times gap does not close with tuning. Re-measure through
+the gRPC adapter before treating FRL as permanently unsuitable, and do
+not block on it.
 
 FRL's dialect is also "close to but not standard SQL", by its own
 README. Uro's migrations need porting either way, and this port targets
 a dialect with one implementation.
-
-So FRL leads on cost and on architecture, and it needs one more
-measurement before it takes the decision. Run `ecto-bench-tpcc` against
-`fdb-relational-server` and compare point-read latency with 0.084 ms.
 
 ## Why not DuckDB for this
 
@@ -139,9 +158,8 @@ the Fly volume, and recovery data sits in the object store.
 
 ## Open
 
-FRL's query latency is unmeasured. `fdb-relational-server` fits at 157
-MB RSS, so cost no longer decides this. Latency does, and 0.084 ms is
-the number to beat.
+FRL through the gRPC adapter is unmeasured. The 45.259 ms figure came
+through JDBC, which the adapter deliberately avoids.
 
 Uro's migrations are not audited for CockroachDB-specific SQL.
 
