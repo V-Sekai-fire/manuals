@@ -289,10 +289,36 @@ blocked by default, so local runs need `--cap-add SYS_ADMIN` and
 Ubuntu 24.04 and later restrict namespace creation through AppArmor,
 and the CI image is `ubuntu:24.04`. Verify this early.
 
-## Open question
+## ReBAC is the one authorization model
 
-`modules/multiplayer_fabric_asset` performs its own `acl_check`
-against Uro. That overlaps `rfd/0092`'s ReBAC planes.
+`modules/multiplayer_fabric_asset` performs an `acl_check` against Uro.
+That looked like a second authorization system next to `rfd/0092`'s
+ReBAC planes. It is not one.
 
-The two must not become competing authorization systems. This RFD does
-not decide which one is authoritative.
+`acl_check` POSTs a tuple to Uro's `/acl/check` endpoint. The tuple is
+`(object, relation, subject)`, and Uro resolves it against the relation
+graph. Its components are strings such as `"asset:123"`, `"viewer"`,
+and `"user:456"`. That is ReBAC.
+
+There is one model and two evaluators. Each evaluator answers a
+different question. The split is this:
+
+- Uro resolves the graph. It answers which relations a subject holds on
+  an object. It is the source of truth for the relation graph.
+- `zone-server-h2o` decides the action. `rebac_check`
+  (`src/gen/rebac.h:62`) takes a resolved relation set and one of
+  `REBAC_ACTION_OBSERVE`, `REBAC_ACTION_INTERACT`, or
+  `REBAC_ACTION_MODIFY`. It does not walk a graph.
+
+ReBAC is the model everywhere. Where the two evaluators overlap, the
+host is authoritative for host actions. `rebac_check` decides whether
+the host performs an action. An `acl_check` boolean alone does not gate
+a host-side action.
+
+`lean-rebac-core` generates `src/gen/rebac.c`. Keep the host decision
+there, and keep it generated. Do not add a second decision procedure
+that Uro and the host must then agree about.
+
+There is one consequence for the guest path. Guest calls must not block
+on an HTTP round trip to Uro. Relations resolve when the host loads a
+guest, and the host holds the resolved set for the life of that guest.
