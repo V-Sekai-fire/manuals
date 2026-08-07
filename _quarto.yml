@@ -95,6 +95,9 @@ project:
     - "rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.md"
     - "rfd/0084-zstd-compression-for-zone-state/README.md"
     - "rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.md"
+    - "rfd/0086-defer-nogod-gossip-zone-authority/README.md"
+    - "rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.md"
+    - "rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.md"
 
 resources:
   - decisions/attachments
