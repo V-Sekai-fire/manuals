@@ -2,8 +2,9 @@
 """Page metadata and backlinks for the manuals site.
 
 Frontmatter stays the single source of truth. This filter:
-  * shows ``tier`` and ``status`` at the top of a page (so authors never repeat
-    them in the body), rendering a ``superseded by <file>.md`` status as a link;
+  * shows ``tier``/``status`` (decisions) or ``state``/``scope`` (RFDs) at the
+    top of a page (so authors never repeat them in the body), rendering a
+    ``superseded by <file>.md`` status as a link;
   * appends a Related section listing every other content page this one links to
     plus every page that links to it (symmetric), and a breadcrumb trail on top.
 """
@@ -164,10 +165,16 @@ def finalize(doc):
 
     tier = doc.get_metadata("tier")
     status = doc.get_metadata("status")
+    state = doc.get_metadata("state")
+    scope = doc.get_metadata("scope")
     if tier:
         add("Tier", [Str(str(tier))])
     if status:
         add("Status", _status_inlines(str(status)))
+    if state:
+        add("State", [Str(str(state))])
+    if scope:
+        add("Scope", [Str(str(scope))])
     if head:
         doc.content.insert(0, Para(*head))
 

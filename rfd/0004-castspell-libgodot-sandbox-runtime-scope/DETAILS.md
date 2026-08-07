@@ -1,10 +1,6 @@
-# RFD 0004: CastSpell's sandboxed runtime: embed `libgodot`, not `godot-sandbox`'s narrow API
-
-**State:** discussion
-
 ## Summary
 
-`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps.md`, item 6, commits to
+`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md`, item 6, commits to
 scoping how much of `libriscv`/`godot-sandbox`'s API surface CastSpell
 effects actually need. This RFD is the detail that item pointed to. It
 resolves the scoping question and decides to embed a real, headless
@@ -281,7 +277,7 @@ through the `METHOD`/`VMETHOD` syscall proxy. Reading
 certainty. `Vector3`'s named math methods are hand-written inline
 RISC-V assembly issuing `ecall`. `Basis`/`Quaternion`/`Transform3D` have
 zero local computation at all. This settles the question the prior draft
-of `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps.md` flagged as
+of `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md` flagged as
 suggestive, not conclusive.
 
 Resolved, part (1) of the `libgodot`-in-sandbox spike. A real

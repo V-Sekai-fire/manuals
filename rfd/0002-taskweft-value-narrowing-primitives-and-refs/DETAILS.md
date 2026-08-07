@@ -1,7 +1,3 @@
-# RFD 0002: taskweft/nif's value narrowing -- primitives, and refs as pointer strings
-
-**State:** discussion
-
 ## Summary
 
 `taskweft/nif` (the C++ core behind the `taskweft/taskweft` Elixir host,
