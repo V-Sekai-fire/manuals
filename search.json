@@ -4,7 +4,7 @@
     "href": "rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html",
     "title": "RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell",
     "section": "",
-    "text": "Manuals › RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell\nState: discussion · Scope: zone-server-h2o game content, web client"
+    "text": "Manuals › RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell\nState: discussion · Scope: zone-server-h2o game content, web client\nThe premise:\nPlayers awaken as “Sparks” — digitized human consciousnesses legally owned by a defunct hyper-corporation. They are currently downloaded into “Frames,” which are cheap, mass-produced synthetic worker chassis. Abandoned on The Gyre, a massive, slowly failing ring-station orbiting a toxic gas giant, players must survive cycle by cycle. They take on grueling localized contracts, scavenge for parts to prevent their Frames from seizing up, and try to buy their digital freedom from the station’s automated debt-collection algorithms."
   },
   {
     "objectID": "rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html#decision",
