@@ -9,7 +9,7 @@ from cffconvert import Citation
 from pathlib import Path
 from collections import defaultdict
 
-cff = Citation(cffstr=Path("CITATION.cff").read_text())._implementation.cffobj
+cff = Citation(cffstr=Path("../CITATION.cff").read_text())._implementation.cffobj
 refs = cff.get("references", [])
 
 TYPE_LABELS = {

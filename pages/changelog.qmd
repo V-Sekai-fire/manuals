@@ -5,7 +5,7 @@ listing:
   filter-ui: true
   type: table
   contents:
-    - "changelog/**/*.md"
+    - "../changelog/**/*.md"
   sort: "filename desc"
   feed: true
   fields: [title]

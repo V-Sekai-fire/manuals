@@ -6,7 +6,7 @@ listing:
   sort-ui: true
   type: table
   contents:
-    - "rfd/**/README.md"
+    - "../rfd/**/README.md"
   sort:
     - "rfd desc"
   feed: true

@@ -41,7 +41,7 @@ pointer stub. Git history still holds the deleted file's content and
 its old path.
 
 A new RFD takes the next unused four-digit number under `rfd/`; check
-`rfd.html`'s live listing (sorted newest first), not any other repo's
+`pages/rfd.html`'s live listing (sorted newest first), not any other repo's
 own numbering, for what is already taken.
 
 ## References
@@ -52,4 +52,4 @@ own numbering, for what is already taken.
 
 ## Related
 
-See `rfd.qmd` (rendered as `rfd.html`) for the live, sortable index.
+See `pages/rfd.qmd` (rendered as `pages/rfd.html`) for the live, sortable index.

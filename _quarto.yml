@@ -117,11 +117,11 @@ website:
     search: true
     left:
       - text: "Changes"
-        file: changelog.qmd
+        file: pages/changelog.qmd
       - text: "RFDs"
-        file: rfd.qmd
+        file: pages/rfd.qmd
       - text: "References"
-        file: references.qmd
+        file: pages/references.qmd
   page-footer:
     right:
       - icon: github
@@ -136,6 +136,6 @@ format:
 
 filters:
   - quarto
-  - filters/decision-meta.py
+  - scripts/decision-meta.py
 
 freeze: true
