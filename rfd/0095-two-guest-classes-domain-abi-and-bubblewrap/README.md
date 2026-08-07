@@ -93,16 +93,16 @@ guests call `ECALL_VCALL` and `ECALL_GET_NODE`, which are domain
 operations. This ABI numbers from 600, which leaves the 500 block free
 so one guest can speak both.
 
-| Call | Purpose |
-| --- | --- |
-| `ZONE_KV_GET` | Read one key |
-| `ZONE_KV_SET` | Write one key |
-| `ZONE_KV_DEL` | Delete one key |
-| `ZONE_KV_LIST` | List keys under a prefix |
-| `ZONE_PRINT` | One zone-tagged log line |
+| Call           | Purpose                    |
+| -------------- | -------------------------- |
+| `ZONE_KV_GET`  | Read one key               |
+| `ZONE_KV_SET`  | Write one key              |
+| `ZONE_KV_DEL`  | Delete one key             |
+| `ZONE_KV_LIST` | List keys under a prefix   |
+| `ZONE_PRINT`   | One zone-tagged log line   |
 | `ZONE_ENTROPY` | Random bytes from the host |
-| `ZONE_OBJ_GET` | Read object bytes |
-| `ZONE_OBJ_PUT` | Publish an object |
+| `ZONE_OBJ_GET` | Read object bytes          |
+| `ZONE_OBJ_PUT` | Publish an object          |
 
 Below the ABI, the host installs 7 Linux syscalls. These are
 libriscv's `setup_minimal_syscalls()`: `close`, `lseek`, `write`,
@@ -196,14 +196,14 @@ property this codebase maintains by omission. It becomes a property
 the kernel enforces. The engine guest cannot reach the h2o loop or the
 FoundationDB port, because it has no interfaces.
 
-| Requirement | Flag |
-| --- | --- |
-| No network | `--unshare-net` |
+| Requirement            | Flag                    |
+| ---------------------- | ----------------------- |
+| No network             | `--unshare-net`         |
 | Read-only content pack | `--ro-bind <pack> /app` |
-| Writable scratch only | `--bind <dir> /tmp` |
-| No host filesystem | `--unshare-all` |
-| Dies with the zone | `--die-with-parent` |
-| Syscall limits | `--seccomp <fd>` |
+| Writable scratch only  | `--bind <dir> /tmp`     |
+| No host filesystem     | `--unshare-all`         |
+| Dies with the zone     | `--die-with-parent`     |
+| Syscall limits         | `--seccomp <fd>`        |
 
 An engine guest is a separate operating-system process. It cannot
 share a `libriscv::Machine` address space, so the in-process ABI does
