@@ -46,7 +46,7 @@ Neither appears in `rfd/0100`. Nor does any relational store, and
       |    planner, /acl/check, /storage/manifest
       +- aria-storage: casync chunking on publish
 
-      +- DuckDB embedded, ETNF Parquet (see rfd/0103)  0 USD
+      +- PostgreSQL, WAL to Tigris (see rfd/0103)   +1.45 USD
 
     Tigris object storage                             0 USD
       |- casync chunks and .caibx indexes             5 GB free
@@ -63,8 +63,8 @@ is 74 percent of the budget for the database alone. That leaves
 nothing.
 
 CockroachDB Cloud Basic is on the blocklist, so the managed free tier
-is not available either. `rfd/0103` moves Uro to DuckDB and Parquet for
-that reason, and it carries the measurements.
+is not available either. `rfd/0103` moves Uro to PostgreSQL for that
+reason, and it carries the measurements.
 
 ## Assets never pass through the zone server
 
@@ -130,8 +130,9 @@ not extracted from the Godot build.
 `zone-backend` is not deployed on Fly, so its 2.02 USD line is an
 estimate rather than a measurement.
 
-Uro's move from CockroachDB to DuckDB is not done. `rfd/0103` decides
-it and states the migration cost as unestimated.
+Uro's move from CockroachDB to PostgreSQL is not done. `rfd/0103`
+decides it, and Uro's migrations are not yet audited for
+CockroachDB-specific SQL.
 
 ## Which record owns which fact
 
