@@ -6,6 +6,8 @@ tier: baseline
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0015](../rfd/0015-bounded-llm-steering-queue/README.md).
+
 ## Context and Problem Statement
 
 We steer an LLM by appending tasks to a queue as we go — this manuals session is

@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0017](../rfd/0017-compiling-godot-engine/README.md).
+
 ## Context
 
 Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from

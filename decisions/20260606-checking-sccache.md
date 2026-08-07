@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0016](../rfd/0016-checking-sccache/README.md).
+
 ## Context and Problem Statement
 
 Native builds route compilation through [sccache](https://github.com/mozilla/sccache)

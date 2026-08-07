@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0009](../rfd/0009-ghcr-package-ownership-same-repo/README.md).
+
 ## Context
 
 The zone server binary was built by `multiplayer-fabric-baker` and pushed to `ghcr.io/v-sekai-fire/godot-zone-double`. The zone deploy workflow (in `multiplayer-fabric-zone`) used `--local-only` with `docker/login-action` to pull that image, but received 403 Forbidden.

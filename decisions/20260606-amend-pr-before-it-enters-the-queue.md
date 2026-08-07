@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0012](../rfd/0012-amend-pr-before-it-enters-the-queue/README.md).
+
 ## Context and Problem Statement
 
 The [merge queue](20260606-require-pr-and-merge-queue-on-main.md) captures a PR's

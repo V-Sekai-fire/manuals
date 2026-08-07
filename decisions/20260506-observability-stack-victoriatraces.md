@@ -7,6 +7,8 @@ tier: baseline
 supersedes: 20260506-observability-stack-victoriametrics-jaeger.md
 ---
 
+> Moved to [rfd/0011](../rfd/0011-observability-stack-victoriatraces/README.md).
+
 > Deployment note: the stack now runs on the Harvester cluster; it has moved off
 > Fly.io (see self-host on Harvester HCI).
 > The Fly volume and `fly proxy` references below are from the original deployment.
