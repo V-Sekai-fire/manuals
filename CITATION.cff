@@ -898,3 +898,58 @@ references:
         given-names: Victor
     year: 2026
     url: "https://victoranderssen.com/blog/linux-ipc-benchmark/"
+
+  # ── Bandwidth budgets: measured client capacity and shipped-title usage ───
+
+  - type: conference-paper
+    title: "Networking for Physics Programmers"
+    abstract: >
+      GDC 2010 talk. Includes the Sony Bandwidth Probe: upload and download
+      capacity sampled from four Sony titles (Pain, Warhawk, Fat Princess,
+      GT5 Prologue) between 2010-01-30 and 2010-02-18. Americas upload:
+      99 percent at or above 64 kbps, 97.3 percent at or above 128 kbps.
+      USA download: 99 percent at or above 256 kbps, 95.5 percent at or
+      above 512 kbps. Europe download: 99.15 percent at or above 256 kbps,
+      97.6 percent at or above 512 kbps.
+    authors:
+      - family-names: Fiedler
+        given-names: Glenn
+    year: 2010
+    url: "https://www.gamedevs.org/uploads/networking-for-physics-programmers.pdf"
+    conference:
+      name: "Game Developers Conference 2010"
+
+  - type: report
+    title: "Blueprint for the Open Metaverse"
+    abstract: >
+      RP1 white paper, AWE 2024. States server-side density rather than a
+      per-client bandwidth cap: 4000 full-fidelity avatars on one dual Xeon
+      E5-2680 v4 in Q1 2016, and 100K full-fidelity avatars on a network of
+      33 servers in mid 2023. Searched for a per-user bandwidth figure and
+      found none.
+    authors:
+      - name: "RP1"
+    year: 2024
+    url: "https://cdn.rp1.com/whitepaper.pdf"
+
+  - type: generic
+    title: "How Much Data Does Fortnite Use? Per Hour and Per Match"
+    abstract: >
+      Consumer data-usage reporting, used here only to bound a shipped
+      title's per-player rate: 50 to 150 MB per hour, which is
+      approximately 110 to 330 kbps.
+    authors:
+      - name: "Zetsim"
+    year: 2026
+    url: "https://www.zetsim.com/blogs/news/how-much-data-does-fortnite-use-per-hour"
+
+  - type: generic
+    title: "How Much Data Does Gaming Use on Mobile, PC and Console"
+    abstract: >
+      Consumer data-usage reporting. Roblox at 100 to 600 MB per hour,
+      approximately 220 kbps to 1.3 Mbps, against Fortnite at 30 to 50 MB
+      per hour.
+    authors:
+      - name: "Jetpac Global"
+    year: 2026
+    url: "https://www.jetpacglobal.com/blog/how-much-data-does-gaming-use/"
