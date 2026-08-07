@@ -43,17 +43,17 @@ in the same order rather than a different one.
 documentation states the limit directly. A query is valid only when one
 Get or one GetRange satisfies it.
 
-- **No joins.**
-- **No `or`.** "A query with an `or` condition is not possible."
-- **No aggregates in the database.** Filtering, aggregation and
+- No joins.
+- No `or`. "A query with an `or` condition is not possible."
+- No aggregates in the database. Filtering, aggregation and
   grouping "must be done by your Elixir code".
-- **One Between clause per query**, on an indexed field, and index
+- One Between clause per query, on an indexed field, and index
   field order decides which ranges work.
-- **Migrations cannot** rename tables or fields, delete fields, drop
+- Migrations cannot rename tables or fields, delete fields, drop
   indexes, or roll back. The standard `mix ecto.migrate` tasks do not
   apply.
-- **Tenants are mandatory.** Omitting one raises at run time.
-- **Transactions run under FoundationDB's 5 second limit**, may
+- Tenants are mandatory. Omitting one raises at run time.
+- Transactions run under FoundationDB's 5 second limit, may
   re-execute on conflict, and must have no side effects. So no PubSub
   publish inside one.
 
