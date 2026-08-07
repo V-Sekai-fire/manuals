@@ -1,11 +1,11 @@
 #!/usr/bin/env elixir
 
 # Creates a new changelog file from the most recent one, or a new template.
-# Usage: elixir create_changelog_entry.exs [new_filename_stem]
+# Usage: elixir scripts/create_changelog_entry.exs [new_filename_stem]
 # If new_filename_stem is not provided, it defaults to today's date (YYYYMMDD).
 # The new_filename_stem should be in YYYYMMDD format if provided.
-# Example: elixir create_changelog_entry.exs 20250426
-# Example: elixir create_changelog_entry.exs (uses today's date, e.g., 20250527, as the stem)
+# Example: elixir scripts/create_changelog_entry.exs 20250426
+# Example: elixir scripts/create_changelog_entry.exs (uses today's date, e.g., 20250527, as the stem)
 # This will create changelog/YYYY/YYYYMMDD-deck-log.md (e.g., changelog/2025/20250527-deck-log.md)
 # and replace '%%DATE%%' in it with today's date (YYYY-MM-DD).
 

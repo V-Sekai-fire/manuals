@@ -49,8 +49,8 @@ Process and infrastructure decisions carry no tier. The decisions index shows th
 ## Adding a changelog entry
 
 ```sh
-elixir create_changelog_entry.exs        # uses today's date
-elixir create_changelog_entry.exs 20260512
+elixir scripts/create_changelog_entry.exs        # uses today's date
+elixir scripts/create_changelog_entry.exs 20260512
 ```
 
 ## Checks
@@ -73,14 +73,16 @@ sequence), and add a matching `references.bib` entry. See the naming-convention 
 
 ## Key files
 
-| Path                         | Purpose                                                  |
-| ---------------------------- | -------------------------------------------------------- |
-| `_quarto.yml`                | Site config                                              |
-| `index.md`                   | Landing page                                             |
-| `decisions/`                 | Architecture Decision Records not yet migrated to an RFD |
-| `changelog/`                 | Changelog entries by year                                |
-| `changelog.qmd`              | Changelog index                                          |
-| `create_changelog_entry.exs` | Generate new changelog entry                             |
+| Path                                 | Purpose                                                           |
+| ------------------------------------ | ----------------------------------------------------------------- |
+| `_quarto.yml`                        | Site config                                                       |
+| `index.md`                           | Landing page                                                      |
+| `decisions/`                         | Architecture Decision Records not yet migrated to an RFD          |
+| `changelog/`                         | Changelog entries by year                                         |
+| `pages/`                             | Site listing pages (`changelog.qmd`, `rfd.qmd`, `references.qmd`) |
+| `pages/changelog.qmd`                | Changelog index                                                   |
+| `scripts/`                           | Repo tooling: changelog generator, tropes check, Quarto filter    |
+| `scripts/create_changelog_entry.exs` | Generate new changelog entry                                      |
 
 ## Conventions
 
