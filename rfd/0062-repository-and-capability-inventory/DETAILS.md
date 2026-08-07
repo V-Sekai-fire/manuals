@@ -1,47 +1,42 @@
----
-title: Repository and capability inventory for the multiplayer fabric
-date: 2026-06-13
-status: accepted
-tier: baseline
-decision-makers: K. S. Ernest (iFire) Lee
----
+## Context and problem statement
 
-> Moved to [rfd/0062](../rfd/0062-repository-and-capability-inventory/README.md).
+The landing page used to carry the full repository list, a
+capability-to-branch table, and a prose description of the deployment
+target. Those facts already have homes — each capability rides a
+decision and an engine branch, the deployment target is a decision,
+the two-org split is a decision — so the landing page was a second
+copy that drifted every time one of those decisions changed. This
+record is the one place that owns the org-wide inventory; the landing
+page links here instead of restating it, and decided facts
+(deployment, org split, per-capability status) stay in their own
+decisions.
 
-## Context and Problem Statement
+The narrower vertical-slice repository map
+(`rfd/0057-vertical-slice-repository-map`) indexes only the
+loot-action slice; this inventory is the full
+[`v-sekai-multiplayer-fabric`](https://github.com/v-sekai-multiplayer-fabric)
+org plus the repos still on
+[`V-Sekai-fire`](https://github.com/V-Sekai-fire).
 
-The landing page used to carry the full repository list, a capability-to-branch
-table, and a prose description of the deployment target. Those facts already have
-homes — each capability rides a decision and an engine branch, the deployment target
-is a decision, the two-org split is a decision — so the landing page was a second
-copy that drifted every time one of those decisions changed. This record is the one
-place that owns the org-wide inventory; the landing page links here instead of
-restating it, and decided facts (deployment, org split, per-capability status) stay
-in their own decisions.
+## Decision outcome
 
-The narrower [vertical-slice repository map](20260612-vertical-slice-repository-map.md)
-indexes only the loot-action slice; this inventory is the full
-[`v-sekai-multiplayer-fabric`](https://github.com/v-sekai-multiplayer-fabric) org plus
-the repos still on [`V-Sekai-fire`](https://github.com/V-Sekai-fire).
-
-## Decision Outcome
-
-This page is the canonical inventory. Each capability maps to the engine feature
-branch in [godot](https://github.com/v-sekai-multiplayer-fabric/godot) that implements
-it; the Tier column follows the
-[feature classification](20260606-feature-classification-poc-baseline-stretch.md).
+This page is the canonical inventory. Each capability maps to the
+engine feature branch in
+[godot](https://github.com/v-sekai-multiplayer-fabric/godot) that
+implements it; the Tier column follows the feature classification
+(`rfd/0018-feature-classification-poc-baseline-stretch`).
 
 ### Capabilities and where they live
 
-| Capability                                                                               | Tier             | Engine branch                                                                        | Supporting repos                                                                                                                                                                                                             | Status                                                                                |
-| ---------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Native video playback                                                                    | Baseline         | `feat/native-media` (MediaFoundation, GStreamer)                                     | [native-media-test](https://github.com/v-sekai-multiplayer-fabric/native-media-test), [vulkan-video-godot](https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot)                                                 | Working; builds on Windows and Linux.                                                 |
-| Networking transport ([WebTransport / HTTP/3](20260606-webtransport-http3-transport.md)) | Baseline         | `feat/module-http3` (picoquic + web/wasm backends)                                   | [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)                                                                                                                                                     | Working; `WebTransportPeer`/`QUICClient`/`QUICServer`, demos, Lean termination proof. |
-| Scene baking via OpenUSD                                                                 | Baseline         | —                                                                                    | [openusd-fabric](https://github.com/v-sekai-multiplayer-fabric/openusd-fabric), [zone-baker](https://github.com/v-sekai-multiplayer-fabric/zone-baker), [idtx-flow](https://github.com/v-sekai-multiplayer-fabric/idtx-flow) | Working; USD schema, Blender export hooks, scene validation, headless export.         |
-| Spatial audio ([HRTF + audio probes](20260606-spatial-audio-patched-resonance-audio.md)) | Baseline         | `feat/spatial-audio-server`, `feat/module-resonance-audio` (patched Resonance Audio) | [sponza-godot-audio](https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio)                                                                                                                                       | Working; demo and benchmark scene.                                                    |
-| Speech                                                                                   | Baseline         | `feat/module-speech`                                                                 | —                                                                                                                                                                                                                            | Working.                                                                              |
-| Pen stroke creation (codename cassie)                                                    | Proof of concept | `feat/module-cassie`                                                                 | [vsekai-materialx](https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx), [materialx-shaders-lean](https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean)                                           | Pen stroke creation is solid; patch surface creation is buggy (loses about 90%).      |
-| Multiplayer presence (tracker orbs)                                                      | Proof of concept | `feat/module-xr-grid`                                                                | [xr-grid](https://github.com/v-sekai-multiplayer-fabric/xr-grid)                                                                                                                                                             | Proposed; head and hand pose orbs sent over low-level WebTransport.                   |
+| Capability                                                                            | Tier             | Engine branch                                                                        | Supporting repos                                                                                                                                                                                                             | Status                                                                                |
+| ------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Native video playback                                                                 | Baseline         | `feat/native-media` (MediaFoundation, GStreamer)                                     | [native-media-test](https://github.com/v-sekai-multiplayer-fabric/native-media-test), [vulkan-video-godot](https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot)                                                 | Working; builds on Windows and Linux.                                                 |
+| Networking transport (WebTransport / HTTP/3, `rfd/0023-webtransport-http3-transport`) | Baseline         | `feat/module-http3` (picoquic + web/wasm backends)                                   | [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)                                                                                                                                                     | Working; `WebTransportPeer`/`QUICClient`/`QUICServer`, demos, Lean termination proof. |
+| Scene baking via OpenUSD                                                              | Baseline         | —                                                                                    | [openusd-fabric](https://github.com/v-sekai-multiplayer-fabric/openusd-fabric), [zone-baker](https://github.com/v-sekai-multiplayer-fabric/zone-baker), [idtx-flow](https://github.com/v-sekai-multiplayer-fabric/idtx-flow) | Working; USD schema, Blender export hooks, scene validation, headless export.         |
+| Spatial audio (HRTF + audio probes, `rfd/0022-spatial-audio-patched-resonance-audio`) | Baseline         | `feat/spatial-audio-server`, `feat/module-resonance-audio` (patched Resonance Audio) | [sponza-godot-audio](https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio)                                                                                                                                       | Working; demo and benchmark scene.                                                    |
+| Speech                                                                                | Baseline         | `feat/module-speech`                                                                 | —                                                                                                                                                                                                                            | Working.                                                                              |
+| Pen stroke creation (codename cassie)                                                 | Proof of concept | `feat/module-cassie`                                                                 | [vsekai-materialx](https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx), [materialx-shaders-lean](https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean)                                           | Pen stroke creation is solid; patch surface creation is buggy (loses about 90%).      |
+| Multiplayer presence (tracker orbs)                                                   | Proof of concept | `feat/module-xr-grid`                                                                | [xr-grid](https://github.com/v-sekai-multiplayer-fabric/xr-grid)                                                                                                                                                             | Proposed; head and hand pose orbs sent over low-level WebTransport.                   |
 
 ### Repositories — `v-sekai-multiplayer-fabric`
 
@@ -68,10 +63,12 @@ it; the Tier column follows the
 
 #### Service images
 
-Each service ships as an OCI container image launched by a podman quadlet under
-systemd; see [run services as systemd podman quadlets on Fedora 44](20260613-quadlets-on-fedora-44-instead-of-harvester.md),
-which supersedes the earlier qcow2-on-Harvester model. The `*-image` repos below are
-being repointed from qcow2 VM images to OCI images per that decision.
+Each service ships as an OCI container image launched by a podman
+quadlet under systemd; see run services as systemd podman quadlets on
+Fedora 44 (`rfd/0061-quadlets-on-fedora-44-instead-of-harvester`),
+which supersedes the earlier qcow2-on-Harvester model. The `*-image`
+repos below are being repointed from qcow2 VM images to OCI images per
+that decision.
 
 | Repo                                                                                           | Purpose                                                                                 |
 | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -128,8 +125,9 @@ being repointed from qcow2 VM images to OCI images per that decision.
 ### Still on `V-Sekai-fire` (not yet migrated)
 
 These repos remain the source of truth under the older org; see the
-[two-org split](20260606-org-split-v-sekai-multiplayer-fabric.md). Links in the
-decisions and changelog that point at them are correct and still resolve.
+two-org split decision (`decisions/20260606-org-split-v-sekai-multiplayer-fabric.md`).
+Links in the decisions and changelog that point at them are correct
+and still resolve.
 
 | Repo                                                                                                       | Purpose                                                             |
 | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -145,8 +143,10 @@ decisions and changelog that point at them are correct and still resolve.
 
 ## Consequences
 
-- One page owns the inventory, so a repo or capability change lands in one place.
-- The landing page asserts only durable orientation and links here, so it no longer
-  drifts when the deployment target, org split, or a capability status changes.
-- This inventory still needs hand maintenance; the gain is a single source of truth,
-  not zero maintenance.
+- One page owns the inventory, so a repo or capability change lands in
+  one place.
+- The landing page asserts only durable orientation and links here, so
+  it no longer drifts when the deployment target, org split, or a
+  capability status changes.
+- This inventory still needs hand maintenance; the gain is a single
+  source of truth, not zero maintenance.

@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0059](../rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.md).
+
 ## Context and Problem Statement
 
 A status report carries an outcome the reader acts on: a slipped date, a broken

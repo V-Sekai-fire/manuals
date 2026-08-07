@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0065](../rfd/0065-fabric-platform-central-elixir-burrito-casync/README.md).
+
 # fabric-platform-central as Elixir OTP app with Burrito and casync
 
 ## The Context

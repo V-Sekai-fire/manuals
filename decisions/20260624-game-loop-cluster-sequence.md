@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0066](../rfd/0066-game-loop-cluster-sequence/README.md).
+
 # Game-loop-first delivery sequence
 
 ## The Context

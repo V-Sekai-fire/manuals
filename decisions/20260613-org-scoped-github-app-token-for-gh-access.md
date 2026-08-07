@@ -6,6 +6,8 @@ tier: baseline
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0060](../rfd/0060-org-scoped-github-app-token-for-gh-access/README.md).
+
 ## Context and Problem Statement
 
 Repository operations against
