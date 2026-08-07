@@ -49,9 +49,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -90,7 +90,8 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-title','listing-state','listing-scope','listing-filename',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-filename-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
+      page: 30,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
       searchColumns: ["listing-filename","listing-file-modified"],
     };
 
@@ -348,8 +349,14 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#related" id="toc-related" class="nav-link active" data-scroll-target="#related">Related</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -374,11 +381,48 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="index.html">Manuals</a> › RFDs</em></p>
+<p><em><a href="../index.html">Manuals</a> › RFDs</em></p>
 <p>Request-for-Discussion documents: longer-lived design records, numbered rather than dated. See <code>rfd/0000-conventions/README.md</code> for the format and the state values.</p>
 
 
 
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="0000-conventions/README.html">RFD 0000: Conventions</a></p></li>
+<li><p><a href="0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.html">RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes</a></p></li>
+<li><p><a href="0002-taskweft-value-narrowing-primitives-and-refs/README.html">RFD 0002: taskweft/nif's value narrowing: primitives, and refs as pointer strings</a></p></li>
+<li><p><a href="0003-castspell-sandbox-package-and-manifest-encoding/README.html">RFD 0003: CastSpell sandbox package format and manifest encoding</a></p></li>
+<li><p><a href="0004-castspell-libgodot-sandbox-runtime-scope/README.html">RFD 0004: CastSpell's sandboxed runtime: embed libgodot, not godot-sandbox's narrow API</a></p></li>
+<li><p><a href="0005-gltf-interactivity-value-type-taxonomy-correction/README.html">RFD 0005: gltf_interactivity's value types: primitive, ref, and custom</a></p></li>
+<li><p><a href="0006-cockroachdb-with-mtls-role-separation/README.html">RFD 0006: CockroachDB with mTLS and role-separated access</a></p></li>
+<li><p><a href="0007-godot-double-precision-template-release-for-zone/README.html">RFD 0007: Godot double precision template_release for zone servers</a></p></li>
+<li><p><a href="0008-webtransport-over-quic-for-game-traffic/README.html">RFD 0008: Use WebTransport over QUIC for game traffic</a></p></li>
+<li><p><a href="0009-ghcr-package-ownership-same-repo/README.html">RFD 0009: GHCR packages must be built by the repo that consumes them</a></p></li>
+<li><p><a href="0010-maglev-cycle-1-gateway-handshake/README.html">RFD 0010: Godot client transport handshake against the authoritative server</a></p></li>
+<li><p><a href="0011-observability-stack-victoriatraces/README.html">RFD 0011: Replace Jaeger with VictoriaTraces for trace storage</a></p></li>
+<li><p><a href="0012-amend-pr-before-it-enters-the-queue/README.html">RFD 0012: Amend a PR before it enters the merge queue, not after</a></p></li>
+<li><p><a href="0013-archival-file-naming-convention/README.html">RFD 0013: Archival file naming convention for committed assets</a></p></li>
+<li><p><a href="0014-art-game-loop-steel-thread/README.html">RFD 0014: Recursive art-game loop and its minimal steel thread</a></p></li>
+<li><p><a href="0015-bounded-llm-steering-queue/README.html">RFD 0015: Bound the LLM steering queue to avoid context overflow</a></p></li>
+<li><p><a href="0016-checking-sccache/README.html">RFD 0016: Checking the sccache build cache</a></p></li>
+<li><p><a href="0017-compiling-godot-engine/README.html">RFD 0017: Compiling the Godot engine</a></p></li>
+<li><p><a href="0018-feature-classification-poc-baseline-stretch/README.html">RFD 0018: Feature classification — proof of concept, baseline, stretch</a></p></li>
+<li><p><a href="0019-gitassembly-tag-release/README.html">RFD 0019: Cut gitassembly tag releases for the assembled engine</a></p></li>
+<li><p><a href="0020-pin-engine-to-frozen-godot-4-7/README.html">RFD 0020: Pin the engine to a frozen Godot 4.7 commit</a></p></li>
+<li><p><a href="0021-require-pr-and-merge-queue-on-main/README.html">RFD 0021: Require pull requests and a merge queue on main</a></p></li>
+<li><p><a href="0022-spatial-audio-patched-resonance-audio/README.html">RFD 0022: Spatial audio via a patched Resonance Audio (HRTF and audio probes)</a></p></li>
+<li><p><a href="0023-webtransport-http3-transport/README.html">RFD 0023: WebTransport over HTTP/3 transport</a></p></li>
+<li><p><a href="0024-windows-background-services-nssm/README.html">RFD 0024: Running background services on Windows with nssm</a></p></li>
+<li><p><a href="0025-tenseless-continuous-present-voice/README.html">RFD 0025: Comments and docs use a tenseless continuous-present voice</a></p></li>
+<li><p><a href="0026-commit-messages-sentence-case/README.html">RFD 0026: Commit messages use sentence case without Conventional Commits prefixes</a></p></li>
+<li><p><a href="0027-umbrella-package-installs-all-components/README.html">RFD 0027: An umbrella package installs every component in one command</a></p></li>
+<li><p><a href="0028-hexagonal-core-ports-adapters/README.html">RFD 0028: Hexagonal core/ports/adapters as the component convention</a></p></li>
+<li><p><a href="0029-cassie-desktop-curvenet-authoring/README.html">RFD 0029: CASSIE desktop curvenet authoring for content, no Blender</a></p></li>
+<li><p><a href="0030-cicd-runners-as-queueing-system/README.html">RFD 0030: CI/CD runners operate as a finite queueing system</a></p></li>
+<li><p><a href="0031-content-build-merged-double-precision-mcp/README.html">RFD 0031: Content creation in a single merged double-precision build via the editor MCP</a></p></li>
+</ul>
+</section>
 
 <div class="quarto-listing quarto-listing-container-table" id="listing-listing">
 <div class="listing-actions-group">
@@ -421,7 +465,7 @@ Scope
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-listing-file-modified-sort="1786062505334" data-listing-filename-sort="README.md">
+<tr data-index="0" data-listing-file-modified-sort="1786063118630" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0000-conventions/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -437,7 +481,7 @@ Scope
 
 </tr>
 
-<tr data-index="1" data-listing-file-modified-sort="1786062505334" data-listing-filename-sort="README.md">
+<tr data-index="1" data-listing-file-modified-sort="1786063118631" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -453,7 +497,7 @@ Scope
 
 </tr>
 
-<tr data-index="2" data-listing-file-modified-sort="1786062505334" data-listing-filename-sort="README.md">
+<tr data-index="2" data-listing-file-modified-sort="1786063118631" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -469,7 +513,7 @@ Scope
 
 </tr>
 
-<tr data-index="3" data-listing-file-modified-sort="1786062505334" data-listing-filename-sort="README.md">
+<tr data-index="3" data-listing-file-modified-sort="1786063118631" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -485,7 +529,7 @@ Scope
 
 </tr>
 
-<tr data-index="4" data-listing-file-modified-sort="1786062505334" data-listing-filename-sort="README.md">
+<tr data-index="4" data-listing-file-modified-sort="1786063118631" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -501,7 +545,7 @@ Scope
 
 </tr>
 
-<tr data-index="5" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="5" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -517,7 +561,7 @@ Scope
 
 </tr>
 
-<tr data-index="6" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="6" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0006-cockroachdb-with-mtls-role-separation/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -533,7 +577,7 @@ Scope
 
 </tr>
 
-<tr data-index="7" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="7" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0007-godot-double-precision-template-release-for-zone/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -549,7 +593,7 @@ Scope
 
 </tr>
 
-<tr data-index="8" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="8" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0008-webtransport-over-quic-for-game-traffic/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -565,7 +609,7 @@ Scope
 
 </tr>
 
-<tr data-index="9" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="9" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0009-ghcr-package-ownership-same-repo/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -581,7 +625,7 @@ Scope
 
 </tr>
 
-<tr data-index="10" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="10" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0010-maglev-cycle-1-gateway-handshake/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -597,7 +641,7 @@ Scope
 
 </tr>
 
-<tr data-index="11" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="11" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0011-observability-stack-victoriatraces/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -613,7 +657,7 @@ Scope
 
 </tr>
 
-<tr data-index="12" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="12" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0012-amend-pr-before-it-enters-the-queue/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -629,7 +673,7 @@ Scope
 
 </tr>
 
-<tr data-index="13" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="13" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0013-archival-file-naming-convention/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -645,7 +689,7 @@ Scope
 
 </tr>
 
-<tr data-index="14" data-listing-file-modified-sort="1786062505335" data-listing-filename-sort="README.md">
+<tr data-index="14" data-listing-file-modified-sort="1786063118632" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0014-art-game-loop-steel-thread/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -661,7 +705,7 @@ Scope
 
 </tr>
 
-<tr data-index="15" data-listing-file-modified-sort="1786062505336" data-listing-filename-sort="README.md">
+<tr data-index="15" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0015-bounded-llm-steering-queue/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -677,7 +721,7 @@ Scope
 
 </tr>
 
-<tr data-index="16" data-listing-file-modified-sort="1786062505336" data-listing-filename-sort="README.md">
+<tr data-index="16" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0016-checking-sccache/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -693,7 +737,7 @@ Scope
 
 </tr>
 
-<tr data-index="17" data-listing-file-modified-sort="1786062505336" data-listing-filename-sort="README.md">
+<tr data-index="17" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0017-compiling-godot-engine/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -709,7 +753,7 @@ Scope
 
 </tr>
 
-<tr data-index="18" data-listing-file-modified-sort="1786062505336" data-listing-filename-sort="README.md">
+<tr data-index="18" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0018-feature-classification-poc-baseline-stretch/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -725,7 +769,215 @@ Scope
 
 </tr>
 
-<tr data-index="19" data-listing-file-modified-sort="1786062505336" data-listing-filename-sort="README.md">
+<tr data-index="19" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0019-gitassembly-tag-release/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0019-gitassembly-tag-release/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="20" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0020-pin-engine-to-frozen-godot-4-7/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0020-pin-engine-to-frozen-godot-4-7/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="21" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0021-require-pr-and-merge-queue-on-main/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0021-require-pr-and-merge-queue-on-main/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="22" data-listing-file-modified-sort="1786063118633" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0022-spatial-audio-patched-resonance-audio/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0022-spatial-audio-patched-resonance-audio/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="23" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0023-webtransport-http3-transport/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0023-webtransport-http3-transport/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="24" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0024-windows-background-services-nssm/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0024-windows-background-services-nssm/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="25" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0025-tenseless-continuous-present-voice/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0025-tenseless-continuous-present-voice/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="26" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0026-commit-messages-sentence-case/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0026-commit-messages-sentence-case/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="27" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0027-umbrella-package-installs-all-components/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0027-umbrella-package-installs-all-components/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="28" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0028-hexagonal-core-ports-adapters/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0028-hexagonal-core-ports-adapters/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="29" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0029-cassie-desktop-curvenet-authoring/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0029-cassie-desktop-curvenet-authoring/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="30" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0030-cicd-runners-as-queueing-system/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0030-cicd-runners-as-queueing-system/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="31" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0031-content-build-merged-double-precision-mcp/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0031-content-build-merged-double-precision-mcp/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="32" data-listing-file-modified-sort="1786063118634" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -744,6 +996,9 @@ Scope
 </tbody>
 </table>
 <div class="listing-no-matching d-none">No matching items</div>
+<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -1166,7 +1421,7 @@ Scope
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
