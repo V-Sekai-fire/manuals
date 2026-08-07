@@ -101,6 +101,7 @@ project:
     - "rfd/0089-flyio-over-podman-quadlets/README.md"
     - "rfd/0090-uro-burrito-release/README.md"
     - "rfd/0091-the-gyre-mud-domain-and-mode-selector/README.md"
+    - "rfd/0092-rebac-gates-libriscv-guest-access/README.md"
 
 resources:
   - decisions/attachments
