@@ -1,0 +1,23 @@
+---
+title: "RFDs"
+toc: true
+listing:
+  filter-ui: true
+  sort-ui: true
+  type: table
+  contents:
+    - "rfd/**/README.md"
+  sort:
+    - "title"
+  feed: true
+  fields: [title, state, scope, filename]
+  field-display-names:
+    title: "Title"
+    state: "State"
+    scope: "Scope"
+    filename: "File"
+---
+
+Request-for-Discussion documents: longer-lived design records, numbered
+rather than dated. See `rfd/0000-conventions/README.md` for the format
+and the state values.

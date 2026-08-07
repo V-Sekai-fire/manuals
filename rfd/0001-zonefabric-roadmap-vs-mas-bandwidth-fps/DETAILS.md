@@ -1,7 +1,3 @@
-# RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes
-
-**State:** discussion
-
 ## Summary
 
 This RFD sequences the remaining `zone-server-h2o` zonefabric work by the
@@ -139,7 +135,7 @@ List these follow-ups in PERT order.
    CastSpell's effect step runs as a sandboxed `libriscv` ELF package,
    reusing `decisions/20260611-generated-behavior-sandboxed-riscv.md`'s
    existing sandboxed-execution work rather than a new execution engine.
-   `rfd/0003-castspell-sandbox-package-and-manifest-encoding.md` is the
+   `rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md` is the
    full design. It is a single `.elf` file per package, an embedded
    CBOR-LD manifest, and one runtime FFI boundary. That boundary is the
    same bitpacked struct format `RFD 0010` already uses for the zone
@@ -151,7 +147,7 @@ List these follow-ups in PERT order.
    under `taskweft/thirdparty/gltf_interactivity/`, already defines, rather
    than invent a new one.
 
-   `rfd/0005-gltf-interactivity-value-type-taxonomy-correction.md` records
+   `rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.md` records
    that specification's real taxonomy: primitive types, `ref`, and a
    third `custom` category the specification defers to extensions.
    `zone-server-h2o` implements only the first two.
@@ -169,7 +165,7 @@ List these follow-ups in PERT order.
 
 6. Scope how much of `libriscv`/`godot-sandbox`'s own API surface
    CastSpell effects actually need, rather than assume the whole thing.
-   `rfd/0004-castspell-libgodot-sandbox-runtime-scope.md` is the full
+   `rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md` is the full
    design. `godot-sandbox`'s own API is mostly a thin remote-call proxy
    into a live Godot process, not local math. This project embeds a
    real, headless `libgodot` instance per zone instead of reimplementing
@@ -220,7 +216,7 @@ comment, and confirm whether the `zf/zone_state/`, `zf/effect/`, and
 Resolved: the sandboxed-CastSpell approach in item 4 needs its own
 follow-up RFD. That is because the scope differs between a client-side
 sandbox and a server-side one running under load. That follow-up is
-`rfd/0003-castspell-sandbox-package-and-manifest-encoding.md`. Its own
+`rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md`. Its own
 open questions, on `jsonld-cpp`'s maintenance risk, the authoring
 tool's sandboxing, and the `QCBOR`-versus-`zcbor` pick, live there, not
 here.
@@ -229,4 +225,4 @@ Resolved, item 6: the scope of `libriscv`/`godot-sandbox`'s API surface
 CastSpell effects need, and the choice to embed `libgodot` instead of
 reimplementing that surface. That decision, and its own open
 performance-measurement gate (part 2 of the spike), live in
-`rfd/0004-castspell-libgodot-sandbox-runtime-scope.md`.
+`rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md`.
