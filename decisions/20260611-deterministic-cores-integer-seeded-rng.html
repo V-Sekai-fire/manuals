@@ -333,6 +333,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Deterministic cores via r128 fixed-point and seeded RNG</em></p>
 <p><strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0034-deterministic-cores-integer-seeded-rng/README.md">rfd/0034</a>.</p>
+</blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>Replay, recorded fixtures, and the future rollback adapter need the authoritative cores to be bit-exact across the RTX 4090 workstation and the Steam Deck. IEEE-754 floating point diverges across platforms through fused multiply-add, instruction reordering, and transcendental functions, so a float in the authoritative path breaks replay silently.</p>
@@ -363,6 +366,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p><a href="20260611-core-contract-pure-reducer-byte-state.html">Cores as pure reducers over byte-serialized state</a></p></li>
 <li><p><a href="20260611-hexagon-combat-core.html">Combat hexagon — core, ports, and adapters</a></p></li>
 <li><p><a href="20260612-r128-fixed-point-as-lean-library.html">r128 Q64.64 fixed-point as a Lean library for the cores</a></p></li>
+<li><p><a href="../rfd/0034-deterministic-cores-integer-seeded-rng/README.html">RFD 0034: Deterministic cores via r128 fixed-point and seeded RNG</a></p></li>
 </ul>
 </section>
 
