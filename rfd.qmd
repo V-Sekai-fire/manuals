@@ -7,8 +7,9 @@ listing:
   type: table
   contents:
     - "rfd/**/README.md"
+    - "!rfd/README.md"
   sort:
-    - "rfd"
+    - "rfd desc"
   feed: true
   fields: [rfd, title, state, scope]
   field-display-names:
