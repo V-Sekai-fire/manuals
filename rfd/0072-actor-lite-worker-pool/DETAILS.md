@@ -1,21 +1,6 @@
----
-title: Actor-lite worker pool architecture for zone-server-h2o
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
+## Target
 
-> Moved to [rfd/0072](../rfd/0072-actor-lite-worker-pool/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0005-actor-lite-architecture.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-**Target:** top 10 TechEmpower R23 data update test
-
-## R23 data update test — top 10
+Top 10 TechEmpower R23 data update test.
 
 | Rank  | Framework             | RPS           | Lang  | ORM     |
 | ----- | --------------------- | ------------- | ----- | ------- |

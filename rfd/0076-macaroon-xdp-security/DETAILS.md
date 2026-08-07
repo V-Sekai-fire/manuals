@@ -1,26 +1,3 @@
----
-title: Macaroon + eBPF/XDP security fabric
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0076](../rfd/0076-macaroon-xdp-security/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0018-macaroon-xdp-security.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Use a two-tier security architecture: Macaroon-based authentication in
-user space, eBPF/XDP session-key enforcement in kernel space. Validate
-the cryptographic token once at connection time, then push a 64-bit
-session key into an eBPF whitelist map for line-rate enforcement on
-every subsequent packet.
-
 ## Rationale
 
 Directly validating a chained-HMAC Macaroon inside an XDP packet filter
@@ -234,7 +211,7 @@ The user-space orchestrator verifies:
 2. `zone_id` is a zone hosted on this server
 3. `server_ip` matches this server's IP
 4. `expires` is in the future
-5. `entity_id` is a valid slot in the zone's slotmap (RFD 0017)
+5. `entity_id` is a valid slot in the zone's slotmap (`rfd/0080-slotmap-entity-storage`)
 
 The `entity_id` caveat ties the Macaroon to a specific slotmap entry.
 If the player's entity is destroyed (slot freed, generation bumped),
@@ -255,20 +232,22 @@ WHITELIST_MAP on the next tick.
 
 ## Relationship to other RFDs
 
-- **RFD 0002** (zonefabric): XDP routes packets to the core handling
-  each zone. The zone's slotmap (RFD 0017) stores the entity state.
-  XDP does not touch the slotmap — it only routes packets.
+- `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps` (zonefabric): XDP
+  routes packets to the core handling each zone. The zone's slotmap
+  (`rfd/0080-slotmap-entity-storage`) stores the entity state. XDP
+  does not touch the slotmap; it only routes packets.
 
-- **RFD 0017** (slotmap): The `entity_id` caveat in the Macaroon maps
-  to a slotmap handle. When the entity is destroyed, the slotmap
-  generation bump invalidates the session.
+- `rfd/0080-slotmap-entity-storage`: The `entity_id` caveat in the
+  Macaroon maps to a slotmap handle. When the entity is destroyed, the
+  slotmap generation bump invalidates the session.
 
-- **RFD 0005** (actor-lite): The user-space orchestrator runs on the
-  H2O event loop. The `bpf_map_update_elem()` call is made from the
-  worker thread that handles the Hello packet.
+- `rfd/0072-actor-lite-worker-pool`: The user-space orchestrator runs
+  on the H2O event loop. The worker thread that handles the Hello
+  packet makes the `bpf_map_update_elem()` call.
 
-- **RFD 0016** (zstd): Orthogonal — zstd compresses FDB values, XDP
-  handles packet routing. They operate on different layers.
+- `rfd/0084-zstd-compression-for-zone-state`: This is orthogonal. zstd
+  compresses FDB values, and XDP handles packet routing. They operate
+  on different layers.
 
 - mas-bandwidth/fps: Glenn Fiedler's architecture mentions XDP for
   packet processing and relays but does not detail authentication.
@@ -284,7 +263,7 @@ WHITELIST_MAP on the next tick.
 
 - eBPF program compilation: the XDP program is compiled with
   clang/llvm to BPF bytecode and loaded with libbpf. This is a build-
-  time concern, documented in RFD 0014 (CI pipeline).
+  time concern, documented in the CI pipeline RFD.
 
 - TLS/mTLS: the control-plane connection (Hello + Macaroon) uses
   TLS. The data-plane (UDP game packets) does not; XDP enforces

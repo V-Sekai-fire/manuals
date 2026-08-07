@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0071](../rfd/0071-yagni-times-structure-to-need/README.md).
+
 # YAGNI times structure to the need, in code and in the record
 
 ## The Context

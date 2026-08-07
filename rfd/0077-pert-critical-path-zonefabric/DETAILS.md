@@ -1,26 +1,3 @@
----
-title: PERT critical path for zonefabric implementation
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0077](../rfd/0077-pert-critical-path-zonefabric/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0020-pert-critical-path.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Model the zonefabric implementation as a PERT (Program Evaluation and
-Review Technique) network. Each RFD's implementation is a task with
-optimistic (O), most-likely (M), and pessimistic (P) duration estimates.
-The critical path — the longest dependency chain — determines the minimum
-time to a working zonefabric benchmark.
-
 ## Method
 
 Expected duration (TE) for each task uses the PERT formula:

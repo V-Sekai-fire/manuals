@@ -1,25 +1,3 @@
----
-title: zstd compression for batched zone-state FDB values
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0084](../rfd/0084-zstd-compression-for-zone-state/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0016-zstd-compression.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Compress FDB values with zstd (Zstandard) before writing and decompress
-after reading. Applies to large value blobs (entity batches, zone
-snapshots, asset content) but NOT to small fixed-size structs where
-compression overhead exceeds the savings.
-
 ## Rationale
 
 mas-bandwidth/fps assumes 10x bandwidth reduction via delta compression

@@ -1,19 +1,4 @@
----
-title: "zonefabric scaling: hub/instanced-zone game-server benchmark shape"
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0082](../rfd/0082-zonefabric-scaling/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0002-zonefabric-scaling.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-**Scale knob:** zone count (direct, no multiplier)  
+**Scale knob:** zone count (direct, no multiplier)
 **Source:** weftspun/scenario-tpcc-bench PR #2
 
 Models weft-warp-loop's hub/instanced-zone game server. Each zone has 200 entities with uniform-random position/velocity. EFFECT_ENTITY and FANOUT_TARGET are runtime-only (produced by CastSpell, not seeded at load).

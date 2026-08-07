@@ -1,28 +1,3 @@
----
-title: plausible-witness-dag for zonefabric feature ablation
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0078](../rfd/0078-plausible-witness-dag-feature-ablation/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0019-feature-ablation.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Use plausible-witness-dag to perform feature ablation on the zonefabric
-MMO design before writing implementation code. Model each game feature
-as a set of invariants, then systematically ablate (remove) features
-to determine which ones are load-bearing for correctness. Features that
-don't affect any invariant are unspent dollars, safe to defer. Features
-that break invariants on removal are speculator debt: they must be built
-correctly the first time or paid for twice.
-
 ## Problem
 
 Building an MMO is expensive. Every feature is a bet:
@@ -42,9 +17,9 @@ Building an MMO is expensive. Every feature is a bet:
   that conflicts with the missing feature's invariants.
 
 Traditional game development resolves this with playtesting and
-prototyping, which are expensive, slow, and subjective. plausible-witness-dag
-resolves it with formal invariant search, which is fast, deterministic, and
-exhaustive within the modeled state space.
+prototyping, which are expensive, slow, and subjective.
+plausible-witness-dag resolves it with formal invariant search, which
+is fast, deterministic, and exhaustive within the modeled state space.
 
 ## Approach
 

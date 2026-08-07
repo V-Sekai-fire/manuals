@@ -1,13 +1,3 @@
----
-title: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0083](../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.md).
-
 ## Context
 
 The production zone server (`zone-server`, deployed as `multiplayer-fabric-zone`
@@ -21,38 +11,6 @@ zone server. Separately, `weftspun/h2o-bench-tpcc` designed (RFD 0002,
 scenario modeling the same hub/instanced-zone shape — entity authority via a
 Hilbert-curve partition, ghost/AOI interest management — independently of this
 org's actual zone-server work.
-
-## Decision
-
-Build [`zone-server-h2o`](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o):
-a native `libh2o` + FoundationDB zone server, built with
-[Fil-C](https://github.com/pizlonator/fil-c) for memory safety against
-untrusted client input, that fully replaces the Godot `FabricZone` engine on
-the **server** side. The client stays Godot engine, unchanged.
-
-Scope carried over from `FabricZone`/`FabricZoneJournal` (not a blank-slate
-design): entity slots, zone-to-zone entity migration, ghost/AOI state, and a
-durable journal (spawn/despawn/payload-update/snapshot/replay) — reimplemented
-against FDB instead of local SQLite, so it is shared across zone-server
-processes instead of single-node.
-
-Physics/IK is ported from [`sinew-mocap/solve`](https://github.com/sinew-mocap/solve)
-(FK + LBS skinning), constrained by the `lean-humanoid-rom` and
-`swing-twist-kusudama` proofs — no working IK implementation existed inside
-`FabricZone` itself to port from directly.
-
-Entity and ReBAC types are generated from `lean-entity-packet` and
-`lean-rebac-core` respectively, rather than hand-duplicated across the C++
-engine being retired, the new FDB/Fil-C code, and any client-facing schema.
-
-First working milestone: a WebTransport datagram round-trip plus a bare
-`ZoneTick` (`position += velocity * dt`, no physics) — everything else
-(migration, ghosts, physics/IK, Fil-C hardening) is built after that is
-proven, not deferred in scope.
-
-`weftspun/h2o-bench-tpcc` is archived once its reusable infrastructure and
-zonefabric design are ported. Its accepted TPC-C benchmark work
-(`RFD 0001`) is unaffected by this decision and stays there, read-only.
 
 ## Consequences
 
@@ -73,3 +31,28 @@ zonefabric design are ported. Its accepted TPC-C benchmark work
   strategy, binary value encoding, async FDB callback chain, zstd
   compression, slotmap entity storage, macaroon/XDP security, feature
   ablation, and the PERT critical path.
+
+## Ported RFDs
+
+The following RFDs in this repo carry forward `weftspun/h2o-bench-tpcc`'s
+zonefabric design, filed the same day as this decision:
+
+- `rfd/0082-zonefabric-scaling`
+- `rfd/0072-actor-lite-worker-pool`
+- `rfd/0075-fdb-over-cockroachdb-for-zone-state`
+- `rfd/0081-three-layer-verification-strategy`
+- `rfd/0074-binary-value-encoding-for-fdb`
+- `rfd/0073-async-fdb-callback-chain`
+- `rfd/0084-zstd-compression-for-zone-state`
+- `rfd/0080-slotmap-entity-storage`
+- `rfd/0076-macaroon-xdp-security`
+- `rfd/0078-plausible-witness-dag-feature-ablation`
+- `rfd/0077-pert-critical-path-zonefabric`
+
+## Related
+
+- `v-sekai-multiplayer-fabric/zone-server-h2o`
+- `V-Sekai-fire/multiplayer-fabric-build`,
+  `godot/modules/multiplayer_fabric/`
+- `sinew-mocap/solve`, `lean-humanoid-rom`, `swing-twist-kusudama`
+- `lean-entity-packet`, `lean-rebac-core`

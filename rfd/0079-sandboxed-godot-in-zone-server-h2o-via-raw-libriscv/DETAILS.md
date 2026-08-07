@@ -1,13 +1,3 @@
----
-title: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0079](../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.md).
-
 ## Context
 
 `godot-riscv-spike` (RFD 0001 item 6) proved a real, full Godot engine
@@ -33,12 +23,7 @@ This session raised and closed two designs before this one.
    cross-compile pipeline. Combining them ties two unrelated build
    systems together for no real benefit.
 
-## Decision
-
-Use the spike's proven whole-engine-in-`rvlinux` approach directly.
-Drive it via raw `libriscv` (`Machine<W>`'s own
-`copy_to_guest`/`copy_from_guest`/`vmcall`). Orchestrate it as a
-separate process, not combined into one binary.
+## Design detail
 
 - **`zone-server-h2o`** (unchanged build) spawns a new
   **`sandbox-orchestrator`** binary. This is new, and separate, and
