@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -311,6 +311,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#entity-and-item-concepts" id="toc-entity-and-item-concepts" class="nav-link" data-scroll-target="#entity-and-item-concepts">Entity and item concepts</a></li>
   <li><a href="#example-room-description" id="toc-example-room-description" class="nav-link" data-scroll-target="#example-room-description">Example room description</a></li>
   <li><a href="#session-pacing-120-minutes" id="toc-session-pacing-120-minutes" class="nav-link" data-scroll-target="#session-pacing-120-minutes">Session pacing (120 minutes)</a></li>
+  <li><a href="#smallest-loop-implementation-status" id="toc-smallest-loop-implementation-status" class="nav-link" data-scroll-target="#smallest-loop-implementation-status">Smallest-loop implementation status</a></li>
   <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -616,6 +617,13 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <p>A session that skips Drone Decommission entirely, or takes its bypass, sees zero required combat encounters across the full 120 minutes. A session that takes it head-on sees exactly one.</p>
+</section>
+<section id="smallest-loop-implementation-status" class="level2">
+<h2 class="anchored" data-anchor-id="smallest-loop-implementation-status">Smallest-loop implementation status</h2>
+<p><code>zone-server-h2o</code> PR #5 lands the smallest real slice of this loop: two rooms only (Decanting Floor, Splicer’s Den), pure exploration, no items or NPCs. Not the full room graph or contract catalog above; those stay design, not yet built.</p>
+<p>The MUD engine (<code>mud/guest/mud_guest.cpp</code>) previously served one hardcoded setting, Middleham. The PR adds a <code>domain</code> boot field (<code>"middleham"</code> default, <code>"the_gyre"</code> new) rather than a new engine: <code>MiddlehamStateMachine</code> keeps its Middleham behavior unchanged for the default domain, and a <code>gyre_room_templates()</code> table plus a <code>DOMAIN_THE_GYRE</code> branch in the constructor, <code>clone_rooms()</code>, and <code>objective_complete()</code> cover the new one. <code>mud/web/index.html</code>/<code>mud.js</code> get a mode selector, one <code>localStorage</code> session id per mode.</p>
+<p>Verified: a native (non-riscv64) link of <code>mud_guest.cpp</code> driving <code>mud_boot()</code>/<code>mud_step()</code> through the whole Gyre loop, real narration text, <code>objective_complete()</code> true after both rooms are visited (<code>mud/guest/test/gyre_smoke_test.cpp</code>). The client change (mode selector, per-domain session id, <code>domain</code> field on the wire) was driven with real Playwright, both Chromium and Camoufox, against a throwaway local stub, before the real spec (<code>mud/web/test/gyre.spec.ts</code>) was written.</p>
+<p>Not verified: a <code>riscv64-musl</code> + <code>libriscv</code> build/run of the guest code (no cross toolchain available when this was written). No real FDB/H2O build or deploy. <code>gyre.spec.ts</code> needs a real <code>MUD_BASE_URL</code> deployment to go green, matching <code>mud.spec.ts</code>’s own red-first convention; it has not run against one.</p>
 </section>
 <section id="open-questions" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>

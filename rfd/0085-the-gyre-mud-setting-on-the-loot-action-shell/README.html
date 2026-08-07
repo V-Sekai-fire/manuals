@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -296,7 +296,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
-  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -324,19 +323,19 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</em></p>
-<p><strong>State:</strong> prediscussion · <strong>Scope:</strong> zone-server-h2o game content, web client</p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o game content, web client</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The Gyre is content, not a new architecture. It reskins the existing Hub-to-Field-to-Hub loop from <code>rfd/0045</code>: the Under-Market and the Commons stand in for the Hub, and each contract (mostly a scavenge, a hack, or an exploration run, occasionally a short combat) is a Field instance. The five hexagonal cores stay the systems of record; The Gyre supplies rooms, NPCs, items, and a Debt Clock framing.</p>
 <p>Target tone and party shape: exploration-forward, fewer combat encounters per session than a typical D&amp;D-paced game, a party of 2-4 Sparks, and recruitable NPC companions filling out a party below 4 humans. See “Party composition and tone” in <code>DETAILS.md</code>.</p>
 <p>The target client is a website, not the current SteamVR build, with GitHub OAuth login carrying save data. That needs a new Progression persistence adapter, not a change to the Combat, Loot, or Budgeter cores. This RFD does not commit to the OAuth/web design yet.</p>
-<p>This RFD does not change any code in <code>zone-server-h2o</code>; its working copy is that repo’s issue <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o/issues/4">#4</a>.</p>
+<p><code>zone-server-h2o</code> PR #5 lands the smallest slice of this loop as real code: a <code>the_gyre</code> MUD domain and a website mode selector. See “Smallest-loop implementation status” in <code>DETAILS.md</code> for what is verified and what is not. This RFD, not <code>zone-server-h2o</code> issue #4 (closed), is the design’s source of truth.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>Room graph, NPCs, contract catalog, item table, session pacing, party/tone detail, and open questions: <code>DETAILS.md</code></li>
-<li>Source design: <code>zone-server-h2o</code> issue #4</li>
+<li>Room graph, NPCs, contract catalog, item table, session pacing, party/tone detail, implementation status, and open questions: <code>DETAILS.md</code></li>
+<li>Implementation: <code>zone-server-h2o</code> PR #5</li>
 </ul>
 </section>
 <section id="related" class="level2">
@@ -347,12 +346,6 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 
 
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../README.html">RFDs</a></p></li>
-</ul>
 </section>
 
 </main> <!-- /main -->
