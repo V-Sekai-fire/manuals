@@ -1,6 +1,6 @@
 ---
-title: "RFD 0089: The Gyre as a second MUD domain"
-rfd: "0089"
+title: "RFD 0091: The Gyre as a second MUD domain"
+rfd: "0091"
 state: published
 scope: zone-server-h2o mud/guest, mud/web
 ---
