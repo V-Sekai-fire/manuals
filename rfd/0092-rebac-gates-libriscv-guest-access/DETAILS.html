@@ -292,8 +292,16 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#status" id="toc-status" class="nav-link active" data-scroll-target="#status">Status</a></li>
   <li><a href="#what-godot-sandbox-documents-today" id="toc-what-godot-sandbox-documents-today" class="nav-link" data-scroll-target="#what-godot-sandbox-documents-today">What <code>godot-sandbox</code> documents today</a></li>
   <li><a href="#the-existing-rebac-engine-this-reuses" id="toc-the-existing-rebac-engine-this-reuses" class="nav-link" data-scroll-target="#the-existing-rebac-engine-this-reuses">The existing ReBAC engine this reuses</a></li>
+  <li><a href="#the-two-engines-differ-and-neither-one-fits-as-it-stands" id="toc-the-two-engines-differ-and-neither-one-fits-as-it-stands" class="nav-link" data-scroll-target="#the-two-engines-differ-and-neither-one-fits-as-it-stands">The two engines differ, and neither one fits as it stands</a></li>
+  <li><a href="#migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it" id="toc-migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it" class="nav-link" data-scroll-target="#migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it">Migrate <code>lean-rebac-core</code> to the graph shape, do not replace it</a>
+  <ul class="collapse">
+  <li><a href="#theorems-this-migration-must-carry" id="toc-theorems-this-migration-must-carry" class="nav-link" data-scroll-target="#theorems-this-migration-must-carry">Theorems this migration must carry</a></li>
+  </ul></li>
+  <li><a href="#administrative-relations-who-may-write-edges" id="toc-administrative-relations-who-may-write-edges" class="nav-link" data-scroll-target="#administrative-relations-who-may-write-edges">Administrative relations: who may write edges</a></li>
   <li><a href="#proposed-mapping" id="toc-proposed-mapping" class="nav-link" data-scroll-target="#proposed-mapping">Proposed mapping</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#the-graph-authors-permissions.-it-does-not-enforce-them." id="toc-the-graph-authors-permissions.-it-does-not-enforce-them." class="nav-link" data-scroll-target="#the-graph-authors-permissions.-it-does-not-enforce-them.">The graph authors permissions. It does not enforce them.</a></li>
+  <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   <li><a href="#revisit-when" id="toc-revisit-when" class="nav-link" data-scroll-target="#revisit-when">Revisit when</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0092-rebac-gates-libriscv-guest-access/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -331,7 +339,73 @@ ul.task-list li input[type="checkbox"] {
 <li><code>can()</code>/<code>rebac_can_json()</code> — a DFS capability search that returns the actual path, not just a boolean, format: <code>{"authorized":bool,"path":[...]}</code>. This is the audit trail <code>godot-sandbox</code>’s five callbacks do not have today.</li>
 <li>JSON (de)serialization (<code>graph_from_json</code>/<code>graph_to_json</code>), so a guest’s capability graph is itself data, not code.</li>
 </ul>
-<p><code>lean-rebac-core</code>’s <code>ReBAC.lean</code>/<code>rebacCheck</code> (already referenced by <code>zone-server-h2o</code>’s own <code>src/gen/rebac.c</code>, per <code>rfd/0083</code>) is the Lean-proved version of the same idea — a pure predicate over <code>Relation</code>/<code>Action</code> ranks, checked against proved theorems (<code>rebac_empty_denied</code>, <code>rebac_public_observe</code>, the owner-only <code>.modify</code> boundary). Either engine fits this design. Which one a real implementation picks is a separate, later decision.</p>
+</section>
+<section id="the-two-engines-differ-and-neither-one-fits-as-it-stands" class="level2">
+<h2 class="anchored" data-anchor-id="the-two-engines-differ-and-neither-one-fits-as-it-stands">The two engines differ, and neither one fits as it stands</h2>
+<p>An earlier draft of this RFD called <code>lean-rebac-core</code>’s <code>rebacCheck</code> an interchangeable alternative to <code>tw_rebac.hpp</code>. That was wrong. The two carry different authorization semantics, and the difference decides this RFD’s whole premise.</p>
+<p>Read <code>zone-server-h2o</code>’s own port, <code>src/gen/rebac.h</code>. <code>rebac_check</code> grants access if and only if the claim’s highest relation rank is greater than or equal to the action’s minimum rank. The ranks form a fixed total order: <code>REBAC_RELATION_PUBLIC = 0</code>, <code>INSTANCE_MEMBER = 1</code>, <code>FRIEND = 2</code>, <code>GUILD_MEMBER = 3</code>, <code>OWNER = 4</code>. The actions are <code>REBAC_ACTION_OBSERVE</code>, <code>INTERACT</code>, and <code>MODIFY</code>.</p>
+<p>That is a five-tier lattice, not a relationship graph. It has no subjects, no objects, and no edges. This RFD exists to replace a two-tier model. A five-tier model is the same shape with three more tiers, so it does not answer the problem statement.</p>
+<p><code>lean-rebac-core</code> keeps its own value, and <code>rfd/0083</code> and <code>rfd/0086</code> both still depend on it. Its theorems are real (<code>rebac_empty_denied</code>, <code>rebac_public_observe</code>, the owner-only <code>.modify</code> boundary). It answers a different question: what rank a player claim needs for a world action. It does not answer what a sandboxed guest may reach on the host.</p>
+<p>The other candidate has the opposite problem. <code>tw_rebac.hpp</code> carries the right shape and no proofs.</p>
+</section>
+<section id="migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it" class="level2">
+<h2 class="anchored" data-anchor-id="migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it">Migrate <code>lean-rebac-core</code> to the graph shape, do not replace it</h2>
+<p>Do not ship the unproved engine. Extend <code>lean-rebac-core</code> in Lean from a rank lattice to a relationship graph, then generate the C from it. <code>rfd/0083</code> already sets this rule for this exact module: ReBAC types generate from <code>lean-rebac-core</code>, and they never get hand-duplicated per language. <code>zone-server-h2o</code>’s <code>src/gen/rebac.c</code> is already that generated artifact. This work extends the Lean source behind it, instead of adding a second, unproved authorization engine beside it.</p>
+<p><code>tw_rebac.hpp</code> keeps two roles in this plan. It is the reference shape, because its relation vocabulary and expression algebra already describe the target. It is also the differential-test oracle, in the same way <code>test/unit/test_xr_grid_entity_packet.c</code> checks a generated codec against golden vectors.</p>
+<p>Precedent exists inside <code>tw_rebac.hpp</code> itself. Its own comment on the <code>member_edges</code> index reads:</p>
+<pre><code>Formally justified by Planner.ExpandIndex: expand_index_equiv proves
+that iterating member_edges gives the same result as scanning all
+edges.</code></pre>
+<p>So <code>taskweft</code> already proves one fast path equal to its slow path, in Lean, for this same header. This migration generalizes that habit rather than inventing it.</p>
+<section id="theorems-this-migration-must-carry" class="level3">
+<h3 class="anchored" data-anchor-id="theorems-this-migration-must-carry">Theorems this migration must carry</h3>
+<ul>
+<li><code>rebac_empty_denied</code>, generalized: an empty graph denies every request. The rank version already proves this.</li>
+<li>Fuel soundness. If <code>check_expr</code> grants at fuel <code>n</code>, it grants at fuel <code>n + 1</code>. More search never reverses a grant, and a fuel-zero denial is therefore always conservative. This closes open question 4.</li>
+<li>Snapshot soundness. A resolved capability table, built at read version <code>V</code>, answers exactly as a graph walk at read version <code>V</code> answers. This replaces an earlier append-only monotonicity theorem, which <code>difference</code> makes false. See <code>rfd/0093</code>.</li>
+<li>Resolution equivalence. The flat capability table, built at bind time, answers exactly as a full graph walk answers. This is the same theorem shape as <code>expand_index_equiv</code>, and it is what makes the enforcement path trustworthy.</li>
+<li>Plane separation. No use-plane derivation grants <code>CAN_GRANT</code>. A guest therefore cannot reach the admin plane. This closes open question 2.</li>
+<li>Non-delegability, if the team takes that fork. No derivation grants <code>CAN_GRANT</code> to a subject that does not already hold a host-seeded <code>CAN_GRANT</code>.</li>
+</ul>
+</section>
+</section>
+<section id="administrative-relations-who-may-write-edges" class="level2">
+<h2 class="anchored" data-anchor-id="administrative-relations-who-may-write-edges">Administrative relations: who may write edges</h2>
+<p>A capability graph that its own subjects may edit grants nothing. <code>godot-luau-script</code> answers this with a coarse split, where core scripts may set their own permissions and user scripts may not. This RFD answers it inside the graph instead, with administrative relations.</p>
+<p>Every check belongs to one of two planes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 49%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plane</th>
+<th>Question</th>
+<th>Relations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Use</td>
+<td>May this guest call <code>X</code>?</td>
+<td><code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>OWNS</code></td>
+</tr>
+<tr class="even">
+<td>Admin</td>
+<td>May this principal add edge <code>(S, O, R)</code>?</td>
+<td><code>CAN_GRANT</code></td>
+</tr>
+</tbody>
+</table>
+<p>A guest lives only on the use plane. Each grant request runs a <code>check_expr</code> on the admin plane first, and the orchestrator runs that check. <code>tw_rebac.hpp</code> supports <code>CAN_GRANT</code> today with no enum change, because <code>parse_rel</code> returns <code>UNKNOWN</code> for an unrecognized string and <code>check_base</code> then matches on <code>rel_name</code> directly. Reuse of the existing <code>SUPERVISOR_OF</code>, <code>OWNS</code>, or <code>DELEGATED_TO</code> relations needs a deliberate decision, because <code>check_base</code> already gives <code>DELEGATED_TO</code> a delegation meaning, not an administration meaning.</p>
+<p>Three sub-decisions stay open:</p>
+<ul>
+<li>Bootstrap. If edge-writing authority is itself an edge, some agent must write the first edge. That seed grant belongs outside the graph, host-side, before any guest runs. <code>godot-luau-script</code> seeds at <code>SandboxService</code> in <code>init.lua</code>. The equivalent here is the orchestrator at <code>mud_boot</code> time.</li>
+<li>Delegability. May a <code>CAN_GRANT</code> holder grant <code>CAN_GRANT</code> itself? A yes makes the relation viral, and one compromised administrator then owns the graph. Open question 3 below records that no revocation exists, so that capture stays permanent. Recommendation: make <code>CAN_GRANT</code> non-delegable in the first version.</li>
+<li>Scope. A global admin right and a scoped one differ completely. A scoped admin edge must name what it governs, such as one relation type or an object prefix. <code>tuple_to_userset</code> already expresses scoped administration, because it pivots through one relation to evaluate another.</li>
+</ul>
 </section>
 <section id="proposed-mapping" class="level2">
 <h2 class="anchored" data-anchor-id="proposed-mapping">Proposed mapping</h2>
@@ -393,12 +467,46 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: one authorization model instead of five independent callbacks plus a two-tier VM split. A denied check returns a real reason (no path found), not just <code>false</code>. The engine is not new, untested code — <code>tw_rebac.hpp</code> already has real callers in <code>taskweft-nif</code>, and <code>lean-rebac-core</code>’s version is Lean-proved.</p>
+<p>Good: one authorization model instead of five independent callbacks plus a two-tier VM split. A denied check returns a real reason (no path found), not just <code>false</code>. The engine is not new, untested code. <code>tw_rebac.hpp</code> already has real callers in <code>taskweft-nif</code>.</p>
 <p>Bad: the team has not implemented this yet. <code>zone-guest-middleham</code>’s <code>mud-sandbox-orchestrator</code> calls exactly two <code>vmcall</code>-reachable guest functions today (<code>mud_boot</code>, <code>mud_step</code>). It has no host-capability surface yet for this model to gate. The design has nothing to attach to until that surface grows. No one wired <code>thirdparty/taskweft-nif</code> into <code>zone-server-h2o</code> yet — <code>mud/domains/README.md</code> already says the MUD guest does not use any of its three domains yet. So reusing <code>tw_rebac.hpp</code> here means depending on code that is itself not yet load-bearing anywhere.</p>
+<p>Bad, and stated plainly: the Lean migration above is real work, and nobody started it. Six theorems need proving, and two of them (resolution equivalence, plane separation) carry the security argument. Until they exist, this design has a proved rank model and an unproved graph model, and neither one gates a guest today.</p>
+</section>
+<section id="the-graph-authors-permissions.-it-does-not-enforce-them." class="level2">
+<h2 class="anchored" data-anchor-id="the-graph-authors-permissions.-it-does-not-enforce-them.">The graph authors permissions. It does not enforce them.</h2>
+<p>A guest runs at near-native speed. <code>libriscv</code>’s own README records a <code>vmcall</code> cost of 3ns, against 50 to 150ns for other sandboxes. The same README records a CoreMark score of 38223 against 41382 native, about 92%. Guest code therefore reaches the host boundary at native-code frequency.</p>
+<p><code>_rebac_dfs</code> allocates. It copies a <code>std::unordered_set&lt;std::string&gt;</code> at every branch (<code>sub_visited = p_visited</code>), and each element is a heap-allocated string. Nobody measured that cost yet, so this RFD states no figure. But an allocating graph search in front of a 3ns call inverts the cost model. The check would dominate the call it protects, and it would discard the one property <code>rfd/0079</code> chose <code>libriscv</code> for.</p>
+<p>So the ReBAC graph is the authoring model, not the enforcement model. Resolve the graph once, at guest boot time and again at each grant, into a flat capability table. The hot path then reads that table by index. It never walks the graph.</p>
+<p>Key that table by snapshot version, the way Zanzibar keys its cache. An earlier draft of this RFD justified the table with an append-only monotonicity argument, where a resolved grant stays valid forever. Google’s own system rejects that argument, and <code>rfd/0093</code> records why: Zanzibar supports exclusion, so a later edge can revoke a grant.</p>
+<p>Zanzibar’s answer is a timestamp, not a monotonicity claim:</p>
+<pre><code>We avoid reusing results evaluated from a different snapshot by
+encoding snapshot timestamps in cache keys.</code></pre>
+<p><code>zone-server-h2o</code> already has the equivalent. FoundationDB is multi-version, and <code>zf_zonetick.c</code> already opens one transaction per tick, so every tick carries a read version. Key the resolved table by that read version. Correctness then rests on multi-version reads, not on a monotonicity property that <code>difference</code> breaks.</p>
+<p>Zanzibar also quantizes its timestamps to “a coarse granularity, such as one or ten seconds” so that recent checks share cache entries. A per-tick read version already gives this design the same effect, with no extra rounding.</p>
+<p><code>godot-sandbox</code> documents the same artifact from the other direction. Its trace-mode workaround produces a static allow-list by hand. This design produces that artifact from the graph instead, which removes the manual review step.</p>
+<p>This also reframes open question 6. <code>godot-sandbox</code> documents that “Objects passed as function arguments remain accessible regardless of restrictions.” That reads as a bypass. It is instead an object-capability design: the handle itself is the authorization, checked once when the guest receives it. That choice is deliberate and fast. It needs a decision here, not an accident.</p>
+</section>
+<section id="open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
+<p>Ten questions stay open. Items 1 to 3 block implementation. The rest are design work.</p>
+<ol type="1">
+<li><p>Engine choice. Resolved above: extend <code>lean-rebac-core</code> to the graph shape and generate the C, with <code>tw_rebac.hpp</code> as the reference shape and test oracle. Recorded here because an earlier draft called the two engines interchangeable, which is wrong.</p></li>
+<li><p>Who may write edges. Answered above by the use/admin plane split, but its three sub-decisions (bootstrap, delegability, scope) stay open.</p></li>
+<li><p>Revocation does not exist. <code>tw_rebac.hpp</code> defines <code>add_edge</code> and <code>define</code>, and no counterpart that removes either. A search for <code>remove</code>, <code>revoke</code>, <code>erase</code>, and <code>delete</code> in that header returns nothing. The graph is append-only. Nobody can revoke a capability mid-session, and no rule covers a guest paused inside a <code>vmcall</code> when its access disappears.</p>
+<p>Zanzibar shows the shape of the fix. Leopard’s incremental layer stores each update as a <code>(T, s, e, t, d)</code> tuple. The paper defines the last two fields:</p>
+<pre><code>t is the timestamp of the update and d is a deletion marker</code></pre>
+<p>A query merges every update at or below its own timestamp on top of the offline index. So revocation is a tombstone plus a version merge, and the Lean migration above must carry both. An append-only graph is not the design. It is the current gap.</p></li>
+<li><p>Fuel has no owner. <code>check_expr</code> and <code>check_base</code> return <code>false</code> at zero fuel. That fails closed, which is correct. But a legitimate deep delegation chain then denies silently, and authorization depends on graph depth. Only <code>tw_expand</code> carries a default (<code>p_fuel = 3</code>). <code>check_expr</code>, <code>check_base</code>, and <code>rebac_can_json</code> each require the caller to supply one. No rule says who picks it.</p></li>
+<li><p>Identity and ID reuse. Subjects and objects are <code>std::string</code>. Godot recycles object instance IDs after a free. A stale <code>HAS_CAPABILITY</code> edge plus a recycled ID grants access to a different object than the authorized one. This RFD names no stable identity scheme.</p></li>
+<li><p>An inherited bypass. <code>godot-sandbox</code>’s own restrictions page states this: “Objects passed as function arguments remain accessible regardless of restrictions.” A check at the call boundary misses handles the guest already holds. No rule covers re-checking a held handle on a later tick.</p></li>
+<li><p>Cost on the 64 Hz path. <code>_rebac_dfs</code> copies the visited set at every branch (<code>sub_visited = p_visited</code>). A graph search per host call, on the zone tick, has no budget in this RFD.</p></li>
+<li><p>Gas checking is circular. If budget extension is itself a ReBAC check, and that check costs time, no rule says whose budget pays.</p></li>
+<li><p>Denial leaks the graph. <code>rebac_can_json</code> returns <code>{"authorized":bool,"path":[...]}</code>. That path is the audit-trail advantage over <code>godot-sandbox</code>. Returning it to untrusted guest code leaks capability-graph structure.</p></li>
+<li><p>Which process may answer. <code>src/gen/rebac.h</code>’s own comment quotes the Lean source: only the authority zone evaluates <code>.interact</code> and <code>.modify</code>, and interest zones may evaluate <code>.observe</code> locally. <code>rfd/0086</code> defers that authority mechanism.</p></li>
+</ol>
 </section>
 <section id="revisit-when" class="level2">
 <h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
-<p><code>zone-guest-middleham</code>’s guest surface grows past <code>mud_boot</code>/<code>mud_step</code> into calling named host functions/classes/objects (the shape <code>rfd/0079</code> left open). At that point, build the five-axis mapping table above as real code, backed by either <code>tw_rebac.hpp</code> or <code>lean-rebac-core</code>’s <code>rebacCheck</code>, instead of ad hoc per-axis callbacks.</p>
+<p><code>zone-guest-middleham</code>’s guest surface grows past <code>mud_boot</code>/<code>mud_step</code> into calling named host functions/classes/objects (the shape <code>rfd/0079</code> left open). At that point, build the five-axis mapping table above as real code, instead of ad hoc per-axis callbacks. Do the Lean migration first, and close open questions 2 and 3 with it. Prove resolution equivalence before anything trusts the flat capability table on the hot path.</p>
 
 
 </section>
