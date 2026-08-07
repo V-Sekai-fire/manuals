@@ -10,7 +10,150 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 12:19:03 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 12:24:15 GMT</lastBuildDate>
+<item>
+  <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/README.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0092: ReBAC gates libriscv guest access, not five callbacks</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-guest-middleham, godot-sandbox-style libriscv hosts</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0079</code> picked raw <code>libriscv</code> for sandboxed guest code (now living in <code>zone-guest-middleham</code>), but never defined what host capabilities a guest may reach. <code>rfd/0079</code>’s own “Consequences” section says so directly: “The exact <code>GodotInstance</code>/scene API <code>godot_tick</code> uses to apply entity input and read state back out is not yet nailed down.”</p>
+<p><code>godot-sandbox</code>, the reference <code>libriscv</code>-Godot integration, already solved this once, with five independent allow-callbacks: class, object, method, property, and resource. Each callback returns a plain boolean. None of the five shares state with the others, and none returns a reason or a path a reviewer could audit later.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Gate guest access through ReBAC, not five separate callbacks, and not a two-tier core/user split like <code>godot-luau-script</code>’s. Reuse the working ReBAC engine already vendored in this ecosystem: <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code>’s <code>TwReBACGraph</code>, or its Lean-proved cousin, <code>lean-rebac-core</code>’s <code>ReBAC.lean</code>.</p>
+<p>Model each guest <code>libriscv::Machine</code> instance as a ReBAC subject. Model each of <code>godot-sandbox</code>’s five gated things (a class, an object, a method, a property, a resource path) as a ReBAC object. Replace each boolean callback with one <code>check_expr</code>/<code>can()</code> call: does this guest subject have <code>HAS_CAPABILITY</code> (or a defined computed relation) to this object. Grant access by adding edges (<code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>DELEGATED_TO</code>), not by writing a new callback per axis.</p>
+<p>Also gate <code>libriscv</code>’s own execution-budget primitives (instruction- counted timeout, pause/resume) as ReBAC actions, not hardcoded constants. Budget extension becomes an authorized relationship: a supervisor or owner grants more gas, checked the same way as any other capability.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Full mapping table, the <code>godot-sandbox</code> API this replaces, and open gaps: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code></li>
+<li><code>sinew-mocap/solve</code> org’s <code>lean-rebac-core</code>, <code>Rebac/core/ReBAC.lean</code></li>
+<li><code>libriscv/godot-sandbox</code>, <code>docs/host_langs/godot_integration/godot_docs/restrictions</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv</code>: the sandboxing decision this gates.</li>
+<li><code>rfd/0086-defer-nogod-gossip-zone-authority</code>: the other place <code>lean-rebac-core</code> is already in scope.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Discussion only. No implementation exists yet. Nothing today calls <code>check_expr</code>, <code>rebac_can_json</code>, or any <code>lean-rebac-core</code> predicate from a <code>libriscv</code> host callback.</p>
+</section>
+<section id="what-godot-sandbox-documents-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-godot-sandbox-documents-today">What <code>godot-sandbox</code> documents today</h2>
+<p><code>godot-sandbox</code> is the reference <code>libriscv</code>-Godot integration. <code>libriscv</code> itself calls “pause and resume … a first-class citizen” in its own README, and documents an “optional execution timeout using instruction counting”. <code>godot-sandbox</code> exposes a <code>restrictions</code> property. Setting it <code>true</code> blocks all external access by default, then five independent callbacks each grant a narrow exception:</p>
+<ul>
+<li><code>set_class_allowed_callback(func(sandbox, name): ...)</code> — gates class instantiation. Checked with <code>is_allowed_class(name)</code>.</li>
+<li><code>add_allowed_object(obj)</code> / <code>remove_allowed_object(obj)</code> / <code>clear_allowed_objects()</code>, plus <code>set_object_allowed_callback(func(sandbox, obj): ...)</code> for anything not in the explicit list.</li>
+<li><code>set_method_allowed_callback(func(sandbox, obj, method): ...)</code> — gates method calls.</li>
+<li><code>set_property_allowed_callback(func(sandbox, obj, prop): ...)</code> — gates property reads/writes.</li>
+<li><code>set_resource_allowed_callback(func(sandbox, path): ...)</code>, checked with <code>is_allowed_resource(path)</code> — gates resource loads.</li>
+</ul>
+<p>Each callback returns a plain boolean, independently of the other four. None of them shares a subject/object model, a delegation concept, or an audit trail. One documented workaround for building a real whitelist is to run once in trace mode. This logs every access request a callback sees, then a person hand-promotes the log into a static allow-list. This RFD’s ReBAC model closes that gap structurally, not by manual log review.</p>
+</section>
+<section id="the-existing-rebac-engine-this-reuses" class="level2">
+<h2 class="anchored" data-anchor-id="the-existing-rebac-engine-this-reuses">The existing ReBAC engine this reuses</h2>
+<p><code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code> (in <code>zone-server-h2o</code>, ported from <code>plan_memory/rebac.py</code>, no Godot dependency) already implements:</p>
+<ul>
+<li>A relation vocabulary: <code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>OWNS</code>, <code>IS_MEMBER_OF</code>, <code>DELEGATED_TO</code>, <code>SUPERVISOR_OF</code>, <code>PARTNER_OF</code>, plus an <code>UNKNOWN</code>/string-named escape hatch for domain-specific relations.</li>
+<li>A boolean expression algebra over relations: <code>base</code>, <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>tuple_to_userset</code> (Zanzibar’s own “pivot through another relation” pattern) — <code>check_expr()</code>.</li>
+<li><code>IS_MEMBER_OF</code> transitive inheritance and <code>CONTROLS</code>/<code>DELEGATED_TO</code> inversion, both handled inside <code>check_base()</code>, not bolted on per caller.</li>
+<li><code>can()</code>/<code>rebac_can_json()</code> — a DFS capability search that returns the actual path, not just a boolean, format: <code>{"authorized":bool,"path":[...]}</code>. This is the audit trail <code>godot-sandbox</code>’s five callbacks do not have today.</li>
+<li>JSON (de)serialization (<code>graph_from_json</code>/<code>graph_to_json</code>), so a guest’s capability graph is itself data, not code.</li>
+</ul>
+<p><code>lean-rebac-core</code>’s <code>ReBAC.lean</code>/<code>rebacCheck</code> (already referenced by <code>zone-server-h2o</code>’s own <code>src/gen/rebac.c</code>, per <code>rfd/0083</code>) is the Lean-proved version of the same idea — a pure predicate over <code>Relation</code>/<code>Action</code> ranks, checked against proved theorems (<code>rebac_empty_denied</code>, <code>rebac_public_observe</code>, the owner-only <code>.modify</code> boundary). Either engine fits this design. Which one a real implementation picks is a separate, later decision.</p>
+</section>
+<section id="proposed-mapping" class="level2">
+<h2 class="anchored" data-anchor-id="proposed-mapping">Proposed mapping</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 17%">
+<col style="width: 19%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>godot-sandbox</code> axis</th>
+<th>ReBAC subject</th>
+<th>ReBAC object</th>
+<th>Relation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Class instantiation</td>
+<td>the guest <code>Machine</code></td>
+<td>the class name</td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="even">
+<td>Object access</td>
+<td>the guest <code>Machine</code></td>
+<td>the object instance</td>
+<td><code>HAS_CAPABILITY</code> or <code>CONTROLS</code></td>
+</tr>
+<tr class="odd">
+<td>Method call</td>
+<td>the guest <code>Machine</code></td>
+<td><code>&lt;object&gt;.&lt;method&gt;</code></td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="even">
+<td>Property access</td>
+<td>the guest <code>Machine</code></td>
+<td><code>&lt;object&gt;.&lt;property&gt;</code></td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="odd">
+<td>Resource load</td>
+<td>the guest <code>Machine</code></td>
+<td>the resource path</td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="even">
+<td>Instruction-budget extension</td>
+<td>the guest <code>Machine</code></td>
+<td>the “more gas” action</td>
+<td><code>DELEGATED_TO</code> from a supervisor/owner</td>
+</tr>
+</tbody>
+</table>
+<p>Delegation, membership, and capability inheritance fall out of the expression algebra already in <code>tw_rebac.hpp</code>. A guest that is <code>IS_MEMBER_OF</code> a trusted group inherits that group’s <code>HAS_CAPABILITY</code> edges automatically, with no new code path per axis. <code>godot-sandbox</code> needs a new hand-written callback for each such case today.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>Good: one authorization model instead of five independent callbacks plus a two-tier VM split. A denied check returns a real reason (no path found), not just <code>false</code>. The engine is not new, untested code — <code>tw_rebac.hpp</code> already has real callers in <code>taskweft-nif</code>, and <code>lean-rebac-core</code>’s version is Lean-proved.</p>
+<p>Bad: the team has not implemented this yet. <code>zone-guest-middleham</code>’s <code>mud-sandbox-orchestrator</code> calls exactly two <code>vmcall</code>-reachable guest functions today (<code>mud_boot</code>, <code>mud_step</code>). It has no host-capability surface yet for this model to gate. The design has nothing to attach to until that surface grows. No one wired <code>thirdparty/taskweft-nif</code> into <code>zone-server-h2o</code> yet — <code>mud/domains/README.md</code> already says the MUD guest does not use any of its three domains yet. So reusing <code>tw_rebac.hpp</code> here means depending on code that is itself not yet load-bearing anywhere.</p>
+</section>
+<section id="revisit-when" class="level2">
+<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
+<p><code>zone-guest-middleham</code>’s guest surface grows past <code>mud_boot</code>/<code>mud_step</code> into calling named host functions/classes/objects (the shape <code>rfd/0079</code> left open). At that point, build the five-axis mapping table above as real code, backed by either <code>tw_rebac.hpp</code> or <code>lean-rebac-core</code>’s <code>rebacCheck</code>, instead of ad hoc per-axis callbacks.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/README.html</guid>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</link>
@@ -75,7 +218,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -231,7 +374,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -309,7 +452,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -349,7 +492,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -390,7 +533,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -430,7 +573,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -786,7 +929,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -1194,7 +1337,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -1275,7 +1418,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -1791,7 +1934,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -1901,7 +2044,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -2184,7 +2327,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -2263,7 +2406,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -2601,7 +2744,7 @@ def slotmap_gen_invariant (s : GameState) : Prop :=
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -3171,7 +3314,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -3585,7 +3728,7 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -3660,7 +3803,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -3730,7 +3873,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -3808,232 +3951,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o worker dispatch</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>zone-server-h2o needs to dispatch HTTP requests from the H2O network thread to worker threads. A generalized actor framework adds scheduler overhead and lock contention on the fast path. The design targets top-10 TechEmpower R23 data update throughput, and that target needs a dispatch path with neither cost.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>zone-server-h2o dispatches HTTP requests from the H2O network thread to a pool of worker threads. It uses lock-free single-producer, single-consumer ring buffers, not a generalized actor framework. Each worker owns one ring and one libpq pipeline connection to FoundationDB, and runs pop, execute, return in a tight loop. The return path wakes the H2O event loop through <code>h2o_multithread_send</code>, with no shared state. This design targets top-10 TechEmpower R23 data update throughput, where h2o already ranks second at 1,226,814 requests per second. The SPSC design adds no scheduler overhead and no lock contention on the fast path.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full architecture diagram, component breakdown, and verification table: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-actor-lite-worker-pool.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0005-actor-lite-architecture.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0073-async-fdb-callback-chain</code>: how each worker drives FDB without blocking its ring.</li>
-<li><code>rfd/0077-pert-critical-path-zonefabric</code>: task C in the build order.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="target" class="level2">
-<h2 class="anchored" data-anchor-id="target">Target</h2>
-<p>Top 10 TechEmpower R23 data update test.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Rank</th>
-<th>Framework</th>
-<th>RPS</th>
-<th>Lang</th>
-<th>ORM</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>may-minihttp</td>
-<td>1,327,378</td>
-<td>Rust</td>
-<td>Raw</td>
-</tr>
-<tr class="even">
-<td><strong>2</strong></td>
-<td><strong>h2o</strong></td>
-<td><strong>1,226,814</strong></td>
-<td><strong>C</strong></td>
-<td><strong>Raw</strong></td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>ntex [sailfish]</td>
-<td>1,210,348</td>
-<td>Rust</td>
-<td>Raw</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>ntex [async-std,db]</td>
-<td>1,197,351</td>
-<td>Rust</td>
-<td>Raw</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>xitca-web</td>
-<td>1,146,712</td>
-<td>Rust</td>
-<td>Raw</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>xitca-web [orm]</td>
-<td>1,115,124</td>
-<td>Rust</td>
-<td>Full</td>
-</tr>
-<tr class="odd">
-<td>7</td>
-<td>axum [postgresql]</td>
-<td>1,114,265</td>
-<td>Rust</td>
-<td>Raw</td>
-</tr>
-<tr class="even">
-<td>8</td>
-<td>lithium-postgres</td>
-<td>1,073,846</td>
-<td>C++</td>
-<td>Full</td>
-</tr>
-<tr class="odd">
-<td>9</td>
-<td>lithium-postgres-beta</td>
-<td>1,068,560</td>
-<td>C++</td>
-<td>Full</td>
-</tr>
-<tr class="even">
-<td>10</td>
-<td>hyper-db</td>
-<td>1,066,644</td>
-<td>Rust</td>
-<td>Raw</td>
-</tr>
-</tbody>
-</table>
-<p>h2o is already rank #2 with 1,226,814 RPS. All top 10 use Postgres with raw SQL (no ORM). The h2o-bench-tpcc target is to match this performance with TPC-C transactions (heavier per request) on CockroachDB (Postgres wire protocol).</p>
-</section>
-<section id="architecture" class="level2">
-<h2 class="anchored" data-anchor-id="architecture">Architecture</h2>
-<pre><code>HTTP client (wrk)
-    │
-    ▼
-H2O network thread (event loop, HTTP/3)
-    │  spsc_ring_push (lock-free, no mutex)
-    ├──► Worker 0 (SPSC ring → libpq pipeline → h2o_multithread_send)
-    ├──► Worker 1
-    └──► Worker N
-    │
-    │  h2o_multithread_send (return path)
-    ▼
-H2O network thread (send HTTP response)
-    │
-    ▼
-FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
-</section>
-<section id="three-components" class="level2">
-<h2 class="anchored" data-anchor-id="three-components">Three components</h2>
-<section id="spsc-lock-free-ring-buffer-spsc_ring.c" class="level3">
-<h3 class="anchored" data-anchor-id="spsc-lock-free-ring-buffer-spsc_ring.c">1. SPSC lock-free ring buffer (<code>spsc_ring.c</code>)</h3>
-<p>Single-producer/single-consumer ring with atomic load/store. Power-of-two capacity (mask-based indexing). No CAS, no mutexes.</p>
-<ul>
-<li>Producer (H2O thread): <code>atomic_store_release(head)</code></li>
-<li>Consumer (worker thread): <code>atomic_store_release(tail)</code></li>
-<li>Invariant: <code>tail &lt;= head &lt;= tail + capacity</code></li>
-</ul>
-<p>Verified by CBMC (<code>test/cbmc/spsc_harness.c</code>) and Lean 4 (<code>test/verification/TpccVerification/Spsc.lean</code>).</p>
-</section>
-<section id="worker-threads-worker_pool.c" class="level3">
-<h3 class="anchored" data-anchor-id="worker-threads-worker_pool.c">2. Worker threads (<code>worker_pool.c</code>)</h3>
-<p>Each worker:</p>
-<ul>
-<li>Owns one SPSC ring (1024 slots)</li>
-<li>Owns one libpq connection (pipeline mode)</li>
-<li>Runs a tight loop: pop -&gt; execute -&gt; return</li>
-<li>Returns results via <code>h2o_multithread_send</code></li>
-</ul>
-<p>Dispatch: round-robin across workers (atomic fetch_add).</p>
-</section>
-<section id="return-path" class="level3">
-<h3 class="anchored" data-anchor-id="return-path">3. Return path</h3>
-<p><code>h2o_multithread_send()</code> wakes the H2O event loop to send the HTTP response. No shared state on the return path.</p>
-</section>
-</section>
-<section id="verification-layers" class="level2">
-<h2 class="anchored" data-anchor-id="verification-layers">Verification layers</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 21%">
-<col style="width: 61%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Layer</th>
-<th>Tool</th>
-<th>What it verifies</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>C invariants</td>
-<td>CBMC</td>
-<td>SPSC ring FIFO, bounds, head-tail invariant</td>
-</tr>
-<tr class="even">
-<td>Specification</td>
-<td>Lean 4</td>
-<td>SPSC linearizability, push/pop preserve bounds</td>
-</tr>
-<tr class="odd">
-<td>TPC-C invariants</td>
-<td>plausible-witness-dag</td>
-<td>NewOrder atomicity, Delivery correctness, Stock non-negative</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="why-this-beats-a-generalized-actor-framework" class="level2">
-<h2 class="anchored" data-anchor-id="why-this-beats-a-generalized-actor-framework">Why this beats a generalized actor framework</h2>
-<ul>
-<li>No scheduler overhead — each worker is a bare pthread</li>
-<li>No lock contention — SPSC rings have zero cross-thread writes on the fast path</li>
-<li>FDB async callbacks chain transaction steps without blocking</li>
-<li>FDB transactions are native ACID (no SQL BEGIN/COMMIT overhead)</li>
-<li>libfdb_c is pure C — no JVM, no JNI, no SQL parser</li>
-<li>h2o’s event loop handles HTTP/3 natively (no separate QUIC stack)</li>
-<li>Top 10 is exclusively Rust and C/C++ — no managed runtime in the top 10</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:24:15 GMT</pubDate>
 </item>
 </channel>
 </rss>

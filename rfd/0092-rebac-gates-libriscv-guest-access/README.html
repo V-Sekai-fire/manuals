@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>details – V-Sekai Fire — Manuals</title>
+<title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,56 +289,169 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#pattern" id="toc-pattern" class="nav-link active" data-scroll-target="#pattern">Pattern</a></li>
-  <li><a href="#why-async-not-blocking" id="toc-why-async-not-blocking" class="nav-link" data-scroll-target="#why-async-not-blocking">Why async, not blocking</a></li>
-  <li><a href="#error-handling-and-retry" id="toc-error-handling-and-retry" class="nav-link" data-scroll-target="#error-handling-and-retry">Error handling and retry</a></li>
-  <li><a href="#memory-management" id="toc-memory-management" class="nav-link" data-scroll-target="#memory-management">Memory management</a></li>
-  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#status" id="toc-status" class="nav-link" data-scroll-target="#status">Status</a></li>
+  <li><a href="#what-godot-sandbox-documents-today" id="toc-what-godot-sandbox-documents-today" class="nav-link" data-scroll-target="#what-godot-sandbox-documents-today">What <code>godot-sandbox</code> documents today</a></li>
+  <li><a href="#the-existing-rebac-engine-this-reuses" id="toc-the-existing-rebac-engine-this-reuses" class="nav-link" data-scroll-target="#the-existing-rebac-engine-this-reuses">The existing ReBAC engine this reuses</a></li>
+  <li><a href="#proposed-mapping" id="toc-proposed-mapping" class="nav-link" data-scroll-target="#proposed-mapping">Proposed mapping</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#revisit-when" id="toc-revisit-when" class="nav-link" data-scroll-target="#revisit-when">Revisit when</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0073-async-fdb-callback-chain/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0092-rebac-gates-libriscv-guest-access/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">RFD 0092: ReBAC gates libriscv guest access, not five callbacks</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<section id="pattern" class="level2">
-<h2 class="anchored" data-anchor-id="pattern">Pattern</h2>
-<pre><code>create_transaction
-  -&gt; get(district)        [async future]
-    -&gt; on_district_read   [callback: extract next_o_id]
-      -&gt; get(customer)    [async future]
-        -&gt; on_customer_read [callback: extract discount]
-          -&gt; get(stock[0]) [async future]
-            -&gt; on_stock_read [callback: update stock, next item]
-              -&gt; ... (loop for 5-15 items)
-              -&gt; set(oorder, new_order, order_line[], stock[])
-              -&gt; commit [async future]
-                -&gt; on_commit [callback: send HTTP response]</code></pre>
+</header>
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0092: ReBAC gates libriscv guest access, not five callbacks</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-guest-middleham, godot-sandbox-style libriscv hosts</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0079</code> picked raw <code>libriscv</code> for sandboxed guest code (now living in <code>zone-guest-middleham</code>), but never defined what host capabilities a guest may reach. <code>rfd/0079</code>’s own “Consequences” section says so directly: “The exact <code>GodotInstance</code>/scene API <code>godot_tick</code> uses to apply entity input and read state back out is not yet nailed down.”</p>
+<p><code>godot-sandbox</code>, the reference <code>libriscv</code>-Godot integration, already solved this once, with five independent allow-callbacks: class, object, method, property, and resource. Each callback returns a plain boolean. None of the five shares state with the others, and none returns a reason or a path a reviewer could audit later.</p>
 </section>
-<section id="why-async-not-blocking" class="level2">
-<h2 class="anchored" data-anchor-id="why-async-not-blocking">Why async, not blocking</h2>
-<p>FDB’s C API is callback-based by design. <code>fdb_future_set_callback()</code> fires when the future resolves. Blocking with <code>fdb_future_block_until_ready()</code> would stall the event loop thread.</p>
-<p>In the actor-lite architecture (<code>rfd/0072-actor-lite-worker-pool</code>), the H2O network thread dispatches work to worker threads via SPSC rings. If a worker blocks on FDB, it can’t process the next request from its ring.</p>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Gate guest access through ReBAC, not five separate callbacks, and not a two-tier core/user split like <code>godot-luau-script</code>’s. Reuse the working ReBAC engine already vendored in this ecosystem: <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code>’s <code>TwReBACGraph</code>, or its Lean-proved cousin, <code>lean-rebac-core</code>’s <code>ReBAC.lean</code>.</p>
+<p>Model each guest <code>libriscv::Machine</code> instance as a ReBAC subject. Model each of <code>godot-sandbox</code>’s five gated things (a class, an object, a method, a property, a resource path) as a ReBAC object. Replace each boolean callback with one <code>check_expr</code>/<code>can()</code> call: does this guest subject have <code>HAS_CAPABILITY</code> (or a defined computed relation) to this object. Grant access by adding edges (<code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>DELEGATED_TO</code>), not by writing a new callback per axis.</p>
+<p>Also gate <code>libriscv</code>’s own execution-budget primitives (instruction- counted timeout, pause/resume) as ReBAC actions, not hardcoded constants. Budget extension becomes an authorized relationship: a supervisor or owner grants more gas, checked the same way as any other capability.</p>
 </section>
-<section id="error-handling-and-retry" class="level2">
-<h2 class="anchored" data-anchor-id="error-handling-and-retry">Error handling and retry</h2>
-<p>On any FDB error (conflict, timeout, etc.), call <code>fdb_transaction_on_error(tr, err)</code>. This returns a future. When it resolves, the transaction has been reset. The callback re-reads the first key and restarts the chain.</p>
-<p>The retry is transparent: the same <code>new_order_ctx_t</code> struct flows through the chain, carrying the transaction parameters. On reset, the read state is cleared and the chain restarts from step 1.</p>
-</section>
-<section id="memory-management" class="level2">
-<h2 class="anchored" data-anchor-id="memory-management">Memory management</h2>
-<p>Each transaction allocates a context struct (<code>new_order_ctx_t</code>, <code>payment_ctx_t</code>, etc.) on the heap. The context is freed in the final callback (commit success or unrecoverable error). The FDB transaction handle is destroyed in the same callback.</p>
-<p>No reference counting needed: the callback chain is linear, each step has exactly one outstanding future, and the context outlives all callbacks.</p>
-</section>
-<section id="limitations" class="level2">
-<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>No batching across transactions: each HTTP request creates its own FDB transaction. Batching multiple requests into one transaction would improve throughput but violate TPC-C spec (each terminal executes one transaction at a time).</li>
-<li>Stack depth is bounded: the callback chain is finite (max 15 stock reads + writes + commit), so no stack overflow risk.</li>
+<li>Full mapping table, the <code>godot-sandbox</code> API this replaces, and open gaps: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code></li>
+<li><code>sinew-mocap/solve</code> org’s <code>lean-rebac-core</code>, <code>Rebac/core/ReBAC.lean</code></li>
+<li><code>libriscv/godot-sandbox</code>, <code>docs/host_langs/godot_integration/godot_docs/restrictions</code></li>
 </ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv</code>: the sandboxing decision this gates.</li>
+<li><code>rfd/0086-defer-nogod-gossip-zone-authority</code>: the other place <code>lean-rebac-core</code> is already in scope.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Discussion only. No implementation exists yet. Nothing today calls <code>check_expr</code>, <code>rebac_can_json</code>, or any <code>lean-rebac-core</code> predicate from a <code>libriscv</code> host callback.</p>
+</section>
+<section id="what-godot-sandbox-documents-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-godot-sandbox-documents-today">What <code>godot-sandbox</code> documents today</h2>
+<p><code>godot-sandbox</code> is the reference <code>libriscv</code>-Godot integration. <code>libriscv</code> itself calls “pause and resume … a first-class citizen” in its own README, and documents an “optional execution timeout using instruction counting”. <code>godot-sandbox</code> exposes a <code>restrictions</code> property. Setting it <code>true</code> blocks all external access by default, then five independent callbacks each grant a narrow exception:</p>
+<ul>
+<li><code>set_class_allowed_callback(func(sandbox, name): ...)</code> — gates class instantiation. Checked with <code>is_allowed_class(name)</code>.</li>
+<li><code>add_allowed_object(obj)</code> / <code>remove_allowed_object(obj)</code> / <code>clear_allowed_objects()</code>, plus <code>set_object_allowed_callback(func(sandbox, obj): ...)</code> for anything not in the explicit list.</li>
+<li><code>set_method_allowed_callback(func(sandbox, obj, method): ...)</code> — gates method calls.</li>
+<li><code>set_property_allowed_callback(func(sandbox, obj, prop): ...)</code> — gates property reads/writes.</li>
+<li><code>set_resource_allowed_callback(func(sandbox, path): ...)</code>, checked with <code>is_allowed_resource(path)</code> — gates resource loads.</li>
+</ul>
+<p>Each callback returns a plain boolean, independently of the other four. None of them shares a subject/object model, a delegation concept, or an audit trail. One documented workaround for building a real whitelist is to run once in trace mode. This logs every access request a callback sees, then a person hand-promotes the log into a static allow-list. This RFD’s ReBAC model closes that gap structurally, not by manual log review.</p>
+</section>
+<section id="the-existing-rebac-engine-this-reuses" class="level2">
+<h2 class="anchored" data-anchor-id="the-existing-rebac-engine-this-reuses">The existing ReBAC engine this reuses</h2>
+<p><code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code> (in <code>zone-server-h2o</code>, ported from <code>plan_memory/rebac.py</code>, no Godot dependency) already implements:</p>
+<ul>
+<li>A relation vocabulary: <code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>OWNS</code>, <code>IS_MEMBER_OF</code>, <code>DELEGATED_TO</code>, <code>SUPERVISOR_OF</code>, <code>PARTNER_OF</code>, plus an <code>UNKNOWN</code>/string-named escape hatch for domain-specific relations.</li>
+<li>A boolean expression algebra over relations: <code>base</code>, <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>tuple_to_userset</code> (Zanzibar’s own “pivot through another relation” pattern) — <code>check_expr()</code>.</li>
+<li><code>IS_MEMBER_OF</code> transitive inheritance and <code>CONTROLS</code>/<code>DELEGATED_TO</code> inversion, both handled inside <code>check_base()</code>, not bolted on per caller.</li>
+<li><code>can()</code>/<code>rebac_can_json()</code> — a DFS capability search that returns the actual path, not just a boolean, format: <code>{"authorized":bool,"path":[...]}</code>. This is the audit trail <code>godot-sandbox</code>’s five callbacks do not have today.</li>
+<li>JSON (de)serialization (<code>graph_from_json</code>/<code>graph_to_json</code>), so a guest’s capability graph is itself data, not code.</li>
+</ul>
+<p><code>lean-rebac-core</code>’s <code>ReBAC.lean</code>/<code>rebacCheck</code> (already referenced by <code>zone-server-h2o</code>’s own <code>src/gen/rebac.c</code>, per <code>rfd/0083</code>) is the Lean-proved version of the same idea — a pure predicate over <code>Relation</code>/<code>Action</code> ranks, checked against proved theorems (<code>rebac_empty_denied</code>, <code>rebac_public_observe</code>, the owner-only <code>.modify</code> boundary). Either engine fits this design. Which one a real implementation picks is a separate, later decision.</p>
+</section>
+<section id="proposed-mapping" class="level2">
+<h2 class="anchored" data-anchor-id="proposed-mapping">Proposed mapping</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 17%">
+<col style="width: 19%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>godot-sandbox</code> axis</th>
+<th>ReBAC subject</th>
+<th>ReBAC object</th>
+<th>Relation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Class instantiation</td>
+<td>the guest <code>Machine</code></td>
+<td>the class name</td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="even">
+<td>Object access</td>
+<td>the guest <code>Machine</code></td>
+<td>the object instance</td>
+<td><code>HAS_CAPABILITY</code> or <code>CONTROLS</code></td>
+</tr>
+<tr class="odd">
+<td>Method call</td>
+<td>the guest <code>Machine</code></td>
+<td><code>&lt;object&gt;.&lt;method&gt;</code></td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="even">
+<td>Property access</td>
+<td>the guest <code>Machine</code></td>
+<td><code>&lt;object&gt;.&lt;property&gt;</code></td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="odd">
+<td>Resource load</td>
+<td>the guest <code>Machine</code></td>
+<td>the resource path</td>
+<td><code>HAS_CAPABILITY</code></td>
+</tr>
+<tr class="even">
+<td>Instruction-budget extension</td>
+<td>the guest <code>Machine</code></td>
+<td>the “more gas” action</td>
+<td><code>DELEGATED_TO</code> from a supervisor/owner</td>
+</tr>
+</tbody>
+</table>
+<p>Delegation, membership, and capability inheritance fall out of the expression algebra already in <code>tw_rebac.hpp</code>. A guest that is <code>IS_MEMBER_OF</code> a trusted group inherits that group’s <code>HAS_CAPABILITY</code> edges automatically, with no new code path per axis. <code>godot-sandbox</code> needs a new hand-written callback for each such case today.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>Good: one authorization model instead of five independent callbacks plus a two-tier VM split. A denied check returns a real reason (no path found), not just <code>false</code>. The engine is not new, untested code — <code>tw_rebac.hpp</code> already has real callers in <code>taskweft-nif</code>, and <code>lean-rebac-core</code>’s version is Lean-proved.</p>
+<p>Bad: the team has not implemented this yet. <code>zone-guest-middleham</code>’s <code>mud-sandbox-orchestrator</code> calls exactly two <code>vmcall</code>-reachable guest functions today (<code>mud_boot</code>, <code>mud_step</code>). It has no host-capability surface yet for this model to gate. The design has nothing to attach to until that surface grows. No one wired <code>thirdparty/taskweft-nif</code> into <code>zone-server-h2o</code> yet — <code>mud/domains/README.md</code> already says the MUD guest does not use any of its three domains yet. So reusing <code>tw_rebac.hpp</code> here means depending on code that is itself not yet load-bearing anywhere.</p>
+</section>
+<section id="revisit-when" class="level2">
+<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
+<p><code>zone-guest-middleham</code>’s guest surface grows past <code>mud_boot</code>/<code>mud_step</code> into calling named host functions/classes/objects (the shape <code>rfd/0079</code> left open). At that point, build the five-axis mapping table above as real code, backed by either <code>tw_rebac.hpp</code> or <code>lean-rebac-core</code>’s <code>rebacCheck</code>, instead of ad hoc per-axis callbacks.</p>
 
 
 </section>
@@ -765,7 +878,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0073-async-fdb-callback-chain/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0092-rebac-gates-libriscv-guest-access/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

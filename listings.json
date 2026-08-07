@@ -16,6 +16,7 @@
   {
     "listing": "/rfd.html",
     "items": [
+      "/rfd/0092-rebac-gates-libriscv-guest-access/README.html",
       "/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html",
       "/rfd/0090-uro-burrito-release/README.html",
       "/rfd/0089-flyio-over-podman-quadlets/README.html",
