@@ -1,6 +1,6 @@
 [
   {
-    "listing": "/changelog.html",
+    "listing": "/pages/changelog.html",
     "items": [
       "/changelog/2026/20260630-deck-log.html",
       "/changelog/2026/20260629-deck-log.html",
@@ -14,7 +14,7 @@
     ]
   },
   {
-    "listing": "/rfd.html",
+    "listing": "/pages/rfd.html",
     "items": [
       "/rfd/0092-rebac-gates-libriscv-guest-access/README.html",
       "/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html",

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>References – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./rfd.html"> 
+    <a class="nav-link" href="../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./references.html"> 
+    <a class="nav-link active" href="../pages/references.html" aria-current="page"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,21 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#journal-articles" id="toc-journal-articles" class="nav-link active" data-scroll-target="#journal-articles">Journal Articles</a></li>
+  <li><a href="#conference-papers" id="toc-conference-papers" class="nav-link" data-scroll-target="#conference-papers">Conference Papers</a></li>
+  <li><a href="#technical-reports" id="toc-technical-reports" class="nav-link" data-scroll-target="#technical-reports">Technical Reports</a></li>
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
+  <li><a href="#source-code" id="toc-source-code" class="nav-link" data-scroll-target="#source-code">Source Code</a></li>
+  <li><a href="#manuals-documentation" id="toc-manuals-documentation" class="nav-link" data-scroll-target="#manuals-documentation">Manuals &amp; Documentation</a></li>
+  <li><a href="#websites" id="toc-websites" class="nav-link" data-scroll-target="#websites">Websites</a></li>
+  <li><a href="#standards-miscellaneous" id="toc-standards-miscellaneous" class="nav-link" data-scroll-target="#standards-miscellaneous">Standards &amp; Miscellaneous</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/pages/references.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +306,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">References</h1>
 </div>
 
 
@@ -370,109 +323,203 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
+<p><em><a href="../index.html">Manuals</a> › References</em></p>
+<section id="journal-articles" class="level2">
+<h2 class="anchored" data-anchor-id="journal-articles">Journal Articles</h2>
+<ul>
+<li><strong>The Partial Migration of Game State and Dynamic Server Selection to Reduce Latency</strong><br>
+Beskow, Paul B.; Vik, Knut-Helge; Halvorsen, Pål; and Griwodz, Carsten · 2009 · Multimedia Tools and Applications · <a href="https://doi.org/10.1007/s11042-009-0287-7">doi:10.1007/s11042-009-0287-7</a></li>
+<li><strong>Cheat-Proof Playout for Centralized and Peer-to-Peer Gaming</strong><br>
+Baughman, Nathaniel E.; Liberatore, Marc; and Levine, Brian Neil · 2007 · IEEE/ACM Transactions on Networking · <a href="https://doi.org/10.1109/TNET.2006.886289">doi:10.1109/TNET.2006.886289</a></li>
+<li><strong>A Survey and Taxonomy of Latency Compensation Techniques for Network Computer Games</strong><br>
+Liu, Shengmei; Xu, Xiaokun; and Claypool, Mark · 2022 · ACM Computing Surveys · <a href="https://doi.org/10.1145/3519023">doi:10.1145/3519023</a></li>
+<li><strong>Interest Management for Distributed Virtual Environments: A Survey</strong><br>
+Liu, Elvis S.; and Theodoropoulos, Georgios K. · 2014 · ACM Computing Surveys · <a href="https://doi.org/10.1145/2535417">doi:10.1145/2535417</a></li>
+<li><strong>GPU-Centered Font Rendering Directly from Glyph Outlines</strong><br>
+Lengyel, Eric · 2017 · Journal of Computer Graphics Techniques (JCGT) · <a href="https://jcgt.org/published/0006/02/02/">https://jcgt.org/published/0006/02/02/</a></li>
+<li><strong>The Cost YAGNI Was Never About</strong><br>
+Beck, Kent · 2026 · <a href="https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about">https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about</a></li>
+<li><strong>The Uncanny Valley [From the Field]</strong><br>
+Mori, Masahiro; MacDorman, Karl F.; and Kageki, Norri · 2012 · IEEE Robotics &amp; Automation Magazine · <a href="https://doi.org/10.1109/MRA.2012.2192811">doi:10.1109/MRA.2012.2192811</a></li>
+<li><strong>Venturing into the Uncanny Valley of Mind — The Influence of Mind Attribution on the Acceptance of Human-Like Characters in a Virtual Reality Setting</strong><br>
+Stein, Jan-Philipp; and Ohler, Peter · 2017 · Cognition · <a href="https://doi.org/10.1016/j.cognition.2016.12.010">doi:10.1016/j.cognition.2016.12.010</a></li>
+<li><strong>Aspects of Visual Avatar Appearance: Self-Representation, Display Type, and Uncanny Valley</strong><br>
+Hepperle, Daniel; Purps, Christian Felix; Deuchler, Jonas; and Wölfel, Matthias · 2021 · The Visual Computer · <a href="https://doi.org/10.1007/s00371-021-02151-0">doi:10.1007/s00371-021-02151-0</a></li>
+<li><strong>Implications of the Uncanny Valley of Avatars and Virtual Characters for Human-Computer Interaction</strong><br>
+Schwind, Valentin; Wolf, Katrin; and Henze, Niels · 2018 · Human-Computer Interaction · <a href="https://www.semanticscholar.org/paper/bbcb5ed4d1d26f9767dbdffb9bb4b60b668a49cb">https://www.semanticscholar.org/paper/bbcb5ed4d1d26f9767dbdffb9bb4b60b668a49cb</a></li>
+</ul>
+</section>
+<section id="conference-papers" class="level2">
+<h2 class="anchored" data-anchor-id="conference-papers">Conference Papers</h2>
+<ul>
+<li><strong>Congestion Avoidance and Control</strong><br>
+Jacobson, Van; and Karels, Michael J. · 1988 · ACM SIGCOMM ’88 · <a href="https://doi.org/10.1145/52324.52356">doi:10.1145/52324.52356</a></li>
+<li><strong>Improving Round-Trip Time Estimates in Reliable Transport Protocols</strong><br>
+Karn, Phil; and Partridge, Craig · 1987 · ACM SIGCOMM ’87 · <a href="https://doi.org/10.1145/55483.55484">doi:10.1145/55483.55484</a></li>
+<li><strong>Talaria: In-Engine Synchronisation for Seamless Migration of Mobile Edge Gaming Instances</strong><br>
+Braud, Tristan; Alhilal, Ahmad; and Hui, Pan · 2021 · CoNEXT ’21 · <a href="https://doi.org/10.1145/3485983.3494848">doi:10.1145/3485983.3494848</a></li>
+<li><strong>Cheat-Proofing Dead Reckoned Multiplayer Games</strong><br>
+Cronin, Eric; Filstrup, Brian; and Jamin, Sugih · 2003 · Workshop on Anti-Cheating in Online Games (ADCOG)</li>
+<li><strong>Supporting Spectators in Online Multiplayer Games</strong><br>
+Bharambe, Ashwin R.; Padmanabhan, Venkata N.; and Seshan, Srinivasan · 2004 · HotNets-III · <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/hotnets2004.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/hotnets2004.pdf</a></li>
+<li><strong>Enhancing the Experience of Multiplayer Shooter Games via Advanced Lag Compensation</strong><br>
+Lee, Steven W. K.; and Chang, Rocky K. C. · 2018 · MMSys ’18 · <a href="https://doi.org/10.1145/3204949.3204971">doi:10.1145/3204949.3204971</a></li>
+<li><strong>A Dynamic Area of Interest Management and Collaboration Model for P2P MMOGs</strong><br>
+Ahmed, Dewan T.; and Shirmohammadi, Shervin · 2008 · DS-RT ’08 · <a href="https://doi.org/10.1109/DS-RT.2008.26">doi:10.1109/DS-RT.2008.26</a></li>
+<li><strong>Comparing Interest Management Algorithms for Massively Multiplayer Games</strong><br>
+Boulanger, Jean-Sébastien; Kienzle, Jörg; and Verbrugge, Clark · 2006 · NetGames ’06 · <a href="https://doi.org/10.1145/1230040.1230046">doi:10.1145/1230040.1230046</a></li>
+<li><strong>Expanding Spheres: A Collision Detection Algorithm for Interest Management in Networked Games</strong><br>
+Morgan, Graham; Storey, Kier; and Lu, Fengyun · 2004 · ICEC 2004 · <a href="https://doi.org/10.1007/978-3-540-28643-1_56">doi:10.1007/978-3-540-28643-1_56</a></li>
+<li><strong>Hitboxes: A Survey About Collision Detection in Video Games</strong><br>
+Lazaridis, Lazaros; Papatsimouli, Maria; Kollias, Konstantinos F.; Sarigiannidis, Panagiotis; and Fragulis, George F. · 2021 · HCI in Games 2021 · <a href="https://doi.org/10.1007/978-3-030-77277-2_24">doi:10.1007/978-3-030-77277-2_24</a></li>
+<li><strong>Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases</strong><br>
+Kulkarni, Sandeep; Demirbas, Murat; Madappa, Deepak; Avva, Bharadwaj; and Leone, Marcelo · 2014 · SSS 2014 · <a href="https://doi.org/10.1007/978-3-319-11764-5_14">doi:10.1007/978-3-319-11764-5_14</a></li>
+<li><strong>FoundationDB: A Distributed Unbundled Transactional Key Value Store</strong><br>
+Zhou, Jingyu; Xu, Meng; Shraer, Alexander; Namasivayam, Bala; Miller, Alex; Tschannen, Evan; Atherton, Steve; Beez, Andrew J.; Hammer, Pat; Arefin, Soumya; Banning, Jared; Laber, Markus; Stumm, Michael; Butterstein, David; Fischel, Brian; Gazit, Benny; Terber, Avi; and Collins, Rusty · 2021 · ACM SIGMOD 2021 · <a href="https://doi.org/10.1145/3448016.3457559">doi:10.1145/3448016.3457559</a></li>
+<li><strong>The Lean 4 Theorem Prover and Programming Language</strong><br>
+de Moura, Leonardo; and Ullrich, Sebastian · 2021 · CADE 28 · <a href="https://doi.org/10.1007/978-3-030-79876-5_37">doi:10.1007/978-3-030-79876-5_37</a></li>
+<li><strong>The Lean Mathematical Library</strong><br>
+The mathlib Community · 2020 · CPP 2020 · <a href="https://doi.org/10.1145/3372885.3373824">doi:10.1145/3372885.3373824</a></li>
+</ul>
+</section>
+<section id="technical-reports" class="level2">
+<h2 class="anchored" data-anchor-id="technical-reports">Technical Reports</h2>
+<ul>
+<li><strong>Network Time Protocol Version 4: Protocol and Algorithms Specification</strong><br>
+Mills, David; Martin, Juergen; Burbank, Jack; and Kasch, William · 2010 · IETF · <a href="https://doi.org/10.17487/RFC5905">doi:10.17487/RFC5905</a></li>
+<li><strong>Concise Binary Object Representation (CBOR)</strong><br>
+Bormann, Carsten; and Hoffman, Paul · 2020 · IETF · <a href="https://doi.org/10.17487/RFC8949">doi:10.17487/RFC8949</a></li>
+</ul>
+</section>
+<section id="software" class="level2">
+<h2 class="anchored" data-anchor-id="software">Software</h2>
+<ul>
+<li><strong>ENet: Reliable UDP Networking Library</strong><br>
+Salzman, Lee · 2026 · <a href="http://enet.bespin.org/">http://enet.bespin.org/</a></li>
+<li><strong>Godot Engine</strong><br>
+Godot Engine contributors · 2026 · <a href="https://godotengine.org/">https://godotengine.org/</a></li>
+<li><strong>CockroachDB</strong><br>
+Cockroach Labs · 2026 · <a href="https://www.cockroachlabs.com/">https://www.cockroachlabs.com/</a></li>
+<li><strong>FoundationDB</strong><br>
+Apple Inc.&nbsp;· 2026 · <a href="https://github.com/apple/foundationdb">https://github.com/apple/foundationdb</a></li>
+<li><strong>MaterialX: An Open Standard for Network-Based CG Object Looks</strong><br>
+Academy Software Foundation · 2026 · <a href="https://materialx.org/">https://materialx.org/</a></li>
+<li><strong>OpenUSD: Universal Scene Description</strong><br>
+Pixar Animation Studios; and Alliance for OpenUSD · 2026 · <a href="https://openusd.org/">https://openusd.org/</a></li>
+<li><strong>Resonance Audio: Multi-Platform Spatial Audio SDK</strong><br>
+Google · 2018 · <a href="https://resonance-audio.github.io/resonance-audio/">https://resonance-audio.github.io/resonance-audio/</a></li>
+<li><strong>sccache: Shared Compilation Cache</strong><br>
+Mozilla · 2026 · <a href="https://github.com/mozilla/sccache">https://github.com/mozilla/sccache</a></li>
+<li><strong>Burrito: Wrap your Elixir application in a BEAM Burrito</strong><br>
+burrito-elixir · 2024 · <a href="https://github.com/burrito-elixir/burrito">https://github.com/burrito-elixir/burrito</a></li>
+<li><strong>aria-storage: Content-addressable storage with the casync protocol</strong><br>
+Lee, K. S. Ernest (iFire) · 2025 · <a href="https://github.com/V-Sekai-fire/aria-storage">https://github.com/V-Sekai-fire/aria-storage</a></li>
+<li><strong>Harvester: Open-Source Hyperconverged Infrastructure</strong><br>
+SUSE Rancher · 2026 · <a href="https://harvesterhci.io/">https://harvesterhci.io/</a></li>
+<li><strong>ANNY: A Differentiable Human Body Model</strong><br>
+NAVER · 2026 · <a href="https://github.com/naver/anny">https://github.com/naver/anny</a></li>
+<li><strong>SOMA-X: Unifying Parametric Human Body Models</strong><br>
+NVIDIA Labs · 2026 · <a href="https://github.com/NVlabs/SOMA-X">https://github.com/NVlabs/SOMA-X</a></li>
+<li><strong>ubpf: Userspace eBPF VM</strong><br>
+IO Visor Project · 2026 · <a href="https://github.com/iovisor/ubpf">https://github.com/iovisor/ubpf</a></li>
+<li><strong>zcbor: CDDL to Code Generator for Constrained Devices</strong><br>
+Nordic Semiconductor · 2026 · <a href="https://github.com/NordicSemiconductor/zcbor">https://github.com/NordicSemiconductor/zcbor</a></li>
+<li><strong>QCBOR: A Comprehensive, Powerful, Commercial-Quality CBOR Encoder/Decoder</strong><br>
+Lundblade, Laurence · 2026 · <a href="https://github.com/laurencelundblade/QCBOR">https://github.com/laurencelundblade/QCBOR</a></li>
+<li><strong>jsonld-cpp: A C++14 Implementation of the JSON-LD 1.1 Specification</strong><br>
+jsonld-cpp contributors · 2026 · <a href="https://github.com/dcdan/jsonld-cpp">https://github.com/dcdan/jsonld-cpp</a></li>
+<li><strong>cborld-c: A C Library for Encoding JSON-LD into CBOR-LD</strong><br>
+CoSWoT · 2026 · <a href="https://gitlab.com/coswot/cborld-c">https://gitlab.com/coswot/cborld-c</a></li>
+<li><strong>Godot Sandbox: Safe, Low-Latency Sandbox for the Godot Game Engine</strong><br>
+libriscv · 2026 · <a href="https://github.com/libriscv/godot-sandbox">https://github.com/libriscv/godot-sandbox</a></li>
+<li><strong>godot-sandbox-gdscript-compiler: A GDScript-to-RISC-V Compiler for Godot Sandbox</strong><br>
+V-Sekai Multiplayer Fabric · 2026 · <a href="https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler">https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler</a></li>
+<li><strong>godot-cpp: C++ Bindings for the Godot Script API</strong><br>
+Godot Engine contributors · 2026 · <a href="https://github.com/godotengine/godot-cpp">https://github.com/godotengine/godot-cpp</a></li>
+</ul>
+</section>
+<section id="source-code" class="level2">
+<h2 class="anchored" data-anchor-id="source-code">Source Code</h2>
+<ul>
+<li><strong>Godot 4.x Dynamic BVH Broadphase: Node Expansion Constants</strong><br>
+Godot Engine contributors · 2026 · <a href="https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h">https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h</a></li>
+<li><strong>fps: Example source code for Creating a First Person Shooter That Scales to Millions of Players</strong><br>
+mas-bandwidth · 2026 · <a href="https://github.com/mas-bandwidth/fps">https://github.com/mas-bandwidth/fps</a></li>
+<li><strong>LibGodot: Embed a Godot Instance in an External Codebase</strong><br>
+Godot Engine contributors; and Migeran · 2026 · <a href="https://github.com/godotengine/godot/pull/90510">https://github.com/godotengine/godot/pull/90510</a></li>
+<li><strong>godot-riscv-spike: rv64 libgodot-in-libriscv feasibility spike</strong><br>
+v-sekai-multiplayer-fabric · 2026 · <a href="https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike">https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike</a></li>
+</ul>
+</section>
+<section id="manuals-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="manuals-documentation">Manuals &amp; Documentation</h2>
+<ul>
+<li><strong>Godot Engine Documentation</strong><br>
+Godot Engine contributors · 2026 · <a href="https://docs.godotengine.org/">https://docs.godotengine.org/</a></li>
+<li><strong>GDScript Documentation</strong><br>
+Godot Engine contributors · 2026 · <a href="https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html">https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html</a></li>
+<li><strong>CockroachDB Manual Deployment</strong><br>
+Cockroach Labs · 2026 · <a href="https://www.cockroachlabs.com/docs/v22.1/manual-deployment.html">https://www.cockroachlabs.com/docs/v22.1/manual-deployment.html</a></li>
+<li><strong>systemd Service Unit Documentation</strong><br>
+The systemd project · 2026 · <a href="https://www.freedesktop.org/software/systemd/man/systemd.service.html">https://www.freedesktop.org/software/systemd/man/systemd.service.html</a></li>
+<li><strong>Helm Documentation</strong><br>
+Helm project · 2026 · <a href="https://helm.sh/docs/">https://helm.sh/docs/</a></li>
+<li><strong>Tailscale Funnel Documentation</strong><br>
+Tailscale · 2026 · <a href="https://tailscale.com/kb/1132/tailscale-funnel/">https://tailscale.com/kb/1132/tailscale-funnel/</a></li>
+<li><strong>Dokku Documentation</strong><br>
+Dokku project · 2026 · <a href="http://dokku.viewdocs.io/dokku/">http://dokku.viewdocs.io/dokku/</a></li>
+<li><strong>ZeroMQ - The Guide: Chapter 7, Advanced Pub-Sub Patterns (The Cheap or Nasty Pattern)</strong><br>
+Hintjens, Pieter · 2026 · <a href="https://zguide.zeromq.org/docs/chapter7/#The-Cheap-or-Nasty-Pattern">https://zguide.zeromq.org/docs/chapter7/#The-Cheap-or-Nasty-Pattern</a></li>
+<li><strong>CBOR-LD 1.0</strong><br>
+W3C · 2026 · <a href="https://w3c.github.io/cbor-ld/">https://w3c.github.io/cbor-ld/</a></li>
+<li><strong>Verifiable Credential Barcodes v1.0</strong><br>
+W3C · 2026 · <a href="https://w3c.github.io/vc-barcodes/">https://w3c.github.io/vc-barcodes/</a></li>
+</ul>
+</section>
+<section id="websites" class="level2">
+<h2 class="anchored" data-anchor-id="websites">Websites</h2>
+<ul>
+<li><strong>VRChat Network Sync and IK Update Rate</strong><br>
+VRChat School · 2026 · <a href="https://vrchatschool.com/network-sync/">https://vrchatschool.com/network-sync/</a></li>
+<li><strong>Tropes: A Directory of AI Writing Tells</strong><br>
+Bukhsh, Ossama · 2026 · <a href="https://tropes.fyi/">https://tropes.fyi/</a></li>
+</ul>
+</section>
+<section id="standards-miscellaneous" class="level2">
+<h2 class="anchored" data-anchor-id="standards-miscellaneous">Standards &amp; Miscellaneous</h2>
+<ul>
+<li><strong>WebTransport over HTTP/3</strong><br>
+Frindell, Alan; Kinnear, Eric; and Vassiliev, Victor · 2023 · <a href="https://datatracker.ietf.org/doc/draft-ietf-webtrans-http3/">https://datatracker.ietf.org/doc/draft-ietf-webtrans-http3/</a></li>
+<li><strong>Zoning Issues and Area of Interest Management in Massively Multiplayer Online Games</strong><br>
+Ahmed, Dewan T.; and Shirmohammadi, Shervin · 2009 · Springer · <a href="https://doi.org/10.1007/978-0-387-89024-1_8">doi:10.1007/978-0-387-89024-1_8</a></li>
+<li><strong>Photon PUN2: Regions and Best Region</strong><br>
+Exit Games · 2026 · <a href="https://doc.photonengine.com/pun/current/connection-and-authentication/regions">https://doc.photonengine.com/pun/current/connection-and-authentication/regions</a></li>
+<li><strong>Most Players Simultaneously in a First-Person Shooter Battle: Planetside 2 World Record</strong><br>
+Guinness World Records; and Daybreak Game Company · 2022 · <a href="https://www.guinnessworldrecords.com/world-records/most-players-simultaneously-in-a-fps-battle">https://www.guinnessworldrecords.com/world-records/most-players-simultaneously-in-a-fps-battle</a></li>
+<li><strong>Add WebTransport Support (Proposal #3899)</strong><br>
+Godot Engine contributors · 2022 · <a href="https://github.com/godotengine/godot-proposals/issues/3899">https://github.com/godotengine/godot-proposals/issues/3899</a></li>
+<li><strong>Parallel Commits TLA+ Specification</strong><br>
+Cockroach Labs · 2020 · <a href="https://github.com/v-sekai/cockroach/blob/release-22.1-oxide/docs/tla-plus/ParallelCommits/ParallelCommits.tla">https://github.com/v-sekai/cockroach/blob/release-22.1-oxide/docs/tla-plus/ParallelCommits/ParallelCommits.tla</a></li>
+<li><strong>FoundationDB Fault Tolerance</strong><br>
+Apple Inc.&nbsp;· 2026 · <a href="https://apple.github.io/foundationdb/fault-tolerance.html">https://apple.github.io/foundationdb/fault-tolerance.html</a></li>
+<li><strong>The Twelve-Factor App: Config</strong><br>
+The Twelve-Factor App authors · 2026 · <a href="https://12factor.net/config">https://12factor.net/config</a></li>
+<li><strong>MADR: Markdown Any Decision Records</strong><br>
+adr.github.io · 2026 · <a href="https://adr.github.io/madr/">https://adr.github.io/madr/</a></li>
+<li><strong>Vulkan Video</strong><br>
+Khronos Group · 2026 · <a href="https://www.khronos.org/blog/an-introduction-to-vulkan-video">https://www.khronos.org/blog/an-introduction-to-vulkan-video</a></li>
+<li><strong>Semantic Versioning 2.0.0</strong><br>
+Preston-Werner, Tom · 2013 · <a href="https://semver.org/">https://semver.org/</a></li>
+<li><strong>xr-grid Debug Scene: Hero-Asset Landmark with Head and Hand Orientation-and-Translation Orbs</strong><br>
+V-Sekai Multiplayer Fabric · 2026</li>
+<li><strong>KHR_interactivity: glTF Interactivity Extension</strong><br>
+Khronos Group · 2026 · <a href="https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_interactivity">https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_interactivity</a></li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
-</tr>
-</thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="./changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="./changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="./changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="./changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="./changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="./changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
-</tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="./changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="./changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1786105371790" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="./changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -894,7 +941,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/pages/references.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
