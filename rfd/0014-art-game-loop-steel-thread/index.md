@@ -39,7 +39,7 @@ stretch goal layered on once the loop turns.
 
 ## Related
 
-`rfd/0018-feature-classification-poc-baseline-stretch/README.md`
+`rfd/0018-feature-classification-poc-baseline-stretch/index.md`
 
 ## Detail
 

@@ -34,7 +34,7 @@ same repo as the deploy it triggers.
 
 ## Related
 
-`rfd/0017-compiling-godot-engine/README.md` covers the engine build this
+`rfd/0017-compiling-godot-engine/index.md` covers the engine build this
 packaging wraps.
 
 ## Detail

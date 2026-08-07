@@ -6,7 +6,7 @@ listing:
   sort-ui: true
   type: table
   contents:
-    - "../rfd/**/README.md"
+    - "../rfd/**/index.md"
   sort:
     - "rfd desc"
   feed: true
@@ -19,5 +19,5 @@ listing:
 ---
 
 Request-for-Discussion documents: longer-lived design records, numbered
-rather than dated. See `rfd/0000-conventions/README.md` for the format
+rather than dated. See `rfd/0000-conventions/index.md` for the format
 and the state values.

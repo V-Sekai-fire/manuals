@@ -37,7 +37,7 @@ On Windows this is wrapped as a `sccheck` PowerShell function (alias
 
 ## Related
 
-`rfd/0017-compiling-godot-engine/README.md` sets up the sccache backend
+`rfd/0017-compiling-godot-engine/index.md` sets up the sccache backend
 this check verifies.
 
 ## Detail

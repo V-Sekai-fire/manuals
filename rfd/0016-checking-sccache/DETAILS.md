@@ -6,7 +6,7 @@ Native builds route compilation through sccache
 (https://github.com/mozilla/sccache) backed by a shared DigitalOcean
 Spaces bucket (`chibifire-sccache`, region `tor1`), so object files are
 cached across machines and CI (see
-`rfd/0017-compiling-godot-engine/README.md`). The failure mode is
+`rfd/0017-compiling-godot-engine/index.md`). The failure mode is
 silent: if the `SCCACHE_*` environment is missing, the credentials are
 wrong, or the region/endpoint is off, sccache quietly falls back to a
 local disk cache — or records read/write errors — while the build still

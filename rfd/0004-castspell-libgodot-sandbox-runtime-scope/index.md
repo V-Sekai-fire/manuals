@@ -37,7 +37,7 @@ options.
 
 ## Related
 
-`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md` (item 6)
+`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.md` (item 6)
 
 ## Detail
 

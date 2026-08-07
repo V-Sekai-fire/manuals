@@ -40,9 +40,9 @@ license, for any later kernel-bypass or eBPF work.
 
 ## Related
 
-`rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md`,
-`rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md`,
-`rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.md`
+`rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md`,
+`rfd/0004-castspell-libgodot-sandbox-runtime-scope/index.md`,
+`rfd/0005-gltf-interactivity-value-type-taxonomy-correction/index.md`
 
 ## Detail
 

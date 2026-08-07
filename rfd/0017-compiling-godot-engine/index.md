@@ -39,8 +39,8 @@ moved or renamed checkout keeps its cache hits.
 
 ## Related
 
-`rfd/0016-checking-sccache/README.md` verifies this cache is working;
-`rfd/0007-godot-double-precision-template-release-for-zone/README.md`
+`rfd/0016-checking-sccache/index.md` verifies this cache is working;
+`rfd/0007-godot-double-precision-template-release-for-zone/index.md`
 uses this build for zone-server binaries.
 
 ## Detail
