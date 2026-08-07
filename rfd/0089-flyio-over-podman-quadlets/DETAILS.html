@@ -289,13 +289,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#details" id="toc-details" class="nav-link active" data-scroll-target="#details">Details</a>
-  <ul class="collapse">
-  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  </ul></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0008-webtransport-over-quic-for-game-traffic/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0089-flyio-over-podman-quadlets/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -304,24 +304,41 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="details" class="level1">
-<h1>Details</h1>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state.</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p><code>rfd/0061</code> chose podman quadlets under systemd on self-hosted Fedora 44 hosts over both Fly.io and the earlier Harvester HCI plan, provisioned by the <code>infra</code> repo’s OpenTofu. Seven quadlet repos were created for this: <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code>, each with an <code>install.sh</code> and a real <code>.container</code> unit. All seven last received a push on 2026-06-13.</p>
+<p>Independently of that decision, real production work on <code>zone-backend</code> continued against Fly.io. <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code> records a Fly app loss and a scoped redeploy of <code>multiplayer-fabric-uro</code> and <code>multiplayer-fabric-crdb</code> only. That redeploy sat broken for weeks: <code>multiplayer-fabric-crdb</code> crash-looped on every boot (<code>/docker-entrypoint.sh: No such file or directory</code> — the image’s real entrypoint is <code>/cockroach/cockroach.sh</code>, confirmed via <code>skopeo inspect --config docker://ghcr.io/v-sekai/cockroach:latest</code>; whatever Dockerfile previously set that override was never committed anywhere), and <code>multiplayer-fabric-uro</code> had 14 secrets staged but never deployed.</p>
+<p>This mismatch — a published RFD choosing quadlets, while the actual service that exists and needs fixing runs on Fly — needed a real decision, not a silent continuation of whichever path happened to have momentum.</p>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ol type="1">
+<li><strong>Fix <code>zone-backend</code>’s Fly deploy, treat quadlets as the long-term target.</strong> Keeps <code>rfd/0061</code> in force; the Fly.io fixes become a stopgap, and someone later ports <code>uro</code>/<code>crdb</code> to <code>zone-backend-quadlet</code>/<code>cockroach-crdb-quadlet</code>.</li>
+<li><strong>Adopt Fly.io as the real target, tombstone the quadlet repos and <code>infra</code>.</strong> Matches what has actually been built, verified, and deployed: a real <code>multiplayer-fabric-crdb</code> fix, confirmed live via Fly’s own health checks and boot logs, and a real Burrito-wrapped release for <code>uro</code>, verified locally (a genuine static ELF binary that boots <code>Uro.Endpoint</code>, <code>Uro.Repo</code>, and <code>Uro.Repo.Migration</code> correctly).</li>
+<li>Running both, service by service, avoids picking a single target but doubles the real ops surface <code>rfd/0061</code>’s own problem statement (Harvester’s “full virtualization tier” wraps the same workloads twice) already argued against, for a different reason.</li>
+</ol>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen: <strong>option 2.</strong> Fly.io is the real deployment target. <code>rfd/0061</code> is superseded. <code>infra</code> and all seven quadlet repos are archived (GitHub’s archive, not deletion — history stays reachable, nothing currently depends on them being writable).</p>
+<p>The concrete evidence this decision is grounded in, not asserted:</p>
+<ul>
+<li><code>multiplayer-fabric-crdb</code>: three real, distinct bugs found and fixed by iterating against actual Fly boot logs, not guessed — the lost entrypoint, a missing <code>chmod +x</code> on its replacement, and a CockroachDB cert-lifetime rounding collision (the node cert requested the exact same lifetime as its CA; CockroachDB 22.1 rejects a cert lifetime <code>&gt;=</code> its CA’s). Health check passing, <code>uro</code> database and <code>gateway_writer</code>/<code>gateway_admin</code> roles bootstrapped, confirmed live.</li>
+<li><code>multiplayer-fabric-uro</code>: a real Burrito-wrapped <code>mix release</code> replaces the dev-shaped root <code>Dockerfile</code> (<code>iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code>, which seeded dummy test data on every boot). Verified locally: the release build genuinely produces a static, ~20MB ELF binary, and both its <code>start</code> and <code>eval</code> commands boot <code>Uro.Application</code> for real (<code>Uro.Repo</code>, <code>Uro.Repo.Migration</code>, and <code>Uro.Endpoint</code> with Bandit all start, confirmed via real Postgrex connection attempts and a real HTTP listener log line).</li>
+<li><code>zone-backend-quadlet</code>’s <code>README.md</code> documents the same <code>DATABASE_URL</code>/<code>MIGRATION_URL</code>/mTLS-cert shape as <code>zone-backend</code>’s <code>AGENTS.md</code> already does for Fly — the two paths were never going to diverge in what they configure, only in where. Nothing about the quadlet path had a working, deployed instance to point to; the Fly path now does.</li>
+</ul>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>UDP eliminates TCP head-of-line blocking.</li>
-<li>Fly.io passes UDP without DNAT, so the app must bind to the same port clients connect to.</li>
-<li>Port 443 requires running as root (or <code>CAP_NET_BIND_SERVICE</code>). The gateway container runs as root.</li>
-<li>Datagrams are used for game state messages. Streams are avoided for ping/pong to sidestep stream half-close deadlock (client must close write side before server response fires).</li>
-<li>Cloudflare’s proxy cannot forward QUIC/UDP. All game-traffic DNS records must be DNS-only (no proxy).</li>
-</ul>
-
-
+<p>Good: one real, currently-working deployment target for <code>zone-backend</code>’s two services, matching engineering effort already spent and verified rather than requiring a second port to a path with no live deployment. <code>rfd/0089</code>’s tombstoning also removes a real source of drift: two competing, both-real deploy configs for the same service (<code>AGENTS.md</code>’s Fly secrets vs.&nbsp;<code>zone-backend-quadlet</code>’s <code>/etc/zone-backend/env</code>) is worse than committing to one.</p>
+<p>Bad: this reverses a published, deliberate decision (<code>rfd/0061</code>) made after weighing Harvester HCI, Fly.io, and quadlets directly against each other. That record’s own stated reasons for excluding Fly.io are not re-litigated here in detail; this RFD documents that the org’s real, current choice is Fly.io, not a re-derivation of why quadlets were rejected the first time. A future RFD revisiting deployment target again should read both <code>rfd/0061</code> and this record.</p>
+<p><code>zone-server-h2o</code> and <code>zone-client-godot</code> are not yet covered by a real Fly.io production deployment; see <code>rfd/0091</code> and <code>rfd/0092</code>.</p>
 </section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p><code>infra</code>, <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code> are archived, confirmed via <code>gh repo view --json isArchived</code> on each. <code>multiplayer-fabric-crdb</code>’s health check is passing on Fly, confirmed via <code>fly machine status</code>. <code>multiplayer-fabric-uro</code>’s real release build is verified locally; its actual Fly deploy is tracked as a follow-up (<code>zone-backend</code> PRs #51, #52), not yet merged and deployed as of this record.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -746,7 +763,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0008-webtransport-over-quic-for-game-traffic/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0089-flyio-over-podman-quadlets/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

@@ -10,7 +10,85 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 11:35:29 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 11:53:36 GMT</lastBuildDate>
+<item>
+  <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> deployment target for fabric runtime services</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code> chose self-hosted podman quadlets on Fedora 44, provisioned by the <code>infra</code> repo’s OpenTofu, and put Fly.io “off the table.” Since then, real production work on <code>zone-backend</code> (<code>multiplayer-fabric-uro</code>, <code>multiplayer-fabric-crdb</code>) has run entirely against Fly.io: a genuine crash-loop bug in <code>multiplayer-fabric-crdb</code> was found and fixed against a real Fly deploy, and a real Burrito-wrapped <code>mix release</code> for <code>uro</code> was built and verified against Fly’s secrets model (<code>config/runtime.exs</code>). The quadlet repos (<code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>) exist but were last pushed 2026-06-13, before any of this real Fly.io deployment work happened.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Use Fly.io as the real deployment target. This supersedes <code>rfd/0061</code>’s choice of self-hosted podman quadlets on Fedora 44.</p>
+<p>The <code>infra</code> repo (OpenTofu provisioning for the Fedora 44 quadlet hosts) and all seven quadlet repos above are archived — tombstoned, not deleted, so their history stays reachable, but they are no longer the deployment path for anything. <code>multiplayer-fabric-crdb</code> and <code>multiplayer-fabric-uro</code> on Fly.io are the real, currently-running services this applies to first.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code>: the decision this supersedes.</li>
+<li><code>v-sekai-multiplayer-fabric/zone-backend</code>, <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code>: the prior Fly-app-loss record this RFD’s Fly.io work continues from.</li>
+<li><code>v-sekai-multiplayer-fabric/infra</code>, <code>v-sekai-multiplayer-fabric/zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>: archived by this decision.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0090-uro-burrito-release</code>: the real production release shape this decision’s Fly.io deploy of <code>uro</code> uses.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p><code>rfd/0061</code> chose podman quadlets under systemd on self-hosted Fedora 44 hosts over both Fly.io and the earlier Harvester HCI plan, provisioned by the <code>infra</code> repo’s OpenTofu. Seven quadlet repos were created for this: <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code>, each with an <code>install.sh</code> and a real <code>.container</code> unit. All seven last received a push on 2026-06-13.</p>
+<p>Independently of that decision, real production work on <code>zone-backend</code> continued against Fly.io. <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code> records a Fly app loss and a scoped redeploy of <code>multiplayer-fabric-uro</code> and <code>multiplayer-fabric-crdb</code> only. That redeploy sat broken for weeks: <code>multiplayer-fabric-crdb</code> crash-looped on every boot (<code>/docker-entrypoint.sh: No such file or directory</code> — the image’s real entrypoint is <code>/cockroach/cockroach.sh</code>, confirmed via <code>skopeo inspect --config docker://ghcr.io/v-sekai/cockroach:latest</code>; whatever Dockerfile previously set that override was never committed anywhere), and <code>multiplayer-fabric-uro</code> had 14 secrets staged but never deployed.</p>
+<p>This mismatch — a published RFD choosing quadlets, while the actual service that exists and needs fixing runs on Fly — needed a real decision, not a silent continuation of whichever path happened to have momentum.</p>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ol type="1">
+<li><strong>Fix <code>zone-backend</code>’s Fly deploy, treat quadlets as the long-term target.</strong> Keeps <code>rfd/0061</code> in force; the Fly.io fixes become a stopgap, and someone later ports <code>uro</code>/<code>crdb</code> to <code>zone-backend-quadlet</code>/<code>cockroach-crdb-quadlet</code>.</li>
+<li><strong>Adopt Fly.io as the real target, tombstone the quadlet repos and <code>infra</code>.</strong> Matches what has actually been built, verified, and deployed: a real <code>multiplayer-fabric-crdb</code> fix, confirmed live via Fly’s own health checks and boot logs, and a real Burrito-wrapped release for <code>uro</code>, verified locally (a genuine static ELF binary that boots <code>Uro.Endpoint</code>, <code>Uro.Repo</code>, and <code>Uro.Repo.Migration</code> correctly).</li>
+<li>Running both, service by service, avoids picking a single target but doubles the real ops surface <code>rfd/0061</code>’s own problem statement (Harvester’s “full virtualization tier” wraps the same workloads twice) already argued against, for a different reason.</li>
+</ol>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen: <strong>option 2.</strong> Fly.io is the real deployment target. <code>rfd/0061</code> is superseded. <code>infra</code> and all seven quadlet repos are archived (GitHub’s archive, not deletion — history stays reachable, nothing currently depends on them being writable).</p>
+<p>The concrete evidence this decision is grounded in, not asserted:</p>
+<ul>
+<li><code>multiplayer-fabric-crdb</code>: three real, distinct bugs found and fixed by iterating against actual Fly boot logs, not guessed — the lost entrypoint, a missing <code>chmod +x</code> on its replacement, and a CockroachDB cert-lifetime rounding collision (the node cert requested the exact same lifetime as its CA; CockroachDB 22.1 rejects a cert lifetime <code>&gt;=</code> its CA’s). Health check passing, <code>uro</code> database and <code>gateway_writer</code>/<code>gateway_admin</code> roles bootstrapped, confirmed live.</li>
+<li><code>multiplayer-fabric-uro</code>: a real Burrito-wrapped <code>mix release</code> replaces the dev-shaped root <code>Dockerfile</code> (<code>iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code>, which seeded dummy test data on every boot). Verified locally: the release build genuinely produces a static, ~20MB ELF binary, and both its <code>start</code> and <code>eval</code> commands boot <code>Uro.Application</code> for real (<code>Uro.Repo</code>, <code>Uro.Repo.Migration</code>, and <code>Uro.Endpoint</code> with Bandit all start, confirmed via real Postgrex connection attempts and a real HTTP listener log line).</li>
+<li><code>zone-backend-quadlet</code>’s <code>README.md</code> documents the same <code>DATABASE_URL</code>/<code>MIGRATION_URL</code>/mTLS-cert shape as <code>zone-backend</code>’s <code>AGENTS.md</code> already does for Fly — the two paths were never going to diverge in what they configure, only in where. Nothing about the quadlet path had a working, deployed instance to point to; the Fly path now does.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>Good: one real, currently-working deployment target for <code>zone-backend</code>’s two services, matching engineering effort already spent and verified rather than requiring a second port to a path with no live deployment. <code>rfd/0089</code>’s tombstoning also removes a real source of drift: two competing, both-real deploy configs for the same service (<code>AGENTS.md</code>’s Fly secrets vs.&nbsp;<code>zone-backend-quadlet</code>’s <code>/etc/zone-backend/env</code>) is worse than committing to one.</p>
+<p>Bad: this reverses a published, deliberate decision (<code>rfd/0061</code>) made after weighing Harvester HCI, Fly.io, and quadlets directly against each other. That record’s own stated reasons for excluding Fly.io are not re-litigated here in detail; this RFD documents that the org’s real, current choice is Fly.io, not a re-derivation of why quadlets were rejected the first time. A future RFD revisiting deployment target again should read both <code>rfd/0061</code> and this record.</p>
+<p><code>zone-server-h2o</code> and <code>zone-client-godot</code> are not yet covered by a real Fly.io production deployment; see <code>rfd/0091</code> and <code>rfd/0092</code>.</p>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p><code>infra</code>, <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code> are archived, confirmed via <code>gh repo view --json isArchived</code> on each. <code>multiplayer-fabric-crdb</code>’s health check is passing on Fly, confirmed via <code>fly machine status</code>. <code>multiplayer-fabric-uro</code>’s real release build is verified locally; its actual Fly deploy is tracked as a follow-up (<code>zone-backend</code> PRs #51, #52), not yet merged and deployed as of this record.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</guid>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</link>
@@ -49,7 +127,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -90,7 +168,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -130,7 +208,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -486,7 +564,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -894,7 +972,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -975,7 +1053,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -1491,7 +1569,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -1601,7 +1679,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -1884,7 +1962,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -1963,7 +2041,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -2301,7 +2379,7 @@ def slotmap_gen_invariant (s : GameState) : Prop :=
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -2871,7 +2949,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -3285,7 +3363,7 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -3360,7 +3438,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -3430,7 +3508,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -3508,7 +3586,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</title>
@@ -3733,7 +3811,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0071: YAGNI times structure to the need, in code and in the record</title>
@@ -3772,7 +3850,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0071-yagni-times-structure-to-need/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0070: Export loop-slice server telemetry to the observability collector</title>
@@ -3854,128 +3932,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0069: Defer the loot-slice hardening scope until its need arrives</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0069-defer-loot-slice-hardening-until-needed/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0069: Defer the loot-slice hardening scope until its need arrives</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> loot-action vertical slice deferred hardening scope</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The loot-action vertical slice’s decided scope goes beyond its stated goal, a slice complete enough to exercise every integration seam. The running <code>godot-loop-slice</code> already meets that integration goal. The rest of the decided scope risks conflating the shipped deliverable with pending work, and building structure ahead of a demonstrated need.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The loot-action vertical slice’s decided scope goes beyond its stated goal — a slice complete enough to exercise every integration seam. The running <code>godot-loop-slice</code> already carries the loop end to end and the playable-loop smoke passes, so the integration goal is met. The rest of the decided scope — a separate presence reducer, a separate progression reducer, the budgeter core, the CockroachDB adapter, the measured 90 Hz performance gate, and a real OpenXR build — carries forward as deferred-until-needed. Each deferred item pairs with the concrete trigger that revives it; the team builds an item only when its trigger fires, not before. This avoids conflating the shipped deliverable with pending work, and avoids building structure ahead of a demonstrated need.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full deferred-item table, downsides, and rejected alternatives: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260629-defer-loot-slice-hardening-until-needed.md</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>: the slice record whose unbuilt scope this record defers.</li>
-<li><code>rfd/0039-hexagon-budgeter-core</code> through <code>rfd/0043-hexagon-progression-core</code>: the deferred cores.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The context</h2>
-<p>The loot-action core-loop MVP vertical slice (<code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>) decides a large scope: five named cores, a CockroachDB adapter, a measured 90 Hz performance gate, and a SteamVR build. Its stated goal, though, is narrow — one slice “complete enough to exercise every integration seam.” The running <code>godot-loop-slice</code> already carries that loop end to end (Hub to Field to Hub, through transport, server authority, loot contention, and SQLite-backed persistence), and the playable-loop smoke passes. The integration goal is met.</p>
-<p>The rest of the decided scope is production hardening and platform reach. None of it adds integration coverage the running loop does not already have. Per YAGNI times structure to the need (<code>decisions/20260629-yagni-times-structure-to-need.md</code>), structure waits for the feature that needs it: committing on a guess spends the option to build the right thing once the need is known, and the cost lands early while the return lands late.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The problem statement</h2>
-<p>The decided-but-unbuilt items sit in the slice record as if they were live pending work. That conflates the shipped deliverable with deferred work and invites building structure ahead of demonstrated need. The slice record needs a companion that names each deferred item and the concrete trigger that revives it, so that nothing is silently dropped and nothing is built early.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Carry the unbuilt scope forward as deferred-until-needed, each item paired with the trigger that materializes its need. Build an item when its trigger fires, not before.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 42%">
-<col style="width: 29%">
-<col style="width: 27%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Deferred item</th>
-<th>Why it waits</th>
-<th>Trigger that revives it</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Presence as a separate named reducer, today folded into the Hilbert interest core and multiplayer sink (<code>rfd/0042-hexagon-presence-core</code>)</td>
-<td>Remote-pose interpolation runs in the slice; a separate reducer adds no integration coverage now</td>
-<td>Remote-pose interpolation needs its own testable reducer, or avatar-fidelity work begins</td>
-</tr>
-<tr class="even">
-<td>Progression as a separate reducer, today an inline inventory append (<code>rfd/0043-hexagon-progression-core</code>)</td>
-<td>The inventory delta commits correctly inline; a reducer is structure ahead of need</td>
-<td>Inventory or affinity logic outgrows append, or deterministic replay is required</td>
-</tr>
-<tr class="odd">
-<td>Budgeter core, unimplemented (<code>rfd/0039-hexagon-budgeter-core</code>)</td>
-<td>Nothing measures or breaches the frame floor yet</td>
-<td>The frame floor is actually breached under load, or the performance gate is enforced</td>
-</tr>
-<tr class="even">
-<td>CockroachDB adapter, with SQLite the only path today (<code>rfd/0006-cockroachdb-with-mtls-role-separation</code>)</td>
-<td>Single-node SQLite carries the slice’s persistence round trip</td>
-<td>Persistence needs multi-node storage or mTLS role separation beyond single-node SQLite</td>
-</tr>
-<tr class="odd">
-<td>Measured performance gate — 90 Hz, 500,000 triangles, 200 draw calls per eye (<code>rfd/0035-first-party-curated-content-zone-baker-budgets</code>)</td>
-<td>No headset target consumes the gate; placeholder content makes the number premature</td>
-<td>A real headset build is the sign-off step</td>
-</tr>
-<tr class="even">
-<td>Real OpenXR build, where the desktop preset duplicates Windows Desktop with no XR options (<code>rfd/0051-headless-openxr-testing-with-monado</code>)</td>
-<td>The slice is verified headless; a real XR export is platform reach, not integration</td>
-<td>A headset playthrough is the acceptance step</td>
-</tr>
-</tbody>
-</table>
-<p>The items the slice record already files after the gate — ranged and caster archetypes, Steam Frame and Steam Deck builds, in-headset authoring, rollback (<code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>), and user-generated content — stay deferred where they are. This record cross-references them rather than restating them.</p>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The downsides</h2>
-<ul>
-<li>A timing judgment can defer something whose need turns out to be near. The named triggers are the early warning; the response is to build once the trigger fires.</li>
-<li>The slice’s full picture now spans two records. The cross-links between this record and the slice record bind them.</li>
-</ul>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The road not taken</h2>
-<ul>
-<li>Build the full decided gate now — rejected as anti-YAGNI; most of it adds production hardening and platform reach, not integration coverage, and pays the optionality and timing bills for a need that has not arrived.</li>
-<li>Leave the unbuilt items in the slice record as “pending” — rejected; it conflates the shipped deliverable with deferred work and invites building ahead of need.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The slice record’s Confirmation (<code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>) points here for the deferred scope. Each item above names the trigger that revives it. The decision holds while no trigger has fired; an item is revived by a new or updated decision record when its trigger arrives.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0069-defer-loot-slice-hardening-until-needed/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:35:29 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
 </item>
 </channel>
 </rss>
