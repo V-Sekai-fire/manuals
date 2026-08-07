@@ -49,10 +49,17 @@ There are two guest classes. Each class gets the runtime that suits
 it. The host gives guests a domain ABI. The host does not emulate
 Linux.
 
+Stated as deployment, which is how it is built and paid for:
+
+- Zone guests run under Bubblewrap on Fly.io.
+- libriscv `.elf` programs carry hybrid rollback-kinematic networking
+  between Godot zone servers and Godot zone clients.
+
 ### Guest classes
 
 A _script guest_ is user-generated content. It is small. It runs on
-every tick. It runs in-process under libriscv.
+every tick. It runs in-process under libriscv. This is the class that
+carries rollback-kinematic prediction and reconciliation.
 
 An _engine guest_ is a complete application, such as a Godot server
 build. It is large. It runs for the life of a zone. It runs as a
@@ -68,18 +75,22 @@ libriscv re-executes bit-exactly. `machine.serialize_to`
 (`machine.hpp:61`) copies it. Together they give true snapshot and
 replay of a running guest.
 
-A rollback-networked zone needs exactly this. A zone server and a zone
-client predict state, then reconcile. Reconciliation replays inputs
-from a snapshot. If the replay diverges from the recorded run, the
-reconciliation is wrong.
+Hybrid rollback-kinematic networking needs exactly this. It runs
+between a Godot zone server and a Godot zone client. Both sides predict
+state from a kinematic model. Both sides then reconcile.
+
+Reconciliation replays inputs from a snapshot. If the replay diverges
+from the recorded run, the reconciliation is wrong. It is wrong
+silently, and it is wrong on the client that did nothing unusual.
 
 A Bubblewrap process cannot do this. It is a Linux process. It holds
 kernel state, timers, file descriptors, and scheduler position.
 Nothing snapshots it faithfully.
 
-Therefore: anything on the rollback path runs as a libriscv program,
-in the style of godot-sandbox. Bubblewrap covers everything off that
-path, where isolation is the requirement and replay is not.
+Therefore, hybrid rollback-kinematic networking between Godot zone
+servers and Godot zone clients runs as libriscv `.elf` programs, in the
+style of godot-sandbox. Bubblewrap covers everything off that path,
+where isolation is the requirement and replay is not.
 
 ### The domain ABI
 
@@ -184,7 +195,14 @@ This is the mechanism that lets UGC scripting produce content. The
 alternative is a host that refuses every guest write, or a host that
 gives guests administrative capability. Both are wrong.
 
-### Engine guests under Bubblewrap
+### Zone guests under Bubblewrap on Fly.io
+
+Zone guests run under Bubblewrap, and they run on Fly.io. Name the
+deployment, because the deployment is what makes the choice work.
+
+A Fly machine is a Firecracker VM. The process is root in its own
+kernel. Unprivileged user namespaces are therefore available, and
+`bwrap` needs them. `rfd/0089` already selects Fly.
 
 Bubblewrap is one unprivileged binary. It is built on Linux
 namespaces. Flatpak uses it. There is no daemon and no userspace
