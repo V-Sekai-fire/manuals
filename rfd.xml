@@ -10,7 +10,163 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 11:53:36 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 11:58:44 GMT</lastBuildDate>
+<item>
+  <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> zone-backend (uro) production boot shape</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>zone-backend</code>’s root <code>Dockerfile</code> boots <code>uro</code> for local <code>docker-compose</code> use via <code>ENTRYPOINT iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code> — a dev-shaped boot that seeds dummy test data on every start. <code>build-image.yml</code>’s own header said its built image is “consumed by <code>v-sekai-multiplayer-fabric/infra</code> via the <code>gateway_image</code>/<code>uro_image</code> tofu variable”; <code>rfd/0089</code> archives <code>infra</code>, so that path no longer exists either. <code>zone-backend</code> needs its own real production build, not a dev image and not a dependency on an archived repo.</p>
+<p><code>config/config.exs</code> used a <code>COMPILE_PHASE</code> environment flag (<code>Uro.Config.Helpers.get_env/2</code>) so the Docker <em>build</em> step could run <code>mix compile</code> without real secrets present: <code>iex -S mix</code> re-evaluates <code>config.exs</code> on every invocation, so the container’s actual boot command re-ran <code>mix</code> a second time with <code>COMPILE_PHASE=false</code> and real secrets in the environment. A real OTP release (<code>mix release</code>) evaluates <code>config.exs</code>/<code>prod.exs</code> once, permanently, at build time — there is no second pass at boot — so this trick does not carry over to a real release at all.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Build <code>uro</code> as a real OTP release, wrapped by <a href="https://github.com/burrito-elixir/burrito">Burrito</a> into one self-contained, statically-linked executable (musl libc, bundled ERTS), cross-compiled via Zig. <code>mix.exs</code> gains a <code>releases:</code> block targeting <code>linux_musl</code> (matching Fly’s runner and this repo’s existing Alpine-based images).</p>
+<p>Every deploy-time secret or URL moves to <code>config/runtime.exs</code> (<code>if config_env() == :prod do ... end</code>), which a real release genuinely re-evaluates every time it starts. <code>config.exs</code>/<code>prod.exs</code> keep only what is safe to bake in at compile time. The <code>COMPILE_PHASE</code> flag and <code>Uro.Config.Helpers</code> are deleted — confirmed unused anywhere outside <code>config/*.exs</code> before removal.</p>
+<p><code>lib/uro/release.ex</code> adds <code>Uro.Release.migrate/0</code>: a compiled release has no <code>mix</code> tasks at runtime, so this runs <code>Ecto.Migrator</code> directly against <code>Uro.Repo.Migration</code> (<code>gateway_admin</code>, DDL-capable) — never <code>Uro.Repo</code> (<code>gateway_writer</code>, DML only), matching <code>AGENTS.md</code>’s documented role separation. <code>docker/uro/fly-start.sh</code> is the script <code>AGENTS.md</code> has described for a while (migrate as <code>gateway_admin</code>, then serve as <code>gateway_writer</code>) but which never actually existed in this repo until now.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>v-sekai-multiplayer-fabric/zone-backend</code> PR #52.</li>
+<li><code>config/runtime.exs</code>, <code>lib/uro/release.ex</code>, <code>docker/uro/Dockerfile</code>, <code>docker/uro/fly-start.sh</code>.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0089-flyio-over-podman-quadlets</code>: the deployment target this release ships to.</li>
+<li><code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>: Burrito’s prior use elsewhere in this org.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p><code>zone-backend</code>’s root <code>Dockerfile</code> (used for local <code>docker-compose</code>) boots <code>uro</code> via <code>iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code>. This is dev-shaped on purpose — seeding <code>test_seeds.exs</code> on every boot is fine for local development — but <code>build-image.yml</code> reused the same root <code>Dockerfile</code> for its <code>ghcr.io</code> image, described as “consumed by <code>v-sekai-multiplayer-fabric/infra</code> via the <code>gateway_image</code>/<code>uro_image</code> tofu variable.” <code>rfd/0089</code> archives <code>infra</code>. Even without that, using a test-seeding dev image for a real production deploy is a real correctness problem, not a stopgap worth keeping.</p>
+<p><code>config.exs</code>’s <code>COMPILE_PHASE</code> flag existed to let <code>mix compile</code> (the Docker build step) succeed with no real secrets present, by returning a placeholder value instead of raising. This only works because <code>iex -S mix ...</code> (not a compiled release) re-evaluates <code>config.exs</code> fresh at container start, this time with <code>COMPILE_PHASE=false</code> and real Fly secrets in the environment. A real <code>mix release</code> does not have this second evaluation: <code>config.exs</code> and <code>prod.exs</code> are baked in once, at build time, forever. Deploying an actual OTP release needed a different mechanism for secrets entirely.</p>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ol type="1">
+<li><strong>Keep the <code>iex -S mix</code> boot shape for production</strong>, and rely on a different image build for the archived <code>infra</code> consumer. Rejected with <code>infra</code>’s archival — nothing consumes that image path anymore, and the seeded test data on every boot was never appropriate for a real deploy regardless.</li>
+<li><strong>A real <code>mix release</code>, config moved to <code>config/runtime.exs</code>, Burrito wrapping it into a single static executable.</strong> Standard Phoenix production pattern (<code>runtime.exs</code>) plus this org’s own established Burrito precedent (<code>rfd/0065</code>).</li>
+<li><strong>A real <code>mix release</code> without Burrito</strong>, shipped as a normal <code>_build/prod/rel/uro</code> directory inside a slim Erlang-installed runtime image. Avoids the Zig/Burrito build dependency, but the runtime image then needs a matching Erlang/OTP install instead of just CA certs, and this org already has a working Burrito toolchain and precedent from <code>fabric-platform-central</code>.</li>
+</ol>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen: <strong>option 2.</strong> <code>mix.exs</code> gains a <code>releases:</code> block:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode elixir code-with-copy"><code class="sourceCode elixir"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">defp</span> releases <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span></span>
+<span id="cb1-2">  <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb1-3">    <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">uro:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb1-4">      <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">steps:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">:assemble</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">Burrito</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>wrap<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span>,</span>
+<span id="cb1-5">      <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">burrito:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb1-6">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">targets:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb1-7">          <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">linux_musl:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">os:</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">:linux</span>, <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">cpu:</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">:x86_64</span>, <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">libc:</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">:musl</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb1-8">        <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb1-9">      <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb1-10">    <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb1-11">  <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb1-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span></code></pre></div></div>
+<p><code>linux_musl</code> matches Fly’s own runner and this repo’s existing Alpine-based images, avoiding a glibc/musl mismatch between the build and run stages.</p>
+<p><code>config/runtime.exs</code> now holds everything that previously depended on <code>Helpers.get_env</code>/<code>COMPILE_PHASE</code>: <code>URL</code>, <code>ROOT_ORIGIN</code>, <code>FRONTEND_URL</code>, both <code>Repo</code>s’ connection config and CockroachDB mTLS SSL options, <code>Uro.Endpoint</code> (port, secret key base, HTTPS options), <code>cors_plug</code>’s origin, <code>joken</code>’s signer, <code>Turnstile</code>’s secret, <code>pow_assent</code>’s OAuth2 provider list, the mailer, <code>ex_aws</code>/S3 config, OpenTelemetry’s endpoint, and <code>aria_storage</code>’s bucket/DB path — all gated under <code>if config_env() == :prod do</code>, so <code>dev.exs</code>/<code>test.exs</code> (which already define their own complete, static <code>Uro.Repo</code> config) are unaffected. <code>config.exs</code>/<code>prod.exs</code> keep only what is genuinely safe to bake in at compile time: <code>ecto_repos</code>, <code>hammer</code>, logger format, <code>pow</code>’s static config, and similar.</p>
+<p><code>Uro.Config.Helpers</code> (the <code>COMPILE_PHASE</code> module) is deleted — confirmed via <code>grep -rln "Uro\.Config\.Helpers\|compile_phase" lib/</code> that nothing outside <code>config/*.exs</code> referenced it.</p>
+<p><code>lib/uro/release.ex</code> adds <code>Uro.Release.migrate/0</code>, run via the release’s own <code>eval</code> command (<code>bin/uro eval "Uro.Release.migrate()"</code>), since a compiled release has no <code>mix</code> tasks at runtime — <code>mix ecto.migrate</code> does not exist inside it. This runs <code>Ecto.Migrator.with_repo/2</code> against <code>Uro.Repo.Migration</code> only, matching <code>AGENTS.md</code>’s documented DDL/DML role split.</p>
+<p><code>docker/uro/Dockerfile</code> is a real two-stage build: a build stage (Elixir/Alpine, plus <code>zig</code>, <code>cmake</code>, <code>ninja-build</code>, and the <code>riscv-none-elf-gcc</code> toolchain <code>.github/workflows/casync-interop.yml</code> already installs, for <code>WeftWarpBurrito.SandboxNif</code>’s <code>c_src</code> build) running <code>mix release uro</code>, and a runtime stage that is just <code>alpine:3.20</code> plus <code>ca-certificates</code> — no Elixir/Erlang install at all, since Burrito’s output is fully static. <code>docker/uro/fly-start.sh</code> runs <code>Uro.Release.migrate/0</code>, then <code>exec</code>s <code>start</code> — the script <code>AGENTS.md</code> has described for a while but which never actually existed in this repo.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>Good: a real production boot path exists that does not depend on the now-archived <code>infra</code> repo, does not seed test data on every start, and matches this org’s own established Burrito precedent (<code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>). The runtime image needs nothing but the static binary and CA certs (outbound TLS to CockroachDB, S3-compatible storage, and OTLP all need real CA verification), which is a smaller, simpler runtime surface than an Erlang-installed image.</p>
+<p>Bad: the build stage is heavier than before — Zig, CMake, Ninja, and a RISC-V cross-compiler, on top of what <code>mix compile</code> already needed per <code>zone-backend</code>’s own <code>docs/decisions/0017</code>. <code>config/runtime.exs</code> is a real, sizeable file (over 150 lines) that concentrates every deploy-time secret in one place; a mistake there is a real production config bug, not a compile error.</p>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>Verified locally before this record, not assumed: <code>MIX_ENV=prod mix release uro</code> (with the <code>riscv-none-elf-gcc</code> toolchain on <code>PATH</code>) produces <code>burrito_out/uro_linux_musl</code>, confirmed via <code>file</code> to be a real <code>ELF 64-bit LSB executable, x86-64 ... statically linked, stripped</code>, about 20MB. Running it with placeholder prod secrets (<code>URL</code>, <code>ROOT_ORIGIN</code>, <code>DATABASE_URL</code>, <code>PHOENIX_KEY_BASE</code>, etc. set) via both <code>start</code> and <code>eval</code> genuinely boots <code>Uro.Application</code>: real <code>Postgrex</code> connection attempts to the given (unreachable, in this local test) <code>DATABASE_URL</code>, and a real <code>[info] Running Uro.Endpoint with Bandit 1.6.11 at 0.0.0.0:&lt;port&gt; (http)</code> log line confirming the HTTP listener actually started. Not yet done: an actual Fly deploy of this image (<code>zone-backend</code> PR #52 is open, not yet merged as of this record).</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</guid>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</link>
@@ -87,7 +243,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -127,7 +283,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -168,7 +324,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -208,7 +364,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -564,7 +720,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -972,7 +1128,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -1053,7 +1209,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -1569,7 +1725,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -1679,7 +1835,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -1962,7 +2118,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -2041,7 +2197,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -2379,7 +2535,7 @@ def slotmap_gen_invariant (s : GameState) : Prop :=
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -2949,7 +3105,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -3363,7 +3519,7 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -3438,7 +3594,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -3508,7 +3664,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -3586,7 +3742,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</title>
@@ -3811,7 +3967,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0071: YAGNI times structure to the need, in code and in the record</title>
@@ -3850,89 +4006,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0071-yagni-times-structure-to-need/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0070: Export loop-slice server telemetry to the observability collector</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0070: Export loop-slice server telemetry to the observability collector</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> loop-slice server OpenTelemetry export</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The loop-slice server already emits spans, counters, gauges, and logs through its <code>OpenTelemetry</code> engine module. Export stays idle with no endpoint set. A deployed server with no configured endpoint stays unobservable.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The loop-slice deploy exports OpenTelemetry over HTTP to the observability collector at <code>http://host.containers.internal:4318</code>, with <code>OTEL_SERVICE_NAME=loop-server</code>. The server already emits spans, counters, gauges, and logs through its <code>OpenTelemetry</code> engine module, but export stays idle with no endpoint set, so a deployed server with no configured endpoint stays unobservable. <code>host.containers.internal</code> resolves to the host, not the loop-slice container’s own loopback, because the server runs as a separate rootless container outside the observability pod’s network namespace. HTTP on 4318 matches the export protocol the rest of the fabric already uses. Export stays opt-in in the engine and the image; only the deploy’s environment sets the endpoint, because only there is the collector a co-located, declared dependency. Applying these values to the deploy’s environment file and quadlet is follow-up work; this record fixes the address and the protocol.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full context, downsides, rejected alternatives, and confirmation: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260629-loop-slice-telemetry-to-the-observability-collector.md</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0011-observability-stack-victoriatraces</code>: the collector and Victoria backends this export reaches.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The context</h2>
-<p>The loop-slice server emits OpenTelemetry through the <code>OpenTelemetry</code> C++ engine module: spans for the loop’s phases, counters and gauges for grants and ticks, and log lines. Export is opt-in. The server reads <code>OTEL_EXPORTER_OTLP_ENDPOINT</code>, and with no endpoint set it stays idle — it records signals in process but exports nothing, which keeps a server that has no collector from retrying against one that is not there. The observability stack (<code>rfd/0011-observability-stack-victoriatraces</code>) runs an OTEL collector that ingests OTLP on 4318 (HTTP) and 4317 (gRPC) and routes metrics to VictoriaMetrics, logs to VictoriaLogs, and traces to VictoriaTraces. The collector and the server’s deploy both exist, so the telemetry the server already produces has somewhere to go; by YAGNI times structure to the need (<code>decisions/20260629-yagni-times-structure-to-need.md</code>), the need is present and the wiring belongs here.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The problem statement</h2>
-<p>A deployed loop-slice server with no configured endpoint is unobservable: its spans, metrics, and logs stay in process and never reach the collector. The export seam is a single environment variable, <code>OTEL_EXPORTER_OTLP_ENDPOINT</code>, and the deploy carries the address that a separately deployed container can actually reach.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>The loop-slice deploy exports OTLP over HTTP to the observability collector at <code>http://host.containers.internal:4318</code>, with <code>OTEL_SERVICE_NAME=loop-server</code>.</p>
-<ul>
-<li>The collector listens for OTLP HTTP on 4318 and routes each signal to its Victoria backend, so the server’s traces, metrics, and logs all land without further configuration. HTTP on 4318 matches the export protocol the rest of the fabric uses; the zone backend exports OTLP HTTP to the same port.</li>
-<li>The endpoint is <code>host.containers.internal</code>, not <code>127.0.0.1</code>. The loop-slice server runs as a separate rootless container that publishes its game port and does not share the observability pod’s network namespace, so inside the container <code>127.0.0.1</code> is the container’s own loopback. <code>host.containers.internal</code> resolves to the host, where the collector publishes 4318.</li>
-<li>Export stays opt-in in the engine and the image. The deploy opts in by setting the endpoint in its environment, because in the deploy the collector is a co-located, declared dependency. The image carries no default endpoint.</li>
-<li>A collector on another host overrides <code>host.containers.internal</code> with that host’s address.</li>
-</ul>
-<p>The values the deploy sets are <code>OTEL_EXPORTER_OTLP_ENDPOINT=http://host.containers.internal:4318</code> and <code>OTEL_SERVICE_NAME=loop-server</code>. Applying them to the deploy’s environment file and quadlet is follow-up work; this record fixes the address and the protocol, not their application.</p>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The downsides</h2>
-<ul>
-<li>An endpoint pointed at an absent collector returns the server to export-retry load, so the endpoint belongs only where the collector runs; the deploy sets it where the two are co-located.</li>
-<li><code>host.containers.internal</code> holds for a same-host collector and needs the host address for a remote one.</li>
-<li>This record decides the wiring without applying it, so a deploy stays unobservable until its environment carries these values.</li>
-</ul>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The road not taken</h2>
-<ul>
-<li>Bake a default endpoint into the image — rejected; a forced default drives connect-retry spam against a collector that may not be there, and it commits the address before the deploy knows it.</li>
-<li>Join the loop-slice container to the observability pod for a <code>localhost:4318</code> endpoint — rejected; it couples the game server’s lifecycle and its published game port to the observability pod.</li>
-<li>Run the loop-slice container on host networking for a <code>127.0.0.1:4318</code> endpoint — rejected; it drops the published-port isolation the deploy relies on.</li>
-<li>Export over gRPC on 4317 — rejected; the fabric’s OTLP export pattern is HTTP on 4318.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>With the endpoint set, the server prints <code>OTEL ready -&gt; http://host.containers.internal:4318</code> in place of <code>OTEL idle</code>, and the collector receives its spans, metrics, and logs. An OTLP listener on 4318 confirms the connection; a VictoriaMetrics query for the <code>loop-server</code> service confirms the full path once the observability pod runs.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:53:36 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
 </item>
 </channel>
 </rss>
