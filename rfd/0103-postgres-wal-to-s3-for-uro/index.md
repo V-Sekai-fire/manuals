@@ -31,7 +31,7 @@ published price.
 | Self-hosted CockroachDB, 1 GB           | 10.26     | 17.1                  | yes              |
 | Neon, paid, always on at 1 CU           | 81.59     | over budget           | yes              |
 
-Every FRL row is an ESTIMATE. See the section below.
+The colocated FRL row is MEASURED. See below.
 
 Point-read latency, both measured in 256 MB:
 
@@ -80,21 +80,30 @@ option here. `rfd/0102` already runs FoundationDB on the zone machine.
 Using it for Uro removes a second datastore, and the adapter belongs to
 this organization.
 
-Two facts stop this RFD from choosing it.
+The memory objection is now measured away.
+`fdb-relational-server` 4.3.6.0 from Maven Central, on JDK 21, in a 512
+MB container that also ran `fdbserver`:
 
-`fdb-relational-server` is a JVM process. Its resident memory is the
-number that decides the cost, and it is unmeasured. The table above
-spans 34.4 to 17.7 concurrent users across plausible sizes, so the
-answer moves by half depending on a figure nobody has taken.
+    RSS 157.0 MB
+    Started on grpcPort=1111/httpPort=1112 with services:
+      grpc.health.v1.Health, grpc.reflection.v1alpha.ServerReflection,
+      grpc.relational.jdbc.v1.JDBCService
 
-FRL's dialect is "close to but not standard SQL", by its own README. So
-Uro's migrations need porting either way, and that porting is toward a
-dialect with one implementation.
+157 MB fits beside Uro on one 512 MB machine, at 34.4 concurrent users.
+That beats PostgreSQL colocated, which reaches 33.9, and it removes a
+datastore rather than adding one.
 
-Measure `fdb-relational-server`'s resident memory under Uro's load, and
-run `ecto-bench-tpcc` against it. Neither repository publishes results
-today. If the server fits beside Uro in 512 MB, FRL wins on both cost
-and architecture, and this decision should be revisited.
+One gap remains, and it is query latency. PostgreSQL measured 0.084 ms
+per point read. There is no equivalent figure for FRL, and neither
+repository publishes `ecto-bench-tpcc` results.
+
+FRL's dialect is also "close to but not standard SQL", by its own
+README. Uro's migrations need porting either way, and this port targets
+a dialect with one implementation.
+
+So FRL leads on cost and on architecture, and it needs one more
+measurement before it takes the decision. Run `ecto-bench-tpcc` against
+`fdb-relational-server` and compare point-read latency with 0.084 ms.
 
 ## Why not DuckDB for this
 
@@ -130,9 +139,9 @@ the Fly volume, and recovery data sits in the object store.
 
 ## Open
 
-`fdb-relational-server`'s resident memory is unmeasured, and it decides
-whether FRL beats PostgreSQL. This is the highest-value measurement
-remaining.
+FRL's query latency is unmeasured. `fdb-relational-server` fits at 157
+MB RSS, so cost no longer decides this. Latency does, and 0.084 ms is
+the number to beat.
 
 Uro's migrations are not audited for CockroachDB-specific SQL.
 
