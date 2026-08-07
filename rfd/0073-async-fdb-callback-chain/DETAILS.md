@@ -1,25 +1,3 @@
----
-title: Async FDB callback chain on the libh2o event loop
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0073](../rfd/0073-async-fdb-callback-chain/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0011-async-fdb-callback-chain.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Implement TPC-C transactions as async callback chains over FDB futures.
-Each transaction step is a function that submits an FDB future and
-registers a callback for when it resolves. The callback performs the
-next step.
-
 ## Pattern
 
 ```
@@ -42,9 +20,10 @@ FDB's C API is callback-based by design. `fdb_future_set_callback()`
 fires when the future resolves. Blocking with
 `fdb_future_block_until_ready()` would stall the event loop thread.
 
-In the actor-lite architecture (RFD 0005), the H2O network thread
-dispatches work to worker threads via SPSC rings. If a worker blocks
-on FDB, it can't process the next request from its ring.
+In the actor-lite architecture (`rfd/0072-actor-lite-worker-pool`),
+the H2O network thread dispatches work to worker threads via SPSC
+rings. If a worker blocks on FDB, it can't process the next request
+from its ring.
 
 ## Error handling and retry
 

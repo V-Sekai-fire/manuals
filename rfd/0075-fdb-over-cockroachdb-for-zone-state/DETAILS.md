@@ -1,23 +1,3 @@
----
-title: FoundationDB selection over CockroachDB for zone-server-h2o state
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0075](../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0006-fdb-selection.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Use raw FoundationDB C API (`libfdb_c`) as the database for
-h2o-bench-tpcc, not CockroachDB.
-
 ## Rationale
 
 **1. Write throughput.** TPC-C is 88% writes (NewOrder + Payment).

@@ -122,3 +122,17 @@ elsewhere.
 | [0068](0068-sccache-github-actions-cache-for-godot-builds/README.md)          | sccache with GitHub Actions cache for Godot container builds                             | published     |
 | [0069](0069-defer-loot-slice-hardening-until-needed/README.md)                | Defer the loot-slice hardening scope until its need arrives                              | published     |
 | [0070](0070-loop-slice-telemetry-to-the-observability-collector/README.md)    | Export loop-slice server telemetry to the observability collector                        | published     |
+| [0071](0071-yagni-times-structure-to-need/README.md)                          | YAGNI times structure to the need, in code and in the record                             | published     |
+| [0072](0072-actor-lite-worker-pool/README.md)                                 | Actor-lite worker pool architecture for zone-server-h2o                                  | published     |
+| [0073](0073-async-fdb-callback-chain/README.md)                               | Async FDB callback chain on the libh2o event loop                                        | published     |
+| [0074](0074-binary-value-encoding-for-fdb/README.md)                          | Binary value encoding for FDB values                                                     | published     |
+| [0075](0075-fdb-over-cockroachdb-for-zone-state/README.md)                    | FoundationDB selection over CockroachDB for zone-server-h2o state                        | published     |
+| [0076](0076-macaroon-xdp-security/README.md)                                  | Macaroon + eBPF/XDP security fabric                                                      | published     |
+| [0077](0077-pert-critical-path-zonefabric/README.md)                          | PERT critical path for zonefabric implementation                                         | published     |
+| [0078](0078-plausible-witness-dag-feature-ablation/README.md)                 | plausible-witness-dag for zonefabric feature ablation                                    | published     |
+| [0079](0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.md)    | Sandboxed Godot game logic in zone-server-h2o, via raw libriscv                          | published     |
+| [0080](0080-slotmap-entity-storage/README.md)                                 | Slotmap entity storage with generational IDs                                             | published     |
+| [0081](0081-three-layer-verification-strategy/README.md)                      | Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)                  | published     |
+| [0082](0082-zonefabric-scaling/README.md)                                     | Zonefabric scaling: hub/instanced-zone game-server benchmark shape                       | published     |
+| [0083](0083-zone-server-h2o-replaces-godot-fabriczone/README.md)              | Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)                   | published     |
+| [0084](0084-zstd-compression-for-zone-state/README.md)                        | zstd compression for batched zone-state FDB values                                       | published     |

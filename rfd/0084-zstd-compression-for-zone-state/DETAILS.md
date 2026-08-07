@@ -1,25 +1,3 @@
----
-title: zstd compression for batched zone-state FDB values
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0084](../rfd/0084-zstd-compression-for-zone-state/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0016-zstd-compression.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Compress FDB values with zstd (Zstandard) before writing and decompress
-after reading. Applies to large value blobs (entity batches, zone
-snapshots, asset content) but NOT to small fixed-size structs where
-compression overhead exceeds the savings.
-
 ## Rationale
 
 mas-bandwidth/fps assumes 10x bandwidth reduction via delta compression
@@ -41,14 +19,14 @@ that complements delta compression:
 
 ## When to compress
 
-| Value type                | Size         | Compress? | Level | Expected ratio            |
-| ------------------------- | ------------ | --------- | ----- | ------------------------- |
-| entity_t (single)         | ~40 bytes    | No        | —     | 1.0x (overhead > savings) |
-| entity batch (200)        | ~8KB         | Yes       | 3     | 2-3x                      |
-| zone snapshot             | ~8-16KB      | Yes       | 3     | 2-3x                      |
-| asset blob                | ~5MB         | Yes       | 19    | 3-5x                      |
-| TPC-C row (packed struct) | 50-500 bytes | No        | —     | 1.0x                      |
-| World table row           | ~10 bytes    | No        | —     | 1.0x                      |
+| Value type                 | Size          | Compress? | Level | Expected ratio             |
+| ----------------------------- | --------------- | ----------- | ------- | ------------------------------ |
+| entity_t (single)          | ~40 bytes      | No        | —     | 1.0x (overhead > savings)  |
+| entity batch (200)         | ~8KB           | Yes       | 3     | 2-3x                       |
+| zone snapshot               | ~8-16KB        | Yes       | 3     | 2-3x                       |
+| asset blob                  | ~5MB           | Yes       | 19    | 3-5x                       |
+| TPC-C row (packed struct)  | 50-500 bytes   | No        | —     | 1.0x                       |
+| World table row             | ~10 bytes      | No        | —     | 1.0x                       |
 
 Threshold: compress values ≥ 512 bytes. Below that, the 4-byte zstd
 frame header + compression CPU cost exceeds the savings.
@@ -127,12 +105,12 @@ vanishingly unlikely for packed structs whose first field is an ID.
 
 ## Compression levels
 
-| Level | Use case                   | Speed    | Ratio |
-| ----- | -------------------------- | -------- | ----- |
-| 1     | Hot path (ZoneTick batch)  | ~1GB/s   | 2x    |
-| 3     | Default (zone snapshot)    | ~800MB/s | 2-3x  |
-| 9     | Warm path (asset upload)   | ~200MB/s | 3-4x  |
-| 19    | Cold path (asset CDN seed) | ~20MB/s  | 3-5x  |
+| Level | Use case                    | Speed     | Ratio |
+| ------- | ------------------------------ | ----------- | ------- |
+| 1     | Hot path (ZoneTick batch)   | ~1GB/s    | 2x    |
+| 3     | Default (zone snapshot)     | ~800MB/s  | 2-3x  |
+| 9     | Warm path (asset upload)    | ~200MB/s  | 3-4x  |
+| 19    | Cold path (asset CDN seed)  | ~20MB/s   | 3-5x  |
 
 zstd level 3 at ~800MB/s is not a bottleneck for 8KB values: compression
 takes ~10µs, negligible vs FDB's 1.5-2.5ms commit latency.

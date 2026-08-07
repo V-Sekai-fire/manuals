@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: proof of concept
 ---
 
+> Moved to [rfd/0081](../rfd/0081-three-layer-verification-strategy/README.md).
+
 > Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
 > `rfd/0008-verification-strategy.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
 > consolidation — see that repo's README for current status. Content below is the

@@ -1,26 +1,3 @@
----
-title: Slotmap entity storage with generational IDs
-date: 2026-08-06
-status: accepted
-decision-makers: K. S. Ernest (iFire) Lee
-tier: proof of concept
----
-
-> Moved to [rfd/0080](../rfd/0080-slotmap-entity-storage/README.md).
-
-> Ported from [`weftspun/h2o-bench-tpcc`](https://github.com/weftspun/h2o-bench-tpcc)'s
-> `rfd/0017-slotmap-entity-storage.md` as part of the [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)
-> consolidation — see that repo's README for current status. Content below is the
-> original RFD, unmodified except for this header and stripping the old State line.
-
-## Decision
-
-Use a slotmap (sparse set with generational indices) for in-memory
-entity storage per zone, replacing hash map and linked list approaches.
-Each zone owns one slotmap. Entities are added/removed as they enter
-and leave zones. FDB remains the durable backing store; the slotmap is
-the hot in-memory index for tick processing.
-
 ## Rationale
 
 Zonefabric's ZoneTick iterates all 200 entities in a zone every tick.
@@ -157,12 +134,12 @@ FDB.
 
 For 200 entities at 40 bytes each:
 
-| Structure           | Memory                     | Iteration cache misses      |
-| ------------------- | -------------------------- | --------------------------- |
-| Hash map (cap 1024) | 40KB + 4KB indices         | ~8 (random access)          |
-| Linked list         | 200 × (40 + 8 ptr) = 9.6KB | ~200 (pointer chasing)      |
-| Slotmap (dense)     | 200 × 40 = 8KB             | ~1 (sequential, prefetched) |
-| Flat array          | 200 × 40 = 8KB             | ~1 (same as slotmap)        |
+| Structure           | Memory                      | Iteration cache misses      |
+| --------------------- | ---------------------------- | ------------------------------ |
+| Hash map (cap 1024) | 40KB + 4KB indices          | ~8 (random access)          |
+| Linked list         | 200 × (40 + 8 ptr) = 9.6KB  | ~200 (pointer chasing)      |
+| Slotmap (dense)     | 200 × 40 = 8KB              | ~1 (sequential, prefetched) |
+| Flat array          | 200 × 40 = 8KB              | ~1 (same as slotmap)        |
 
 The slotmap matches flat array iteration speed while supporting O(1)
 insert/remove with stable handles.
