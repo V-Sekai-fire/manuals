@@ -49,24 +49,24 @@ elsewhere.
 
 ## Index
 
-| RFD                                                                      | Title                                                                      | State      |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ---------- |
-| [0000](0000-conventions/README.md)                                       | Conventions                                                                | published  |
-| [0001](0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md)           | Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes | discussion |
-| [0002](0002-taskweft-value-narrowing-primitives-and-refs/README.md)      | taskweft/nif's value narrowing: primitives, and refs as pointer strings    | discussion |
-| [0003](0003-castspell-sandbox-package-and-manifest-encoding/README.md)   | CastSpell sandbox package format and manifest encoding                     | discussion |
-| [0004](0004-castspell-libgodot-sandbox-runtime-scope/README.md)          | CastSpell's sandboxed runtime: embed `libgodot`, not `godot-sandbox`'s API | discussion |
-| [0005](0005-gltf-interactivity-value-type-taxonomy-correction/README.md) | `gltf_interactivity`'s value types: primitive, `ref`, and `custom`         | discussion |
-| [0006](0006-cockroachdb-with-mtls-role-separation/README.md)             | CockroachDB with mTLS and role-separated access                           | published  |
-| [0007](0007-godot-double-precision-template-release-for-zone/README.md) | Godot double precision template_release for zone servers                  | published  |
-| [0008](0008-webtransport-over-quic-for-game-traffic/README.md)           | Use WebTransport over QUIC for game traffic                               | published  |
-| [0009](0009-ghcr-package-ownership-same-repo/README.md)                  | GHCR packages must be built by the repo that consumes them                | published  |
-| [0010](0010-maglev-cycle-1-gateway-handshake/README.md)                  | Godot client transport handshake against the authoritative server         | published  |
-| [0011](0011-observability-stack-victoriatraces/README.md)                | Replace Jaeger with VictoriaTraces for trace storage                      | published  |
-| [0012](0012-amend-pr-before-it-enters-the-queue/README.md)               | Amend a PR before it enters the merge queue, not after                    | published  |
-| [0013](0013-archival-file-naming-convention/README.md)                   | Archival file naming convention for committed assets                      | published  |
-| [0014](0014-art-game-loop-steel-thread/README.md)                        | Recursive art-game loop and its minimal steel thread                      | prediscussion |
-| [0015](0015-bounded-llm-steering-queue/README.md)                        | Bound the LLM steering queue to avoid context overflow                    | published  |
-| [0016](0016-checking-sccache/README.md)                                  | Checking the sccache build cache                                          | published  |
-| [0017](0017-compiling-godot-engine/README.md)                            | Compiling the Godot engine                                                | published  |
-| [0018](0018-feature-classification-poc-baseline-stretch/README.md)       | Feature classification — proof of concept, baseline, stretch              | published  |
+| RFD                                                                      | Title                                                                      | State         |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------- |
+| [0000](0000-conventions/README.md)                                       | Conventions                                                                | published     |
+| [0001](0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md)           | Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes | discussion    |
+| [0002](0002-taskweft-value-narrowing-primitives-and-refs/README.md)      | taskweft/nif's value narrowing: primitives, and refs as pointer strings    | discussion    |
+| [0003](0003-castspell-sandbox-package-and-manifest-encoding/README.md)   | CastSpell sandbox package format and manifest encoding                     | discussion    |
+| [0004](0004-castspell-libgodot-sandbox-runtime-scope/README.md)          | CastSpell's sandboxed runtime: embed `libgodot`, not `godot-sandbox`'s API | discussion    |
+| [0005](0005-gltf-interactivity-value-type-taxonomy-correction/README.md) | `gltf_interactivity`'s value types: primitive, `ref`, and `custom`         | discussion    |
+| [0006](0006-cockroachdb-with-mtls-role-separation/README.md)             | CockroachDB with mTLS and role-separated access                            | published     |
+| [0007](0007-godot-double-precision-template-release-for-zone/README.md)  | Godot double precision template_release for zone servers                   | published     |
+| [0008](0008-webtransport-over-quic-for-game-traffic/README.md)           | Use WebTransport over QUIC for game traffic                                | published     |
+| [0009](0009-ghcr-package-ownership-same-repo/README.md)                  | GHCR packages must be built by the repo that consumes them                 | published     |
+| [0010](0010-maglev-cycle-1-gateway-handshake/README.md)                  | Godot client transport handshake against the authoritative server          | published     |
+| [0011](0011-observability-stack-victoriatraces/README.md)                | Replace Jaeger with VictoriaTraces for trace storage                       | published     |
+| [0012](0012-amend-pr-before-it-enters-the-queue/README.md)               | Amend a PR before it enters the merge queue, not after                     | published     |
+| [0013](0013-archival-file-naming-convention/README.md)                   | Archival file naming convention for committed assets                       | published     |
+| [0014](0014-art-game-loop-steel-thread/README.md)                        | Recursive art-game loop and its minimal steel thread                       | prediscussion |
+| [0015](0015-bounded-llm-steering-queue/README.md)                        | Bound the LLM steering queue to avoid context overflow                     | published     |
+| [0016](0016-checking-sccache/README.md)                                  | Checking the sccache build cache                                           | published     |
+| [0017](0017-compiling-godot-engine/README.md)                            | Compiling the Godot engine                                                 | published     |
+| [0018](0018-feature-classification-poc-baseline-stretch/README.md)       | Feature classification — proof of concept, baseline, stretch               | published     |

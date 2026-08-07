@@ -11,7 +11,7 @@ moved or renamed.
 ## Prerequisites
 
 | Tool     | Windows                       | WSL (Ubuntu 24.04)             |
-| -------- | ------------------------------ | ------------------------------- |
+| -------- | ----------------------------- | ------------------------------ |
 | Python 3 | `scoop install python`        | system `python3`               |
 | SCons    | `python -m pip install scons` | `python3 -m pip install scons` |
 | Compiler | MinGW-w64 (`use_mingw=yes`)   | `build-essential` (gcc/g++)    |

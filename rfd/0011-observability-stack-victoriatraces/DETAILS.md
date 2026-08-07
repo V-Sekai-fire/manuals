@@ -20,11 +20,11 @@ matches the port and CLI-flag conventions already in use.
 ## Port map after this change
 
 | Service         | Port                     | Purpose                          |
-| ---------------- | ------------------------ | --------------------------------- |
-| VictoriaMetrics  | 8428                     | Metrics storage and PromQL        |
-| VictoriaLogs     | 9428                     | Log storage and query             |
-| VictoriaTraces   | 10428                    | Trace storage and query           |
-| OTEL Collector   | 4317 (gRPC), 4318 (HTTP) | OTLP ingest, routes to the above  |
+| --------------- | ------------------------ | -------------------------------- |
+| VictoriaMetrics | 8428                     | Metrics storage and PromQL       |
+| VictoriaLogs    | 9428                     | Log storage and query            |
+| VictoriaTraces  | 10428                    | Trace storage and query          |
+| OTEL Collector  | 4317 (gRPC), 4318 (HTTP) | OTLP ingest, routes to the above |
 
 ## Consequences
 
