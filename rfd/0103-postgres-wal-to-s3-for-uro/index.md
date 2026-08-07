@@ -93,32 +93,42 @@ MB container that also ran `fdbserver`:
 That beats PostgreSQL colocated, which reaches 33.9, and it removes a
 datastore rather than adding one.
 
-Latency decides it, and the measurement is not close.
+Latency is not what decides it, because FRL's latency is unmeasured.
 
-    FRL insert 20000 rows          198901.8 ms total
-    FRL point SELECT               median=  45.259 ms  p99=  66.866 ms  n=1000
+An earlier revision of this RFD reported 45.259 ms per point SELECT and
+called FRL 539 times slower than PostgreSQL. **Withdraw that number.**
+It measured `fdb-relational-server` over JDBC and gRPC, and
+`ecto-fdb-relational`'s ADR 0003 removed that transport in v0.2.
 
-45.259 ms per point read is 539 times PostgreSQL's 0.084 ms. Inserts
-ran at approximately 10 ms per row.
+v0.2 embeds FRL in-process through a Rustler NIF, calling
+`com.apple.foundationdb.relational.server.FRL` directly. There is no
+server process, no gRPC, and no network hop. The measured path is the
+one the adapter deleted.
 
-For scale, `rfd/0100` measured a raw FoundationDB commit at 2396.6 us
-on the same storage engine. FRL adds roughly 19 times on top of the
-database underneath it.
+Two failures in that probe are also documented FRL behavior rather
+than probe errors. `setAutoCommit(false)` returned "Not implemented
+setAutoCommit", which ADR 0001 records as autocommit-per-call. An
+`UPDATE ... SET x = ? WHERE y = ?` failed on a planner bug that ADR
+0003 states reproduces in-process as well.
 
-At 45 ms a login of five queries costs 225 ms before any other work.
-Single-threaded throughput is about 22 queries per second.
+So FRL is not ruled out on speed. It is ruled out for this deployment
+on cost of adoption, and those costs come from its own ADR 0003:
 
-Three caveats, because one measurement should not close a door
-permanently. This used the JDBC driver. The adapter's own ADR 0001
-records that FoundationDB marks that interface experimental, and
-`ecto-fdb-relational` speaks gRPC directly instead. The measurement
-also ran against a single-node FoundationDB that shared a container.
-An UPDATE probe failed on an FRL dialect type mismatch, so it is
-unmeasured.
+- **No crash isolation, permanently.** A JVM segfault, or a panic
+  crossing the Rust and JNI boundary, takes down the whole BEAM node.
+  `Protocol.ping/2` is a deliberate no-op as a result.
+- **A JDK and a Rust toolchain are hard prerequisites to `mix
+compile`**, not only to run tests.
+- **Every NIF call runs on Rustler's `DirtyIo` scheduler.** A long FDB
+  call ties up a dirty scheduler thread.
+- **No per-call timeout**, because a dirty NIF cannot easily be
+  canceled.
 
-Even so, a 539 times gap does not close with tuning. Re-measure through
-the gRPC adapter before treating FRL as permanently unsuitable, and do
-not block on it.
+PostgreSQL carries none of those, is measured at 0.084 ms, and keeps
+Postgrex, which is a mature adapter with none of these prerequisites.
+
+Re-measure FRL through the in-process NIF when the cost of adoption is
+worth paying. This RFD does not claim FRL is slow.
 
 FRL's dialect is also "close to but not standard SQL", by its own
 README. Uro's migrations need porting either way, and this port targets
