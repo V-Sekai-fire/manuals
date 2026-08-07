@@ -10,7 +10,347 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 19:00:59 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 19:08:29 GMT</lastBuildDate>
+<item>
+  <title>RFD 0100: Tick rate is not send rate, and an entity is a bone</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0100: Tick rate is not send rate, and an entity is a bone</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0099</code> calculated 10.2 Mbit per second per client and called it unshippable. That number is correct arithmetic on two wrong assumptions.</p>
+<p>The first assumption is that the send rate equals the tick rate. <code>rfd/0096</code> through <code>rfd/0099</code> all divide by 15625 us, which is <code>ZONE_TICK_HZ</code> at 64. Every one of them then assumed the server sends at that rate too.</p>
+<p>The second assumption is that an entity is a whole object. It is not. An entity is a bone, or a part of a bone.</p>
+<p>This RFD corrects both, adds the voice budget that no earlier RFD counted, and states the resulting per-client target.</p>
+</section>
+<section id="decision-1-three-rates-not-one" class="level2">
+<h2 class="anchored" data-anchor-id="decision-1-three-rates-not-one">Decision 1: three rates, not one</h2>
+<p>Simulation rate and send rate are separate numbers. Conflating them produced the 10.2 Mbit per second figure.</p>
+<p>There are in fact three rates, and each has a different reason:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rate</th>
+<th>Value</th>
+<th>Set by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Simulation</td>
+<td>64 Hz</td>
+<td><code>ZONE_TICK_HZ</code>, for the fixed integer step</td>
+</tr>
+<tr class="even">
+<td>State send</td>
+<td>10 to 20 Hz</td>
+<td>this RFD, matching VRChat’s IK range</td>
+</tr>
+<tr class="odd">
+<td>Voice send</td>
+<td>50 Hz</td>
+<td>20 ms Opus packets in <code>modules/speech</code></td>
+</tr>
+</tbody>
+</table>
+<p>Voice already runs at 50 Hz in shipped code, which is faster than the state send rate and slower than the simulation. That alone disproves the idea that one rate governs everything.</p>
+<p>VRChat is the closest comparable product, and it does not send at the simulation rate. Its IK update rate is approximately 6 to 20 Hz, and float parameters sync at approximately 10 Hz.</p>
+<p><code>ZONE_TICK_HZ</code> stays at 64, because the integer physics in <code>zf_zonetick.h</code> wants a fixed step. The send rate becomes its own constant, and it is 10 to 20 Hz.</p>
+<p>The client covers the gap by interpolating, which is standard practice and is what <code>rfd/0099</code>’s client-side prediction already implies.</p>
+</section>
+<section id="decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste" class="level2">
+<h2 class="anchored" data-anchor-id="decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste">Decision 2: an entity is a bone, so the packet is mostly waste</h2>
+<p><code>xr_grid_entity_packet_t</code> carries <code>pos_um_x/y/z</code> as three int64 values, which is 24 bytes, and <code>rot_x/y/z</code> as swing-twist, which is 6 bytes.</p>
+<p>VRM 1.0 defines 55 humanoid bones, of which 15 are required and 40 are optional. An avatar also carries 1 root node for its world transform. So the entity count per avatar is 56.</p>
+<p>Two of those 56 use translation. The root places the avatar in the world. The hips carry humanoid translation relative to that root. VRM states that every remaining humanoid bone uses rotation.</p>
+<p>So for 54 of 56 entities, the 24 bytes of position are unused. The real payload for those is the 6-byte swing-twist rotation.</p>
+<p>Per avatar:</p>
+<pre><code>1 root     24 B position + 6 B rotation  =  30 B
+1 hips     24 B position + 6 B rotation  =  30 B
+54 others  6 B rotation each             = 324 B
+total                                    = 384 B</code></pre>
+<p>A 100-byte packet for each of 56 entities would cost 5600 bytes per avatar. The rotation-only form costs 384 bytes, which is 14.6 times smaller.</p>
+<p><code>rfd/0002</code>’s 200 entities per zone is therefore about 3.6 avatars, not 200 objects. That reframes every capacity claim in the earlier RFDs.</p>
+</section>
+<section id="decision-3-bone-level-of-detail-is-the-form-interest-management-takes" class="level2">
+<h2 class="anchored" data-anchor-id="decision-3-bone-level-of-detail-is-the-form-interest-management-takes">Decision 3: bone level of detail is the form interest management takes</h2>
+<p><code>rfd/0099</code> made interest management a requirement. This RFD says what it does in a social VR context.</p>
+<p>Distance does not only remove avatars. It removes BONES. A distant avatar does not need 40 optional bones, because nobody can see a finger at 20 metres.</p>
+<p>Three tiers:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>Entities sent</th>
+<th>Bytes</th>
+<th>Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Near</td>
+<td>root plus 55 humanoid bones</td>
+<td>384 B</td>
+<td>20 Hz</td>
+</tr>
+<tr class="even">
+<td>Far</td>
+<td>root plus 15 required bones</td>
+<td>144 B</td>
+<td>5 Hz</td>
+</tr>
+<tr class="odd">
+<td>Distant</td>
+<td>root only</td>
+<td>30 B</td>
+<td>5 Hz</td>
+</tr>
+</tbody>
+</table>
+<p>The 15-required and 55-total split is not invented here. It is VRM 1.0’s own division, so a far-tier avatar remains a valid humanoid.</p>
+</section>
+<section id="decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side" class="level2">
+<h2 class="anchored" data-anchor-id="decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side">Decision 4: voice is a first-class budget line, and it is mixed server-side</h2>
+<p>No earlier RFD counted voice. In social VR it is a large share of the traffic, and leaving it out made every budget optimistic.</p>
+<p>The codec choice is already made and already implemented. <code>fabric-godot-core</code>’s <code>modules/speech</code> on branch <code>feat/module-speech</code> uses Opus with these settings, from <code>speech_processor.h</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SPEECH_SETTING_CHANNEL_COUNT</code></td>
+<td>1, mono</td>
+</tr>
+<tr class="even">
+<td><code>SPEECH_SETTING_SAMPLE_RATE</code></td>
+<td>48000</td>
+</tr>
+<tr class="odd">
+<td><code>SPEECH_SETTING_MILLISECONDS_PER_PACKET</code></td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td><code>SPEECH_SETTING_BUFFER_FRAME_COUNT</code></td>
+<td>960</td>
+</tr>
+<tr class="odd">
+<td><code>SPEECH_SETTING_APPLICATION</code></td>
+<td><code>OPUS_APPLICATION_AUDIO</code></td>
+</tr>
+</tbody>
+</table>
+<p>Two of those deserve review, and this RFD raises them rather than changing them.</p>
+<p>The module sets no bitrate. It never calls <code>OPUS_SET_BITRATE</code>, so Opus selects its own default from the sample rate and channel count. For 48 kHz mono that lands near 64 kbps, which matches Discord’s default. The budget below uses 64 kbps for that reason, and an explicit constant would be better than a library default.</p>
+<p>The module also selects <code>OPUS_APPLICATION_AUDIO</code> rather than <code>OPUS_APPLICATION_VOIP</code>. VOIP mode is the speech-tuned one. AUDIO mode targets general content and generally needs more bitrate for equal speech quality. Voice chat is the use case here, so this looks like the wrong constant.</p>
+<p>Industry rates for comparison:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Use</th>
+<th>Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Clear speech</td>
+<td>16 to 24 kbps</td>
+</tr>
+<tr class="even">
+<td>Most VoIP and conferencing</td>
+<td>24 to 64 kbps</td>
+</tr>
+<tr class="odd">
+<td>Discord default</td>
+<td>64 kbps</td>
+</tr>
+<tr class="even">
+<td>Mumble maximum</td>
+<td>128 kbps</td>
+</tr>
+</tbody>
+</table>
+<p>Mix on the server, and send one stream. RP1’s own demo used server-mixed spatial audio.</p>
+<p>The reason is arithmetic. Eight unmixed speakers at 24 kbps is 192 kbps per listener, and it grows with the number of speakers. One mixed stream at 64 kbps does not grow at all.</p>
+<p>Server mixing costs CPU on a machine with one shared vCPU. Measure that before committing to it, because <code>rfd/0096</code> measured the busy-poll failure on exactly that machine shape.</p>
+<p><code>modules/speech</code> does not mix. It encodes, decodes, and buffers on the client. Server-side mixing is unbuilt, and this RFD puts it on the critical path.</p>
+</section>
+<section id="decision-5-cost-sets-the-cap-not-client-capacity" class="level2">
+<h2 class="anchored" data-anchor-id="decision-5-cost-sets-the-cap-not-client-capacity">Decision 5: cost sets the cap, not client capacity</h2>
+<p>Every budget above asks what a client can receive. That is the wrong question. The binding constraint is what the project can afford to send.</p>
+<p>Fly.io prices outbound transfer per GB:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Price per GB</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>North America and Europe</td>
+<td>0.02 USD</td>
+</tr>
+<tr class="even">
+<td>Asia Pacific, Oceania, South America</td>
+<td>0.04 USD</td>
+</tr>
+<tr class="odd">
+<td>Africa and India</td>
+<td>0.12 USD</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>shared-cpu-1x</code> machine with 256 MB costs 2.02 USD per month. Pay As You Go has no free tier.</p>
+<p>Take a 15 USD monthly budget. Two machines cost 4.04 USD, which leaves 10.96 USD for transfer. At 0.02 USD per GB that is 548 GB per month.</p>
+<p>Now convert a per-client rate into client-hours:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 21%">
+<col style="width: 27%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Per-client rate</th>
+<th>GB per client-hour</th>
+<th>Client-hours for 548 GB</th>
+<th>Concurrent, 24/7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>648.6 kbps, the budget above</td>
+<td>0.29187</td>
+<td>1878</td>
+<td>2.6</td>
+</tr>
+<tr class="even">
+<td>320 kbps</td>
+<td>0.144</td>
+<td>3806</td>
+<td>5.2</td>
+</tr>
+<tr class="odd">
+<td>128 kbps</td>
+<td>0.0576</td>
+<td>9514</td>
+<td>13.0</td>
+</tr>
+<tr class="even">
+<td>64 kbps</td>
+<td>0.0288</td>
+<td>19028</td>
+<td>26.1</td>
+</tr>
+<tr class="odd">
+<td>41.7 kbps</td>
+<td>0.01877</td>
+<td>29200</td>
+<td>40.0</td>
+</tr>
+</tbody>
+</table>
+<p>The budget in the previous section supports 2.6 concurrent users, run continuously, for 15 USD per month. Comparing against VRChat’s cap of 80 or Fortnite’s 100 was therefore meaningless. Cost stops this design roughly 30 times sooner than any of those product limits.</p>
+<p>Reverse the calculation to get the requirement. Forty concurrent users running continuously need 41.7 kbps per client. That is 15.5 times less than 648.6 kbps.</p>
+<p>Region multiplies the problem. Asia Pacific doubles the price, and Africa and India multiply it by six. A client in India costs six times a client in Europe for identical traffic.</p>
+<section id="what-128-kbps-actually-buys" class="level3">
+<h3 class="anchored" data-anchor-id="what-128-kbps-actually-buys">What 128 kbps actually buys</h3>
+<p>Take 128 kbps as a target, which gives 13 concurrent users continuously, or approximately 475 users at 20 hours each per month.</p>
+<p>Voice is the largest single line. At Opus 64 kbps it takes half the budget. At 24 kbps, which the sources call clear for speech, it takes 19 percent.</p>
+<p>With voice at 24 kbps, 104 kbps remains, which is 13000 bytes per second. At a 10 Hz state send that is 1300 bytes per update:</p>
+<pre><code>3 near   x 384 B = 1152 B
+1 far    x 144 B =  144 B
+total            = 1296 B</code></pre>
+<p>So 128 kbps buys about four visible avatars at 10 Hz, not forty.</p>
+<p>That is the real design pressure. It points at three levers. Reduce the voice bitrate. Reduce the state send rate. Compress the per-bone rotation below 6 bytes.</p>
+</section>
+<section id="consequence-for-decision-4" class="level3">
+<h3 class="anchored" data-anchor-id="consequence-for-decision-4">Consequence for decision 4</h3>
+<p><code>OPUS_APPLICATION_AUDIO</code> with no explicit bitrate is now a cost decision, not only a quality decision. The library default near 64 kbps consumes half of a 128 kbps budget.</p>
+<p>Set the bitrate explicitly, and evaluate <code>OPUS_APPLICATION_VOIP</code> against it, because VOIP mode reaches speech quality at a lower rate.</p>
+</section>
+</section>
+<section id="the-corrected-budget" class="level2">
+<h2 class="anchored" data-anchor-id="the-corrected-budget">The corrected budget</h2>
+<p>Using 40 avatars, the tiers above, and server-mixed voice:</p>
+<pre><code> 8 near    x 384 B x 20 Hz = 61440 B/s = 491.5 kbps
+12 far     x 144 B x  5 Hz =  8640 B/s =  69.1 kbps
+20 distant x  30 B x  5 Hz =  3000 B/s =  24.0 kbps
+voice, server-mixed                    =  64.0 kbps
+total                                  = 648.6 kbps</code></pre>
+<p>Against the sources:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Reference</th>
+<th>Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>This design</td>
+<td>648.6 kbps</td>
+</tr>
+<tr class="even">
+<td>Fortnite</td>
+<td>110 to 330 kbps</td>
+</tr>
+<tr class="odd">
+<td>Roblox</td>
+<td>220 kbps to 1.3 Mbps</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0099</code> as written</td>
+<td>10.2 Mbit per second</td>
+</tr>
+</tbody>
+</table>
+<p>648.6 kbps sits inside Roblox’s range and near twice Fortnite’s upper bound. It is defensible on client capacity, and decision 5 shows it fails on cost.</p>
+<p>Client capacity supports it. The Sony Bandwidth Probe found 95.5 percent of USA samples at or above 512 kbps download. It found 97.6 percent in Europe at or above 512 kbps. Those samples are from 2010, so they are a conservative floor rather than a current estimate.</p>
+<p>Upload is the tighter side, and it is tight. 97.3 percent of Americas samples are at or above 128 kbps. A client sends only its own avatar, which is 384 bytes at 20 Hz, or 61.4 kbps. Voice adds 24 to 64 kbps.</p>
+<p>So a client uploads 85.4 to 125.4 kbps. That fits under 128 kbps, and it fits with very little margin. An increase in send rate or bone count removes clients from the design. It starts with the 2.7 percent below 128 kbps, and it takes more as the number grows.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p><code>rfd/0099</code>’s 10.2 Mbit per second figure is superseded. The reasoning was right and both inputs were wrong.</p>
+<p>The send rate needs its own constant, separate from <code>ZONE_TICK_HZ</code>. Name it explicitly so the two never merge again.</p>
+<p>The wire form for a rotation-only bone should not carry 24 bytes of unused position. Whether that is a second packet type or a flag on the existing one is an implementation question, and this RFD does not decide it.</p>
+<p>Capacity claims stated in entities must say whether they mean bones or avatars. At 56 entities per humanoid the two differ by a factor of 56.</p>
+<p>Server-side voice mixing is now on the critical path, and its CPU cost on <code>shared-cpu-1x</code> is unmeasured.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li><a href="https://www.gamedevs.org/uploads/networking-for-physics-programmers.pdf">Networking for Physics Programmers, GDC 2010</a>, for the Sony Bandwidth Probe</li>
+<li><a href="https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/humanoid.md">VRM 1.0 humanoid specification</a>, for 55 bones, 15 required, hips-only translation</li>
+<li><a href="https://wiki.hydrogenaudio.org/index.php?title=Opus">Opus, Hydrogenaudio Knowledgebase</a></li>
+<li><a href="https://cdn.rp1.com/whitepaper.pdf">Blueprint for the Open Metaverse</a>, for server-mixed spatial audio</li>
+<li><code>src/gen/xr_grid_entity_packet.h</code>, for the packet layout</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</link>
@@ -164,7 +504,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -323,7 +663,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -493,7 +833,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -685,7 +1025,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -907,7 +1247,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -994,7 +1334,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -1128,7 +1468,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -1374,7 +1714,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -1440,7 +1780,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -1596,7 +1936,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -1674,7 +2014,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -1714,7 +2054,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -1755,7 +2095,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -1795,7 +2135,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -2151,7 +2491,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -2559,7 +2899,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -2640,7 +2980,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -3156,7 +3496,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -3266,290 +3606,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0080: Slotmap entity storage with generational IDs</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0080: Slotmap entity storage with generational IDs</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o in-memory entity storage</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>In-memory entity storage per zone used a hash map or a linked list approach. A hash map of 200 entities touches about 8 random cache lines per iteration. A linked list needs pointer-chasing, and both approaches cost more than a sequential scan.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use a slotmap for in-memory entity storage per zone, replacing hash map and linked list approaches. A slotmap is a sparse set with generational indices. Each zone owns one thread-local slotmap. FDB stays the durable backing store, and the slotmap is the hot in-memory index for tick processing. Iterating 200 entities in a slotmap’s dense array touches about 8KB sequentially, roughly one L1 miss after warmup. A hash map of the same size touches about 8 random cache lines, and a linked list needs pointer-chasing.</p>
-<p>Generational (index, version) handles prevent ABA problems, where a recycled slot looks like a live entity. A stale handle’s version mismatch returns null instead of the wrong entity. The team rejected a full ECS framework like EnTT as unjustified overhead for one component type and one system. The slotmap is about 100 lines of C, against EnTT’s roughly 15,000 lines of C++, at comparable iteration speed for this workload.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full slotmap struct layout, operations, cache-behavior table, and FDB migration sync sequence: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-slotmap-entity-storage.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0017-slotmap-entity-storage.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>rfd/0074-binary-value-encoding-for-fdb</code> (the format the slotmap stores by <code>memcpy</code>), <code>rfd/0076-macaroon-xdp-security</code> (the <code>entity_id</code> caveat maps to a slotmap handle), and <code>rfd/0072-actor-lite-worker-pool</code> (each worker owns its zone’s slotmap thread-locally).</p>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="rationale" class="level2">
-<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<p>Zonefabric’s ZoneTick iterates all 200 entities in a zone every tick. The iteration pattern is:</p>
-<ol type="1">
-<li>Range scan FDB <code>zf/entity/{z_id}/</code> → 200 KV pairs (cold path)</li>
-<li>Deserialize into in-memory entity array (warm path)</li>
-<li>Iterate: update position += velocity × dt (hot path)</li>
-<li>Batch write back to FDB (cold path)</li>
-</ol>
-<p>Steps 1 and 4 are FDB operations (~1ms latency). Step 3 is pure compute (~7µs for 200 entities). Step 2 is the deserialization bridge — and its data structure choice determines whether step 3 is cache-friendly.</p>
-<p>A hash map (open-addressing) scatters entities across memory based on hash of entity ID. Iterating 200 entities from a hash map of capacity 1024 touches ~8 cache lines randomly — 8 potential L1 misses.</p>
-<p>A slotmap stores entities in a dense array indexed by a slot index. Iteration is a sequential scan of the dense array — 200 entities × 40 bytes = 8KB, which fits in 128 cache lines, accessed sequentially with hardware prefetch. Zero L1 misses after warmup.</p>
-</section>
-<section id="slotmap-design" class="level2">
-<h2 class="anchored" data-anchor-id="slotmap-design">Slotmap design</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">typedef</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">struct</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb1-2">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> index<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>   <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// slot index into entries[]</span></span>
-<span id="cb1-3">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> version<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// generation counter for ABA safety</span></span>
-<span id="cb1-4"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span> zf_slot_t<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb1-5"></span>
-<span id="cb1-6"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">typedef</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">struct</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb1-7">    zf_entity_t entity<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// 40 bytes: the actual data</span></span>
-<span id="cb1-8">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> version<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>      <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// generation: incremented on free</span></span>
-<span id="cb1-9">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> next_free<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// free list link (UINT32_MAX = end)</span></span>
-<span id="cb1-10"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span> zf_slot_entry_t<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb1-11"></span>
-<span id="cb1-12"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">typedef</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">struct</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb1-13">    zf_slot_entry_t <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>entries<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// dense array, capacity = power of 2</span></span>
-<span id="cb1-14">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>slots<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>           <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// slot index → entry index (or free)</span></span>
-<span id="cb1-15">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> free_head<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// head of free list in entries[]</span></span>
-<span id="cb1-16">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> count<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>            <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// live entity count</span></span>
-<span id="cb1-17">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> capacity<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>         <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// total slots</span></span>
-<span id="cb1-18"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span> zf_slotmap_t<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span></span></code></pre></div></div>
-<section id="operations" class="level3">
-<h3 class="anchored" data-anchor-id="operations">Operations</h3>
-<p><strong>Insert</strong> (entity enters zone):</p>
-<pre><code>entry_idx = free_head
-free_head = entries[entry_idx].next_free
-entries[entry_idx].entity = entity
-entries[entry_idx].version++
-slot_idx = allocate_slot()
-slots[slot_idx] = entry_idx
-return {slot_idx, entries[entry_idx].version}</code></pre>
-<p><strong>Remove</strong> (entity leaves zone):</p>
-<pre><code>entry_idx = slots[slot.version]
-if entries[entry_idx].version != slot.version: return STALE
-entries[entry_idx].next_free = free_head
-free_head = entry_idx
-entries[entry_idx].version++  // invalidate all existing handles
-free_slot(slot.index)
-count--</code></pre>
-<p><strong>Lookup</strong> (random access by handle):</p>
-<pre><code>entry_idx = slots[handle.index]
-if entries[entry_idx].version != handle.version: return NULL
-return &amp;entries[entry_idx].entity</code></pre>
-<p><strong>Iterate</strong> (tick all entities):</p>
-<pre><code>for i in 0..count:
-    entity = &amp;entries[dense_order[i]].entity
-    entity-&gt;x += entity-&gt;vx * dt
-    entity-&gt;y += entity-&gt;vy * dt</code></pre>
-<p>Iteration uses a dense order array so live entities are contiguous, even after removals (removal swaps the last entry into the freed slot).</p>
-</section>
-</section>
-<section id="why-not-just-a-flat-array" class="level2">
-<h2 class="anchored" data-anchor-id="why-not-just-a-flat-array">Why not just a flat array?</h2>
-<p>A flat array works if entities never leave zones. But zonefabric has entity migration — entities cross zone boundaries. When entity #47 of 200 leaves, a flat array either:</p>
-<ul>
-<li>Leaves a gap (iteration must skip dead entries → branch per entity)</li>
-<li>Compacts (swap-remove → O(1) but changes entity ordering)</li>
-</ul>
-<p>A slotmap gives O(1) insert/remove with stable handles (generational indices prevent ABA problems where a recycled slot is mistaken for a live entity). The dense iteration order is maintained by swap-remove on the slot array.</p>
-</section>
-<section id="why-not-entt-flecs-an-ecs-framework" class="level2">
-<h2 class="anchored" data-anchor-id="why-not-entt-flecs-an-ecs-framework">Why not entt / flecs / an ECS framework?</h2>
-<p>From <a href="https://github.com/abeimler/ecs_benchmark">abeimler/ecs_benchmark</a>, EnTT iterates 10K entities with 7 systems in 350µs. A slotmap with 200 entities and 1 system (position+velocity) takes ~7µs. The overhead of a full ECS framework (archetype storage, component registration, system scheduling, query matching) is not justified for a single component type and a single system.</p>
-<p>The slotmap is ~100 lines of C. EnTT is ~15K lines of C++. We need the iteration speed, not the abstraction.</p>
-</section>
-<section id="generational-handles-and-fdb-sync" class="level2">
-<h2 class="anchored" data-anchor-id="generational-handles-and-fdb-sync">Generational handles and FDB sync</h2>
-<p>When an entity migrates from zone A to zone B:</p>
-<ol type="1">
-<li>Zone A: <code>slotmap_remove(sm_a, handle)</code> — version bumped, slot freed</li>
-<li>FDB: <code>fdb_transaction_clear(zf/entity/{a_id}/{e_id})</code> — delete key</li>
-<li>FDB: <code>fdb_transaction_set(zf/entity/{b_id}/{e_id}, packed_entity)</code> — insert key</li>
-<li>Zone B: <code>handle_b = slotmap_insert(sm_b, entity)</code> — new slot, new version</li>
-</ol>
-<p>The generational handle prevents zone A from using a stale handle to access an entity that has already migrated to zone B. The version mismatch on lookup returns NULL, signaling the caller to re-read from FDB.</p>
-</section>
-<section id="memory-layout-and-cache-behavior" class="level2">
-<h2 class="anchored" data-anchor-id="memory-layout-and-cache-behavior">Memory layout and cache behavior</h2>
-<p>For 200 entities at 40 bytes each:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 26%">
-<col style="width: 36%">
-<col style="width: 37%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Structure</th>
-<th>Memory</th>
-<th>Iteration cache misses</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Hash map (cap 1024)</td>
-<td>40KB + 4KB indices</td>
-<td>~8 (random access)</td>
-</tr>
-<tr class="even">
-<td>Linked list</td>
-<td>200 × (40 + 8 ptr) = 9.6KB</td>
-<td>~200 (pointer chasing)</td>
-</tr>
-<tr class="odd">
-<td>Slotmap (dense)</td>
-<td>200 × 40 = 8KB</td>
-<td>~1 (sequential, prefetched)</td>
-</tr>
-<tr class="even">
-<td>Flat array</td>
-<td>200 × 40 = 8KB</td>
-<td>~1 (same as slotmap)</td>
-</tr>
-</tbody>
-</table>
-<p>The slotmap matches flat array iteration speed while supporting O(1) insert/remove with stable handles.</p>
-</section>
-<section id="capacity-and-growth" class="level2">
-<h2 class="anchored" data-anchor-id="capacity-and-growth">Capacity and growth</h2>
-<p>Initial capacity: 256 (AUTHORITY_CAPACITY from RFD 0002). Grows by doubling when count reaches capacity. Growth is amortized O(1) — the realloc + copy is rare (log₂(200/256) = 0 growth events at steady state).</p>
-<p>Memory per zone: 256 × (40 + 8) = 12KB. For 10,000 zones: 120MB. Negligible vs FDB’s storage overhead.</p>
-</section>
-<section id="relationship-to-other-rfds" class="level2">
-<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
-<ul>
-<li><strong>RFD 0002</strong> (zonefabric): defines ENTITIES_PER_ZONE=200 and AUTHORITY_CAPACITY=256. Slotmap capacity = AUTHORITY_CAPACITY.</li>
-<li><strong>RFD 0010</strong> (binary encoding): FDB values are packed structs. The slotmap stores the same struct in memory — <code>memcpy</code> from FDB value to slotmap entry, no conversion.</li>
-<li><strong>RFD 0011</strong> (async callbacks): FDB range scan callback populates the slotmap. Each KV pair in the range result is one <code>slotmap_insert</code>.</li>
-<li><strong>RFD 0016</strong> (zstd): if the FDB value is compressed, decompress before <code>memcpy</code> into the slotmap entry. The slotmap always stores uncompressed data.</li>
-<li><strong>RFD 0005</strong> (actor-lite): each worker thread owns its zone’s slotmap. No cross-thread access — the slotmap is thread-local. No locks, no atomics on the hot path.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/</guid>
-  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 19:08:29 GMT</pubDate>
 </item>
 </channel>
 </rss>

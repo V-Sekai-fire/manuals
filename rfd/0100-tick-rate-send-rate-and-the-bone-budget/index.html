@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>RFD 0100: Tick rate is not send rate, and an entity is a bone – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../pages/changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/rfd.html"> 
+    <a class="nav-link" href="../../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/references.html"> 
+    <a class="nav-link" href="../../pages/references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,26 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision-1-three-rates-not-one" id="toc-decision-1-three-rates-not-one" class="nav-link" data-scroll-target="#decision-1-three-rates-not-one">Decision 1: three rates, not one</a></li>
+  <li><a href="#decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste" id="toc-decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste" class="nav-link" data-scroll-target="#decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste">Decision 2: an entity is a bone, so the packet is mostly waste</a></li>
+  <li><a href="#decision-3-bone-level-of-detail-is-the-form-interest-management-takes" id="toc-decision-3-bone-level-of-detail-is-the-form-interest-management-takes" class="nav-link" data-scroll-target="#decision-3-bone-level-of-detail-is-the-form-interest-management-takes">Decision 3: bone level of detail is the form interest management takes</a></li>
+  <li><a href="#decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side" id="toc-decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side" class="nav-link" data-scroll-target="#decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side">Decision 4: voice is a first-class budget line, and it is mixed server-side</a></li>
+  <li><a href="#decision-5-cost-sets-the-cap-not-client-capacity" id="toc-decision-5-cost-sets-the-cap-not-client-capacity" class="nav-link" data-scroll-target="#decision-5-cost-sets-the-cap-not-client-capacity">Decision 5: cost sets the cap, not client capacity</a>
+  <ul class="collapse">
+  <li><a href="#what-128-kbps-actually-buys" id="toc-what-128-kbps-actually-buys" class="nav-link" data-scroll-target="#what-128-kbps-actually-buys">What 128 kbps actually buys</a></li>
+  <li><a href="#consequence-for-decision-4" id="toc-consequence-for-decision-4" class="nav-link" data-scroll-target="#consequence-for-decision-4">Consequence for decision 4</a></li>
+  </ul></li>
+  <li><a href="#the-corrected-budget" id="toc-the-corrected-budget" class="nav-link" data-scroll-target="#the-corrected-budget">The corrected budget</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0100-tick-rate-send-rate-and-the-bone-budget/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +311,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">RFD 0100: Tick rate is not send rate, and an entity is a bone</h1>
 </div>
 
 
@@ -370,109 +328,334 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
+<p><em><a href="../../index.html">Manuals</a> › RFD 0100: Tick rate is not send rate, and an entity is a bone</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0099</code> calculated 10.2 Mbit per second per client and called it unshippable. That number is correct arithmetic on two wrong assumptions.</p>
+<p>The first assumption is that the send rate equals the tick rate. <code>rfd/0096</code> through <code>rfd/0099</code> all divide by 15625 us, which is <code>ZONE_TICK_HZ</code> at 64. Every one of them then assumed the server sends at that rate too.</p>
+<p>The second assumption is that an entity is a whole object. It is not. An entity is a bone, or a part of a bone.</p>
+<p>This RFD corrects both, adds the voice budget that no earlier RFD counted, and states the resulting per-client target.</p>
+</section>
+<section id="decision-1-three-rates-not-one" class="level2">
+<h2 class="anchored" data-anchor-id="decision-1-three-rates-not-one">Decision 1: three rates, not one</h2>
+<p>Simulation rate and send rate are separate numbers. Conflating them produced the 10.2 Mbit per second figure.</p>
+<p>There are in fact three rates, and each has a different reason:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 66%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
+<tr class="header">
+<th>Rate</th>
+<th>Value</th>
+<th>Set by</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="../changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>Simulation</td>
+<td>64 Hz</td>
+<td><code>ZONE_TICK_HZ</code>, for the fixed integer step</td>
 </tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="../changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
+<tr class="even">
+<td>State send</td>
+<td>10 to 20 Hz</td>
+<td>this RFD, matching VRChat’s IK range</td>
 </tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="../changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
+<tr class="odd">
+<td>Voice send</td>
+<td>50 Hz</td>
+<td>20 ms Opus packets in <code>modules/speech</code></td>
 </tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="../changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="../changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="../changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
-</tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="../changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="../changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1786129627460" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="../changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<p>Voice already runs at 50 Hz in shipped code, which is faster than the state send rate and slower than the simulation. That alone disproves the idea that one rate governs everything.</p>
+<p>VRChat is the closest comparable product, and it does not send at the simulation rate. Its IK update rate is approximately 6 to 20 Hz, and float parameters sync at approximately 10 Hz.</p>
+<p><code>ZONE_TICK_HZ</code> stays at 64, because the integer physics in <code>zf_zonetick.h</code> wants a fixed step. The send rate becomes its own constant, and it is 10 to 20 Hz.</p>
+<p>The client covers the gap by interpolating, which is standard practice and is what <code>rfd/0099</code>’s client-side prediction already implies.</p>
+</section>
+<section id="decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste" class="level2">
+<h2 class="anchored" data-anchor-id="decision-2-an-entity-is-a-bone-so-the-packet-is-mostly-waste">Decision 2: an entity is a bone, so the packet is mostly waste</h2>
+<p><code>xr_grid_entity_packet_t</code> carries <code>pos_um_x/y/z</code> as three int64 values, which is 24 bytes, and <code>rot_x/y/z</code> as swing-twist, which is 6 bytes.</p>
+<p>VRM 1.0 defines 55 humanoid bones, of which 15 are required and 40 are optional. An avatar also carries 1 root node for its world transform. So the entity count per avatar is 56.</p>
+<p>Two of those 56 use translation. The root places the avatar in the world. The hips carry humanoid translation relative to that root. VRM states that every remaining humanoid bone uses rotation.</p>
+<p>So for 54 of 56 entities, the 24 bytes of position are unused. The real payload for those is the 6-byte swing-twist rotation.</p>
+<p>Per avatar:</p>
+<pre><code>1 root     24 B position + 6 B rotation  =  30 B
+1 hips     24 B position + 6 B rotation  =  30 B
+54 others  6 B rotation each             = 324 B
+total                                    = 384 B</code></pre>
+<p>A 100-byte packet for each of 56 entities would cost 5600 bytes per avatar. The rotation-only form costs 384 bytes, which is 14.6 times smaller.</p>
+<p><code>rfd/0002</code>’s 200 entities per zone is therefore about 3.6 avatars, not 200 objects. That reframes every capacity claim in the earlier RFDs.</p>
+</section>
+<section id="decision-3-bone-level-of-detail-is-the-form-interest-management-takes" class="level2">
+<h2 class="anchored" data-anchor-id="decision-3-bone-level-of-detail-is-the-form-interest-management-takes">Decision 3: bone level of detail is the form interest management takes</h2>
+<p><code>rfd/0099</code> made interest management a requirement. This RFD says what it does in a social VR context.</p>
+<p>Distance does not only remove avatars. It removes BONES. A distant avatar does not need 40 optional bones, because nobody can see a finger at 20 metres.</p>
+<p>Three tiers:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>Entities sent</th>
+<th>Bytes</th>
+<th>Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Near</td>
+<td>root plus 55 humanoid bones</td>
+<td>384 B</td>
+<td>20 Hz</td>
+</tr>
+<tr class="even">
+<td>Far</td>
+<td>root plus 15 required bones</td>
+<td>144 B</td>
+<td>5 Hz</td>
+</tr>
+<tr class="odd">
+<td>Distant</td>
+<td>root only</td>
+<td>30 B</td>
+<td>5 Hz</td>
+</tr>
+</tbody>
+</table>
+<p>The 15-required and 55-total split is not invented here. It is VRM 1.0’s own division, so a far-tier avatar remains a valid humanoid.</p>
+</section>
+<section id="decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side" class="level2">
+<h2 class="anchored" data-anchor-id="decision-4-voice-is-a-first-class-budget-line-and-it-is-mixed-server-side">Decision 4: voice is a first-class budget line, and it is mixed server-side</h2>
+<p>No earlier RFD counted voice. In social VR it is a large share of the traffic, and leaving it out made every budget optimistic.</p>
+<p>The codec choice is already made and already implemented. <code>fabric-godot-core</code>’s <code>modules/speech</code> on branch <code>feat/module-speech</code> uses Opus with these settings, from <code>speech_processor.h</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SPEECH_SETTING_CHANNEL_COUNT</code></td>
+<td>1, mono</td>
+</tr>
+<tr class="even">
+<td><code>SPEECH_SETTING_SAMPLE_RATE</code></td>
+<td>48000</td>
+</tr>
+<tr class="odd">
+<td><code>SPEECH_SETTING_MILLISECONDS_PER_PACKET</code></td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td><code>SPEECH_SETTING_BUFFER_FRAME_COUNT</code></td>
+<td>960</td>
+</tr>
+<tr class="odd">
+<td><code>SPEECH_SETTING_APPLICATION</code></td>
+<td><code>OPUS_APPLICATION_AUDIO</code></td>
+</tr>
+</tbody>
+</table>
+<p>Two of those deserve review, and this RFD raises them rather than changing them.</p>
+<p>The module sets no bitrate. It never calls <code>OPUS_SET_BITRATE</code>, so Opus selects its own default from the sample rate and channel count. For 48 kHz mono that lands near 64 kbps, which matches Discord’s default. The budget below uses 64 kbps for that reason, and an explicit constant would be better than a library default.</p>
+<p>The module also selects <code>OPUS_APPLICATION_AUDIO</code> rather than <code>OPUS_APPLICATION_VOIP</code>. VOIP mode is the speech-tuned one. AUDIO mode targets general content and generally needs more bitrate for equal speech quality. Voice chat is the use case here, so this looks like the wrong constant.</p>
+<p>Industry rates for comparison:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Use</th>
+<th>Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Clear speech</td>
+<td>16 to 24 kbps</td>
+</tr>
+<tr class="even">
+<td>Most VoIP and conferencing</td>
+<td>24 to 64 kbps</td>
+</tr>
+<tr class="odd">
+<td>Discord default</td>
+<td>64 kbps</td>
+</tr>
+<tr class="even">
+<td>Mumble maximum</td>
+<td>128 kbps</td>
+</tr>
+</tbody>
+</table>
+<p>Mix on the server, and send one stream. RP1’s own demo used server-mixed spatial audio.</p>
+<p>The reason is arithmetic. Eight unmixed speakers at 24 kbps is 192 kbps per listener, and it grows with the number of speakers. One mixed stream at 64 kbps does not grow at all.</p>
+<p>Server mixing costs CPU on a machine with one shared vCPU. Measure that before committing to it, because <code>rfd/0096</code> measured the busy-poll failure on exactly that machine shape.</p>
+<p><code>modules/speech</code> does not mix. It encodes, decodes, and buffers on the client. Server-side mixing is unbuilt, and this RFD puts it on the critical path.</p>
+</section>
+<section id="decision-5-cost-sets-the-cap-not-client-capacity" class="level2">
+<h2 class="anchored" data-anchor-id="decision-5-cost-sets-the-cap-not-client-capacity">Decision 5: cost sets the cap, not client capacity</h2>
+<p>Every budget above asks what a client can receive. That is the wrong question. The binding constraint is what the project can afford to send.</p>
+<p>Fly.io prices outbound transfer per GB:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Price per GB</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>North America and Europe</td>
+<td>0.02 USD</td>
+</tr>
+<tr class="even">
+<td>Asia Pacific, Oceania, South America</td>
+<td>0.04 USD</td>
+</tr>
+<tr class="odd">
+<td>Africa and India</td>
+<td>0.12 USD</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>shared-cpu-1x</code> machine with 256 MB costs 2.02 USD per month. Pay As You Go has no free tier.</p>
+<p>Take a 15 USD monthly budget. Two machines cost 4.04 USD, which leaves 10.96 USD for transfer. At 0.02 USD per GB that is 548 GB per month.</p>
+<p>Now convert a per-client rate into client-hours:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 21%">
+<col style="width: 27%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Per-client rate</th>
+<th>GB per client-hour</th>
+<th>Client-hours for 548 GB</th>
+<th>Concurrent, 24/7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>648.6 kbps, the budget above</td>
+<td>0.29187</td>
+<td>1878</td>
+<td>2.6</td>
+</tr>
+<tr class="even">
+<td>320 kbps</td>
+<td>0.144</td>
+<td>3806</td>
+<td>5.2</td>
+</tr>
+<tr class="odd">
+<td>128 kbps</td>
+<td>0.0576</td>
+<td>9514</td>
+<td>13.0</td>
+</tr>
+<tr class="even">
+<td>64 kbps</td>
+<td>0.0288</td>
+<td>19028</td>
+<td>26.1</td>
+</tr>
+<tr class="odd">
+<td>41.7 kbps</td>
+<td>0.01877</td>
+<td>29200</td>
+<td>40.0</td>
+</tr>
+</tbody>
+</table>
+<p>The budget in the previous section supports 2.6 concurrent users, run continuously, for 15 USD per month. Comparing against VRChat’s cap of 80 or Fortnite’s 100 was therefore meaningless. Cost stops this design roughly 30 times sooner than any of those product limits.</p>
+<p>Reverse the calculation to get the requirement. Forty concurrent users running continuously need 41.7 kbps per client. That is 15.5 times less than 648.6 kbps.</p>
+<p>Region multiplies the problem. Asia Pacific doubles the price, and Africa and India multiply it by six. A client in India costs six times a client in Europe for identical traffic.</p>
+<section id="what-128-kbps-actually-buys" class="level3">
+<h3 class="anchored" data-anchor-id="what-128-kbps-actually-buys">What 128 kbps actually buys</h3>
+<p>Take 128 kbps as a target, which gives 13 concurrent users continuously, or approximately 475 users at 20 hours each per month.</p>
+<p>Voice is the largest single line. At Opus 64 kbps it takes half the budget. At 24 kbps, which the sources call clear for speech, it takes 19 percent.</p>
+<p>With voice at 24 kbps, 104 kbps remains, which is 13000 bytes per second. At a 10 Hz state send that is 1300 bytes per update:</p>
+<pre><code>3 near   x 384 B = 1152 B
+1 far    x 144 B =  144 B
+total            = 1296 B</code></pre>
+<p>So 128 kbps buys about four visible avatars at 10 Hz, not forty.</p>
+<p>That is the real design pressure. It points at three levers. Reduce the voice bitrate. Reduce the state send rate. Compress the per-bone rotation below 6 bytes.</p>
+</section>
+<section id="consequence-for-decision-4" class="level3">
+<h3 class="anchored" data-anchor-id="consequence-for-decision-4">Consequence for decision 4</h3>
+<p><code>OPUS_APPLICATION_AUDIO</code> with no explicit bitrate is now a cost decision, not only a quality decision. The library default near 64 kbps consumes half of a 128 kbps budget.</p>
+<p>Set the bitrate explicitly, and evaluate <code>OPUS_APPLICATION_VOIP</code> against it, because VOIP mode reaches speech quality at a lower rate.</p>
+</section>
+</section>
+<section id="the-corrected-budget" class="level2">
+<h2 class="anchored" data-anchor-id="the-corrected-budget">The corrected budget</h2>
+<p>Using 40 avatars, the tiers above, and server-mixed voice:</p>
+<pre><code> 8 near    x 384 B x 20 Hz = 61440 B/s = 491.5 kbps
+12 far     x 144 B x  5 Hz =  8640 B/s =  69.1 kbps
+20 distant x  30 B x  5 Hz =  3000 B/s =  24.0 kbps
+voice, server-mixed                    =  64.0 kbps
+total                                  = 648.6 kbps</code></pre>
+<p>Against the sources:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Reference</th>
+<th>Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>This design</td>
+<td>648.6 kbps</td>
+</tr>
+<tr class="even">
+<td>Fortnite</td>
+<td>110 to 330 kbps</td>
+</tr>
+<tr class="odd">
+<td>Roblox</td>
+<td>220 kbps to 1.3 Mbps</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0099</code> as written</td>
+<td>10.2 Mbit per second</td>
+</tr>
+</tbody>
+</table>
+<p>648.6 kbps sits inside Roblox’s range and near twice Fortnite’s upper bound. It is defensible on client capacity, and decision 5 shows it fails on cost.</p>
+<p>Client capacity supports it. The Sony Bandwidth Probe found 95.5 percent of USA samples at or above 512 kbps download. It found 97.6 percent in Europe at or above 512 kbps. Those samples are from 2010, so they are a conservative floor rather than a current estimate.</p>
+<p>Upload is the tighter side, and it is tight. 97.3 percent of Americas samples are at or above 128 kbps. A client sends only its own avatar, which is 384 bytes at 20 Hz, or 61.4 kbps. Voice adds 24 to 64 kbps.</p>
+<p>So a client uploads 85.4 to 125.4 kbps. That fits under 128 kbps, and it fits with very little margin. An increase in send rate or bone count removes clients from the design. It starts with the 2.7 percent below 128 kbps, and it takes more as the number grows.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p><code>rfd/0099</code>’s 10.2 Mbit per second figure is superseded. The reasoning was right and both inputs were wrong.</p>
+<p>The send rate needs its own constant, separate from <code>ZONE_TICK_HZ</code>. Name it explicitly so the two never merge again.</p>
+<p>The wire form for a rotation-only bone should not carry 24 bytes of unused position. Whether that is a second packet type or a flag on the existing one is an implementation question, and this RFD does not decide it.</p>
+<p>Capacity claims stated in entities must say whether they mean bones or avatars. At 56 entities per humanoid the two differ by a factor of 56.</p>
+<p>Server-side voice mixing is now on the critical path, and its CPU cost on <code>shared-cpu-1x</code> is unmeasured.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li><a href="https://www.gamedevs.org/uploads/networking-for-physics-programmers.pdf">Networking for Physics Programmers, GDC 2010</a>, for the Sony Bandwidth Probe</li>
+<li><a href="https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/humanoid.md">VRM 1.0 humanoid specification</a>, for 55 bones, 15 required, hips-only translation</li>
+<li><a href="https://wiki.hydrogenaudio.org/index.php?title=Opus">Opus, Hydrogenaudio Knowledgebase</a></li>
+<li><a href="https://cdn.rp1.com/whitepaper.pdf">Blueprint for the Open Metaverse</a>, for server-mixed spatial audio</li>
+<li><code>src/gen/xr_grid_entity_packet.h</code>, for the packet layout</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -894,7 +1077,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/pages/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0100-tick-rate-send-rate-and-the-bone-budget/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
