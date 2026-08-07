@@ -36,14 +36,19 @@ the mechanism behind `rfd/0092`'s resolution-equivalence theorem, and
 it retires the `p_fuel` parameter, because termination becomes
 structural.
 
-Two constructs resist this. `difference` needs complement, and
-`tuple_to_userset` moves the object as well as the subject.
-`DETAILS.md` treats both as the risk that decides feasibility.
+Two constructs resist this. Zanzibar already answers the first one.
+`difference` is non-monotonic, so follow Leopard's rule: denormalize
+the monotone fragment only, and evaluate exclusion at query time over
+the compiled sets.
+
+The second stays open, and it decides feasibility.
+`tuple_to_userset` moves the object as well as the subject, and nobody
+checked whether it stays regular.
 
 ## References
 
-- Construction, the two hard constructs, and the monotonicity conflict
-  this creates with `rfd/0092`: `DETAILS.md`
+- Construction, the two hard constructs, and Zanzibar's own answer to
+  the negation problem: `DETAILS.md`
 - `v-sekai-multiplayer-fabric/zone-server-h2o`,
   `thirdparty/taskweft-nif/standalone/tw_rebac.hpp` and `tw_domain.hpp`
 - `google/re2`, `doc/syntax.html` and its linear-time guarantee

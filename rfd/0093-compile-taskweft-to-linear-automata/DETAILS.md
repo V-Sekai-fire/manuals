@@ -85,23 +85,60 @@ of states. `re2` lives with the same fact and answers it with a lazy
 deterministic automaton plus a flushable cache. The same answer
 applies here.
 
-The sharper problem is not cost. It is monotonicity. `rfd/0092` states
-an append-only monotonicity theorem: adding an edge never turns a
-grant into a denial. That property is what makes a resolved capability
-table safe to cache. **`difference` breaks that theorem.**
+The sharper problem is not cost. It is monotonicity. An expression of
+the form "A and not B" turns a grant into a denial as soon as an edge
+satisfies B. An earlier `rfd/0092` draft claimed the opposite, as an
+append-only monotonicity theorem, and used it to justify caching a
+resolved capability table. **`difference` makes that theorem false.**
 
-An expression of the form "A and not B" turns a grant into a denial as
-soon as an edge satisfies B. So the two RFDs conflict, and the
-conflict needs an explicit resolution, one of:
+Zanzibar already answers this, because Zanzibar ships exclusion. A
+userset expression there combines sub-expressions:
 
-- Restrict `difference` out of any expression the enforcement path
-  uses, and keep it for planning goals only.
-- Keep `difference` and drop the caching theorem, which returns the
-  hot-path cost problem `rfd/0092` open question 7 records.
-- Prove a weaker, stratified monotonicity that holds for a negation
-  depth of one.
+```
+by operations such as union, intersection, and exclusion
+```
 
-This RFD does not pick one. It records that somebody must.
+Google never claims monotonicity. Their cache correctness rests on a
+version instead:
+
+```
+We avoid reusing results evaluated from a different snapshot by
+encoding snapshot timestamps in cache keys.
+```
+
+`rfd/0092` now carries that correction. Its table keys on the
+FoundationDB read version that `zf_zonetick.c` already opens per tick.
+That correction closes the conflict, and negation stays available.
+
+### Leopard's rule: do not denormalize through exclusion
+
+Zanzibar's index draws a sharper line, and this RFD adopts it. Leopard
+denormalizes only the monotone fragment. Its two set types are
+`GROUP2GROUP` and `MEMBER2GROUP`, and both express pure reachability:
+
+```
+Group membership can be considered as a reachability problem in a
+graph, where nodes represent groups and users and edges represent
+direct membership.
+```
+
+Exclusion never enters the index. It runs at query time over the
+indexed sets:
+
+```
+A query evaluates an expression of union, intersection, or exclusion
+of named sets
+```
+
+So the rule is not "ban `difference`". The rule is: compile and
+denormalize the monotone fragment, then apply `union`, `intersection`,
+and `difference` at query time over those compiled sets. A negated
+sub-expression stays a live query, and it never becomes a cached edge
+set.
+
+Google also treats this indexing as opt-in, "For selected namespaces
+that exhibit such structure", not as a universal transform. This RFD
+takes the same position for taskweft's own definitions.
 
 **`tuple_to_userset` moves the object.** A plain regular path query
 fixes its target and varies the path. `tuple_to_userset` pivots
@@ -155,19 +192,18 @@ owner) and open question 7 (cost on the 64 Hz path). The fuel
 parameter stops being a silent denial source. Planning and access
 control share one evaluator, because both already call `check_expr`.
 
-Bad: this is a compiler, and nobody wrote it. The `difference`
-monotonicity conflict above is real and unresolved, and it touches an
-already-merged RFD. Nobody answered the `tuple_to_userset` regularity
-question, and a negative answer weakens the central claim. None of
-this work has a caller yet, because `thirdparty/taskweft-nif` is not
-wired into `zone-server-h2o`, and `rfd/0092`'s guest surface does not
-exist either.
+Bad: this is a compiler, and nobody wrote it. Nobody answered the
+`tuple_to_userset` regularity question, and a negative answer weakens
+the central claim. None of this work has a caller yet, because
+`thirdparty/taskweft-nif` is not wired into `zone-server-h2o`, and
+`rfd/0092`'s guest surface does not exist either. Adopting Leopard's
+split also costs something real: a negated sub-expression stays a live
+query forever, so it never gains the compiled path's speed.
 
 ## Revisit when
 
 Somebody answers the `tuple_to_userset` regularity question. That
 answer decides whether to build the product construction as written,
-or to fall back to a pushdown model with a bounded nesting depth.
-Resolve the `difference` monotonicity conflict with `rfd/0092` in the
-same pass, because the two answers together decide whether a resolved
-capability table stays cacheable.
+or to fall back to a pushdown model with a bounded nesting depth. It
+is now the one open question that decides this design, because
+Zanzibar already settled the `difference` question above.
