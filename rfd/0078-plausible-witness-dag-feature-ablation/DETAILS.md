@@ -29,16 +29,16 @@ Each zonefabric feature is modeled as a set of predicates over the
 game state. A feature is "present" when its invariants are enforced;
 "ablated" when they are removed.
 
-| Feature         | Invariants when present                              | What breaks when ablated                                |
-| ---------------- | ------------------------------------------------------ | ---------------------------------------------------------- |
-| ZoneTick        | `∀ entity: pos' = pos + vel × dt`                     | Entities freeze; positions never update                 |
-| CastSpell       | `effect → fanout ⊆ entities_in_ghost_range`           | Effects hit entities outside range; teleporting damage   |
-| GhostRelevance  | `ghost ⊆ entities_within_ghost_range(zone_boundary)`  | Players see entities they shouldn't; information leak    |
-| ZoneSplit       | `population² > threshold ⟹ split`                     | Hot zones never split; performance cliff                 |
-| EntityMigration | `entity leaves zone A ⟹ entity enters zone B`         | Entities vanish or duplicate; state corruption           |
-| SlotmapGenIDs   | `handle.gen == slot.gen ⟹ entity is live`             | Dangling references; fireball hits wrong player          |
-| SessionExpiry   | `now > expiry ⟹ XDP drops packets`                    | Expired sessions still route; security hole              |
-| RateLimit       | `packets_per_sec ≤ rate_limit`                        | No flood protection; DDoS amplification                  |
+| Feature         | Invariants when present                              | What breaks when ablated                               |
+| --------------- | ---------------------------------------------------- | ------------------------------------------------------ |
+| ZoneTick        | `∀ entity: pos' = pos + vel × dt`                    | Entities freeze; positions never update                |
+| CastSpell       | `effect → fanout ⊆ entities_in_ghost_range`          | Effects hit entities outside range; teleporting damage |
+| GhostRelevance  | `ghost ⊆ entities_within_ghost_range(zone_boundary)` | Players see entities they shouldn't; information leak  |
+| ZoneSplit       | `population² > threshold ⟹ split`                    | Hot zones never split; performance cliff               |
+| EntityMigration | `entity leaves zone A ⟹ entity enters zone B`        | Entities vanish or duplicate; state corruption         |
+| SlotmapGenIDs   | `handle.gen == slot.gen ⟹ entity is live`            | Dangling references; fireball hits wrong player        |
+| SessionExpiry   | `now > expiry ⟹ XDP drops packets`                   | Expired sessions still route; security hole            |
+| RateLimit       | `packets_per_sec ≤ rate_limit`                       | No flood protection; DDoS amplification                |
 
 ### Step 2: Ablation matrix
 
@@ -85,16 +85,16 @@ speculator-debt risk (probability × cost-of-rework). The ablation
 matrix tells us which features are safe to defer (low risk) and which
 must be built first (high risk if wrong).
 
-| Feature         | Impl cost      | Load-bearing?                            | Defer? | Rationale                          |
-| ---------------- | -------------- | ------------------------------------------ | ------ | ------------------------------------ |
-| SlotmapGenIDs   | Low (~100 LoC) | Yes — breaks CastSpell, Ghost, Migration | No     | Cheap, foundational, do first      |
-| ZoneTick        | Medium         | Yes — breaks ZoneSplit, CastSpell         | No     | Core loop, can't defer             |
-| SessionExpiry   | Low            | Yes — breaks RateLimit, security          | No     | Cheap, security-critical           |
-| CastSpell       | High           | No — independent of ZoneSplit             | Yes    | Complex, defer until tick works    |
-| GhostRelevance  | Medium         | No — independent of ZoneSplit             | Yes    | Can stub with full-mesh initially  |
-| ZoneSplit       | Medium         | No — independent of CastSpell             | Yes    | Only needed at scale               |
-| EntityMigration | Medium         | Yes — breaks on slotmap absence           | No     | Needed for correctness at scale    |
-| RateLimit       | Low            | No — independent of game logic            | Yes    | Can add after launch               |
+| Feature         | Impl cost      | Load-bearing?                            | Defer? | Rationale                         |
+| --------------- | -------------- | ---------------------------------------- | ------ | --------------------------------- |
+| SlotmapGenIDs   | Low (~100 LoC) | Yes — breaks CastSpell, Ghost, Migration | No     | Cheap, foundational, do first     |
+| ZoneTick        | Medium         | Yes — breaks ZoneSplit, CastSpell        | No     | Core loop, can't defer            |
+| SessionExpiry   | Low            | Yes — breaks RateLimit, security         | No     | Cheap, security-critical          |
+| CastSpell       | High           | No — independent of ZoneSplit            | Yes    | Complex, defer until tick works   |
+| GhostRelevance  | Medium         | No — independent of ZoneSplit            | Yes    | Can stub with full-mesh initially |
+| ZoneSplit       | Medium         | No — independent of CastSpell            | Yes    | Only needed at scale              |
+| EntityMigration | Medium         | Yes — breaks on slotmap absence          | No     | Needed for correctness at scale   |
+| RateLimit       | Low            | No — independent of game logic           | Yes    | Can add after launch              |
 
 ## plausible-witness-dag integration
 
@@ -193,12 +193,12 @@ seconds, L2 in minutes. Most ablation results are determined at L0.
 
 ## Economics
 
-| Outcome                            | Cost without ablation         | Cost with ablation                        |
-| ------------------------------------ | ------------------------------- | -------------------------------------------- |
-| Feature built that wasn't needed   | $10K-50K engineering           | $0 (deferred, unspent dollars preserved)    |
-| Feature built wrong, then rebuilt  | $20K-100K (build + rework)     | $5K-25K (build right first time)            |
-| Feature built in wrong order       | $10K-30K (mock + replace)      | $0 (correct order from dependency graph)    |
-| Feature correctly deferred         | $0 (but risk of building it)   | $0 (confirmed safe to defer)                |
+| Outcome                           | Cost without ablation        | Cost with ablation                       |
+| --------------------------------- | ---------------------------- | ---------------------------------------- |
+| Feature built that wasn't needed  | $10K-50K engineering         | $0 (deferred, unspent dollars preserved) |
+| Feature built wrong, then rebuilt | $20K-100K (build + rework)   | $5K-25K (build right first time)         |
+| Feature built in wrong order      | $10K-30K (mock + replace)    | $0 (correct order from dependency graph) |
+| Feature correctly deferred        | $0 (but risk of building it) | $0 (confirmed safe to defer)             |
 
 For a 20-feature MMO backend, ablation testing costs ~1 week of
 engineering time (writing predicates + running the search). The

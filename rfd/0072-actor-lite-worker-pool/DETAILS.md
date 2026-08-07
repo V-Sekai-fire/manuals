@@ -73,7 +73,7 @@ HTTP response. No shared state on the return path.
 ## Verification layers
 
 | Layer            | Tool                  | What it verifies                                             |
-| ----------------- | --------------------- | ------------------------------------------------------------ |
+| ---------------- | --------------------- | ------------------------------------------------------------ |
 | C invariants     | CBMC                  | SPSC ring FIFO, bounds, head-tail invariant                  |
 | Specification    | Lean 4                | SPSC linearizability, push/pop preserve bounds               |
 | TPC-C invariants | plausible-witness-dag | NewOrder atomicity, Delivery correctness, Stock non-negative |

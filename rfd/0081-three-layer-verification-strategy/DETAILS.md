@@ -1,10 +1,10 @@
 ## Layers
 
-| Layer            | Tool                  | Scope           | What it proves                                                |
-| ----------------- | --------------------- | ---------------- | ---------------------------------------------------------------- |
-| C invariants     | CBMC                  | Implementation  | SPSC ring FIFO, bounds, head-tail, NURand range               |
-| Specification    | Lean 4                | Design          | SPSC linearizability, push/pop preserve bounds                |
-| TPC-C semantics  | plausible-witness-dag | Runtime         | NewOrder atomicity, Delivery correctness, Stock non-negative  |
+| Layer           | Tool                  | Scope          | What it proves                                               |
+| --------------- | --------------------- | -------------- | ------------------------------------------------------------ |
+| C invariants    | CBMC                  | Implementation | SPSC ring FIFO, bounds, head-tail, NURand range              |
+| Specification   | Lean 4                | Design         | SPSC linearizability, push/pop preserve bounds               |
+| TPC-C semantics | plausible-witness-dag | Runtime        | NewOrder atomicity, Delivery correctness, Stock non-negative |
 
 ## Why three layers
 

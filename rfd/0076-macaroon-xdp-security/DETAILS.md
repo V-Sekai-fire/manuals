@@ -148,16 +148,16 @@ and integer comparison. This executes in ~10-50 nanoseconds per packet.
 
 At 25M CCU, 60Hz tick rate, 200 entities/zone:
 
-| Metric                        | Value                         |
-| ------------------------------ | ------------------------------ |
-| Total players                 | 25,000,000                    |
-| Packets/player/sec             | 60                             |
-| Total packets/sec              | 1,500,000,000 (1.5 Gpps)      |
-| Zones (200 entities each)      | 125,000                       |
-| Packets/zone/sec                | 12,000 (200 entities × 60Hz) |
-| XDP cost/packet                 | ~50ns                         |
-| XDP CPU/zone/sec                | 0.6ms (12,000 × 50ns)         |
-| XDP CPU/core (16 zones/core)   | 9.6ms/sec (1% of one core)    |
+| Metric                       | Value                        |
+| ---------------------------- | ---------------------------- |
+| Total players                | 25,000,000                   |
+| Packets/player/sec           | 60                           |
+| Total packets/sec            | 1,500,000,000 (1.5 Gpps)     |
+| Zones (200 entities each)    | 125,000                      |
+| Packets/zone/sec             | 12,000 (200 entities × 60Hz) |
+| XDP cost/packet              | ~50ns                        |
+| XDP CPU/zone/sec             | 0.6ms (12,000 × 50ns)        |
+| XDP CPU/core (16 zones/core) | 9.6ms/sec (1% of one core)   |
 
 The XDP filter consumes <1% of a single core's CPU. The remaining 99%
 is available for ZoneTick computation and FDB batch writes.
@@ -232,22 +232,22 @@ WHITELIST_MAP on the next tick.
 
 ## Relationship to other RFDs
 
-- **`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps`** (zonefabric):
-  XDP routes packets to the core handling each zone. The zone's
-  slotmap (`rfd/0080-slotmap-entity-storage`) stores the entity state.
-  XDP does not touch the slotmap — it only routes packets.
+- `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps` (zonefabric): XDP
+  routes packets to the core handling each zone. The zone's slotmap
+  (`rfd/0080-slotmap-entity-storage`) stores the entity state. XDP
+  does not touch the slotmap; it only routes packets.
 
-- **`rfd/0080-slotmap-entity-storage`**: The `entity_id` caveat in the
+- `rfd/0080-slotmap-entity-storage`: The `entity_id` caveat in the
   Macaroon maps to a slotmap handle. When the entity is destroyed, the
   slotmap generation bump invalidates the session.
 
-- **`rfd/0072-actor-lite-worker-pool`**: The user-space orchestrator
-  runs on the H2O event loop. The `bpf_map_update_elem()` call is made
-  from the worker thread that handles the Hello packet.
+- `rfd/0072-actor-lite-worker-pool`: The user-space orchestrator runs
+  on the H2O event loop. The worker thread that handles the Hello
+  packet makes the `bpf_map_update_elem()` call.
 
-- **`rfd/0084-zstd-compression-for-zone-state`**: Orthogonal — zstd
-  compresses FDB values, XDP handles packet routing. They operate on
-  different layers.
+- `rfd/0084-zstd-compression-for-zone-state`: This is orthogonal. zstd
+  compresses FDB values, and XDP handles packet routing. They operate
+  on different layers.
 
 - mas-bandwidth/fps: Glenn Fiedler's architecture mentions XDP for
   packet processing and relays but does not detail authentication.

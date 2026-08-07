@@ -22,7 +22,7 @@ date.
 All durations in engineering days. One engineer, full-time.
 
 | ID  | Task                                            | Depends on | O   | M   | P   | TE  | σ²   |
-| --- | ------------------------------------------------ | ---------- | --- | --- | --- | --- | ---- |
+| --- | ----------------------------------------------- | ---------- | --- | --- | --- | --- | ---- |
 | A   | Binary value encoding (RFD 0010)                | —          | 1   | 2   | 4   | 2.2 | 0.25 |
 | B   | FDB keyspace + async callbacks (RFD 0009, 0011) | A          | 2   | 3   | 6   | 3.3 | 0.44 |
 | C   | Actor-lite worker pool (RFD 0005)               | B          | 3   | 5   | 9   | 5.3 | 1.00 |
@@ -69,7 +69,7 @@ A → B → C → F → I → M
 ```
 
 | Step | Task                              | TE (days) | Cumulative |
-| ---- | ---------------------------------- | --------- | ---------- |
+| ---- | --------------------------------- | --------- | ---------- |
 | 1    | A: Binary value encoding          | 2.2       | 2.2        |
 | 2    | B: FDB keyspace + async callbacks | 3.3       | 5.5        |
 | 3    | C: Actor-lite worker pool         | 5.3       | 10.8       |
@@ -90,17 +90,17 @@ riskiest task.
 Tasks NOT on the critical path have slack. Slack = (latest finish) −
 (earliest start + duration).
 
-| Task                   | TE  | Earliest start   | Latest finish    | Slack |
-| ----------------------- | --- | ---------------- | ---------------- | ----- |
-| D: Slotmap             | 3.2 | 5.5 (after A+B)  | 10.8 (before F)  | 2.1   |
-| E: Zstd                | 2.0 | 2.2 (after A)    | 15.3 (before G)  | 11.1  |
-| G: Zone-state blob     | 3.2 | 15.3 (after F)   | 19.8 (before K)  | 1.3   |
-| H: GhostRelevance      | 3.3 | 15.3 (after F)   | 20.8 (before I)  | 2.2   |
-| J: EntityMigration     | 4.2 | 15.3 (after F)   | 26.0 (end)       | 6.5   |
-| K: ZoneSplit           | 3.2 | 18.5 (after G)   | 26.0 (end)       | 4.3   |
-| L: Macaroon + XDP      | 7.7 | 10.8 (after C)   | 26.0 (end)       | 7.5   |
-| N: Benchmark harness   | 2.0 | 18.5 (after G)   | 26.0 (end)       | 5.5   |
-| O: Scaling measurement | 3.2 | 20.5 (after N)   | 26.0 (end)       | 2.3   |
+| Task                   | TE  | Earliest start  | Latest finish   | Slack |
+| ---------------------- | --- | --------------- | --------------- | ----- |
+| D: Slotmap             | 3.2 | 5.5 (after A+B) | 10.8 (before F) | 2.1   |
+| E: Zstd                | 2.0 | 2.2 (after A)   | 15.3 (before G) | 11.1  |
+| G: Zone-state blob     | 3.2 | 15.3 (after F)  | 19.8 (before K) | 1.3   |
+| H: GhostRelevance      | 3.3 | 15.3 (after F)  | 20.8 (before I) | 2.2   |
+| J: EntityMigration     | 4.2 | 15.3 (after F)  | 26.0 (end)      | 6.5   |
+| K: ZoneSplit           | 3.2 | 18.5 (after G)  | 26.0 (end)      | 4.3   |
+| L: Macaroon + XDP      | 7.7 | 10.8 (after C)  | 26.0 (end)      | 7.5   |
+| N: Benchmark harness   | 2.0 | 18.5 (after G)  | 26.0 (end)      | 5.5   |
+| O: Scaling measurement | 3.2 | 20.5 (after N)  | 26.0 (end)      | 2.3   |
 
 ### Slack interpretation
 
@@ -122,27 +122,27 @@ Tasks NOT on the critical path have slack. Slack = (latest finish) −
 
 ## Milestones
 
-| Milestone              | Cumulative days | What's working                                                                              |
-| ----------------------- | ---------------- | ---------------------------------------------------------------------------------------------- |
-| M1: FDB reads/writes   | 5.5              | Binary encoding + FDB keyspace. Can read/write entity rows.                                 |
-| M2: Worker pool        | 10.8             | H2O event loop dispatches to worker threads via SPSC ring.                                  |
-| M3: Zone tick          | 15.3             | ZoneTick reads entities, updates positions, writes back. **First benchmarkable milestone.** |
-| M4: Ghost queries      | 18.6             | GhostRelevance returns entities within GHOST_RANGE.                                         |
-| M5: CastSpell          | 20.8             | Effects + fanout work. **Full game loop operational.**                                      |
-| M6: Ablation verified  | 26.0             | Feature ablation confirms no speculator debt. **Ship-ready.**                               |
+| Milestone             | Cumulative days | What's working                                                                              |
+| --------------------- | --------------- | ------------------------------------------------------------------------------------------- |
+| M1: FDB reads/writes  | 5.5             | Binary encoding + FDB keyspace. Can read/write entity rows.                                 |
+| M2: Worker pool       | 10.8            | H2O event loop dispatches to worker threads via SPSC ring.                                  |
+| M3: Zone tick         | 15.3            | ZoneTick reads entities, updates positions, writes back. **First benchmarkable milestone.** |
+| M4: Ghost queries     | 18.6            | GhostRelevance returns entities within GHOST_RANGE.                                         |
+| M5: CastSpell         | 20.8            | Effects + fanout work. **Full game loop operational.**                                      |
+| M6: Ablation verified | 26.0            | Feature ablation confirms no speculator debt. **Ship-ready.**                               |
 
 ## Parallelization with two engineers
 
 If a second engineer is available, the slack tasks can be parallelized:
 
-| Engineer 1 (critical path)  | Engineer 2 (slack tasks)                         |
-| ----------------------------- | -------------------------------------------------- |
-| A: Binary encoding (2.2d)   | (pair on A)                                       |
-| B: FDB keyspace (3.3d)      | E: Zstd (2.0d) → slack                            |
-| C: Actor-lite pool (5.3d)   | D: Slotmap (3.2d) → L: XDP (7.7d, partial)        |
-| F: ZoneTick (4.5d)          | H: GhostRelevance (3.3d) → J: Migration (4.2d)    |
-| I: CastSpell (5.5d)         | G: Zone-state blob (3.2d) → K: ZoneSplit (3.2d)   |
-| M: Ablation (5.2d)          | N: Benchmark harness (2.0d) → O: Scaling (3.2d)   |
+| Engineer 1 (critical path) | Engineer 2 (slack tasks)                        |
+| -------------------------- | ----------------------------------------------- |
+| A: Binary encoding (2.2d)  | (pair on A)                                     |
+| B: FDB keyspace (3.3d)     | E: Zstd (2.0d) → slack                          |
+| C: Actor-lite pool (5.3d)  | D: Slotmap (3.2d) → L: XDP (7.7d, partial)      |
+| F: ZoneTick (4.5d)         | H: GhostRelevance (3.3d) → J: Migration (4.2d)  |
+| I: CastSpell (5.5d)        | G: Zone-state blob (3.2d) → K: ZoneSplit (3.2d) |
+| M: Ablation (5.2d)         | N: Benchmark harness (2.0d) → O: Scaling (3.2d) |
 
 With two engineers, the critical path remains A→B→C→F→I→M at 26 days
 (Engineer 1), but all slack tasks are completed in parallel. Total
@@ -155,14 +155,14 @@ entities) can shorten it.
 
 ## Risk register
 
-| Risk                                            | Probability | Impact                    | Mitigation                                                     |
-| ------------------------------------------------ | ----------- | -------------------------- | ----------------------------------------------------------------- |
-| CastSpell fanout complexity exceeds estimate    | Medium      | +3 days on critical path  | Stub with full-radius scan first, optimize later               |
-| FDB async callback chain has memory bugs        | Low         | +5 days (debugging)       | CBMC verification (RFD 0008) before integration                |
-| Slotmap serialization breaks generational IDs   | Low         | +2 days on D               | Test round-trip serialize/deserialize before F integration     |
-| XDP/eBPF program rejected by verifier           | Medium      | +4 days on L               | Start L early (has 7.5d slack), use libbpf skeletons            |
-| Zstd dictionary training needed for good ratio  | Low         | +1 day on E                 | Use level 3 default, skip dictionary training initially         |
-| Actor-lite SPSC ring has race condition         | Low         | +3 days on C                | Lean 4 proof of linearizability (RFD 0008) before C completes  |
+| Risk                                           | Probability | Impact                   | Mitigation                                                    |
+| ---------------------------------------------- | ----------- | ------------------------ | ------------------------------------------------------------- |
+| CastSpell fanout complexity exceeds estimate   | Medium      | +3 days on critical path | Stub with full-radius scan first, optimize later              |
+| FDB async callback chain has memory bugs       | Low         | +5 days (debugging)      | CBMC verification (RFD 0008) before integration               |
+| Slotmap serialization breaks generational IDs  | Low         | +2 days on D             | Test round-trip serialize/deserialize before F integration    |
+| XDP/eBPF program rejected by verifier          | Medium      | +4 days on L             | Start L early (has 7.5d slack), use libbpf skeletons          |
+| Zstd dictionary training needed for good ratio | Low         | +1 day on E              | Use level 3 default, skip dictionary training initially       |
+| Actor-lite SPSC ring has race condition        | Low         | +3 days on C             | Lean 4 proof of linearizability (RFD 0008) before C completes |
 
 ## Build order (recommended)
 

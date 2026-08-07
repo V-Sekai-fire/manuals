@@ -134,12 +134,12 @@ FDB.
 
 For 200 entities at 40 bytes each:
 
-| Structure           | Memory                      | Iteration cache misses      |
-| --------------------- | ---------------------------- | ------------------------------ |
-| Hash map (cap 1024) | 40KB + 4KB indices          | ~8 (random access)          |
-| Linked list         | 200 × (40 + 8 ptr) = 9.6KB  | ~200 (pointer chasing)      |
-| Slotmap (dense)     | 200 × 40 = 8KB              | ~1 (sequential, prefetched) |
-| Flat array          | 200 × 40 = 8KB              | ~1 (same as slotmap)        |
+| Structure           | Memory                     | Iteration cache misses      |
+| ------------------- | -------------------------- | --------------------------- |
+| Hash map (cap 1024) | 40KB + 4KB indices         | ~8 (random access)          |
+| Linked list         | 200 × (40 + 8 ptr) = 9.6KB | ~200 (pointer chasing)      |
+| Slotmap (dense)     | 200 × 40 = 8KB             | ~1 (sequential, prefetched) |
+| Flat array          | 200 × 40 = 8KB             | ~1 (same as slotmap)        |
 
 The slotmap matches flat array iteration speed while supporting O(1)
 insert/remove with stable handles.

@@ -5,12 +5,12 @@ Models weft-warp-loop's hub/instanced-zone game server. Each zone has 200 entiti
 
 ## Tables
 
-| Table          | Rows               | Formula      |
-| --------------- | -------------------- | -------------- |
-| ZONE           | scalefactor         | 1 per zone   |
-| ENTITY         | scalefactor × 200   | 200 per zone |
-| EFFECT_ENTITY  | 0 at load           | runtime-only |
-| FANOUT_TARGET  | 0 at load           | runtime-only |
+| Table         | Rows              | Formula      |
+| ------------- | ----------------- | ------------ |
+| ZONE          | scalefactor       | 1 per zone   |
+| ENTITY        | scalefactor × 200 | 200 per zone |
+| EFFECT_ENTITY | 0 at load         | runtime-only |
+| FANOUT_TARGET | 0 at load         | runtime-only |
 
 Fixed constants: ENTITIES_PER_ZONE=200, WORLD_EXTENT=10000.0, GHOST_RANGE=150.0, AUTHORITY_CAPACITY=256, INTEREST_CAPACITY=512, SPLIT_COST_THRESHOLD=40000.0. Uniform (Flat) random for entity attributes. No skewed zone selection at load — any skew comes from runtime workload.
 
@@ -102,14 +102,14 @@ Zonefabric is a novel workload — there is no TechEmpower benchmark for
 game server zone scaling. Each operation is mapped to its closest
 existing benchmark with the specific numbers we need to beat:
 
-| Zonefabric operation            | Closest benchmark                | Reference                          | Our target                                 |
-| --------------------------------- | ----------------------------------- | ------------------------------------- | --------------------------------------------- |
-| ZoneTick (200 entities)         | EnTT ECS 10K entities/7 systems  | 350µs total                        | <10µs (200 entities, 1 system)             |
-| Zone query (FDB range scan)     | FDB range read                   | 3.6M keys/sec/core                 | 18,000 zone queries/sec/core               |
-| Entity position update          | FDB batch set + commit           | 35K writes/sec/core                | 175 zone ticks/sec/core (200 writes each)  |
-| CastSpell effect fanout         | FDB read + write mix             | 90K reads + 35K writes/sec/core    | ~1,000 casts/sec/core                      |
-| Ghost relevance query           | QuickZone LBVH spatial query     | O(N log Z), 1M zones               | O(N) per zone (fixed 200)                  |
-| Entity replication (full mesh)  | Arcane full-mesh broadcast       | 2,750 CCU @ 60Hz, 8×c6in.4xlarge   | >5,000 CCU (AOI-filtered, not full-mesh)   |
+| Zonefabric operation           | Closest benchmark               | Reference                        | Our target                                |
+| ------------------------------ | ------------------------------- | -------------------------------- | ----------------------------------------- |
+| ZoneTick (200 entities)        | EnTT ECS 10K entities/7 systems | 350µs total                      | <10µs (200 entities, 1 system)            |
+| Zone query (FDB range scan)    | FDB range read                  | 3.6M keys/sec/core               | 18,000 zone queries/sec/core              |
+| Entity position update         | FDB batch set + commit          | 35K writes/sec/core              | 175 zone ticks/sec/core (200 writes each) |
+| CastSpell effect fanout        | FDB read + write mix            | 90K reads + 35K writes/sec/core  | ~1,000 casts/sec/core                     |
+| Ghost relevance query          | QuickZone LBVH spatial query    | O(N log Z), 1M zones             | O(N) per zone (fixed 200)                 |
+| Entity replication (full mesh) | Arcane full-mesh broadcast      | 2,750 CCU @ 60Hz, 8×c6in.4xlarge | >5,000 CCU (AOI-filtered, not full-mesh)  |
 
 ### Arcane comparison (closest game-server benchmark)
 
@@ -128,14 +128,14 @@ should sustain significantly higher CCU per core.
 FDB 7.3 official numbers, directly comparable since we use the same
 C API:
 
-| Workload                    | Single core         | 12-machine (48 cores) |
-| ------------------------------ | ---------------------- | ------------------------ |
-| Reads (memory engine)       | 90,000/sec           | 5,540,000/sec          |
-| Writes (memory engine)      | 35,000/sec            | 720,000/sec             |
-| Range scans                 | 3,600,000 keys/sec    | —                        |
-| 90/10 mixed                 | —                     | 2,390,000 ops/sec       |
-| Read latency (<75% load)    | 0.1-1ms               | 0.1-1ms                 |
-| Commit latency (<75% load)  | 1.5-2.5ms             | 1.5-2.5ms               |
+| Workload                   | Single core        | 12-machine (48 cores) |
+| -------------------------- | ------------------ | --------------------- |
+| Reads (memory engine)      | 90,000/sec         | 5,540,000/sec         |
+| Writes (memory engine)     | 35,000/sec         | 720,000/sec           |
+| Range scans                | 3,600,000 keys/sec | —                     |
+| 90/10 mixed                | —                  | 2,390,000 ops/sec     |
+| Read latency (<75% load)   | 0.1-1ms            | 0.1-1ms               |
+| Commit latency (<75% load) | 1.5-2.5ms          | 1.5-2.5ms             |
 
 ### ECS iteration baseline
 
@@ -215,22 +215,22 @@ Zonefabric IS that world database, implemented on FDB instead of Redis.
 
 ### Concept mapping
 
-| mas-bandwidth/fps concept                                           | Zonefabric implementation                          | Why FDB                                                        |
-| ----------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
-| **World database** (Redis-like, async)                              | FDB as the world database                          | ACID transactions, range scans, durability                     |
-| **World server grid** (10km × 10km, 1km² cells)                     | ZONE rows with entity subspace per zone             | FDB key prefix = spatial partition                             |
-| **Player state history** (100 bytes × 100Hz × 10K players = 100MB)  | ENTITY rows with x, y, vx, vy, rtt_ms               | FDB range scan returns packed structs                          |
-| **"Raycast and find first hit"**                                    | CastSpell with GHOST_RANGE scan                     | FDB range read over entity positions                           |
-| **"Find players in volume"**                                        | GhostRelevance spatial range query                  | FDB range scan filtered by ghost range                         |
-| **"Apply damage to entity"**                                        | CastSpell fanout_target insert                      | FDB transactional write                                        |
-| **Shallow state** (100 bytes, interpolation)                        | entity_t packed struct (~40 bytes)                  | Binary value encoding (RFD 0010)                                |
-| **Deep state** (1000 bytes, prediction/rollback)                    | Not modeled (future: add history ring)              | FDB version stamps for MVCC history                            |
-| **Async calls** (goroutine per player, blocking on world DB)        | H2O event loop + FDB async callbacks                | fdb_future_set_callback (RFD 0011)                              |
-| **Input-driven simulation** (no global tick)                        | ZoneTick is per-zone, on-demand                     | Each zone is an independent FDB transaction                    |
-| **XDP kernel bypass** (10G NIC, 50K players/server)                  | H2O HTTP/TCP (not UDP/XDP)                          | HTTP is the benchmark transport; XDP is production transport   |
-| **O(N²) snapshot delivery**                                         | AOI-filtered (GHOST_RANGE=150.0 in 10000.0 world)   | 0.02% of world space per zone — not full-mesh                  |
-| **Static geometry, no player collision**                            | Entities have position+velocity only                | No physics engine — pure data operations                       |
-| **8K-50K players per 32-CPU server**                                | Benchmark target: zones per core                    | FDB scales linearly with cores                                 |
+| mas-bandwidth/fps concept                                          | Zonefabric implementation                         | Why FDB                                                      |
+| ------------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| **World database** (Redis-like, async)                             | FDB as the world database                         | ACID transactions, range scans, durability                   |
+| **World server grid** (10km × 10km, 1km² cells)                    | ZONE rows with entity subspace per zone           | FDB key prefix = spatial partition                           |
+| **Player state history** (100 bytes × 100Hz × 10K players = 100MB) | ENTITY rows with x, y, vx, vy, rtt_ms             | FDB range scan returns packed structs                        |
+| **"Raycast and find first hit"**                                   | CastSpell with GHOST_RANGE scan                   | FDB range read over entity positions                         |
+| **"Find players in volume"**                                       | GhostRelevance spatial range query                | FDB range scan filtered by ghost range                       |
+| **"Apply damage to entity"**                                       | CastSpell fanout_target insert                    | FDB transactional write                                      |
+| **Shallow state** (100 bytes, interpolation)                       | entity_t packed struct (~40 bytes)                | Binary value encoding (RFD 0010)                             |
+| **Deep state** (1000 bytes, prediction/rollback)                   | Not modeled (future: add history ring)            | FDB version stamps for MVCC history                          |
+| **Async calls** (goroutine per player, blocking on world DB)       | H2O event loop + FDB async callbacks              | fdb_future_set_callback (RFD 0011)                           |
+| **Input-driven simulation** (no global tick)                       | ZoneTick is per-zone, on-demand                   | Each zone is an independent FDB transaction                  |
+| **XDP kernel bypass** (10G NIC, 50K players/server)                | H2O HTTP/TCP (not UDP/XDP)                        | HTTP is the benchmark transport; XDP is production transport |
+| **O(N²) snapshot delivery**                                        | AOI-filtered (GHOST_RANGE=150.0 in 10000.0 world) | 0.02% of world space per zone — not full-mesh                |
+| **Static geometry, no player collision**                           | Entities have position+velocity only              | No physics engine — pure data operations                     |
+| **8K-50K players per 32-CPU server**                               | Benchmark target: zones per core                  | FDB scales linearly with cores                               |
 
 ### What mas-bandwidth/fps has that zonefabric does not (yet)
 
@@ -362,15 +362,15 @@ inherent in dynamic game simulations:
 
 ### Why this is complete
 
-| Problem                                  | Solution                                                        | RFD         |
-| ------------------------------------------ | -------------------------------------------------------------------- | ------------- |
-| Dangling references (use-after-free)    | Slotmap generational IDs                                        | 0017        |
-| FDB write amplification (200 keys/zone) | Batched zone-state blob (1 key/zone)                            | 0002        |
-| Bandwidth / storage size                | zstd compression (2-3x on batches)                              | 0016        |
-| O(N²) snapshot delivery                 | AOI filtering (GHOST_RANGE=150.0, 0.02% world)                  | 0002        |
-| Core scaling contention                 | Per-zone independent FDB transactions, thread-local slotmaps    | 0005, 0017  |
-| Transport bottleneck (kernel overhead)  | XDP/eBPF kernel bypass (future)                                  | —           |
-| World database (Glenn Fiedler's gap)    | FDB as ACID async world database                                | 0006, 0011  |
+| Problem                                 | Solution                                                     | RFD        |
+| --------------------------------------- | ------------------------------------------------------------ | ---------- |
+| Dangling references (use-after-free)    | Slotmap generational IDs                                     | 0017       |
+| FDB write amplification (200 keys/zone) | Batched zone-state blob (1 key/zone)                         | 0002       |
+| Bandwidth / storage size                | zstd compression (2-3x on batches)                           | 0016       |
+| O(N²) snapshot delivery                 | AOI filtering (GHOST_RANGE=150.0, 0.02% world)               | 0002       |
+| Core scaling contention                 | Per-zone independent FDB transactions, thread-local slotmaps | 0005, 0017 |
+| Transport bottleneck (kernel overhead)  | XDP/eBPF kernel bypass (future)                              | —          |
+| World database (Glenn Fiedler's gap)    | FDB as ACID async world database                             | 0006, 0011 |
 
 The three layers compose: XDP handles the packet flood, zstd + FDB +
 slotmap handle compute and storage, generational IDs handle memory
