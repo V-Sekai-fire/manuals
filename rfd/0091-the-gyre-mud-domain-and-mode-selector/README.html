@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>details – V-Sekai Fire — Manuals</title>
+<title>RFD 0091: The Gyre as a second MUD domain – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,39 +289,92 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#details" id="toc-details" class="nav-link active" data-scroll-target="#details">Details</a>
-  <ul class="collapse">
-  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  </ul></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#status" id="toc-status" class="nav-link" data-scroll-target="#status">Status</a></li>
+  <li><a href="#wire-protocol" id="toc-wire-protocol" class="nav-link" data-scroll-target="#wire-protocol">Wire protocol</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link" data-scroll-target="#verification">Verification</a></li>
+  <li><a href="#revisit-when" id="toc-revisit-when" class="nav-link" data-scroll-target="#revisit-when">Revisit when</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0008-webtransport-over-quic-for-game-traffic/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">RFD 0091: The Gyre as a second MUD domain</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<section id="details" class="level1">
-<h1>Details</h1>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state.</p>
+</header>
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0091: The Gyre as a second MUD domain</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o mud/guest, mud/web</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>mud/guest/mud_guest.cpp</code> served one setting, Middleham. Middleham is a spy-thriller MUD, with gate, market, and temple rooms. It has trust and suspicion objectives. The starting room, the item list, and the objective logic were all fixed to that one world. <code>rfd/0085</code> proposes a second setting, The Gyre. <code>zone-server-h2o</code> needed a way to add it without a second server architecture.</p>
 </section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><code>mud_boot()</code> reads a new <code>domain</code> CBOR field (<code>"middleham"</code> default, <code>"the_gyre"</code> new). <code>MiddlehamStateMachine</code> keeps its name and its existing behavior unchanged for the default domain. A <code>domain_</code> member and three guarded branches cover the new domain: the start-room pick, <code>clone_rooms()</code>, and <code>objective_complete()</code>. A new <code>gyre_room_templates()</code> backs them, with two rooms, <code>decanting_floor</code> and <code>splicers_den</code>, one exit each way, no items, and no non-player characters (NPCs). This is the smallest possible loop (look, go, look), not <code>rfd/0085</code>’s full room graph.</p>
+<p>The <code>domain</code> field threads through the same chain the <code>objective</code> field already used, ending at <code>POST /api/mud/command</code>. <code>mud/web/index.html</code> and <code>mud.js</code> get a mode selector (Middleham or The Gyre). Each mode keeps its own <code>localStorage</code> session ID, because the server reads a session’s domain only once, on that session’s first request.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>UDP eliminates TCP head-of-line blocking.</li>
-<li>Fly.io passes UDP without DNAT, so the app must bind to the same port clients connect to.</li>
-<li>Port 443 requires running as root (or <code>CAP_NET_BIND_SERVICE</code>). The gateway container runs as root.</li>
-<li>Datagrams are used for game state messages. Streams are avoided for ping/pong to sidestep stream half-close deadlock (client must close write side before server response fires).</li>
-<li>Cloudflare’s proxy cannot forward QUIC/UDP. All game-traffic DNS records must be DNS-only (no proxy).</li>
+<li>Full verification log, wire-protocol detail, and open follow-up items: <code>DETAILS.md</code></li>
+<li>Source: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>docs/0003-the-gyre-mud-domain-and-mode-selector.md</code>. This RFD ports that file’s content here. Git history in that repo still keeps the original file.</li>
 </ul>
-
-
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell</code>: the design RFD this implements the smallest code-side loop for.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Done for the smallest loop (<code>zone-server-h2o</code> PR #5). Not verified end to end.</p>
+</section>
+<section id="wire-protocol" class="level2">
+<h2 class="anchored" data-anchor-id="wire-protocol">Wire protocol</h2>
+<p>The <code>domain</code> field flows through the same chain the <code>objective</code> field already used: <code>mud_cbor_encode_boot_config()</code>, then <code>mud_session_get_or_create()</code>, then <code>on_mud_command()</code>’s <code>POST /api/mud/command</code> handler. That handler now reads <code>domain</code> from the request body and picks a matching default objective (<code>explore_gyre</code> for The Gyre, <code>gain_watch_trust</code> for Middleham). The handler’s own prior comment already flagged an objective/domain picker as website-UI scope, not its own. This work fills that gap rather than inventing a new extension point.</p>
+</section>
+<section id="verification" class="level2">
+<h2 class="anchored" data-anchor-id="verification">Verification</h2>
+<p>Real, not assumed:</p>
+<ul>
+<li><code>mud/guest/test/gyre_smoke_test.cpp</code>: a native (non-riscv64) link of <code>mud_guest.cpp</code> that drives <code>mud_boot()</code> and <code>mud_step()</code> through the whole Gyre loop (look, go east, look). Built and run locally against QCBOR (<code>laurencelundblade/QCBOR</code>). It produces real narration text and real <code>post_room</code> transitions, and <code>objective_complete()</code> returns true after the player visits both rooms. A native Middleham boot, run the same way with the same seed <code>DIFFERENTIAL_TEST.md</code> uses, produced byte-identical “Middleham City Gate” narration to before this change. The default path did not regress.</li>
+<li>The client change (mode selector, per-domain session ID, <code>domain</code> field on the wire) went through real end-to-end tests. The team used Playwright, in both Chromium and Camoufox (a Firefox-family browser), against a throwaway local Node stub that matched the real API shape. The team did not commit that stub. The team threw it away once it confirmed the client logic was correct.</li>
+<li><code>mud/web/test/gyre.spec.ts</code> is the real, committed spec. It is Camoufox-driven, and it follows <code>mud.spec.ts</code>’s own house rule: <code>MUD_BASE_URL</code> must point at a real reachable instance, with no mock. It has not run against one yet. It stays red until a real deployment with the Gyre domain exists — the same state <code>mud.spec.ts</code> itself documented before its own first real deploy.</li>
+</ul>
+<p>The team did not verify a <code>riscv64-musl</code> and <code>libriscv</code> build and run of the changed guest code. The team’s own environment had no cross toolchain for that. The team did not attempt an FDB or H2O real build or deploy either.</p>
+</section>
+<section id="revisit-when" class="level2">
+<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
+<p>A real <code>-z</code> deploy exists with the Gyre domain reachable. At that point, run <code>gyre.spec.ts</code> for real. Also run a real riscv64 differential test, matching <code>DIFFERENTIAL_TEST.md</code>’s own Middleham precedent. Only then treat this as more than a reviewed, natively tested diff.</p>
+<p><code>rfd/0085</code>’s fuller room graph, contract catalog, and item set stay design only. Porting them past the two-room smallest loop is a separate, larger task. This RFD does not claim the team finished that larger task.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -746,7 +799,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0008-webtransport-over-quic-for-game-traffic/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

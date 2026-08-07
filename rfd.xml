@@ -10,7 +10,73 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 11:58:44 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 12:19:03 GMT</lastBuildDate>
+<item>
+  <title>RFD 0091: The Gyre as a second MUD domain</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0091: The Gyre as a second MUD domain</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o mud/guest, mud/web</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>mud/guest/mud_guest.cpp</code> served one setting, Middleham. Middleham is a spy-thriller MUD, with gate, market, and temple rooms. It has trust and suspicion objectives. The starting room, the item list, and the objective logic were all fixed to that one world. <code>rfd/0085</code> proposes a second setting, The Gyre. <code>zone-server-h2o</code> needed a way to add it without a second server architecture.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><code>mud_boot()</code> reads a new <code>domain</code> CBOR field (<code>"middleham"</code> default, <code>"the_gyre"</code> new). <code>MiddlehamStateMachine</code> keeps its name and its existing behavior unchanged for the default domain. A <code>domain_</code> member and three guarded branches cover the new domain: the start-room pick, <code>clone_rooms()</code>, and <code>objective_complete()</code>. A new <code>gyre_room_templates()</code> backs them, with two rooms, <code>decanting_floor</code> and <code>splicers_den</code>, one exit each way, no items, and no non-player characters (NPCs). This is the smallest possible loop (look, go, look), not <code>rfd/0085</code>’s full room graph.</p>
+<p>The <code>domain</code> field threads through the same chain the <code>objective</code> field already used, ending at <code>POST /api/mud/command</code>. <code>mud/web/index.html</code> and <code>mud.js</code> get a mode selector (Middleham or The Gyre). Each mode keeps its own <code>localStorage</code> session ID, because the server reads a session’s domain only once, on that session’s first request.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Full verification log, wire-protocol detail, and open follow-up items: <code>DETAILS.md</code></li>
+<li>Source: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>docs/0003-the-gyre-mud-domain-and-mode-selector.md</code>. This RFD ports that file’s content here. Git history in that repo still keeps the original file.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell</code>: the design RFD this implements the smallest code-side loop for.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Done for the smallest loop (<code>zone-server-h2o</code> PR #5). Not verified end to end.</p>
+</section>
+<section id="wire-protocol" class="level2">
+<h2 class="anchored" data-anchor-id="wire-protocol">Wire protocol</h2>
+<p>The <code>domain</code> field flows through the same chain the <code>objective</code> field already used: <code>mud_cbor_encode_boot_config()</code>, then <code>mud_session_get_or_create()</code>, then <code>on_mud_command()</code>’s <code>POST /api/mud/command</code> handler. That handler now reads <code>domain</code> from the request body and picks a matching default objective (<code>explore_gyre</code> for The Gyre, <code>gain_watch_trust</code> for Middleham). The handler’s own prior comment already flagged an objective/domain picker as website-UI scope, not its own. This work fills that gap rather than inventing a new extension point.</p>
+</section>
+<section id="verification" class="level2">
+<h2 class="anchored" data-anchor-id="verification">Verification</h2>
+<p>Real, not assumed:</p>
+<ul>
+<li><code>mud/guest/test/gyre_smoke_test.cpp</code>: a native (non-riscv64) link of <code>mud_guest.cpp</code> that drives <code>mud_boot()</code> and <code>mud_step()</code> through the whole Gyre loop (look, go east, look). Built and run locally against QCBOR (<code>laurencelundblade/QCBOR</code>). It produces real narration text and real <code>post_room</code> transitions, and <code>objective_complete()</code> returns true after the player visits both rooms. A native Middleham boot, run the same way with the same seed <code>DIFFERENTIAL_TEST.md</code> uses, produced byte-identical “Middleham City Gate” narration to before this change. The default path did not regress.</li>
+<li>The client change (mode selector, per-domain session ID, <code>domain</code> field on the wire) went through real end-to-end tests. The team used Playwright, in both Chromium and Camoufox (a Firefox-family browser), against a throwaway local Node stub that matched the real API shape. The team did not commit that stub. The team threw it away once it confirmed the client logic was correct.</li>
+<li><code>mud/web/test/gyre.spec.ts</code> is the real, committed spec. It is Camoufox-driven, and it follows <code>mud.spec.ts</code>’s own house rule: <code>MUD_BASE_URL</code> must point at a real reachable instance, with no mock. It has not run against one yet. It stays red until a real deployment with the Gyre domain exists — the same state <code>mud.spec.ts</code> itself documented before its own first real deploy.</li>
+</ul>
+<p>The team did not verify a <code>riscv64-musl</code> and <code>libriscv</code> build and run of the changed guest code. The team’s own environment had no cross toolchain for that. The team did not attempt an FDB or H2O real build or deploy either.</p>
+</section>
+<section id="revisit-when" class="level2">
+<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
+<p>A real <code>-z</code> deploy exists with the Gyre domain reachable. At that point, run <code>gyre.spec.ts</code> for real. Also run a real riscv64 differential test, matching <code>DIFFERENTIAL_TEST.md</code>’s own Middleham precedent. Only then treat this as more than a reviewed, natively tested diff.</p>
+<p><code>rfd/0085</code>’s fuller room graph, contract catalog, and item set stay design only. Porting them past the two-room smallest loop is a separate, larger task. This RFD does not claim the team finished that larger task.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</guid>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</link>
@@ -165,7 +231,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -243,7 +309,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -283,7 +349,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -324,7 +390,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
@@ -364,7 +430,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
@@ -720,7 +786,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -1128,7 +1194,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -1209,7 +1275,7 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -1725,7 +1791,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -1835,7 +1901,7 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -2118,7 +2184,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -2197,7 +2263,7 @@ return &amp;entries[entry_idx].entity</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -2535,7 +2601,7 @@ def slotmap_gen_invariant (s : GameState) : Prop :=
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -3105,7 +3171,7 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -3519,7 +3585,7 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -3594,7 +3660,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -3664,7 +3730,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -3742,7 +3808,7 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</title>
@@ -3967,46 +4033,7 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0071: YAGNI times structure to the need, in code and in the record</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0071-yagni-times-structure-to-need/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0071: YAGNI times structure to the need, in code and in the record</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> decision records and build scripts</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Building structure ahead of the feature that needs it spends an option and delays a return. Cheap code generation does not remove either cost. Some decision records and build scripts in the project carried structure ahead of a demonstrated need.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>YAGNI is a timing rule, not a thrift rule. Building structure ahead of the feature that needs it spends an option and delays a return, and cheap code generation does not remove either cost. The project builds structure only when a real near-term need arrives. A decision record keeps only its load-bearing sections: context, problem, design, downsides, the road not taken, and confirmation. When a record no longer describes the live plan, the record is marked superseded and moved to <code>_archive</code>.</p>
-<p>The project applied this rule three times. It trimmed ceremony from heavy decision records. It archived a superseded demo. It cut the <code>build_msix</code> script down to the two platforms it serves. Each change left working behavior unchanged.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Original record: <code>decisions/20260629-yagni-times-structure-to-need.md</code></li>
-<li>Kent Beck, “The Cost YAGNI Was Never About”: https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about</li>
-<li><code>_archive/README.md</code>: the archiving convention this rule points to</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>rfd/0069-defer-loot-slice-hardening-until-needed</code>: an applied case of the same timing rule.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0071-yagni-times-structure-to-need/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 11:58:44 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 12:19:03 GMT</pubDate>
 </item>
 </channel>
 </rss>
