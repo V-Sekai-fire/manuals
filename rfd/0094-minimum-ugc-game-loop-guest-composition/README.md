@@ -13,8 +13,8 @@ CDN-guest move). The first cut of that PR also deleted
 in-tree consumer was the MUD orchestrator. That deletion was wrong,
 and the review that caught it exposed an undocumented decision.
 
-`rfd/0092` defines *how* the host gates guest access (ReBAC, a use
-plane and an admin plane). No RFD defines *what* the host repo must
+`rfd/0092` defines _how_ the host gates guest access (ReBAC, a use
+plane and an admin plane). No RFD defines _what_ the host repo must
 implement to close a user-generated-content game loop. No RFD says
 which repo is that host, or how many guests compose in one zone.
 
