@@ -21,8 +21,9 @@ not consult it.
 ## The parts that were missing
 
 `zone-backend`, which is Uro, is a Phoenix and Elixir service for
-identity, the zone directory, and the planner. It runs on PostgreSQL
-through Ecto, with separate DML and DDL roles.
+identity, the zone directory, and the planner. It runs on
+**CockroachDB**, with separate DML and DDL roles over mTLS client
+certificates, per `rfd/0006`.
 
 `aria-storage` is the Elixir casync and desync library that
 `zone-backend` already uses.
@@ -43,17 +44,27 @@ Neither appears in `rfd/0100`. Nor does any relational store, and
     Fly machine 2, shared-cpu-1x 256 MB, iad          2.02 USD
       |- zone-backend (Uro): identity, zone directory,
       |    planner, /acl/check, /storage/manifest
-      |- aria-storage: casync chunking on publish
-      +- 1 GB volume, PostgreSQL                      0.15 USD
+      +- aria-storage: casync chunking on publish
+
+      +- PostgreSQL, WAL to Tigris (see rfd/0103)   +1.45 USD
 
     Tigris object storage                             0 USD
       |- casync chunks and .caibx indexes             5 GB free
       |- fdbbackup target (disaster recovery)
       +- auto-replicated to Fly edge: this IS the CDN
 
-FoundationDB holds zone state. PostgreSQL holds identity and the
-directory. `rfd/0075` chose FoundationDB over CockroachDB for zone
-state, and it did not remove Uro's relational store.
+FoundationDB holds zone state. CockroachDB holds identity and the
+directory. `rfd/0075` chose FoundationDB over CockroachDB **for zone
+state**, and that scope never removed Uro's own relational store.
+
+CockroachDB does not run on Fly here. Fly charges about 5 USD per GB of
+RAM per month. A `shared-cpu-1x` at 2 GB is therefore 11.11 USD, which
+is 74 percent of the budget for the database alone. That leaves
+nothing.
+
+CockroachDB Cloud Basic is on the blocklist, so the managed free tier
+is not available either. `rfd/0103` moves Uro to PostgreSQL for that
+reason, and it carries the measurements.
 
 ## Assets never pass through the zone server
 
@@ -116,13 +127,46 @@ The zone server records an identifier. It never carries the bytes.
 `modules/multiplayer_fabric_asset` holds the C++ casync client and is
 not extracted from the Godot build.
 
-Neither `zone-backend` nor PostgreSQL is deployed on Fly, so both cost
-lines are estimates rather than measurements.
+`zone-backend` is not deployed on Fly, so its 2.02 USD line is an
+estimate rather than a measurement.
+
+Uro's move from CockroachDB to PostgreSQL is not done. `rfd/0103`
+decides it, and Uro's migrations are not yet audited for
+CockroachDB-specific SQL.
+
+## Which record owns which fact
+
+This RFD owns the deployment topology and its cost. It restates nothing
+else, because restating is what caused the error above.
+
+| Fact                                 | Owner       |
+| ------------------------------------ | ----------- |
+| Repository and capability inventory  | `rfd/0062`  |
+| CockroachDB and mTLS role separation | `rfd/0006`  |
+| FoundationDB for zone state          | `rfd/0075`  |
+| Fly as the deployment target         | `rfd/0089`  |
+| Uro packaging                        | `rfd/0090`  |
+| Guest classes and the two stores     | `rfd/0095`  |
+| Per-client bandwidth cap             | `rfd/0100`  |
+| Wire format and compression          | `rfd/0101`  |
+| Deployment topology and cost         | this record |
+
+## A correction
+
+An earlier revision of this RFD said Uro runs on PostgreSQL. It does
+not. It runs on CockroachDB.
+
+The error came from reading `config/runtime.exs`, seeing
+`adapter: Ecto.Adapters.Postgres`, and concluding the server from the
+adapter. CockroachDB speaks the PostgreSQL wire protocol, so that
+adapter is what an Elixir application uses to reach it.
+
+The same file names `CRDB_SNI`, `CRDB_CA_CERT`, `CRDB_CLIENT_CERT` and
+`CRDB_ADMIN_CERT`, which `rfd/0006` already documents. The evidence was
+present and was not read.
 
 ## Sources
 
-- `rfd/0062` and its `DETAILS.md`, the capability inventory
-- `rfd/0075`, FoundationDB over CockroachDB for zone state
-- `rfd/0090`, Uro as a Burrito-wrapped release
+- [Fly pricing](https://fly.io/docs/about/pricing/), about 5 USD per GB of RAM per month
 - [Tigris pricing](https://www.tigrisdata.com/pricing/), 0.02 USD per GB, 0 egress, 5 GB free
-- `zone-backend` `config/runtime.exs`, for `Ecto.Adapters.Postgres`
+- `zone-backend` `config/runtime.exs`, for the `CRDB_*` variables
