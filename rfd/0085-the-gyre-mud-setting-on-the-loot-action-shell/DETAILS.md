@@ -22,22 +22,22 @@ players plus NPC party members.
 
 Apply that directly:
 
-- **Party size 2-4.** A contract board scales its harder contracts to
-  whatever party size shows up, rather than assuming a fixed four.
-- **NPC companions.** Rook, Splicer Jax, and other named NPCs are
-  recruitable for a run, not just vendors. A party of 2 can take a
-  contract sized for 4 by bringing one or two NPC companions instead
-  of waiting for more players.
-- **Combat is the minority activity.** Of the nine contracts in the
+- Party size stays 2-4. A contract board scales its harder contracts
+  to whatever party size shows up, rather than assuming a fixed four.
+- Rook, Splicer Jax, and other named NPCs are recruitable companions
+  for a run, not just vendors. A party of 2 can take a contract sized
+  for 4 by bringing one or two NPC companions instead of waiting for
+  more players.
+- Combat stays the minority activity. Of the nine contracts in the
   catalog below, one (Drone Decommission) is combat, and it is
-  avoidable — a stealth or hacking path exists around the drones for
-  a party that would rather not fight. The rest are scavenging,
-  repair, hacking, delivery, and social/exploration work.
-- **Exploration carries the session.** A room's description, its
-  NPCs, and what a player finds there (a Rumor, a piece of station
-  history, a side conversation) matter as much as the contract's
-  reward. The Session pacing table below spends more of its 120
-  minutes moving through rooms and talking to NPCs than fighting.
+  avoidable: a stealth or hacking path exists around the drones for a
+  party that would rather not fight. The rest are scavenging, repair,
+  hacking, delivery, and social/exploration work.
+- Exploration carries the session. A room's description, its NPCs,
+  and what a player finds there (a Rumor, a piece of station history,
+  a side conversation) matter as much as the contract's reward. The
+  Session pacing table below spends more of its 120 minutes moving
+  through rooms and talking to NPCs than fighting.
 
 ## The web target and save data
 
@@ -49,28 +49,27 @@ This is new client and persistence-adapter work, not a change to the
 core reducers. The Progression core (`rfd/0043`) already owns profile
 and inventory commits through a port; a web/OAuth build needs a new
 adapter behind that port, not a new core. The Combat, Loot, and
-Budgeter cores are unaffected: a text-based web client still issues
+Budgeter cores stay unaffected: a text-based web client still issues
 the same loot-request and combat-tick events the SteamVR client does,
 just through a different front end.
 
 ## Mapping The Gyre onto the Hub/Field shell
 
-- **Hub** → The Under-Market (Splicer's Den, Exchange Plaza, Transit
-  Rails) and The Commons (Cycle's End Tavern, Chapel of the Backup,
-  Broadcast Row). Players gather, trade, and patch up here between
-  contracts, the same role the Hub deck plays in `rfd/0045`.
-- **Field instance** → one contract run. The Tangle, the Sub-Net, and
-  the Underhull each host contract-type Field rooms: a scavenge check,
-  a hacking check, a short combat encounter. Each contract is bounded
-  and returns the player to the Hub, matching the Hub-to-Field-to-Hub
-  round trip.
-- **Loot core** → contract rewards (chits, Encrypted Bounties, salvage)
-  resolve through the same first-touch contention the loot core
-  already implements.
-- **Progression core** → the Debt Clock, Frame Integrity, and
-  inventory are profile state the progression core commits, the same
-  path the MVP slice's inventory delta already uses.
-- **Combat core** → only the Drone Decommission contract type uses it,
+- The Hub maps to The Under-Market (Splicer's Den, Exchange Plaza,
+  Transit Rails) and The Commons (Cycle's End Tavern, Chapel of the
+  Backup, Broadcast Row). Players gather, trade, and patch up here
+  between contracts, the same role the Hub deck plays in `rfd/0045`.
+- A Field instance maps to one contract run. The Tangle, the Sub-Net,
+  and the Underhull each host contract-type Field rooms: a scavenge
+  check, a hacking check, a short combat encounter. Each contract is
+  bounded and returns the player to the Hub, matching the
+  Hub-to-Field-to-Hub round trip.
+- Contract rewards (chits, Encrypted Bounties, salvage) resolve
+  through the loot core's existing first-touch contention.
+- The Debt Clock, Frame Integrity, and inventory are profile state
+  the progression core commits, the same path the MVP slice's
+  inventory delta already uses.
+- Only the Drone Decommission contract type uses the combat core,
   reusing the existing timed-hit validation. Every other contract
   resolves through the Loot and Progression cores alone, keeping
   combat the minority path through the content, per "Party
@@ -82,80 +81,80 @@ Six zones, three to four rooms each.
 
 ### The Reclamation Wards (spawn zone)
 
-- **The Decanting Floor:** a freezing, sterile room filled with
+- The Decanting Floor is a freezing, sterile room filled with
   hundreds of suspended Frames. Automated robotic arms attach players
   to their new bodies.
-- **The Decon Vents:** a mandatory exit path where players are blasted
+- The Decon Vents are a mandatory exit path where players are blasted
   with harsh chemical foam before being pushed out into the station's
   general population.
-- **Intake Records:** a small office of humming servers where a
-  player can review their current Debt Clock balance and Frame
-  warranty status.
+- Intake Records is a small office of humming servers where a player
+  can review their current Debt Clock balance and Frame warranty
+  status.
 
 ### The Tangle (scavenging and gathering)
 
-- **Collapsed Aeroponics:** a humid, rusted dome where modified
-  fungal blooms have taken over the old air scrubbers. Players can
-  harvest bio-matter here, but risk inhaling corrosive spores.
-- **The Filtration Sump:** a dark, flooded sector where players can
+- Collapsed Aeroponics is a humid, rusted dome where modified fungal
+  blooms have taken over the old air scrubbers. Players can harvest
+  bio-matter here, but risk inhaling corrosive spores.
+- The Filtration Sump is a dark, flooded sector where players can
   filter clean water out of the station's waste runoff.
-- **Scrap Canyon:** a collapsed maintenance corridor, floor to
-  ceiling in decades of dumped hardware. The station's best salvage,
-  and its least stable footing.
+- Scrap Canyon is a collapsed maintenance corridor, floor to ceiling
+  in decades of dumped hardware, the station's best salvage and its
+  least stable footing.
 
 ### The Under-Market (safe zone and hub)
 
-- **The Splicer's Den:** a makeshift clinic lit by harsh LED strips.
+- The Splicer's Den is a makeshift clinic lit by harsh LED strips.
   Players spend chits here to patch their Integrity or install
   unregulated augments.
-- **Exchange Plaza:** a crowded, noisy hub where players pick up
+- Exchange Plaza is a crowded, noisy hub where players pick up
   bounties, trade salvaged tech, and check the current cycle's market
   prices.
-- **The Transit Rails:** the station's rattling internal shuttle
-  line. Riding it skips travel time between distant zones, for a
-  small chit fare.
+- The Transit Rails are the station's rattling internal shuttle line.
+  Riding it skips travel time between distant zones, for a small
+  chit fare.
 
 ### The Sub-Net (the "dungeon")
 
-- **Uplink Node Alpha:** a physical junction box sparking with loose
+- Uplink Node Alpha is a physical junction box sparking with loose
   wires. A player with the right augment can plug their Frame
   directly in.
-- **The Data Sea:** a surreal, text-based interpretation of the
+- The Data Sea is a surreal, text-based interpretation of the
   station's intranet. Movement here is instant, but a failed hacking
   check causes direct neural feedback, damaging the player's Spark.
-- **The Firewall Reef:** a maze of self-patching defensive
-  subroutines rendered as jagged coral. The station's most valuable
-  data, and its most aggressive automated defenses.
+- The Firewall Reef is a maze of self-patching defensive subroutines
+  rendered as jagged coral, the station's most valuable data and its
+  most aggressive automated defenses.
 
 ### The Underhull (hazard zone)
 
-- **The Radiation Seam:** a cracked section of outer hull venting the
+- The Radiation Seam is a cracked section of outer hull venting the
   gas giant's ambient radiation directly into the corridor. Fast
   Integrity drain, fast salvage.
-- **The Drone Graveyard:** dozens of decommissioned security drones,
+- The Drone Graveyard holds dozens of decommissioned security drones,
   some not fully decommissioned. A slow, tense room, not a rush.
-- **Airlock Seven:** the only working route to the station's
-  exterior. A short EVA contract type launches from here.
+- Airlock Seven is the only working route to the station's exterior.
+  A short EVA contract type launches from here.
 
 ### The Commons (social zone)
 
-- **Cycle's End Tavern:** other Sparks unwind here between contracts.
-  A source of rumor-board side content and NPC banter.
-- **The Chapel of the Backup:** a quiet room where Sparks who fear a
+- Other Sparks unwind at Cycle's End Tavern between contracts, a
+  source of rumor-board side content and NPC banter.
+- The Chapel of the Backup is a quiet room where Sparks who fear a
   bad resleeve pay to store a redundant memory snapshot.
-- **Broadcast Row:** a row of dead advertising screens one
-  enterprising Spark reactivated to run a pirate radio station.
+- Broadcast Row is a row of dead advertising screens one enterprising
+  Spark reactivated to run a pirate radio station.
 
 ## NPCs
 
-- **Splicer Jax:** runs The Splicer's Den. Gruff, transactional,
-  quietly generous to Sparks who are clearly new.
-- **Overseer Q-11:** the automated debt-collection voice heard at the
-  start and end of every cycle. Never hostile, never warm, always
+- Splicer Jax runs The Splicer's Den, gruff, transactional, quietly
+  generous to Sparks who are clearly new.
+- Overseer Q-11 is the automated debt-collection voice heard at the
+  start and end of every cycle, never hostile, never warm, always
   exact about numbers.
-- **Rook:** a Tangle scavenger who trades salvage tips for a cut of
+- Rook is a Tangle scavenger who trades salvage tips for a cut of
   whatever the player finds on their first trip.
-- **The Pirate DJ:** runs Broadcast Row, drops rumors about which
+- The Pirate DJ runs Broadcast Row and drops rumors about which
   zones have good salvage or heavy drone activity this cycle.
 
 ## Contract catalog
@@ -200,16 +199,18 @@ rather not.
 > Hauler Frame sits in the corner, its servos clicking in a
 > repetitive, broken loop.
 >
-> _Exits: [North] to Exchange Plaza, [East] to The Transit Rails._ > _Interactables: [Splicer Jax], [Medical Vendor], [Scavenge Pile]_
+> _Exits: [North] to Exchange Plaza, [East] to The Transit Rails._
+>
+> _Interactables: [Splicer Jax], [Medical Vendor], [Scavenge Pile]_
 
 ## Session pacing (120 minutes)
 
 | Phase                               | Minutes | Content                                                                                                                 |
 | ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Login and orientation               | 0-10    | Decanting Floor, Decon Vents, Intake Records, first look at the Debt Clock; recruit an NPC companion if under 4 players |
-| Loop 1-2 (exploration and scavenge) | 10-40   | Scrub the Scrubbers, The Long Corridor — no combat, teach the loop and the setting                                      |
+| Loop 1-2 (exploration and scavenge) | 10-40   | Scrub the Scrubbers, The Long Corridor, no combat, teach the loop and the setting                                       |
 | Market and downtime                 | 40-55   | Exchange Plaza trades, Splicer's Den patch-up, Cycle's End Tavern rumor pickup, NPC banter                              |
-| Loop 3-4 (repair and hacking)       | 55-95   | Sump Pump Repair, Ghost Line — real Integrity risk, still no required combat                                            |
+| Loop 3-4 (repair and hacking)       | 55-95   | Sump Pump Repair, Ghost Line, real Integrity risk, still no required combat                                             |
 | Closing set piece                   | 95-115  | Reef Breach (a hacking contract, not combat) or Drone Decommission via its stealth bypass                               |
 | Wrap-up                             | 115-120 | Turn-in, Debt Clock check, Backup Snapshot purchase before logout                                                       |
 
@@ -231,11 +232,11 @@ minutes. A session that takes it head-on sees exactly one.
   (hacking, scavenging, and similar) work, mechanically, against the
   Combat core's existing timed-hit validation model?
 - Whether the Debt Clock and Effort Pips need their own core, or fit
-  inside the existing Progression and Budgeter cores, is undecided;
-  default to reusing Progression until a concrete need forces a new
+  inside the existing Progression and Budgeter cores, is undecided.
+  Default to reusing Progression until a concrete need forces a new
   core.
-- How an NPC companion occupies a party slot in the Presence core: as
-  a server-driven pseudo-player with its own pose/state, or as a
-  lighter-weight attachment to the recruiting player's own state, is
-  undecided. The choice affects whether a 2-player party with two NPC
+- How an NPC companion occupies a party slot in the Presence core is
+  undecided: a server-driven pseudo-player with its own pose/state,
+  or a lighter-weight attachment to the recruiting player's own
+  state. The choice affects whether a 2-player party with two NPC
   companions costs the same server resources as a 4-human party.
