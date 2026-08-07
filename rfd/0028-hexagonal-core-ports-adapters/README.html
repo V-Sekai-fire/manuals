@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -292,6 +292,18 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a>
+  <ul class="collapse">
+  <li><a href="#core-dependency-free-domain-logic" id="toc-core-dependency-free-domain-logic" class="nav-link" data-scroll-target="#core-dependency-free-domain-logic">core/ — dependency-free domain logic</a></li>
+  <li><a href="#ports-interface-contracts-labelled-by-direction" id="toc-ports-interface-contracts-labelled-by-direction" class="nav-link" data-scroll-target="#ports-interface-contracts-labelled-by-direction">ports/ — interface contracts, labelled by direction</a></li>
+  <li><a href="#adapters-concrete-io-at-the-edges" id="toc-adapters-concrete-io-at-the-edges" class="nav-link" data-scroll-target="#adapters-concrete-io-at-the-edges">adapters/ — concrete I/O at the edges</a></li>
+  <li><a href="#cluster-composition-wiring-ports-across-the-seam" id="toc-cluster-composition-wiring-ports-across-the-seam" class="nav-link" data-scroll-target="#cluster-composition-wiring-ports-across-the-seam">Cluster composition — wiring ports across the seam</a></li>
+  </ul></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0028-hexagonal-core-ports-adapters/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -335,6 +347,62 @@ ul.task-list li input[type="checkbox"] {
 <li>Original record: <code>decisions/20260610-hexagonal-core-ports-adapters.md</code></li>
 <li><code>sinew-mocap</code> repos: <code>driver</code>, <code>mount_drift</code>, <code>solve</code>, <code>viewer</code>, <code>vr_bridge</code></li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>Components in the stack span several languages (C, C++, Python, Elixir, GDScript), run as separate processes, and each binds to hardware, a GPU, the network, or an engine runtime. A component has to stay testable without its device, replaceable without a rewrite of its callers, and composable with components written in another language. A shared monolith or a single in-memory object model does not hold across those boundaries.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>Real-time and pipeline paths cross process and language boundaries with no shared object model.</li>
+<li>Hardware, OS, GPU, network, and engine concerns have to stay out of the domain logic, or that logic becomes untestable away from the live system.</li>
+<li>CI runs the domain logic against recorded fixtures, without the device or the runtime.</li>
+<li>One computed result often feeds several outputs from a single pass.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Each component is a hexagon with a uniform <code>core/</code> + <code>ports/</code> + <code>adapters/</code> layout, and components compose into a cluster by wiring ports across the boundary.</p>
+<section id="core-dependency-free-domain-logic" class="level3">
+<h3 class="anchored" data-anchor-id="core-dependency-free-domain-logic">core/ — dependency-free domain logic</h3>
+<p><code>core/</code> holds the component’s domain logic and nothing else: it opens no socket, reads no device, and links no framework. It carries its own <code>core/spec/</code> of tests that run in isolation against fixtures. A transport never reaches into the core.</p>
+</section>
+<section id="ports-interface-contracts-labelled-by-direction" class="level3">
+<h3 class="anchored" data-anchor-id="ports-interface-contracts-labelled-by-direction">ports/ — interface contracts, labelled by direction</h3>
+<p>A port is a narrow interface the core defines and an adapter implements. Each port is labelled by its side of the hexagon and by its data direction:</p>
+<ul>
+<li>driving (primary) ports carry input the outside world pushes into the core;</li>
+<li>driven (secondary) ports carry the core’s output back out to the outside world;</li>
+<li>by data flow, a <code>*_source</code> port reads data in and a <code>*_sink</code> port writes data out.</li>
+</ul>
+<p>A port stays at the lowest common denominator every binding language can implement: a C-ABI struct of function pointers where the cluster crosses languages, a language-native interface where it does not. One header then binds C, C++, and Python adapters alike.</p>
+</section>
+<section id="adapters-concrete-io-at-the-edges" class="level3">
+<h3 class="anchored" data-anchor-id="adapters-concrete-io-at-the-edges">adapters/ — concrete I/O at the edges</h3>
+<p>Adapters implement the ports against the real world: a serial device, a UDP socket, a recorded fixture for CI, a GPU compute host, a renderer, an engine runtime. One port admits many adapters, so a single core output fans out to several destinations from one pass, and a recorded-fixture adapter stands in for live hardware under CI.</p>
+</section>
+<section id="cluster-composition-wiring-ports-across-the-seam" class="level3">
+<h3 class="anchored" data-anchor-id="cluster-composition-wiring-ports-across-the-seam">Cluster composition — wiring ports across the seam</h3>
+<p>Components compose by connecting one component’s sink to another’s source. An in-process dependency links the sibling directly; a cross-process dependency meets on a wire, a network protocol the two ends share. The wire is the integration contract, so a producer in one language and a consumer in another share no code, only the message format. Each component declares its sibling wiring alongside its ports.</p>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>A dependency-free core lets CI replay recorded fixtures through the domain logic with no device and no runtime.</li>
+<li>The wire seam decouples languages and processes, so any component is rewritable or replaceable as long as it keeps the message contract.</li>
+<li>A new output is a new sink adapter, with no change to the core that produced the data.</li>
+<li>The driving and driven labels keep the dependency direction explicit: adapters depend on the core through ports, and the core depends on nothing.</li>
+<li>The convention costs interface boilerplate, and across a process boundary it adds a serialize and parse step the in-process link avoids. That cost buys cross-language, cross-process composition.</li>
+</ul>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>The <code>sinew-mocap</code> cluster applies the pattern end to end. Each repository (<code>driver</code>, <code>mount_drift</code>, <code>solve</code>, <code>viewer</code>, <code>vr_bridge</code>) carries the <code>core/</code> + <code>ports/</code> + <code>adapters/</code> triad; ports are header-only C struct vtables labelled driving or driven and named <code>*_source.h</code> / <code>*_sink.h</code> (FrameSource, TrackerSink, PoseSink, HmdSource); adapters bind the serial dongle, a recorded <code>.rawlog</code>, UDP, polyscope, SteamVR, OpenVR, and Vulkan; and the repositories compose over the <code>/sinew</code> OSC wire (UDP 39539), with each <code>ports/sibling-repos.txt</code> declaring the wiring. The synthetic-data branch in <code>sinew-vrdance/pose_distill</code> applies the same triad in Python: core geometry and label cleaning, ports for the teacher pose model, renderer, and dataset sink, and adapters for the model, the Godot renderer, and the COCO sink.</p>
 
 
 </section>

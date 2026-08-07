@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -292,6 +292,17 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a>
+  <ul class="collapse">
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered Options</a></li>
+  <li><a href="#following-the-library-of-congress-file-naming-guidance" id="toc-following-the-library-of-congress-file-naming-guidance" class="nav-link" data-scroll-target="#following-the-library-of-congress-file-naming-guidance">Following the Library of Congress file-naming guidance</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0013-archival-file-naming-convention/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -338,8 +349,61 @@ ul.task-list li input[type="checkbox"] {
 <li>Decision drivers, considered options, and confirmation: <code>DETAILS.md</code></li>
 <li>Original record: <code>decisions/20260606-archival-file-naming-convention.md</code></li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="details" class="level1">
+<h1>Details</h1>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The manuals repo now commits binary assets alongside prose, starting with screenshots under <code>decisions/attachments/</code>. Ad-hoc names like <code>image.png</code> collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Names should be unique and not collide across decisions.</li>
+<li>Names should sort chronologically and read as self-describing.</li>
+<li>Names should survive being copied out of the repo (provenance in the name).</li>
+<li>The convention should match established digital-preservation guidance.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Keep source names (<code>image.png</code>, <code>screenshot (1).png</code>).</li>
+<li>Content hash names (<code>a1b2c3.png</code>).</li>
+<li>A Library of Congress style descriptive convention.</li>
+</ul>
+</section>
+<section id="following-the-library-of-congress-file-naming-guidance" class="level2">
+<h2 class="anchored" data-anchor-id="following-the-library-of-congress-file-naming-guidance">Following the Library of Congress file-naming guidance</h2>
+<ul>
+<li>Lowercase ASCII only; no spaces or special characters.</li>
+<li>ISO 8601 date first (<code>YYYYMMDD</code>) so names sort chronologically.</li>
+<li>Facets separated by underscores (<code>_</code>); words within a facet by hyphens (<code>-</code>).</li>
+<li>A zero-padded sequence (<code>NNNN</code>) to keep same-day captures unique and ordered.</li>
+<li>Descriptive but reasonably short.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good: assets are unique, sort by date, and carry their provenance in the name.</li>
+<li>Good: the convention matches preservation practice and is mechanical to apply.</li>
+<li>Bad: names are longer than source names, and renaming on import is a manual step.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>Assets under <code>decisions/attachments/</code> match <code>YYYYMMDD_project_description_NNNN.ext</code> and have a matching <code>references.bib</code> entry. The first example is <code>20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, cited from the presence-demo decision.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Based on the Library of Congress guidance on file naming for digital preservation (descriptive, no spaces, lowercase, ISO dates, zero-padded sequences).</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0033-core-contract-pure-reducer-byte-state/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -343,6 +349,37 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0034-deterministic-cores-integer-seeded-rng</code>: the determinism rule that makes replay byte-exact.</li>
 <li><code>rfd/0032-core-codegen-lean-slang</code>: the compute kernels this contract’s cores dispatch on the GPU.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>Every hexagonal core (<code>rfd/0028-hexagonal-core-ports-adapters</code>) needs to be replayable, snapshot-able, fixture-testable, and transport-agnostic. A core that hides mutable state behind methods defeats all four.</p>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Stateful objects whose internal state lives behind methods.</li>
+<li>A pure reducer over an explicit, serializable state value.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: model each core as a pure reducer, <code>step : State -&gt; Event -&gt; State x Effects</code>, with <code>State</code>, <code>Event</code>, and <code>Effects</code> serialized to bytes deterministically, so the core is bytes to bytes. The flat C ABI exposes <code>step</code> plus <code>snapshot</code> and <code>restore</code> over the byte state, and the compute kernels lower through <code>rfd/0032-core-codegen-lean-slang</code> to SPIR-V, dispatched on the GPU. Hidden mutable state defeats snapshots and exact fixtures, so the first option loses replay and rollback.</p>
+<p>With <code>rfd/0034-deterministic-cores-integer-seeded-rng</code>, this makes replay byte-exact and snapshots a value copy.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Snapshots and rollback are copies of the state bytes.</li>
+<li>Fixtures pin exact output bytes, so a divergence shows up as a failing fixture.</li>
+<li>The same <code>step</code> backs every adapter, so <code>webtransportd</code> and the engine carry the same bytes.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>Replaying an event log reproduces the state bytes on every target.</p>
 
 
 </section>

@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,20 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a></li>
+  <li><a href="#task-list" id="toc-task-list" class="nav-link" data-scroll-target="#task-list">Task list</a></li>
+  <li><a href="#dependency-graph" id="toc-dependency-graph" class="nav-link" data-scroll-target="#dependency-graph">Dependency graph</a></li>
+  <li><a href="#critical-path" id="toc-critical-path" class="nav-link" data-scroll-target="#critical-path">Critical path</a></li>
+  <li><a href="#slack-analysis" id="toc-slack-analysis" class="nav-link" data-scroll-target="#slack-analysis">Slack analysis</a>
+  <ul class="collapse">
+  <li><a href="#slack-interpretation" id="toc-slack-interpretation" class="nav-link" data-scroll-target="#slack-interpretation">Slack interpretation</a></li>
+  </ul></li>
+  <li><a href="#milestones" id="toc-milestones" class="nav-link" data-scroll-target="#milestones">Milestones</a></li>
+  <li><a href="#parallelization-with-two-engineers" id="toc-parallelization-with-two-engineers" class="nav-link" data-scroll-target="#parallelization-with-two-engineers">Parallelization with two engineers</a></li>
+  <li><a href="#risk-register" id="toc-risk-register" class="nav-link" data-scroll-target="#risk-register">Risk register</a></li>
+  <li><a href="#build-order-recommended" id="toc-build-order-recommended" class="nav-link" data-scroll-target="#build-order-recommended">Build order (recommended)</a></li>
+  <li><a href="#relationship-to-other-rfds" id="toc-relationship-to-other-rfds" class="nav-link" data-scroll-target="#relationship-to-other-rfds">Relationship to other RFDs</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0077-pert-critical-path-zonefabric/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,6 +356,536 @@ ul.task-list li input[type="checkbox"] {
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <p><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps</code>: adopts this task order (A, B, C, F, then I, then M) as the current build plan.</p>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>Expected duration (TE) for each task uses the PERT formula:</p>
+<pre><code>TE = (O + 4M + P) / 6</code></pre>
+<p>Variance (σ²) measures uncertainty:</p>
+<pre><code>σ² = ((P - O) / 6)²</code></pre>
+<p>The critical path is the chain of dependent tasks with the longest total TE. Any delay on the critical path delays the entire project. Tasks off the critical path have slack — they can slip without affecting the end date.</p>
+</section>
+<section id="task-list" class="level2">
+<h2 class="anchored" data-anchor-id="task-list">Task list</h2>
+<p>All durations in engineering days. One engineer, full-time.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 61%">
+<col style="width: 13%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Task</th>
+<th>Depends on</th>
+<th>O</th>
+<th>M</th>
+<th>P</th>
+<th>TE</th>
+<th>σ²</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Binary value encoding (RFD 0010)</td>
+<td>—</td>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+<td>2.2</td>
+<td>0.25</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>FDB keyspace + async callbacks (RFD 0009, 0011)</td>
+<td>A</td>
+<td>2</td>
+<td>3</td>
+<td>6</td>
+<td>3.3</td>
+<td>0.44</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>Actor-lite worker pool (RFD 0005)</td>
+<td>B</td>
+<td>3</td>
+<td>5</td>
+<td>9</td>
+<td>5.3</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>Slotmap entity storage (RFD 0017)</td>
+<td>A, B</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>3.2</td>
+<td>0.25</td>
+</tr>
+<tr class="odd">
+<td>E</td>
+<td>Zstd compression (RFD 0016)</td>
+<td>A</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>2.0</td>
+<td>0.11</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>ZoneTick (read/write loop)</td>
+<td>C, D</td>
+<td>3</td>
+<td>4</td>
+<td>8</td>
+<td>4.5</td>
+<td>0.69</td>
+</tr>
+<tr class="odd">
+<td>G</td>
+<td>Zone-state blob persistence</td>
+<td>D, E, F</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>3.2</td>
+<td>0.25</td>
+</tr>
+<tr class="even">
+<td>H</td>
+<td>GhostRelevance (AOI query)</td>
+<td>D, F</td>
+<td>2</td>
+<td>3</td>
+<td>6</td>
+<td>3.3</td>
+<td>0.44</td>
+</tr>
+<tr class="odd">
+<td>I</td>
+<td>CastSpell (effect + fanout)</td>
+<td>D, F, H</td>
+<td>3</td>
+<td>5</td>
+<td>10</td>
+<td>5.5</td>
+<td>1.36</td>
+</tr>
+<tr class="even">
+<td>J</td>
+<td>EntityMigration (zone handoff)</td>
+<td>D, F</td>
+<td>2</td>
+<td>4</td>
+<td>7</td>
+<td>4.2</td>
+<td>0.69</td>
+</tr>
+<tr class="odd">
+<td>K</td>
+<td>ZoneSplit (cost threshold)</td>
+<td>F, G</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>3.2</td>
+<td>0.25</td>
+</tr>
+<tr class="even">
+<td>L</td>
+<td>Macaroon + XDP security (RFD 0018)</td>
+<td>C, D</td>
+<td>4</td>
+<td>7</td>
+<td>14</td>
+<td>7.7</td>
+<td>2.78</td>
+</tr>
+<tr class="odd">
+<td>M</td>
+<td>Feature ablation (RFD 0019)</td>
+<td>F, H, I</td>
+<td>3</td>
+<td>5</td>
+<td>8</td>
+<td>5.2</td>
+<td>0.69</td>
+</tr>
+<tr class="even">
+<td>N</td>
+<td>Benchmark harness (wrk scripts)</td>
+<td>F, G</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>2.0</td>
+<td>0.11</td>
+</tr>
+<tr class="odd">
+<td>O</td>
+<td>Core-scaling measurement</td>
+<td>N</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>3.2</td>
+<td>0.25</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dependency-graph" class="level2">
+<h2 class="anchored" data-anchor-id="dependency-graph">Dependency graph</h2>
+<pre><code>A (binary encoding)
+├── B (FDB keyspace + async)
+│   ├── C (actor-lite pool)
+│   │   ├── F (ZoneTick) ◄═══ CRITICAL PATH
+│   │   │   ├── G (zone-state blob)
+│   │   │   │   └── K (ZoneSplit)
+│   │   │   ├── H (GhostRelevance)
+│   │   │   │   └── I (CastSpell)
+│   │   │   │       └── M (ablation)
+│   │   │   ├── J (EntityMigration)
+│   │   │   └── N (benchmark harness)
+│   │   │       └── O (scaling measurement)
+│   │   └── L (Macaroon + XDP)
+│   └── D (slotmap) ──► (feeds into F, H, I, J, L)
+├── E (zstd) ──► (feeds into G)
+└── (A also feeds D, E directly)</code></pre>
+</section>
+<section id="critical-path" class="level2">
+<h2 class="anchored" data-anchor-id="critical-path">Critical path</h2>
+<p>The critical path is the longest chain through the dependency graph:</p>
+<pre><code>A → B → C → F → I → M</code></pre>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Task</th>
+<th>TE (days)</th>
+<th>Cumulative</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>A: Binary value encoding</td>
+<td>2.2</td>
+<td>2.2</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>B: FDB keyspace + async callbacks</td>
+<td>3.3</td>
+<td>5.5</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>C: Actor-lite worker pool</td>
+<td>5.3</td>
+<td>10.8</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>F: ZoneTick</td>
+<td>4.5</td>
+<td>15.3</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>I: CastSpell</td>
+<td>5.5</td>
+<td>20.8</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>M: Feature ablation</td>
+<td>5.2</td>
+<td>26.0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Critical path total: 26.0 engineering days (~5.2 weeks)</strong></p>
+<p>This is the minimum time to a verified, ablation-tested zonefabric benchmark with CastSpell. The critical path passes through CastSpell because it depends on three upstream tasks (slotmap, tick, ghost) and has the highest variance (σ² = 1.36) — it’s both the longest and the riskiest task.</p>
+</section>
+<section id="slack-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="slack-analysis">Slack analysis</h2>
+<p>Tasks NOT on the critical path have slack. Slack = (latest finish) − (earliest start + duration).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 5%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>TE</th>
+<th>Earliest start</th>
+<th>Latest finish</th>
+<th>Slack</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D: Slotmap</td>
+<td>3.2</td>
+<td>5.5 (after A+B)</td>
+<td>10.8 (before F)</td>
+<td>2.1</td>
+</tr>
+<tr class="even">
+<td>E: Zstd</td>
+<td>2.0</td>
+<td>2.2 (after A)</td>
+<td>15.3 (before G)</td>
+<td>11.1</td>
+</tr>
+<tr class="odd">
+<td>G: Zone-state blob</td>
+<td>3.2</td>
+<td>15.3 (after F)</td>
+<td>19.8 (before K)</td>
+<td>1.3</td>
+</tr>
+<tr class="even">
+<td>H: GhostRelevance</td>
+<td>3.3</td>
+<td>15.3 (after F)</td>
+<td>20.8 (before I)</td>
+<td>2.2</td>
+</tr>
+<tr class="odd">
+<td>J: EntityMigration</td>
+<td>4.2</td>
+<td>15.3 (after F)</td>
+<td>26.0 (end)</td>
+<td>6.5</td>
+</tr>
+<tr class="even">
+<td>K: ZoneSplit</td>
+<td>3.2</td>
+<td>18.5 (after G)</td>
+<td>26.0 (end)</td>
+<td>4.3</td>
+</tr>
+<tr class="odd">
+<td>L: Macaroon + XDP</td>
+<td>7.7</td>
+<td>10.8 (after C)</td>
+<td>26.0 (end)</td>
+<td>7.5</td>
+</tr>
+<tr class="even">
+<td>N: Benchmark harness</td>
+<td>2.0</td>
+<td>18.5 (after G)</td>
+<td>26.0 (end)</td>
+<td>5.5</td>
+</tr>
+<tr class="odd">
+<td>O: Scaling measurement</td>
+<td>3.2</td>
+<td>20.5 (after N)</td>
+<td>26.0 (end)</td>
+<td>2.3</td>
+</tr>
+</tbody>
+</table>
+<section id="slack-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="slack-interpretation">Slack interpretation</h3>
+<ul>
+<li><p>E (Zstd) has 11.1 days of slack. Compression can be added any time before zone-state blob persistence. This confirms RFD 0019’s ablation result: zstd is deferrable. Do NOT build it first.</p></li>
+<li><p>L (Macaroon + XDP) has 7.5 days of slack. Security can be built in parallel with game logic. This confirms RFD 0019: security features are independent of game-logic invariants.</p></li>
+<li><p>J (EntityMigration) has 6.5 days of slack. Migration is needed for correctness at scale but can be stubbed initially (entities stay in their birth zone). Build it after the core loop works.</p></li>
+<li><p>D (Slotmap) has only 2.1 days of slack and is near-critical. This confirms RFD 0019: slotmap is foundational and must be built early. Any delay on slotmap pushes the critical path.</p></li>
+</ul>
+</section>
+</section>
+<section id="milestones" class="level2">
+<h2 class="anchored" data-anchor-id="milestones">Milestones</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 71%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Milestone</th>
+<th>Cumulative days</th>
+<th>What’s working</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>M1: FDB reads/writes</td>
+<td>5.5</td>
+<td>Binary encoding + FDB keyspace. Can read/write entity rows.</td>
+</tr>
+<tr class="even">
+<td>M2: Worker pool</td>
+<td>10.8</td>
+<td>H2O event loop dispatches to worker threads via SPSC ring.</td>
+</tr>
+<tr class="odd">
+<td>M3: Zone tick</td>
+<td>15.3</td>
+<td>ZoneTick reads entities, updates positions, writes back. <strong>First benchmarkable milestone.</strong></td>
+</tr>
+<tr class="even">
+<td>M4: Ghost queries</td>
+<td>18.6</td>
+<td>GhostRelevance returns entities within GHOST_RANGE.</td>
+</tr>
+<tr class="odd">
+<td>M5: CastSpell</td>
+<td>20.8</td>
+<td>Effects + fanout work. <strong>Full game loop operational.</strong></td>
+</tr>
+<tr class="even">
+<td>M6: Ablation verified</td>
+<td>26.0</td>
+<td>Feature ablation confirms no speculator debt. <strong>Ship-ready.</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="parallelization-with-two-engineers" class="level2">
+<h2 class="anchored" data-anchor-id="parallelization-with-two-engineers">Parallelization with two engineers</h2>
+<p>If a second engineer is available, the slack tasks can be parallelized:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Engineer 1 (critical path)</th>
+<th>Engineer 2 (slack tasks)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A: Binary encoding (2.2d)</td>
+<td>(pair on A)</td>
+</tr>
+<tr class="even">
+<td>B: FDB keyspace (3.3d)</td>
+<td>E: Zstd (2.0d) → slack</td>
+</tr>
+<tr class="odd">
+<td>C: Actor-lite pool (5.3d)</td>
+<td>D: Slotmap (3.2d) → L: XDP (7.7d, partial)</td>
+</tr>
+<tr class="even">
+<td>F: ZoneTick (4.5d)</td>
+<td>H: GhostRelevance (3.3d) → J: Migration (4.2d)</td>
+</tr>
+<tr class="odd">
+<td>I: CastSpell (5.5d)</td>
+<td>G: Zone-state blob (3.2d) → K: ZoneSplit (3.2d)</td>
+</tr>
+<tr class="even">
+<td>M: Ablation (5.2d)</td>
+<td>N: Benchmark harness (2.0d) → O: Scaling (3.2d)</td>
+</tr>
+</tbody>
+</table>
+<p>With two engineers, the critical path remains A→B→C→F→I→M at 26 days (Engineer 1), but all slack tasks are completed in parallel. Total project duration: ~26 days instead of ~38 days (serial sum).</p>
+<p>The critical path cannot be shortened by adding engineers — it’s sequential by dependency. Only reducing task scope (e.g., stubbing CastSpell’s fanout as a fixed-radius range scan without effect entities) can shorten it.</p>
+</section>
+<section id="risk-register" class="level2">
+<h2 class="anchored" data-anchor-id="risk-register">Risk register</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 7%">
+<col style="width: 16%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Risk</th>
+<th>Probability</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CastSpell fanout complexity exceeds estimate</td>
+<td>Medium</td>
+<td>+3 days on critical path</td>
+<td>Stub with full-radius scan first, optimize later</td>
+</tr>
+<tr class="even">
+<td>FDB async callback chain has memory bugs</td>
+<td>Low</td>
+<td>+5 days (debugging)</td>
+<td>CBMC verification (RFD 0008) before integration</td>
+</tr>
+<tr class="odd">
+<td>Slotmap serialization breaks generational IDs</td>
+<td>Low</td>
+<td>+2 days on D</td>
+<td>Test round-trip serialize/deserialize before F integration</td>
+</tr>
+<tr class="even">
+<td>XDP/eBPF program rejected by verifier</td>
+<td>Medium</td>
+<td>+4 days on L</td>
+<td>Start L early (has 7.5d slack), use libbpf skeletons</td>
+</tr>
+<tr class="odd">
+<td>Zstd dictionary training needed for good ratio</td>
+<td>Low</td>
+<td>+1 day on E</td>
+<td>Use level 3 default, skip dictionary training initially</td>
+</tr>
+<tr class="even">
+<td>Actor-lite SPSC ring has race condition</td>
+<td>Low</td>
+<td>+3 days on C</td>
+<td>Lean 4 proof of linearizability (RFD 0008) before C completes</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="build-order-recommended" class="level2">
+<h2 class="anchored" data-anchor-id="build-order-recommended">Build order (recommended)</h2>
+<p>Based on the PERT analysis and RFD 0019 ablation matrix:</p>
+<pre><code>Week 1: A (binary encoding) → B (FDB keyspace) → D (slotmap)
+Week 2: C (actor-lite pool) → F (ZoneTick) → E (zstd, parallel)
+Week 3: H (ghost) → G (zone-state blob) → N (benchmark harness)
+Week 4: I (CastSpell) → J (migration) → K (zone split)
+Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
+<p>This order respects all dependencies, keeps the critical path moving, and defers high-slack tasks (zstd, XDP, zone split) to later weeks.</p>
+</section>
+<section id="relationship-to-other-rfds" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
+<ul>
+<li><p><strong>RFD 0019</strong> (feature ablation): The dependency graph in this PERT chart is derived from the ablation matrix. The ablation confirms which tasks are load-bearing (on or near the critical path) and which are deferrable (high slack).</p></li>
+<li><p><strong>RFD 0008</strong> (verification): CBMC and Lean 4 verification happen during tasks C (SPSC ring) and D (slotmap), not as a separate phase. Verification is built into the task estimates.</p></li>
+<li><p><strong>RFD 0014</strong> (CI): The CI pipeline is assumed to exist from the start (building on every commit). It is infrastructure that supports all tasks, not a separate task.</p></li>
+<li><p><strong>RFD 0013</strong> (benchmark harness): Task N is the wrk script implementation, which depends on the zone-state blob (G) being writable to FDB.</p></li>
+</ul>
 
 
 </section>

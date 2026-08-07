@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#layers" id="toc-layers" class="nav-link" data-scroll-target="#layers">Layers</a></li>
+  <li><a href="#why-three-layers" id="toc-why-three-layers" class="nav-link" data-scroll-target="#why-three-layers">Why three layers</a></li>
+  <li><a href="#cbmc-harnesses" id="toc-cbmc-harnesses" class="nav-link" data-scroll-target="#cbmc-harnesses">CBMC harnesses</a></li>
+  <li><a href="#lean-4-modules" id="toc-lean-4-modules" class="nav-link" data-scroll-target="#lean-4-modules">Lean 4 modules</a></li>
+  <li><a href="#plausible-witness-dag-integration" id="toc-plausible-witness-dag-integration" class="nav-link" data-scroll-target="#plausible-witness-dag-integration">plausible-witness-dag integration</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0081-three-layer-verification-strategy/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -345,6 +351,73 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0072-actor-lite-worker-pool</code>: the SPSC ring these CBMC and Lean 4 proofs cover.</li>
 <li><code>rfd/0078-plausible-witness-dag-feature-ablation</code>: extends plausible-witness-dag’s runtime role to pre-implementation design ablation.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="layers" class="level2">
+<h2 class="anchored" data-anchor-id="layers">Layers</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 12%">
+<col style="width: 54%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Tool</th>
+<th>Scope</th>
+<th>What it proves</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>C invariants</td>
+<td>CBMC</td>
+<td>Implementation</td>
+<td>SPSC ring FIFO, bounds, head-tail, NURand range</td>
+</tr>
+<tr class="even">
+<td>Specification</td>
+<td>Lean 4</td>
+<td>Design</td>
+<td>SPSC linearizability, push/pop preserve bounds</td>
+</tr>
+<tr class="odd">
+<td>TPC-C semantics</td>
+<td>plausible-witness-dag</td>
+<td>Runtime</td>
+<td>NewOrder atomicity, Delivery correctness, Stock non-negative</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-three-layers" class="level2">
+<h2 class="anchored" data-anchor-id="why-three-layers">Why three layers</h2>
+<p>CBMC proves the C code is correct for bounded inputs but cannot reason about TPC-C semantics. Lean 4 proves the specification is sound but does not verify the C implementation. plausible-witness-dag searches for runtime invariant violations via HTTP but cannot prove absence of bugs.</p>
+<p>Together they cover the gap: CBMC catches implementation bugs, Lean 4 catches specification bugs, plausible-witness-dag catches integration bugs.</p>
+</section>
+<section id="cbmc-harnesses" class="level2">
+<h2 class="anchored" data-anchor-id="cbmc-harnesses">CBMC harnesses</h2>
+<ul>
+<li><code>test/cbmc/spsc_harness.c</code> — FIFO ordering, overflow, underflow, head-tail invariant</li>
+<li><code>test/cbmc/nurand_harness.c</code> — NURand result in [x, y]</li>
+<li><code>test/cbmc/random_harness.c</code> — get_random_number in [0, max]</li>
+</ul>
+</section>
+<section id="lean-4-modules" class="level2">
+<h2 class="anchored" data-anchor-id="lean-4-modules">Lean 4 modules</h2>
+<ul>
+<li><code>TpccVerification/Spsc.lean</code> — SPSC ring buffer specification with proofs: <code>init_safe</code>, <code>push_safe</code>, <code>pop_safe</code></li>
+<li><code>TpccVerification/Basic.lean</code> — TPC-C invariant predicates for plausible-witness-dag</li>
+</ul>
+</section>
+<section id="plausible-witness-dag-integration" class="level2">
+<h2 class="anchored" data-anchor-id="plausible-witness-dag-integration">plausible-witness-dag integration</h2>
+<p>Depends on <code>fire/plausible-witness-dag</code> as a Lake dependency. The <code>resolve</code> function takes a candidate predicate and a deterministic readback, escalating through L0/L1/L2 until it finds a witness or proves none exists.</p>
+<p>Escalation ladder: L0 (10 txns, W=1), L1 (100 txns, W=5), L2 (1000 txns, W=20).</p>
 
 
 </section>

@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -292,6 +292,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a>
+  <ul class="collapse">
+  <li><a href="#deployment-note" id="toc-deployment-note" class="nav-link" data-scroll-target="#deployment-note">Deployment note</a></li>
+  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
+  <li><a href="#port-map-after-this-change" id="toc-port-map-after-this-change" class="nav-link" data-scroll-target="#port-map-after-this-change">Port map after this change</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0011-observability-stack-victoriatraces/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -337,8 +345,71 @@ ul.task-list li input[type="checkbox"] {
 <li>Original record: <code>decisions/20260506-observability-stack-victoriatraces.md</code></li>
 <li>Supersedes: <code>decisions/20260506-observability-stack-victoriametrics-jaeger.md</code></li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="details" class="level1">
+<h1>Details</h1>
+<section id="deployment-note" class="level2">
+<h2 class="anchored" data-anchor-id="deployment-note">Deployment note</h2>
+<p>The stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly volume and <code>fly proxy</code> references below are from the original deployment.</p>
+</section>
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7x less RAM and 2.6x less CPU vs Tempo.</p>
+<p>Using VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions already in use.</p>
+</section>
+<section id="port-map-after-this-change" class="level2">
+<h2 class="anchored" data-anchor-id="port-map-after-this-change">Port map after this change</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 33%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Service</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>VictoriaMetrics</td>
+<td>8428</td>
+<td>Metrics storage and PromQL</td>
+</tr>
+<tr class="even">
+<td>VictoriaLogs</td>
+<td>9428</td>
+<td>Log storage and query</td>
+</tr>
+<tr class="odd">
+<td>VictoriaTraces</td>
+<td>10428</td>
+<td>Trace storage and query</td>
+</tr>
+<tr class="even">
+<td>OTEL Collector</td>
+<td>4317 (gRPC), 4318 (HTTP)</td>
+<td>OTLP ingest, routes to the above</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>All four services are now Apache 2.0; the three storage backends are from VictoriaMetrics.</li>
+<li>VictoriaTraces query UI is at <code>http://...:10428/select/vmui</code>.</li>
+<li><code>fly proxy 10428:10428</code> replaces the former <code>fly proxy 16686:16686</code> for trace inspection.</li>
+<li>No explicit trace TTL is configured; add <code>-retentionPeriod</code> if disk pressure becomes a concern.</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

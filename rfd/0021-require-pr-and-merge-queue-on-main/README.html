@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -47,9 +82,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +328,22 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
+  <li><a href="#amendment-2026-07-12-auto-delete-head-branches-after-merge" id="toc-amendment-2026-07-12-auto-delete-head-branches-after-merge" class="nav-link" data-scroll-target="#amendment-2026-07-12-auto-delete-head-branches-after-merge">Amendment (2026-07-12): auto-delete head branches after merge</a>
+  <ul class="collapse">
+  <li><a href="#confirmation-1" id="toc-confirmation-1" class="nav-link" data-scroll-target="#confirmation-1">Confirmation</a></li>
+  </ul></li>
+  <li><a href="#amendment-2026-07-14-the-merge-queue-rule-alone-does-not-require-ci" id="toc-amendment-2026-07-14-the-merge-queue-rule-alone-does-not-require-ci" class="nav-link" data-scroll-target="#amendment-2026-07-14-the-merge-queue-rule-alone-does-not-require-ci">Amendment (2026-07-14): the merge queue rule alone does not require CI</a>
+  <ul class="collapse">
+  <li><a href="#confirmation-2" id="toc-confirmation-2" class="nav-link" data-scroll-target="#confirmation-2">Confirmation</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0021-require-pr-and-merge-queue-on-main/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,8 +393,98 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0012-amend-pr-before-it-enters-the-queue</code></li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>The <code>manuals</code> repo had no branch protection on <code>main</code>. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older <code>main</code> and then conflict or break the Quarto build once both land. How should changes reach <code>main</code> so that every merge is reviewable and tested against the tip it will actually join?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>Every change to <code>main</code> should arrive through a pull request, not a direct push.</li>
+<li>Concurrent PRs should serialize so each is validated against the latest <code>main</code>.</li>
+<li>The team is small, so the process should add little ceremony (no mandatory second reviewer).</li>
+<li>The setting should be declarative and recorded, not click-ops folklore.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Leave <code>main</code> unprotected (status quo).</li>
+<li>Branch protection requiring a pull request only.</li>
+<li>A repository ruleset requiring a pull request plus a merge queue.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: a repository ruleset requiring a pull request plus a merge queue, because it serializes merges and keeps <code>main</code> PR-only without forcing a second reviewer.</p>
+<p>The ruleset targets the default branch with these rules:</p>
+<ul>
+<li>Block branch deletion and non-fast-forward pushes.</li>
+<li>Require a pull request, with <code>0</code> required approvals (review is allowed, not mandated) and all three merge methods permitted on the PR.</li>
+<li>Require a merge queue using the merge commit method, <code>ALLGREEN</code> grouping, up to 5 entries built and merged per batch, and a 1-minute minimum wait.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good: <code>main</code> only changes through PRs, and the queue tests each entry against the branch tip before it lands.</li>
+<li>Good: the configuration is captured here and reproducible from the ruleset JSON.</li>
+<li>Bad: solo edits now need a PR and an enqueue step.</li>
+<li>Bad: with <code>0</code> required approvals, the rule enforces process but not review, so an unreviewed PR can still merge.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The ruleset is active (id <code>17352485</code>). <code>gh api repos/v-sekai-multiplayer-fabric/manuals/rulesets</code> lists it, and a direct push to <code>main</code> is rejected. Future PRs land via the queue.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>Created with <code>gh api -X POST repos/v-sekai-multiplayer-fabric/manuals/rulesets</code>. To change the policy, edit the ruleset rather than protecting the branch through the classic branch-protection API, so the two mechanisms do not overlap.</p>
+</section>
+<section id="amendment-2026-07-12-auto-delete-head-branches-after-merge" class="level2">
+<h2 class="anchored" data-anchor-id="amendment-2026-07-12-auto-delete-head-branches-after-merge">Amendment (2026-07-12): auto-delete head branches after merge</h2>
+<p>Force branch deletion after merge by enabling the repository’s automatically delete head branches setting (<code>delete_branch_on_merge</code>). When a PR merges, its source branch is removed automatically, so merged feature branches do not pile up.</p>
+<p>Why this is a repo setting and not part of the ruleset:</p>
+<ul>
+<li>The merge queue rejects deletion at merge time — <code>gh pr merge --delete-branch</code> fails with “Cannot use <code>-d</code> or <code>--delete-branch</code> when merge queue enabled”, so the per-merge flag cannot do the cleanup. The repo-level <code>delete_branch_on_merge</code> setting fires after the queue lands the commit and is the correct mechanism.</li>
+<li>It does not conflict with the ruleset’s “block branch deletion” rule. That rule protects the ruleset’s target (the default branch) from being deleted; this setting deletes the merged PR’s source branch. Different branches, different mechanisms.</li>
+</ul>
+<p>Apply it declaratively:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> api <span class="at">-X</span> PATCH repos/v-sekai-multiplayer-fabric/<span class="op">&lt;</span>repo<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-F</span> delete_branch_on_merge=true</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="confirmation-1" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation-1">Confirmation</h3>
+<p><code>gh api repos/v-sekai-multiplayer-fabric/&lt;repo&gt; --jq .delete_branch_on_merge</code> returns <code>true</code>, and the source branch of a merged PR no longer exists.</p>
+</section>
+</section>
+<section id="amendment-2026-07-14-the-merge-queue-rule-alone-does-not-require-ci" class="level2">
+<h2 class="anchored" data-anchor-id="amendment-2026-07-14-the-merge-queue-rule-alone-does-not-require-ci">Amendment (2026-07-14): the merge queue rule alone does not require CI</h2>
+<p>The <code>merge_queue</code> rule (<code>grouping_strategy: ALLGREEN</code>) only controls how the queue batches and lands entries. On its own it does not name any CI job as a precondition, so a repo with <code>pull_request</code> + <code>merge_queue</code> and no separate <code>required_status_checks</code> rule will merge a PR through the queue even if every check on it failed, or if no check ran at all. This was found on two dependent repos (<code>taskweft/taskweft</code>, <code>taskweft/nif</code>) that had the <code>pull_request</code> + <code>merge_queue</code> rules from this decision applied without a <code>required_status_checks</code> rule alongside them.</p>
+<p>Every ruleset built from this decision needs a <code>required_status_checks</code> rule listing the repo’s actual CI job names, added next to the existing <code>pull_request</code> and <code>merge_queue</code> rules:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> api repos/<span class="op">&lt;</span>org<span class="op">&gt;</span>/<span class="op">&lt;</span>repo<span class="op">&gt;</span>/rulesets/<span class="op">&lt;</span>id<span class="op">&gt;</span> --jq <span class="st">'.rules'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>lists the current rules; job names to require come from a real PR’s checks:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> pr checks <span class="op">&lt;</span>PR-number<span class="op">&gt;</span> --repo <span class="op">&lt;</span>org<span class="op">&gt;</span>/<span class="op">&lt;</span>repo<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then <code>PUT</code> the full rule array back with a <code>required_status_checks</code> entry added (the API replaces the whole rule list, so read it first and re-add every existing rule, not just the new one):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> api <span class="at">-X</span> PUT repos/<span class="op">&lt;</span>org<span class="op">&gt;</span>/<span class="op">&lt;</span>repo<span class="op">&gt;</span>/rulesets/<span class="op">&lt;</span>id<span class="op">&gt;</span> --input ruleset-with-checks.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>where the new rule takes the shape:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"required_status_checks"</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"parameters"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"strict_required_status_checks_policy"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"required_status_checks"</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">"context"</span><span class="fu">:</span> <span class="st">"&lt;job name from gh pr checks&gt;"</span> <span class="fu">}</span><span class="ot">]</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This repo’s own ruleset (id <code>17352485</code>) already carries a <code>required_status_checks</code> rule for <code>prek</code> and <code>tropes</code> and was not affected; the gap was specific to the two repos named above.</p>
+<section id="confirmation-2" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation-2">Confirmation</h3>
+<p><code>gh api repos/&lt;org&gt;/&lt;repo&gt;/rulesets/&lt;id&gt; --jq '.rules[] | select(.type == "required_status_checks")'</code> returns the rule with the expected job names, and a PR with a failing check cannot be merged by the queue.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

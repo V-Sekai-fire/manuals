@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,28 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#problem-1" id="toc-problem-1" class="nav-link" data-scroll-target="#problem-1">Problem</a></li>
+  <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a>
+  <ul class="collapse">
+  <li><a href="#step-1-model-features-as-invariant-sets" id="toc-step-1-model-features-as-invariant-sets" class="nav-link" data-scroll-target="#step-1-model-features-as-invariant-sets">Step 1: Model features as invariant sets</a></li>
+  <li><a href="#step-2-ablation-matrix" id="toc-step-2-ablation-matrix" class="nav-link" data-scroll-target="#step-2-ablation-matrix">Step 2: Ablation matrix</a></li>
+  <li><a href="#step-3-dependency-ordering" id="toc-step-3-dependency-ordering" class="nav-link" data-scroll-target="#step-3-dependency-ordering">Step 3: Dependency ordering</a></li>
+  <li><a href="#step-4-cost-weighted-ablation" id="toc-step-4-cost-weighted-ablation" class="nav-link" data-scroll-target="#step-4-cost-weighted-ablation">Step 4: Cost-weighted ablation</a></li>
+  </ul></li>
+  <li><a href="#plausible-witness-dag-integration" id="toc-plausible-witness-dag-integration" class="nav-link" data-scroll-target="#plausible-witness-dag-integration">plausible-witness-dag integration</a>
+  <ul class="collapse">
+  <li><a href="#predicate-language" id="toc-predicate-language" class="nav-link" data-scroll-target="#predicate-language">Predicate language</a></li>
+  <li><a href="#witness-search" id="toc-witness-search" class="nav-link" data-scroll-target="#witness-search">Witness search</a></li>
+  <li><a href="#ablation-run" id="toc-ablation-run" class="nav-link" data-scroll-target="#ablation-run">Ablation run</a></li>
+  </ul></li>
+  <li><a href="#what-this-prevents" id="toc-what-this-prevents" class="nav-link" data-scroll-target="#what-this-prevents">What this prevents</a>
+  <ul class="collapse">
+  <li><a href="#speculator-debt-examples" id="toc-speculator-debt-examples" class="nav-link" data-scroll-target="#speculator-debt-examples">Speculator debt examples</a></li>
+  </ul></li>
+  <li><a href="#relationship-to-other-rfds" id="toc-relationship-to-other-rfds" class="nav-link" data-scroll-target="#relationship-to-other-rfds">Relationship to other RFDs</a></li>
+  <li><a href="#economics" id="toc-economics" class="nav-link" data-scroll-target="#economics">Economics</a></li>
+  <li><a href="#what-this-rfd-does-not-cover" id="toc-what-this-rfd-does-not-cover" class="nav-link" data-scroll-target="#what-this-rfd-does-not-cover">What this RFD does NOT cover</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0078-plausible-witness-dag-feature-ablation/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -345,6 +367,300 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0081-three-layer-verification-strategy</code>: plausible-witness-dag’s other role, as the runtime verification layer.</li>
 <li><code>rfd/0080-slotmap-entity-storage</code>: the first feature this ablation verifies as foundational.</li>
 <li><code>rfd/0076-macaroon-xdp-security</code>: security features ablated independently of game logic.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="problem-1" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1">Problem</h2>
+<p>Building an MMO is expensive. Every feature is a bet:</p>
+<ul>
+<li><p><strong>Feature built that wasn’t needed</strong> = wasted engineering dollars. The code exists, must be maintained, adds complexity, slows down the hot path, and provides zero player value.</p></li>
+<li><p><strong>Feature built wrong, then rebuilt</strong> = speculator debt. You ship a feature based on assumption, discover the assumption was wrong in production, then pay to tear it out and rebuild it properly. You pay twice: once to build it wrong, once to build it right.</p></li>
+<li><p><strong>Feature not built that was needed</strong> = opportunity cost, but recoverable. You can always add it later if the architecture accommodates it. The dangerous case is building a <em>replacement</em> that conflicts with the missing feature’s invariants.</p></li>
+</ul>
+<p>Traditional game development resolves this with playtesting and prototyping, which are expensive, slow, and subjective. plausible-witness-dag resolves it with formal invariant search, which is fast, deterministic, and exhaustive within the modeled state space.</p>
+</section>
+<section id="approach" class="level2">
+<h2 class="anchored" data-anchor-id="approach">Approach</h2>
+<section id="step-1-model-features-as-invariant-sets" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-model-features-as-invariant-sets">Step 1: Model features as invariant sets</h3>
+<p>Each zonefabric feature is modeled as a set of predicates over the game state. A feature is “present” when its invariants are enforced; “ablated” when they are removed.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 42%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Invariants when present</th>
+<th>What breaks when ablated</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ZoneTick</td>
+<td><code>∀ entity: pos' = pos + vel × dt</code></td>
+<td>Entities freeze; positions never update</td>
+</tr>
+<tr class="even">
+<td>CastSpell</td>
+<td><code>effect → fanout ⊆ entities_in_ghost_range</code></td>
+<td>Effects hit entities outside range; teleporting damage</td>
+</tr>
+<tr class="odd">
+<td>GhostRelevance</td>
+<td><code>ghost ⊆ entities_within_ghost_range(zone_boundary)</code></td>
+<td>Players see entities they shouldn’t; information leak</td>
+</tr>
+<tr class="even">
+<td>ZoneSplit</td>
+<td><code>population² &gt; threshold ⟹ split</code></td>
+<td>Hot zones never split; performance cliff</td>
+</tr>
+<tr class="odd">
+<td>EntityMigration</td>
+<td><code>entity leaves zone A ⟹ entity enters zone B</code></td>
+<td>Entities vanish or duplicate; state corruption</td>
+</tr>
+<tr class="even">
+<td>SlotmapGenIDs</td>
+<td><code>handle.gen == slot.gen ⟹ entity is live</code></td>
+<td>Dangling references; fireball hits wrong player</td>
+</tr>
+<tr class="odd">
+<td>SessionExpiry</td>
+<td><code>now &gt; expiry ⟹ XDP drops packets</code></td>
+<td>Expired sessions still route; security hole</td>
+</tr>
+<tr class="even">
+<td>RateLimit</td>
+<td><code>packets_per_sec ≤ rate_limit</code></td>
+<td>No flood protection; DDoS amplification</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="step-2-ablation-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-ablation-matrix">Step 2: Ablation matrix</h3>
+<p>For each feature F, run plausible-witness-dag with F’s invariants removed and all other features’ invariants present. The witness search either:</p>
+<ul>
+<li><p><strong>Finds a witness</strong> (a state trace that violates a remaining invariant when F is absent) → F is load-bearing. Building it wrong or omitting it causes a cascade of invariant violations. This is speculator debt — build it correctly or pay twice.</p></li>
+<li><p><strong>Finds no witness</strong> → F’s invariants are independent of the rest. The feature can be safely deferred (unspent dollars preserved) or built in any order without risking the core system.</p></li>
+</ul>
+</section>
+<section id="step-3-dependency-ordering" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-dependency-ordering">Step 3: Dependency ordering</h3>
+<p>The ablation matrix produces a dependency graph. If removing feature A breaks feature B’s invariants, then A must be built before B. This gives a build order that minimizes speculator debt: no feature is built on top of an unverified foundation.</p>
+<pre><code>SlotmapGenIDs ──────► CastSpell (needs valid entity handles)
+       │
+       ├────────────► GhostRelevance (needs valid ghost handles)
+       │
+       └────────────► EntityMigration (needs generational safety)
+
+SessionExpiry ──────► RateLimit (expired sessions shouldn't rate-limit)
+
+ZoneTick ───────────► ZoneSplit (split needs current population)
+       │
+       └────────────► CastSpell (spell needs current positions)
+
+GhostRelevance ─────► CastSpell (fanout scoped by ghost range)</code></pre>
+</section>
+<section id="step-4-cost-weighted-ablation" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-cost-weighted-ablation">Step 4: Cost-weighted ablation</h3>
+<p>Each feature has an implementation cost (engineering hours) and a speculator-debt risk (probability × cost-of-rework). The ablation matrix tells us which features are safe to defer (low risk) and which must be built first (high risk if wrong).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 37%">
+<col style="width: 5%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Impl cost</th>
+<th>Load-bearing?</th>
+<th>Defer?</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SlotmapGenIDs</td>
+<td>Low (~100 LoC)</td>
+<td>Yes — breaks CastSpell, Ghost, Migration</td>
+<td>No</td>
+<td>Cheap, foundational, do first</td>
+</tr>
+<tr class="even">
+<td>ZoneTick</td>
+<td>Medium</td>
+<td>Yes — breaks ZoneSplit, CastSpell</td>
+<td>No</td>
+<td>Core loop, can’t defer</td>
+</tr>
+<tr class="odd">
+<td>SessionExpiry</td>
+<td>Low</td>
+<td>Yes — breaks RateLimit, security</td>
+<td>No</td>
+<td>Cheap, security-critical</td>
+</tr>
+<tr class="even">
+<td>CastSpell</td>
+<td>High</td>
+<td>No — independent of ZoneSplit</td>
+<td>Yes</td>
+<td>Complex, defer until tick works</td>
+</tr>
+<tr class="odd">
+<td>GhostRelevance</td>
+<td>Medium</td>
+<td>No — independent of ZoneSplit</td>
+<td>Yes</td>
+<td>Can stub with full-mesh initially</td>
+</tr>
+<tr class="even">
+<td>ZoneSplit</td>
+<td>Medium</td>
+<td>No — independent of CastSpell</td>
+<td>Yes</td>
+<td>Only needed at scale</td>
+</tr>
+<tr class="odd">
+<td>EntityMigration</td>
+<td>Medium</td>
+<td>Yes — breaks on slotmap absence</td>
+<td>No</td>
+<td>Needed for correctness at scale</td>
+</tr>
+<tr class="even">
+<td>RateLimit</td>
+<td>Low</td>
+<td>No — independent of game logic</td>
+<td>Yes</td>
+<td>Can add after launch</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="plausible-witness-dag-integration" class="level2">
+<h2 class="anchored" data-anchor-id="plausible-witness-dag-integration">plausible-witness-dag integration</h2>
+<section id="predicate-language" class="level3">
+<h3 class="anchored" data-anchor-id="predicate-language">Predicate language</h3>
+<p>Each invariant is expressed as a Lean 4 predicate over the game state:</p>
+<pre class="lean"><code>-- ZoneTick invariant: position updates correctly
+def zone_tick_invariant (s : GameState) : Prop :=
+  ∀ e : Entity, e ∈ s.zone.entities →
+    e.position' = e.position + e.velocity * s.dt
+
+-- CastSpell invariant: fanout is scoped to ghost range
+def cast_spell_invariant (s : GameState) : Prop :=
+  ∀ eff : EffectEntity, eff ∈ s.effects →
+    ∀ target : Entity, target ∈ eff.fanout →
+      dist(eff.position, target.position) ≤ GHOST_RANGE
+
+-- Slotmap generational ID invariant
+def slotmap_gen_invariant (s : GameState) : Prop :=
+  ∀ h : EntityHandle, h ∈ s.pending_effects →
+    s.slotmap.lookup(h).isSome →
+      s.slotmap.lookup(h).gen = h.gen</code></pre>
+</section>
+<section id="witness-search" class="level3">
+<h3 class="anchored" data-anchor-id="witness-search">Witness search</h3>
+<p>plausible-witness-dag’s <code>resolve</code> function takes a candidate predicate and a deterministic readback, escalating through L0/L1/L2:</p>
+<ul>
+<li><strong>L0</strong> (10 transactions, 1 zone): Quick smoke test. Catches gross invariant violations in seconds.</li>
+<li><strong>L1</strong> (100 transactions, 5 zones): Medium scale. Catches interaction bugs between features (e.g., CastSpell + EntityMigration).</li>
+<li><strong>L2</strong> (1000 transactions, 20 zones): Large scale. Catches performance-adjacent invariants (ZoneSplit threshold, rate limiting).</li>
+</ul>
+</section>
+<section id="ablation-run" class="level3">
+<h3 class="anchored" data-anchor-id="ablation-run">Ablation run</h3>
+<p>For feature F being ablated:</p>
+<ol type="1">
+<li>Remove F’s invariants from the predicate set</li>
+<li>Keep all other features’ invariants</li>
+<li>Run <code>resolve</code> at L0, then L1, then L2</li>
+<li>If a witness is found at any level → F is load-bearing</li>
+<li>If no witness at L2 → F is deferrable</li>
+</ol>
+<p>The escalation ladder ensures we don’t waste compute: L0 runs in seconds, L2 in minutes. Most ablation results are determined at L0.</p>
+</section>
+</section>
+<section id="what-this-prevents" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-prevents">What this prevents</h2>
+<section id="speculator-debt-examples" class="level3">
+<h3 class="anchored" data-anchor-id="speculator-debt-examples">Speculator debt examples</h3>
+<ol type="1">
+<li><p>Building CastSpell before SlotmapGenIDs. Without generational handles, CastSpell’s fanout targets can dangle. The ablation matrix shows removing SlotmapGenIDs breaks CastSpell’s invariant. Build slotmap first, or pay to refactor CastSpell later.</p></li>
+<li><p>Building GhostRelevance with full-mesh fallback. If we stub ghost relevance with full-mesh broadcast initially, the ablation shows full-mesh doesn’t violate any invariant (it’s a superset of AOI). The stub is safe: we can ship with full-mesh and add AOI later without rework. This is unspent dollars preserved.</p></li>
+<li><p>Omitting EntityMigration. The ablation shows that without migration, entities that cross zone boundaries vanish (ZoneTick invariant broken). Migration is load-bearing and can’t be deferred.</p></li>
+<li><p>Building ZoneSplit before ZoneTick. The ablation shows ZoneSplit depends on ZoneTick’s population count. Building split first means building a mock population tracker, then replacing it with the real tick. That’s speculator debt: pay once for the mock, once for the real thing. Build tick first.</p></li>
+</ol>
+</section>
+</section>
+<section id="relationship-to-other-rfds" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
+<ul>
+<li><p><strong>RFD 0008</strong> (verification strategy): plausible-witness-dag is already the L2 runtime verification layer. This RFD extends its use from post-implementation verification to pre-implementation design validation.</p></li>
+<li><p><strong>RFD 0002</strong> (zonefabric): The feature set being ablated is the zonefabric runtime operations (ZoneTick, CastSpell, GhostRelevance, ZoneSplit, EntityMigration).</p></li>
+<li><p><strong>RFD 0017</strong> (slotmap): SlotmapGenIDs is the first feature to verify — it’s foundational and cheap. The ablation matrix confirms it must be built before CastSpell and GhostRelevance.</p></li>
+<li><p><strong>RFD 0018</strong> (security): SessionExpiry and RateLimit are security features that can be ablated independently of game logic. The matrix shows they’re load-bearing for security invariants but not for game logic invariants — so they can be built in parallel with game logic.</p></li>
+</ul>
+</section>
+<section id="economics" class="level2">
+<h2 class="anchored" data-anchor-id="economics">Economics</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 27%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Outcome</th>
+<th>Cost without ablation</th>
+<th>Cost with ablation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Feature built that wasn’t needed</td>
+<td>$10K-50K engineering</td>
+<td>$0 (deferred, unspent dollars preserved)</td>
+</tr>
+<tr class="even">
+<td>Feature built wrong, then rebuilt</td>
+<td>$20K-100K (build + rework)</td>
+<td>$5K-25K (build right first time)</td>
+</tr>
+<tr class="odd">
+<td>Feature built in wrong order</td>
+<td>$10K-30K (mock + replace)</td>
+<td>$0 (correct order from dependency graph)</td>
+</tr>
+<tr class="even">
+<td>Feature correctly deferred</td>
+<td>$0 (but risk of building it)</td>
+<td>$0 (confirmed safe to defer)</td>
+</tr>
+</tbody>
+</table>
+<p>For a 20-feature MMO backend, ablation testing costs ~1 week of engineering time (writing predicates + running the search). The expected savings from avoiding one speculator-debt cycle: $20K-100K. ROI: 10-50x.</p>
+</section>
+<section id="what-this-rfd-does-not-cover" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-rfd-does-not-cover">What this RFD does NOT cover</h2>
+<ul>
+<li><p>Player-facing feature decisions: this ablation covers backend system features (tick, spell, ghost, migration). Deciding whether players want fireballs vs.&nbsp;ice storms is a game design question, not an invariant question.</p></li>
+<li><p>Performance ablation: this RFD covers correctness invariants. Performance ablation (does feature X slow down the hot path?) is measured by the benchmark harness (RFD 0013), not by plausible-witness-dag.</p></li>
+<li><p>UI/UX features: not modeled. These are subjective and must be playtested, not formally verified.</p></li>
 </ul>
 
 

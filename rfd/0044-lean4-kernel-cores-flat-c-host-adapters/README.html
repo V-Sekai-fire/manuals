@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0044-lean4-kernel-cores-flat-c-host-adapters/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,6 +348,38 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0032-core-codegen-lean-slang</code>: the Lean-to-SPIR-V compute kernel codegen these cores dispatch.</li>
 <li><code>rfd/0033-core-contract-pure-reducer-byte-state</code>: the pure-reducer contract each core implements.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>The hexagonal cores (<code>rfd/0028-hexagonal-core-ports-adapters</code>) hold dependency-free domain logic that Godot, the Elixir backend, and a CLI all bind. The team wants strong spec and proof guarantees on that logic without linking a heavy language runtime into every host. The <code>idtx-flow</code> repository already explores this shape in its <code>LEAN_KERNELS_HOST_ADAPTERS</code> investigation.</p>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Link the Lean runtime into each host and call exported Lean functions over a C ABI.</li>
+<li>Hand-write the cores in flat C with no Lean involvement.</li>
+<li>Use Lean 4 at build time for the spec and code generation, and ship a flat-C runtime core.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: use Lean 4 at build time as the kernel, the spec, and the code generator, and ship each runtime core as a flat C ABI behind the port ring with no Lean runtime linked into any host, because this keeps the proof leverage while the hosts bind only a flat C surface. The first option links a heavy runtime and marshals Lean objects across every boundary; the second option loses the spec and proof leverage.</p>
+<p>Each core models a pure reducer over byte-serialized state, so it is bytes to bytes. The compute kernels are authored in Lean and lowered to Slang through <a href="https://github.com/V-Sekai-fire/lean-slang">lean-slang</a>, then <code>slangc -target spirv</code> lowers the Slang to SPIR-V, and the runtime core dispatches the <code>.spv</code> compute kernel behind the flat C ABI, byte-pinned beside the core (<code>rfd/0032-core-codegen-lean-slang</code>). The spec suite drives the C ABI through Python ctypes, the property tests run on Plausible, and a handful of theorems pin the invariants that never break. This mirrors <code>idtx-flow</code>, where <code>flow/core</code> compiles to a flat-C library, <code>flow/ports</code> is the flat C ABI, and <code>flow/core/spec</code> drives that ABI through ctypes with no engine and no hardware.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>A host binds only the flat C ABI and never sees core internals or a Lean runtime.</li>
+<li>CI runs the cores headless on the workstation, with no engine and no device.</li>
+<li>Lean stays a build-time tool, so the runtime carries no Lean dependency.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>Each core passes its ctypes fixture suite and its Plausible properties in CI, and no host binary links a Lean runtime.</p>
 
 
 </section>

@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The context</a></li>
+  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The problem statement</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
+  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The downsides</a></li>
+  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The road not taken</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0066-game-loop-cluster-sequence/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -340,6 +346,33 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>: the vertical slice this sequencing decision prioritizes.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The context</h2>
+<p>The team polled on which concern to stabilise next. Game-loop received 2 of 4 votes (50%). The uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o concerns all require a verified game-loop as their integration target and are not testable end-to-end without one.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The problem statement</h2>
+<p>The uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o concerns have no stable integration target while the game-loop remains unverified. Work that lands on an unstable loop accumulates rework debt that blocks the feedback release.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>The OpenXR Windows build (export preset <code>OpenXR</code>, <code>build/openxr/loop-slice.exe</code>) is the external feedback artifact. It runs the full hub-to-field-to-loot round trip and is the SteamVR-compatible path for PCVR reviewers.</p>
+<p>The game-loop is complete when <code>smoke.sh</code> passes, the OpenXR Windows build exports without error, and at least one external reviewer runs the full loop against a live server.</p>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The downsides</h2>
+<p>The shop-economy and openUSD-i/o concerns have no integration path before the feedback release. If the game-loop verification slips, all four dependent concerns slip with it and there is no parallel path to absorb the delay.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The road not taken</h2>
+<ul>
+<li>Parallel concerns: advancing uiux-polish or cassie-pen-mesh alongside the game-loop risks landing polish or authoring work on a loop that is still changing, producing rework.</li>
+<li>Content-first: stabilising content concerns before the loop pushes integration gaps late, when they are most expensive to fix.</li>
 </ul>
 
 

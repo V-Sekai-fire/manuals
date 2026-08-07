@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#rationale" id="toc-rationale" class="nav-link" data-scroll-target="#rationale">Rationale</a></li>
+  <li><a href="#tradeoffs" id="toc-tradeoffs" class="nav-link" data-scroll-target="#tradeoffs">Tradeoffs</a></li>
+  <li><a href="#what-we-did-not-use" id="toc-what-we-did-not-use" class="nav-link" data-scroll-target="#what-we-did-not-use">What we did not use</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0074-binary-value-encoding-for-fdb/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -343,6 +347,34 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0080-slotmap-entity-storage</code>: stores the same packed struct in memory, <code>memcpy</code> from FDB value to slotmap entry.</li>
 <li><code>rfd/0084-zstd-compression-for-zone-state</code>: compresses the packed byte stream this RFD produces.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="rationale" class="level2">
+<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
+<ol type="1">
+<li><p>Zero-copy deserialization: a packed struct can be cast directly from FDB’s <code>FDBKeyValue.value</code> pointer. No parsing step. The callback handler does <code>(stock_val_t *)kv-&gt;value</code> and reads fields.</p></li>
+<li><p>Minimal size: no type tags, no field names, no separators. A warehouse row is 109 bytes packed vs ~350 bytes in JSON.</p></li>
+<li><p>Deterministic layout: <code>#pragma pack(push, 1)</code> ensures no padding. The same struct compiles identically on the loader, the server, and the verification harness. Cross-platform safe as long as all parties use the same header file.</p></li>
+<li><p>Endianness is fixed: network byte order for all integers. x86_64 and ARM both support unaligned access, so the byte-swap cost is negligible.</p></li>
+</ol>
+</section>
+<section id="tradeoffs" class="level2">
+<h2 class="anchored" data-anchor-id="tradeoffs">Tradeoffs</h2>
+<ul>
+<li>Schema evolution: adding a field breaks compatibility. Solution: version the struct (include a <code>uint8_t version</code> field) or use FDB key prefixes to distinguish row formats.</li>
+<li>Debugging: binary values are not human-readable in fdbcli. Solution: the loader and verification harness have debug print functions that decode the struct.</li>
+<li>Portability: requires matching <code>#pragma pack</code> behavior across compilers. GCC and Clang both support this correctly.</li>
+</ul>
+</section>
+<section id="what-we-did-not-use" class="level2">
+<h2 class="anchored" data-anchor-id="what-we-did-not-use">What we did not use</h2>
+<ul>
+<li>FDB tuple layer for values: the tuple layer is for keys (where lexicographic ordering matters). Values don’t need ordering, so the tuple layer’s overhead is unnecessary.</li>
+<li>Protocol Buffers / Cap’n Proto: adds a dependency and codegen step. For fixed-schema TPC-C, a C struct is simpler and faster.</li>
+<li>JSON: 3-5x larger, requires a parser, and yajl allocation per row would dominate the hot path.</li>
 </ul>
 
 

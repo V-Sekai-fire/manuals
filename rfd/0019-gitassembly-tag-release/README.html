@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0019-gitassembly-tag-release/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,6 +350,58 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>: the tag fixes the assembly merged onto that pinned base.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>The <code>merge</code> repo’s <code>gitassembly</code> recipe builds the engine by merging feature branches (<code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, <code>feat/module-http3</code>, and the rest) onto the frozen Godot 4.7 base. The base is pinned, but the feature branch tips are not: an assembly run today and one next week can merge different branch SHAs and produce a different engine. The cold-boot dependencies refer to the branches by name, so “assemble these branches” alone is not a reproducible artifact. What is the shareable, fixed reference for the assembled engine?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>Reproducibility: a name that resolves to one exact assembled tree, not moving tips.</li>
+<li>A single reference the demo, <code>godot-images</code>, and CI can all build from.</li>
+<li>Cheap to cut so releases keep pace with the feature branches.</li>
+<li>Do not steamroll prior assemblies that other work already builds against.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Keep referring to branch names; each consumer assembles the tips itself.</li>
+<li>Force-push the assembled <code>multiplayer-fabric</code> branch as the shared reference.</li>
+<li>Push an immutable, timestamped tag of the assembled tree (the existing <code>merge</code> tooling already does this).</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: push an immutable, timestamped tag, because it gives one reference that resolves to an exact tree without overwriting prior assemblies. This adopts the behavior the <code>merge</code> tooling already implements rather than inventing a new scheme.</p>
+<ul>
+<li><code>elixir update_godot_v_sekai.exs</code> (run from <code>main</code>) fetches the remotes, runs the vendored <code>git-assembler</code> over the <code>gitassembly</code> recipe, then tags the assembled <code>multiplayer-fabric</code> branch and pushes only the tag to <code>v-sekai-multiplayer-fabric/godot</code>. The moving branch stays local, so a release never steamrolls anyone working off a previous tip.</li>
+<li>Tag format (CalVer, UTC): <code>v&lt;YYYY.MM.DD.HHMM&gt;-multiplayer-fabric</code>. The timestamp is the only thing that changes between runs; the assembler is deterministic, so the same inputs produce the same tree.</li>
+<li>The current cold-boot reference is <code>v2026.06.06.1853-multiplayer-fabric</code> (commit <code>9ea526ab</code>), assembled onto the pinned 4.7 base with the full recipe, including <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code>.</li>
+<li>Consumers pin to a tag, not to branch names. <code>godot-images</code> builds its GHCR editor image from a tag, and the cold-boot steps reference that tag.</li>
+<li>Iterate with <code>--dry-run</code> (assembles locally, no push) before cutting a release.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good: a tag resolves to one exact assembled engine, so demo, image, and CI build the same tree.</li>
+<li>Good: tag-only push keeps every prior assembly intact and addressable.</li>
+<li>Bad: the CalVer tag carries no semantic version, so the assembled Godot version is implicit in the pinned base.</li>
+<li>Bad: tags must be cut deliberately, so a stale tag can lag the live branches.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p><code>git ls-remote --tags v-sekai-multiplayer-fabric/godot</code> lists <code>v&lt;YYYY.MM.DD.HHMM&gt;-multiplayer-fabric</code> tags, a <code>godot-images</code> build from a tag reproduces the same editor, and the cold-boot steps reference a tag rather than branch names.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>The tag sits on top of the engine pin: the pin fixes the base, and the tag fixes the assembly merged onto it. It is the reproducible artifact the cold-boot dependencies build from. The tag format and workflow are documented in the <code>merge</code> repo’s <code>CONTRIBUTING.md</code>.</p>
 
 
 </section>

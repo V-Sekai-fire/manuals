@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -47,9 +82,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -292,6 +327,18 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#proposal" id="toc-proposal" class="nav-link" data-scroll-target="#proposal">Proposal</a>
+  <ul class="collapse">
+  <li><a href="#the-real-twvalue-shape-as-it-exists-in-taskweftnif" id="toc-the-real-twvalue-shape-as-it-exists-in-taskweftnif" class="nav-link" data-scroll-target="#the-real-twvalue-shape-as-it-exists-in-taskweftnif">The real <code>TwValue</code> shape, as it exists in <code>taskweft/nif</code></a></li>
+  <li><a href="#references-are-strings-shaped-as-json-pointers-not-a-distinct-kind" id="toc-references-are-strings-shaped-as-json-pointers-not-a-distinct-kind" class="nav-link" data-scroll-target="#references-are-strings-shaped-as-json-pointers-not-a-distinct-kind">References are <code>STRING</code>s shaped as JSON Pointers, not a distinct kind</a></li>
+  <li><a href="#recommendation-for-this-projects-own-fdb-value-encoding" id="toc-recommendation-for-this-projects-own-fdb-value-encoding" class="nav-link" data-scroll-target="#recommendation-for-this-projects-own-fdb-value-encoding">Recommendation for this project’s own FDB value encoding</a></li>
+  </ul></li>
+  <li><a href="#recommendation-and-next-steps" id="toc-recommendation-and-next-steps" class="nav-link" data-scroll-target="#recommendation-and-next-steps">Recommendation and next steps</a></li>
+  <li><a href="#open-questions-and-verification" id="toc-open-questions-and-verification" class="nav-link" data-scroll-target="#open-questions-and-verification">Open questions and verification</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -332,6 +379,98 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Full source-read detail, the proposed <code>zf_value_kind_t</code> sketch, and open questions: <code>DETAILS.md</code></li>
 <li><code>taskweft/nif</code>: <code>standalone/tw_value.hpp</code>, <code>tw_loader.hpp</code>, <code>tw_state.hpp</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p><code>taskweft/nif</code> (the C++ core behind the <code>taskweft/taskweft</code> Elixir host, a separate repo from the one the name suggests) narrows every value that crosses an interpreter or ABI boundary down to one small tagged union, <code>TwValue</code>, with seven kinds: <code>NIL</code>, <code>BOOL</code>, <code>INT</code>, <code>FLOAT</code>, <code>STRING</code>, <code>ARRAY</code>, <code>DICT</code>. There is no eighth kind for references. A reference is a plain <code>STRING</code> value, shaped as an RFC 6901 JSON Pointer, resolved against a flat <code>var -&gt; Dict</code> state tree at the point of use. This RFD records that real design, checked directly against the source, and proposes the same pattern for this project’s own FDB value encoding (<code>zf_kv.c</code>/<code>mud_kv.c</code>), which today hand-rolls one packed C struct per value type instead of one shared, narrow value representation.</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>Earlier work this session read <code>taskweft/taskweft</code>’s own RFD 0004 (“KHR_interactivity Tier 2 – embed libriscv, compile behavior graphs to riscv64”) for a different reason, and carried forward a working assumption that its value system split into “primitives and refs” as two separate, peer kinds. A direct source read for this RFD found that assumption imprecise. The real split is primitives (the <code>TwValue</code> enum itself) plus a convention, layered on top, for treating one primitive kind (<code>STRING</code>) as a reference when its content parses as a JSON Pointer. Recording the corrected, source-checked version here, not the earlier paraphrase.</p>
+</section>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p>Three real, separate things make this worth a project-level record instead of a one-off note.</p>
+<p>First, <code>zf_kv.c</code> and (this session’s own new) <code>mud_kv.c</code> both hand-roll one packed C struct per stored value type (<code>zf_zone_val_t</code>, <code>zf_entity_val_t</code>, <code>mud_session_val_t</code>). Every new value type needs a new struct, a new encode function, and a new decode function. <code>TwValue</code>’s own shape shows a real, working alternative already proven at a real production scale (<code>taskweft/nif</code> backs a real planner and ReBAC engine): one shared tagged union covers every value type this project has needed so far (integers, floats, strings, small maps), and a plain-string convention covers references without a second tagged-union arm.</p>
+<p>Second, <code>mud_kv.c</code>’s own turn-history keyspace (<code>zf/mud/turn/{session_id}/{turn}</code>) already stores a plain string value (the narration text) with no packed struct at all – it already, independently, arrived at the same “some values are just strings” shape <code>TwValue</code> uses, without deliberately copying it. That is a real signal the pattern fits this project’s own data, not just taskweft’s.</p>
+<p>Third, <code>taskweft/nif</code>’s own NIF boundary (<code>c_src/taskweft_nif.cpp</code>) narrows even further at the actual ABI crossing: no <code>TwValue</code> ever crosses that boundary directly, only <code>std::string</code> (carrying serialized JSON), <code>int64_t</code>, <code>double</code>, <code>bool</code>, and <code>std::vector&lt;std::string&gt;</code>. Structured payloads travel as JSON text, parsed back into <code>TwValue</code> on the receiving side. This project already does the JSON-LD-framed CBOR equivalent of that at the <code>mud-sandbox-orchestrator</code> boundary (per the <code>sandboxed-godot-in-zone-server-h2o</code> decision doc), so this is a second, independent confirmation of the same narrowing principle at a different boundary, not a new one to adopt.</p>
+</section>
+<section id="proposal" class="level2">
+<h2 class="anchored" data-anchor-id="proposal">Proposal</h2>
+<section id="the-real-twvalue-shape-as-it-exists-in-taskweftnif" class="level3">
+<h3 class="anchored" data-anchor-id="the-real-twvalue-shape-as-it-exists-in-taskweftnif">The real <code>TwValue</code> shape, as it exists in <code>taskweft/nif</code></h3>
+<p>File <code>standalone/tw_value.hpp</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TwValue <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">enum</span> <span class="kw">class</span> Type <span class="op">{</span> NIL<span class="op">,</span> BOOL<span class="op">,</span> INT<span class="op">,</span> FLOAT<span class="op">,</span> STRING<span class="op">,</span> ARRAY<span class="op">,</span> DICT <span class="op">};</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> Array <span class="op">=</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>TwValue<span class="op">&gt;;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">using</span> Dict  <span class="op">=</span> tsl<span class="op">::</span>ordered_map<span class="op">&lt;</span><span class="bu">std::</span>string<span class="op">,</span> TwValue<span class="op">&gt;;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span><span class="op">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    Type    _type <span class="op">=</span> Type<span class="op">::</span>NIL<span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">bool</span>    _b    <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int64_t</span> _i    <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span>  _f    <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>string                 _s<span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>unique_ptr<span class="op">&lt;</span>Array<span class="op">&gt;</span>      _arr<span class="op">;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>unique_ptr<span class="op">&lt;</span>Dict<span class="op">&gt;</span>       _dct<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A hand-written tagged union, not <code>std::variant</code> – deep-copying copy constructor, a <code>stable_hash()</code> used for planner memoization (sorted dict keys, <code>NaN</code> and <code>-0.0</code> normalized), and structural <code>operator==</code>/<code>&lt;</code>. <code>Dict</code> uses <code>tsl::ordered_map</code> specifically so key iteration order matches Python dict insertion order, for determinism against a reference implementation – stated directly in the file’s own header comment, not inferred.</p>
+</section>
+<section id="references-are-strings-shaped-as-json-pointers-not-a-distinct-kind" class="level3">
+<h3 class="anchored" data-anchor-id="references-are-strings-shaped-as-json-pointers-not-a-distinct-kind">References are <code>STRING</code>s shaped as JSON Pointers, not a distinct kind</h3>
+<p><code>standalone/tw_loader.hpp</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// RFC 6901 -- parse a JSON Pointer into decoded reference tokens.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Empty string -&gt; {} (whole-document reference).</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>string<span class="op">&gt;</span> parse_rfc6901<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>string <span class="op">&amp;</span>ptr<span class="op">)</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Resolve a templated pointer into Taskweft's 2-segment (var, key) shape.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="bu">std::</span>pair<span class="op">&lt;</span><span class="bu">std::</span>string<span class="op">,</span> TwValue<span class="op">&gt;</span> parse_pointer<span class="op">(</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">const</span> <span class="bu">std::</span>string <span class="op">&amp;</span>ptr<span class="op">,</span> <span class="at">const</span> Params <span class="op">&amp;</span>params<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> tokens <span class="op">=</span> parse_rfc6901<span class="op">(</span>substitute_pointer<span class="op">(</span>ptr<span class="op">,</span> params<span class="op">));</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>tokens<span class="op">.</span>size<span class="op">()</span> <span class="op">!=</span> <span class="dv">2</span><span class="op">)</span> <span class="cf">return</span> <span class="op">{</span><span class="st">""</span><span class="op">,</span> TwValue<span class="op">{}};</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">{</span><span class="bu">std::</span>move<span class="op">(</span>tokens<span class="op">[</span><span class="dv">0</span><span class="op">]),</span> TwValue<span class="op">(</span><span class="bu">std::</span>move<span class="op">(</span>tokens<span class="op">[</span><span class="dv">1</span><span class="op">]))};</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>standalone/tw_state.hpp</code> holds what those pointers resolve against: a flat <code>var -&gt; Dict</code> map, not a slotmap or entity-handle table.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> TwState <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    tsl<span class="op">::</span>ordered_map<span class="op">&lt;</span><span class="bu">std::</span>string<span class="op">,</span> TwValue<span class="op">&gt;</span> vars<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>shared_ptr<span class="op">&lt;</span><span class="at">const</span> TwReBAC<span class="op">::</span>TwReBACGraph<span class="op">&gt;</span> rebac_graph<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> rebac_fuel <span class="op">=</span> <span class="dv">8</span><span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> set_var<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>string <span class="op">&amp;</span>key<span class="op">,</span> TwValue val<span class="op">)</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    TwValue get_var<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>string <span class="op">&amp;</span>key<span class="op">)</span> <span class="at">const</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>RFD 0002 in <code>taskweft/taskweft</code> itself (its own numbering, a different sequence from this repo’s) is where the <code>pointer/get</code>/<code>pointer/set</code> node-type convention was introduced, aligning on the glTF <code>KHR_interactivity</code> node model. RFD 0003 there covers the calling convention for value-computing node types (one <code>TwValue</code> in, one out, <code>(a,b,c,d)</code> input-slot table, a <code>b</code>-selector for multi-output nodes) – decomposition and structural-node policy, not the value union’s own shape. RFD 0004 there is the one with the ABI-crossing line this project’s earlier work already cited correctly: “Values cross the ABI as JSON, reusing existing <code>TwValue</code> (de)serialization.”</p>
+</section>
+<section id="recommendation-for-this-projects-own-fdb-value-encoding" class="level3">
+<h3 class="anchored" data-anchor-id="recommendation-for-this-projects-own-fdb-value-encoding">Recommendation for this project’s own FDB value encoding</h3>
+<p><code>zf_kv.h</code>/<code>mud_kv.h</code> today: one packed C struct per value type, one hand-written encode function, one hand-written decode function, per type. Real, working, and already verified (this project’s own golden- vector and multi-zone-isolation tests), but every new value type this project adds needs the same three-part boilerplate again.</p>
+<p>Proposed direction, not yet built: a single narrow tagged value type for new FDB value encoding, shaped like <code>TwValue</code> but scoped to what this project’s own data actually needs –</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ZF_VAL_INT<span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ZF_VAL_FLOAT<span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    ZF_VAL_STRING<span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ZF_VAL_BYTES<span class="op">,</span>   <span class="co">/* the existing xr_grid_entity_packet_t-style packed</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">                        wire structs stay valid as one more "kind" here,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">                        not replaced -- see Open questions below */</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> zf_value_kind_t<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>with references handled the same way <code>TwValue</code> handles them: not a distinct kind, a <code>ZF_VAL_STRING</code> whose content is one of this project’s own existing FDB key-builder outputs (<code>zf_kv_entity_key</code>, <code>mud_kv_turn_key</code>, …), resolved by a plain FDB <code>fdb_async_get()</code> at the point of use, mirroring <code>parse_pointer</code>’s own resolve-at-use-time shape rather than eagerly dereferencing.</p>
+<p>This is a real, scoped design proposal, not a decision – see Open questions below for what blocks moving from proposal to implementation.</p>
+</section>
+</section>
+<section id="recommendation-and-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="recommendation-and-next-steps">Recommendation and next steps</h2>
+<p>Adopt the “primitives plus refs-as-strings” principle for <strong>new</strong> FDB value types added after this RFD, without migrating <code>zf_zone_val_t</code>, <code>zf_entity_val_t</code>, or <code>mud_session_val_t</code> – those are real, tested, and already have real data behind them in every environment this project has deployed to. <code>mud_kv.c</code>’s own turn-history value (plain narration text, no struct) already follows this RFD’s own recommendation by coincidence; treat that as the first real example, not an exception to fix.</p>
+<p>Next real step, not done by this RFD: prototype <code>zf_value_kind_t</code> (or an equivalent) against one genuinely new value type this project needs next, and verify it against a real golden-vector test the same way <code>xr_grid_entity_packet.c</code> was checked against <code>lean-entity-packet</code>, before treating the pattern as this project’s own default.</p>
+</section>
+<section id="open-questions-and-verification" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions-and-verification">Open questions and verification</h2>
+<ul>
+<li>Whether <code>zf_value_kind_t</code>’s <code>ZF_VAL_BYTES</code> escape hatch (for <code>xr_grid_entity_packet_t</code> and any future packed wire struct) undermines the whole point of narrowing – if most of this project’s real values end up as <code>ZF_VAL_BYTES</code> anyway, the narrowing buys little. Needs a real inventory of this project’s own value types before deciding, not assumed either way here.</li>
+<li>Whether tagged-union overhead (a discriminant byte plus the widest member’s storage, per value) is acceptable inside FDB’s own real single-transaction byte-size ceiling (already measured this session, see <code>zone-server-h2o</code>’s own real throughput verification work) at this project’s real entity-count scale (1400/1800 per zone).</li>
+<li><code>taskweft/nif</code>’s own <code>Dict</code> ordering guarantee (<code>tsl::ordered_map</code>, for cross-implementation determinism against a Python reference) has no equivalent need in this project yet – flagged so a future prototype does not import that dependency without first confirming a real, present need for it here.</li>
 </ul>
 
 

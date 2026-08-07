@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,17 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#target" id="toc-target" class="nav-link" data-scroll-target="#target">Target</a></li>
+  <li><a href="#architecture" id="toc-architecture" class="nav-link" data-scroll-target="#architecture">Architecture</a></li>
+  <li><a href="#three-components" id="toc-three-components" class="nav-link" data-scroll-target="#three-components">Three components</a>
+  <ul class="collapse">
+  <li><a href="#spsc-lock-free-ring-buffer-spsc_ring.c" id="toc-spsc-lock-free-ring-buffer-spsc_ring.c" class="nav-link" data-scroll-target="#spsc-lock-free-ring-buffer-spsc_ring.c">1. SPSC lock-free ring buffer (<code>spsc_ring.c</code>)</a></li>
+  <li><a href="#worker-threads-worker_pool.c" id="toc-worker-threads-worker_pool.c" class="nav-link" data-scroll-target="#worker-threads-worker_pool.c">2. Worker threads (<code>worker_pool.c</code>)</a></li>
+  <li><a href="#return-path" id="toc-return-path" class="nav-link" data-scroll-target="#return-path">3. Return path</a></li>
+  </ul></li>
+  <li><a href="#verification-layers" id="toc-verification-layers" class="nav-link" data-scroll-target="#verification-layers">Verification layers</a></li>
+  <li><a href="#why-this-beats-a-generalized-actor-framework" id="toc-why-this-beats-a-generalized-actor-framework" class="nav-link" data-scroll-target="#why-this-beats-a-generalized-actor-framework">Why this beats a generalized actor framework</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0072-actor-lite-worker-pool/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -343,6 +354,189 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0073-async-fdb-callback-chain</code>: how each worker drives FDB without blocking its ring.</li>
 <li><code>rfd/0077-pert-critical-path-zonefabric</code>: task C in the build order.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="target" class="level2">
+<h2 class="anchored" data-anchor-id="target">Target</h2>
+<p>Top 10 TechEmpower R23 data update test.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>Framework</th>
+<th>RPS</th>
+<th>Lang</th>
+<th>ORM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>may-minihttp</td>
+<td>1,327,378</td>
+<td>Rust</td>
+<td>Raw</td>
+</tr>
+<tr class="even">
+<td><strong>2</strong></td>
+<td><strong>h2o</strong></td>
+<td><strong>1,226,814</strong></td>
+<td><strong>C</strong></td>
+<td><strong>Raw</strong></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>ntex [sailfish]</td>
+<td>1,210,348</td>
+<td>Rust</td>
+<td>Raw</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>ntex [async-std,db]</td>
+<td>1,197,351</td>
+<td>Rust</td>
+<td>Raw</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>xitca-web</td>
+<td>1,146,712</td>
+<td>Rust</td>
+<td>Raw</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>xitca-web [orm]</td>
+<td>1,115,124</td>
+<td>Rust</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>axum [postgresql]</td>
+<td>1,114,265</td>
+<td>Rust</td>
+<td>Raw</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>lithium-postgres</td>
+<td>1,073,846</td>
+<td>C++</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>lithium-postgres-beta</td>
+<td>1,068,560</td>
+<td>C++</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>hyper-db</td>
+<td>1,066,644</td>
+<td>Rust</td>
+<td>Raw</td>
+</tr>
+</tbody>
+</table>
+<p>h2o is already rank #2 with 1,226,814 RPS. All top 10 use Postgres with raw SQL (no ORM). The h2o-bench-tpcc target is to match this performance with TPC-C transactions (heavier per request) on CockroachDB (Postgres wire protocol).</p>
+</section>
+<section id="architecture" class="level2">
+<h2 class="anchored" data-anchor-id="architecture">Architecture</h2>
+<pre><code>HTTP client (wrk)
+    │
+    ▼
+H2O network thread (event loop, HTTP/3)
+    │  spsc_ring_push (lock-free, no mutex)
+    ├──► Worker 0 (SPSC ring → libpq pipeline → h2o_multithread_send)
+    ├──► Worker 1
+    └──► Worker N
+    │
+    │  h2o_multithread_send (return path)
+    ▼
+H2O network thread (send HTTP response)
+    │
+    ▼
+FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
+</section>
+<section id="three-components" class="level2">
+<h2 class="anchored" data-anchor-id="three-components">Three components</h2>
+<section id="spsc-lock-free-ring-buffer-spsc_ring.c" class="level3">
+<h3 class="anchored" data-anchor-id="spsc-lock-free-ring-buffer-spsc_ring.c">1. SPSC lock-free ring buffer (<code>spsc_ring.c</code>)</h3>
+<p>Single-producer/single-consumer ring with atomic load/store. Power-of-two capacity (mask-based indexing). No CAS, no mutexes.</p>
+<ul>
+<li>Producer (H2O thread): <code>atomic_store_release(head)</code></li>
+<li>Consumer (worker thread): <code>atomic_store_release(tail)</code></li>
+<li>Invariant: <code>tail &lt;= head &lt;= tail + capacity</code></li>
+</ul>
+<p>Verified by CBMC (<code>test/cbmc/spsc_harness.c</code>) and Lean 4 (<code>test/verification/TpccVerification/Spsc.lean</code>).</p>
+</section>
+<section id="worker-threads-worker_pool.c" class="level3">
+<h3 class="anchored" data-anchor-id="worker-threads-worker_pool.c">2. Worker threads (<code>worker_pool.c</code>)</h3>
+<p>Each worker:</p>
+<ul>
+<li>Owns one SPSC ring (1024 slots)</li>
+<li>Owns one libpq connection (pipeline mode)</li>
+<li>Runs a tight loop: pop -&gt; execute -&gt; return</li>
+<li>Returns results via <code>h2o_multithread_send</code></li>
+</ul>
+<p>Dispatch: round-robin across workers (atomic fetch_add).</p>
+</section>
+<section id="return-path" class="level3">
+<h3 class="anchored" data-anchor-id="return-path">3. Return path</h3>
+<p><code>h2o_multithread_send()</code> wakes the H2O event loop to send the HTTP response. No shared state on the return path.</p>
+</section>
+</section>
+<section id="verification-layers" class="level2">
+<h2 class="anchored" data-anchor-id="verification-layers">Verification layers</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 21%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Tool</th>
+<th>What it verifies</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>C invariants</td>
+<td>CBMC</td>
+<td>SPSC ring FIFO, bounds, head-tail invariant</td>
+</tr>
+<tr class="even">
+<td>Specification</td>
+<td>Lean 4</td>
+<td>SPSC linearizability, push/pop preserve bounds</td>
+</tr>
+<tr class="odd">
+<td>TPC-C invariants</td>
+<td>plausible-witness-dag</td>
+<td>NewOrder atomicity, Delivery correctness, Stock non-negative</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-this-beats-a-generalized-actor-framework" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-beats-a-generalized-actor-framework">Why this beats a generalized actor framework</h2>
+<ul>
+<li>No scheduler overhead — each worker is a bare pthread</li>
+<li>No lock contention — SPSC rings have zero cross-thread writes on the fast path</li>
+<li>FDB async callbacks chain transaction steps without blocking</li>
+<li>FDB transactions are native ACID (no SQL BEGIN/COMMIT overhead)</li>
+<li>libfdb_c is pure C — no JVM, no JNI, no SQL parser</li>
+<li>h2o’s event loop handles HTTP/3 natively (no separate QUIC stack)</li>
+<li>Top 10 is exclusively Rust and C/C++ — no managed runtime in the top 10</li>
 </ul>
 
 

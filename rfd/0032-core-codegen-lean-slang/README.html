@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0032-core-codegen-lean-slang/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -343,6 +350,45 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0034-deterministic-cores-integer-seeded-rng</code>: the integer-op determinism rule these kernels follow.</li>
 <li><code>rfd/0044-lean4-kernel-cores-flat-c-host-adapters</code>: the flat C ABI these kernels dispatch behind.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>The cores carry compute kernels — hit raycasts, the budgeter solve, geometry costing — that need to be verified once and run as GPU compute, with the dispatch wrapped behind the flat C ABI port (<code>rfd/0044-lean4-kernel-cores-flat-c-host-adapters</code>). Hand-porting a kernel from a separate spec to a shader drifts.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>One verified Lean source per kernel, with no separate shader to drift.</li>
+<li>The kernel runs on the GPU and integrates with GPU convergence; the CPU Slang target lacks that integration.</li>
+<li>Integer ops keep the kernel deterministic across conformant devices.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Hand-write each kernel as a shader from a separate spec.</li>
+<li>Lower a CPU host target through Slang.</li>
+<li>Author the kernel in Lean and lower it to SPIR-V.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: author the compute kernels in Lean and lower them to Slang through <a href="https://github.com/V-Sekai-fire/lean-slang">lean-slang</a>, then run <code>slangc -target spirv</code> to SPIR-V (<code>.spv</code>), and dispatch the <code>.spv</code> behind the flat C ABI, because SPIR-V runs the kernel on the GPU with the convergence integration the CPU Slang target lacks, and one verified Lean source produces the shipped kernel. The <code>idtx-flow</code> repository already depends on <code>LeanSlang</code> and byte-pins the emitted Slang against committed source with <code>native_decide</code>.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>One Lean kernel source produces the <code>.spv</code>, so the spec and the shipped kernel stay one artifact.</li>
+<li>The lowered Slang and the <code>.spv</code> are committed and byte-pinned, so a regen that drifts fails the pin.</li>
+<li>The kernels use integer ops, so the SPIR-V stays deterministic across conformant devices (<code>rfd/0034-deterministic-cores-integer-seeded-rng</code>).</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The emitted Slang matches its committed byte-pin, and the dispatched <code>.spv</code> kernel passes the core fixtures.</p>
 
 
 </section>

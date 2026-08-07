@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0040-hexagon-combat-core/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -341,6 +346,30 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0037-generated-behavior-sandboxed-riscv</code>: the <code>behavior_source</code> adapter for generated enemy behavior.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>The combat concern — combo timing, hit validation, the enemy spawn-invulnerability window, and damage — needs to be deterministic and testable with no server and no headset. Per <code>rfd/0028-hexagonal-core-ports-adapters</code> it becomes a core behind narrow ports.</p>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: structure combat as a hexagon. The core resolves the combo timing, validates each hit against the authoritative positions, holds the enemy invulnerable for its spawn window, and deducts health, as a pure reducer (<code>rfd/0033-core-contract-pure-reducer-byte-state</code>) over deterministic state (<code>rfd/0034-deterministic-cores-integer-seeded-rng</code>).</p>
+<p>Driving ports: <code>input_source</code> (player commands with timestamps and targets), <code>tick_source</code> (the constant-step clock), <code>behavior_source</code> (enemy intents). Driven ports: <code>state_sink</code> (authoritative entity state), <code>event_sink</code> (hits, deaths, door unlocks). Adapters: <code>feat/module-http3</code> feeds <code>input_source</code>; the <code>zone-server</code> hosts the core and drives <code>tick_source</code> under server authority (<code>decisions/20260611-server-authoritative-simulation-deferred-rollback.md</code>); sandboxed behavior (<code>rfd/0037-generated-behavior-sandboxed-riscv</code>) implements <code>behavior_source</code>; a fixture adapter replays recorded inputs for CI.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The server-authoritative adapter binds <code>input_source</code> and <code>state_sink</code> with interpolation and no prediction for the deadline; the rollback adapter lands after the gate behind the same ports.</li>
+<li>The combat core runs headless against fixtures, so a flaky adapter fails in isolation.</li>
+<li>The melee archetype ships first; the ranged and caster archetypes land after the gate.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The combat core passes its fixtures, and a melee combo lands a hit under server authority on the OpenXR client.</p>
 
 
 </section>

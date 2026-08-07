@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#the-install-recipe-fedora-monado-25.1.0" id="toc-the-install-recipe-fedora-monado-25.1.0" class="nav-link" data-scroll-target="#the-install-recipe-fedora-monado-25.1.0">The install recipe (Fedora, Monado 25.1.0)</a></li>
+  <li><a href="#the-stdin-pipe-caveat" id="toc-the-stdin-pipe-caveat" class="nav-link" data-scroll-target="#the-stdin-pipe-caveat">The stdin-pipe caveat</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0051-headless-openxr-testing-with-monado/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -341,6 +347,39 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0056-systemd-quadlet-verification-queue</code>: the quadlet queue that runs this Monado smoke.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>Functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware.</p>
+</section>
+<section id="the-install-recipe-fedora-monado-25.1.0" class="level2">
+<h2 class="anchored" data-anchor-id="the-install-recipe-fedora-monado-25.1.0">The install recipe (Fedora, Monado 25.1.0)</h2>
+<ul>
+<li>Install <code>monado monado-devel monado-vulkan-layers</code>.</li>
+<li>Select the runtime: symlink <code>~/.config/openxr/1/active_runtime.json</code> to <code>/usr/share/openxr/1/openxr_monado.json</code>, or set <code>XR_RUNTIME_JSON</code>.</li>
+<li>Start the service headless: <code>tail -f /dev/null | XRT_COMPOSITOR_NULL=1 SIMULATED_ENABLE=1 monado-service</code>.</li>
+<li>OpenXR clients connect over the IPC socket <code>$XDG_RUNTIME_DIR/monado_comp_ipc</code>.</li>
+</ul>
+</section>
+<section id="the-stdin-pipe-caveat" class="level2">
+<h2 class="anchored" data-anchor-id="the-stdin-pipe-caveat">The stdin-pipe caveat</h2>
+<p><code>monado-service</code> watches stdin through <code>epoll</code> to notice shutdown, and a non-epoll-able stdin (a closed descriptor or a regular file, which is what a background job, a <code>nohup</code>, or a container hands it) makes <code>epoll_ctl(stdin)</code> fail and the service aborts before it opens the socket. Feeding it an epoll-able pipe (<code>tail -f /dev/null | ...</code>, or a held-open FIFO) is what lets it start.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The OpenXR path runs on the workstation and in a podman quadlet with no display and no headset.</li>
+<li><code>XRT_COMPOSITOR_NULL</code> discards submitted frames, so this covers the runtime, the tracking, and frame submission, with no rendered output and no performance signal.</li>
+<li><code>SIMULATED_ENABLE</code> supplies a head and controllers driven programmatically; the <code>qwerty</code> driver (<code>QWERTY_ENABLE</code>) adds keyboard and mouse control for an interactive desktop run.</li>
+<li>This is functional and integration coverage; the standalone OpenXR build is the performance and comfort gate.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p><code>openxr_runtime_list</code>, and any OpenXR app, reaches <code>xrCreateInstance</code> against the running service, and the service log reports the null compositor and a simulated HMD.</p>
 
 
 </section>

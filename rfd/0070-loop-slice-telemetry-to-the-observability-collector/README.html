@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The context</a></li>
+  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The problem statement</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
+  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The downsides</a></li>
+  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The road not taken</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -341,6 +348,49 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0011-observability-stack-victoriatraces</code>: the collector and Victoria backends this export reaches.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The context</h2>
+<p>The loop-slice server emits OpenTelemetry through the <code>OpenTelemetry</code> C++ engine module: spans for the loop’s phases, counters and gauges for grants and ticks, and log lines. Export is opt-in. The server reads <code>OTEL_EXPORTER_OTLP_ENDPOINT</code>, and with no endpoint set it stays idle — it records signals in process but exports nothing, which keeps a server that has no collector from retrying against one that is not there. The observability stack (<code>rfd/0011-observability-stack-victoriatraces</code>) runs an OTEL collector that ingests OTLP on 4318 (HTTP) and 4317 (gRPC) and routes metrics to VictoriaMetrics, logs to VictoriaLogs, and traces to VictoriaTraces. The collector and the server’s deploy both exist, so the telemetry the server already produces has somewhere to go; by YAGNI times structure to the need (<code>decisions/20260629-yagni-times-structure-to-need.md</code>), the need is present and the wiring belongs here.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The problem statement</h2>
+<p>A deployed loop-slice server with no configured endpoint is unobservable: its spans, metrics, and logs stay in process and never reach the collector. The export seam is a single environment variable, <code>OTEL_EXPORTER_OTLP_ENDPOINT</code>, and the deploy carries the address that a separately deployed container can actually reach.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>The loop-slice deploy exports OTLP over HTTP to the observability collector at <code>http://host.containers.internal:4318</code>, with <code>OTEL_SERVICE_NAME=loop-server</code>.</p>
+<ul>
+<li>The collector listens for OTLP HTTP on 4318 and routes each signal to its Victoria backend, so the server’s traces, metrics, and logs all land without further configuration. HTTP on 4318 matches the export protocol the rest of the fabric uses; the zone backend exports OTLP HTTP to the same port.</li>
+<li>The endpoint is <code>host.containers.internal</code>, not <code>127.0.0.1</code>. The loop-slice server runs as a separate rootless container that publishes its game port and does not share the observability pod’s network namespace, so inside the container <code>127.0.0.1</code> is the container’s own loopback. <code>host.containers.internal</code> resolves to the host, where the collector publishes 4318.</li>
+<li>Export stays opt-in in the engine and the image. The deploy opts in by setting the endpoint in its environment, because in the deploy the collector is a co-located, declared dependency. The image carries no default endpoint.</li>
+<li>A collector on another host overrides <code>host.containers.internal</code> with that host’s address.</li>
+</ul>
+<p>The values the deploy sets are <code>OTEL_EXPORTER_OTLP_ENDPOINT=http://host.containers.internal:4318</code> and <code>OTEL_SERVICE_NAME=loop-server</code>. Applying them to the deploy’s environment file and quadlet is follow-up work; this record fixes the address and the protocol, not their application.</p>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The downsides</h2>
+<ul>
+<li>An endpoint pointed at an absent collector returns the server to export-retry load, so the endpoint belongs only where the collector runs; the deploy sets it where the two are co-located.</li>
+<li><code>host.containers.internal</code> holds for a same-host collector and needs the host address for a remote one.</li>
+<li>This record decides the wiring without applying it, so a deploy stays unobservable until its environment carries these values.</li>
+</ul>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The road not taken</h2>
+<ul>
+<li>Bake a default endpoint into the image — rejected; a forced default drives connect-retry spam against a collector that may not be there, and it commits the address before the deploy knows it.</li>
+<li>Join the loop-slice container to the observability pod for a <code>localhost:4318</code> endpoint — rejected; it couples the game server’s lifecycle and its published game port to the observability pod.</li>
+<li>Run the loop-slice container on host networking for a <code>127.0.0.1:4318</code> endpoint — rejected; it drops the published-port isolation the deploy relies on.</li>
+<li>Export over gRPC on 4317 — rejected; the fabric’s OTLP export pattern is HTTP on 4318.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>With the endpoint set, the server prints <code>OTEL ready -&gt; http://host.containers.internal:4318</code> in place of <code>OTEL idle</code>, and the collector receives its spans, metrics, and logs. An OTLP listener on 4318 confirms the connection; a VictoriaMetrics query for the <code>loop-server</code> service confirms the full path once the observability pod runs.</p>
 
 
 </section>

@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#related-repositories" id="toc-related-repositories" class="nav-link" data-scroll-target="#related-repositories">Related repositories</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0053-integral-entity-transform-wire/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,6 +346,29 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0034-deterministic-cores-integer-seeded-rng</code>: the determinism doctrine this wire format follows.</li>
 <li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: why clients render rather than re-simulate.</li>
 <li><code>rfd/0049-fabric-channels-as-reliability-classes</code>: the channel this packet rides.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The wire has no floating point; replication is deterministic across platforms.</li>
+<li>The packet speaks the predictive BVH’s native int64-micrometer language, so position flows into the BVH with no conversion.</li>
+<li>Tying velocity to <code>PBVH_V_MAX_PHYSICAL_DEFAULT</code> closes a latent drift (the codec had an ad-hoc times-1000 scale that the BVH-sync review surfaced).</li>
+<li>Density, when it matters, comes from value delta-from-baseline rather than origin rebasing; entropy coding stays off the per-tick path because variable length breaks the fixed datagram layout.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The <code>entity_packet</code> Plausible suite passes a 50000-vector roundtrip and size sweep, and the engine’s C++ decode matches the Lean golden bytes on 64 vectors. The change lands on <code>feat/module-xr-grid</code> and <code>feat/module-multiplayer-fabric</code>.</p>
+</section>
+<section id="related-repositories" class="level2">
+<h2 class="anchored" data-anchor-id="related-repositories">Related repositories</h2>
+<ul>
+<li>Spec model: <code>https://github.com/v-sekai-multiplayer-fabric/entity_packet</code></li>
+<li>BVH consumer: <code>https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh</code></li>
 </ul>
 
 

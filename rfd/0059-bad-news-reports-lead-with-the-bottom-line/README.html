@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -341,6 +349,62 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0025-tenseless-continuous-present-voice</code>: the companion voice rule for prose across the repo.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>A status report carries an outcome the reader acts on: a slipped date, a broken build, a failed smoke. A report that opens with progress and buffers the outcome to the end makes the reader scan for the catch before the report says anything they can use. How does a report in this project phrase an outcome the reader needs first?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>A reader who learns the outcome in the first sentence starts deciding on it immediately, rather than after a paragraph of buildup.</li>
+<li>An executive or on-call reader scans the opening line and stops; the rest is there for whoever needs the why.</li>
+<li>The rule stays mechanical enough to apply in review without debate.</li>
+<li>Urgency — a down service, a failed gate — leaves no room for a warm-up.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Indirect approach: open with a progress buffer, then state the outcome.</li>
+<li>Direct approach (bottom line up front): state the outcome first, then the explanation, then the next step.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: “the direct approach”, because the reader holds the outcome before the explanation, so the explanation reads as context rather than as suspense, and a reader who needs only the outcome stops after one line.</p>
+<p>A status report carries three parts in order:</p>
+<ol type="1">
+<li>The bottom line comes first. The opening sentence states the outcome plainly — the slip, the failure, the result — with no buffer, no apology, and no warm-up. A reader who reads only this line knows where the work stands.</li>
+<li>The explanation follows. It gives the factual reason for the outcome; the reader already holds the result, so the explanation carries the why without holding it back.</li>
+<li>The next step closes the report: the fix underway, the alternative open to the reader, or the time of the next update.</li>
+</ol>
+<p>The voice rules out two habits:</p>
+<ul>
+<li>A progress buffer that opens on what went well and defers the outcome to the end.</li>
+<li>An apology or hedge in place of the outcome in the first sentence.</li>
+</ul>
+<p>A good outcome takes the same shape: the first sentence states the result, and the rest carries the why and the next step.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good, because the reader decides on the outcome from the first line instead of scanning for it.</li>
+<li>Good, because one shape covers a slip, a failed gate, and a shipped result alike.</li>
+<li>Good, because an urgent report — a down service, a recall — leads with the fact that drives the response.</li>
+<li>Bad, because the opening reads blunt, and an author used to a buffer needs practice to drop it.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>Review checks that a status report opens on its outcome, with the explanation and the next step after it, and no progress buffer or apology ahead of the bottom line.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>This applies the BLUF (bottom line up front) convention to status reports, and sits alongside the tenseless continuous-present voice (<code>rfd/0025-tenseless-continuous-present-voice</code>) for prose across the repo.</p>
 
 
 </section>

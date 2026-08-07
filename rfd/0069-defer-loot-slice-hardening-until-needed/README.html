@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The context</a></li>
+  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The problem statement</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
+  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The downsides</a></li>
+  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The road not taken</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0069-defer-loot-slice-hardening-until-needed/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,6 +349,87 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>: the slice record whose unbuilt scope this record defers.</li>
 <li><code>rfd/0039-hexagon-budgeter-core</code> through <code>rfd/0043-hexagon-progression-core</code>: the deferred cores.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The context</h2>
+<p>The loot-action core-loop MVP vertical slice (<code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>) decides a large scope: five named cores, a CockroachDB adapter, a measured 90 Hz performance gate, and a SteamVR build. Its stated goal, though, is narrow — one slice “complete enough to exercise every integration seam.” The running <code>godot-loop-slice</code> already carries that loop end to end (Hub to Field to Hub, through transport, server authority, loot contention, and SQLite-backed persistence), and the playable-loop smoke passes. The integration goal is met.</p>
+<p>The rest of the decided scope is production hardening and platform reach. None of it adds integration coverage the running loop does not already have. Per YAGNI times structure to the need (<code>decisions/20260629-yagni-times-structure-to-need.md</code>), structure waits for the feature that needs it: committing on a guess spends the option to build the right thing once the need is known, and the cost lands early while the return lands late.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The problem statement</h2>
+<p>The decided-but-unbuilt items sit in the slice record as if they were live pending work. That conflates the shipped deliverable with deferred work and invites building structure ahead of demonstrated need. The slice record needs a companion that names each deferred item and the concrete trigger that revives it, so that nothing is silently dropped and nothing is built early.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Carry the unbuilt scope forward as deferred-until-needed, each item paired with the trigger that materializes its need. Build an item when its trigger fires, not before.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 29%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Deferred item</th>
+<th>Why it waits</th>
+<th>Trigger that revives it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Presence as a separate named reducer, today folded into the Hilbert interest core and multiplayer sink (<code>rfd/0042-hexagon-presence-core</code>)</td>
+<td>Remote-pose interpolation runs in the slice; a separate reducer adds no integration coverage now</td>
+<td>Remote-pose interpolation needs its own testable reducer, or avatar-fidelity work begins</td>
+</tr>
+<tr class="even">
+<td>Progression as a separate reducer, today an inline inventory append (<code>rfd/0043-hexagon-progression-core</code>)</td>
+<td>The inventory delta commits correctly inline; a reducer is structure ahead of need</td>
+<td>Inventory or affinity logic outgrows append, or deterministic replay is required</td>
+</tr>
+<tr class="odd">
+<td>Budgeter core, unimplemented (<code>rfd/0039-hexagon-budgeter-core</code>)</td>
+<td>Nothing measures or breaches the frame floor yet</td>
+<td>The frame floor is actually breached under load, or the performance gate is enforced</td>
+</tr>
+<tr class="even">
+<td>CockroachDB adapter, with SQLite the only path today (<code>rfd/0006-cockroachdb-with-mtls-role-separation</code>)</td>
+<td>Single-node SQLite carries the slice’s persistence round trip</td>
+<td>Persistence needs multi-node storage or mTLS role separation beyond single-node SQLite</td>
+</tr>
+<tr class="odd">
+<td>Measured performance gate — 90 Hz, 500,000 triangles, 200 draw calls per eye (<code>rfd/0035-first-party-curated-content-zone-baker-budgets</code>)</td>
+<td>No headset target consumes the gate; placeholder content makes the number premature</td>
+<td>A real headset build is the sign-off step</td>
+</tr>
+<tr class="even">
+<td>Real OpenXR build, where the desktop preset duplicates Windows Desktop with no XR options (<code>rfd/0051-headless-openxr-testing-with-monado</code>)</td>
+<td>The slice is verified headless; a real XR export is platform reach, not integration</td>
+<td>A headset playthrough is the acceptance step</td>
+</tr>
+</tbody>
+</table>
+<p>The items the slice record already files after the gate — ranged and caster archetypes, Steam Frame and Steam Deck builds, in-headset authoring, rollback (<code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>), and user-generated content — stay deferred where they are. This record cross-references them rather than restating them.</p>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The downsides</h2>
+<ul>
+<li>A timing judgment can defer something whose need turns out to be near. The named triggers are the early warning; the response is to build once the trigger fires.</li>
+<li>The slice’s full picture now spans two records. The cross-links between this record and the slice record bind them.</li>
+</ul>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The road not taken</h2>
+<ul>
+<li>Build the full decided gate now — rejected as anti-YAGNI; most of it adds production hardening and platform reach, not integration coverage, and pays the optionality and timing bills for a need that has not arrived.</li>
+<li>Leave the unbuilt items in the slice record as “pending” — rejected; it conflates the shipped deliverable with deferred work and invites building ahead of need.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The slice record’s Confirmation (<code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>) points here for the deferred scope. Each item above names the trigger that revives it. The decision holds while no trigger has fired; an item is revived by a new or updated decision record when its trigger arrives.</p>
 
 
 </section>

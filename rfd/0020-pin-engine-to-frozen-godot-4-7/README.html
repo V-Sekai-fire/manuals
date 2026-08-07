@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0020-pin-engine-to-frozen-godot-4-7/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -343,6 +351,55 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0019-gitassembly-tag-release</code>: the tag fixes the assembly merged onto this pinned base.</li>
 <li><code>rfd/0022-spatial-audio-patched-resonance-audio</code>: targets this fixed engine API.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>The engine fork carries many feature branches (cassie, resonance audio, native media, speech, spatial audio, the fabric modules) that the <code>merge</code> recipe assembles onto a base. If that base tracks a moving upstream, every assembly can shift under the patches, so a green build one day can break the next from upstream churn alone. What base should the feature branches and the assembly build on?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>A stable base so assembly and CI are reproducible.</li>
+<li>Patch branches that do not have to chase upstream API changes mid-cycle.</li>
+<li>A known engine version for the docs and for downstream images.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Track upstream <code>godotengine/godot</code> <code>master</code>.</li>
+<li>Track an upstream release branch.</li>
+<li>Pin the fork’s <code>master</code> to one frozen upstream Godot 4.7 commit.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: pin the fork’s <code>master</code> to one frozen upstream Godot 4.7 commit, because it gives the patch branches and the assembly a fixed target, so builds are reproducible and upstream churn cannot break an assembly.</p>
+<ul>
+<li>The fork’s <code>master</code> is the frozen base. Its tip is <code>8a337510</code> (Godot <code>4.7.0-beta</code>, per <code>version.py</code>).</li>
+<li>Every feature branch in the <code>merge</code> <code>gitassembly</code> recipe stands alone on <code>master</code>; the recipe merges them onto the assembled branch from that base.</li>
+<li>The pin moves only by a deliberate update to <code>master</code>, not by following upstream.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good: assemblies and CI are reproducible against a fixed engine.</li>
+<li>Good: feature branches target one fixed engine API.</li>
+<li>Bad: upstream fixes after the pin are not picked up until <code>master</code> is advanced on purpose.</li>
+<li>Bad: the longer the pin sits on a beta, the larger the eventual catch-up to a later 4.7.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p><code>version.py</code> on the fork reports <code>4.7.0-beta</code>, and the <code>gitassembly</code> recipe bases its branches on <code>master</code>. Advancing the engine is a single, reviewable change to the <code>master</code> pin.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>This pin is why the spatial audio decision notes the module targets a fixed engine API. The exact upstream commit that <code>master</code> mirrors lives in the godot fork’s git history.</p>
 
 
 </section>

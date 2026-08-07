@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,21 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#proposal" id="toc-proposal" class="nav-link" data-scroll-target="#proposal">Proposal</a>
+  <ul class="collapse">
+  <li><a href="#embed-libgodot-per-zone" id="toc-embed-libgodot-per-zone" class="nav-link" data-scroll-target="#embed-libgodot-per-zone">Embed <code>libgodot</code> per zone</a></li>
+  <li><a href="#build-configuration" id="toc-build-configuration" class="nav-link" data-scroll-target="#build-configuration">Build configuration</a></li>
+  <li><a href="#the-spike-part-1-boot-and-run-is-done" id="toc-the-spike-part-1-boot-and-run-is-done" class="nav-link" data-scroll-target="#the-spike-part-1-boot-and-run-is-done">The spike: part 1 (boot and run) is done</a></li>
+  <li><a href="#the-spike-part-2-performance-is-not-done" id="toc-the-spike-part-2-performance-is-not-done" class="nav-link" data-scroll-target="#the-spike-part-2-performance-is-not-done">The spike: part 2 (performance) is not done</a></li>
+  <li><a href="#maintainer-feedback" id="toc-maintainer-feedback" class="nav-link" data-scroll-target="#maintainer-feedback">Maintainer feedback</a></li>
+  <li><a href="#fallback-options-ranked-below-the-chosen-one" id="toc-fallback-options-ranked-below-the-chosen-one" class="nav-link" data-scroll-target="#fallback-options-ranked-below-the-chosen-one">Fallback options, ranked below the chosen one</a></li>
+  </ul></li>
+  <li><a href="#recommendation-and-next-steps" id="toc-recommendation-and-next-steps" class="nav-link" data-scroll-target="#recommendation-and-next-steps">Recommendation and next steps</a></li>
+  <li><a href="#open-questions-and-verification" id="toc-open-questions-and-verification" class="nav-link" data-scroll-target="#open-questions-and-verification">Open questions and verification</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -338,6 +353,95 @@ ul.task-list li input[type="checkbox"] {
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <p><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md</code> (item 6)</p>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md</code>, item 6, commits to scoping how much of <code>libriscv</code>/<code>godot-sandbox</code>’s API surface CastSpell effects actually need. This RFD is the detail that item pointed to. It resolves the scoping question and decides to embed a real, headless <code>libgodot</code> instance per zone instead of reimplementing <code>godot-sandbox</code>’s narrow API. It also records a real spike that proved the approach boots correctly.</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p><code>godot-sandbox</code>’s guest-side API (<code>program/cpp/docker/api/</code>) is not a local math library. Reading it directly settles this. Most of that API, <code>Vector3</code>’s own named methods (<code>abs</code>, <code>bezier_interpolate</code>, <code>lerp</code>, <code>slerp</code>, and similar), all of <code>Array</code>, <code>Dictionary</code>, <code>String</code>, and everything under <code>node.hpp</code>/<code>node2d.hpp</code>/<code>node3d.hpp</code>/<code>object.hpp</code>, expands through the <code>METHOD</code>/<code>VMETHOD</code> macros. Those macros build a named, string-dispatched syscall (<code>operator()</code>) that calls back into a live, running Godot process on the host side to actually execute.</p>
+<p>Confirmed directly in <code>program/cpp/docker/api/vector.cpp</code>: <code>Vector3::dot()</code>, <code>cross()</code>, <code>length()</code>, and similar are hand-written inline RISC-V assembly issuing <code>ecall</code> (syscall <code>ECALL_VEC3_OPS</code>), not local computation. <code>Basis</code>, <code>Quaternion</code>, and <code>Transform3D</code> are entirely syscall-based too, with zero locally-computed math at all. Every method routes through a <code>MAKE_SYSCALL(...)</code>-generated call carrying an opaque host-side registry index. This confirms these types are thin remote handles in <code>godot-sandbox</code>’s own design, not real local value types.</p>
+<p><code>zone-server-h2o</code> runs no live Godot process outside the sandbox itself, so it cannot answer these syscalls the way a real Godot host does.</p>
+</section>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p>CastSpell effects never touch a live Node or scene tree in the first place. They only read and write zonefabric’s own entity data: position, velocity, health. Nothing here needs <code>Node</code>/<code>Node2D</code>/<code>Node3D</code>/<code>Object</code>/<code>Callable</code>/<code>Timer</code> at all. This narrows what any runtime choice below actually needs to cover.</p>
+</section>
+<section id="proposal" class="level2">
+<h2 class="anchored" data-anchor-id="proposal">Proposal</h2>
+<section id="embed-libgodot-per-zone" class="level3">
+<h3 class="anchored" data-anchor-id="embed-libgodot-per-zone">Embed <code>libgodot</code> per zone</h3>
+<p>Decide the runtime this way. Embed a real, headless Godot engine instance, via <code>libgodot</code> (<code>core/extension/libgodot.h</code>, <code>GodotInstance</code>, merged in Godot 4.6), inside each CastSpell <code>libriscv</code> sandbox <code>Machine</code>, one instance per zone. This matches <code>libriscv</code>’s Linux syscall emulation ABI rather than <code>godot-sandbox</code>’s own narrow API. <code>GodotInstance</code>’s documented “only one per process” constraint maps cleanly onto one <code>libriscv</code> <code>Machine</code> per zone, since each sandboxed guest is already its own isolated process-like boundary.</p>
+<p>Build this from <code>fabric-godot-core</code>’s own pinned release tag, <code>v2026.06.27.1907-multiplayer-fabric</code> (Godot 4.7.0-beta per that tag’s own <code>version.py</code>), not upstream <code>godotengine/godot</code> generically. Reading directly at that exact tag confirms all three load-bearing pieces this decision needs are present: <code>core/extension/libgodot.h</code>, <code>rv64</code> in <code>platform/linuxbsd/detect.py</code>’s <code>supported_arches</code>, and <code>modules/sandbox</code> (vendored as its own subrepo). None of this is a “does our fork have this yet” open question. It already does.</p>
+</section>
+<section id="build-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="build-configuration">Build configuration</h3>
+<p>Build headless (<code>DisplayServerHeadless</code>, a real, shipped dummy display backend, removing the X11/Wayland/D-Bus/fontconfig/ speech-dispatcher dependencies <code>platform/linuxbsd</code> otherwise pulls in via <code>dlopen</code>), for <code>arch=rv64</code>. <code>rv64</code> is already an existing Godot Linux architecture target in this exact pinned tag, not a new platform port. <code>supported_arches</code> already lists <code>"rv64"</code> alongside <code>x86_32</code>/<code>x86_64</code>/<code>arm32</code>/<code>arm64</code>/<code>ppc64</code>/<code>loongarch64</code>, with real RISC-V compiler flags (<code>-march=rv64gc</code>) already wired in. This is the same <code>platform/linuxbsd</code> code every other Linux architecture uses. It needs building the existing, already-supported headless target for <code>arch=rv64</code>, not designing a new platform backend.</p>
+<p>Disable <code>modules/sandbox</code> for this one embedded-build target specifically, even though the fork’s normal client build keeps it enabled. That module lets a normally-running Godot client host further <code>libriscv</code>-sandboxed guest programs. The embedded CastSpell instance already runs as a <code>libriscv</code> guest itself. Compiling <code>modules/sandbox</code> into it would nest a second sandboxing layer inside the first, adding binary size and surface for no requirement that calls for it. Exclude it via SCons <code>disable_modules=sandbox</code> or an equivalent <code>custom.py</code>/<code>modules.cfg</code> entry for this target only.</p>
+<p>Build with <code>threads=no</code>, Godot’s own single-thread build mode. The Web/WASM export already proves this mode in production. <code>libriscv</code>’s thread model needs it too. <code>lib/libriscv/threads.hpp</code> and both <code>native_threads.cpp</code> and the fuller <code>posix/threads.cpp</code> confirm the model is single-host-thread, cooperative, register-swapping microthreading in both cases, not real concurrent host threads. Godot’s default build assumes genuine parallel execution instead (<code>WorkerThreadPool</code> behind physics and rendering).</p>
+<p>Run real audio headless, not silence. Reading <code>servers/audio/audio_driver_dummy.cpp</code> directly confirms <code>AudioDriverDummy</code> is not a stub. Its <code>mix_audio()</code> calls the real <code>audio_server_process()</code> pipeline, genuine bus mixing, effects, panning, producing real PCM. The driver already exposes <code>set_use_threads(bool)</code>. When threading is off, <code>mix_audio()</code> is the documented, guarded synchronous path (<code>ERR_FAIL_COND(use_threads == true)</code> inside it). The embedding host should poll that path directly, not run it on a background thread.</p>
+<p>Call <code>set_use_threads(false)</code>, and poll <code>mix_audio()</code> from the same tick loop that calls <code>iteration()</code>, to get real mixed audio headless. The Web export’s documented audio glitching traces to that platform’s real-time <code>AudioWorklet</code> output driver. It does not carry over to this already-synchronous <code>Dummy</code> driver path.</p>
+<p>Virtualize filesystem access, and stub or virtualize networking, through <code>libriscv</code>’s own broad Linux syscall-emulation tier, <code>Machine&lt;W&gt;::setup_linux_syscalls(filesystem, sockets)</code> (<code>lib/libriscv/linux/system_calls.cpp</code>), not through <code>godot-sandbox</code>’s own narrow API. This gives real, host-mediated <code>openat</code>/<code>read</code>/<code>mmap</code>-backed file access (with host-side path whitelisting) and full socket calls, already proven against a real statically linked <code>riscv64-unknown-linux-gnu</code> binary in <code>libriscv/libriscv</code>’s own <code>binaries/linux64/</code> example.</p>
+<p>Avoid runtime <code>dlopen</code>. <code>libriscv</code>’s own docs state dynamic library loading needs extra host-side whitelisting, not out-of-the-box support. Statically link every GDExtension a CastSpell instance needs at guest-build time instead.</p>
+</section>
+<section id="the-spike-part-1-boot-and-run-is-done" class="level3">
+<h3 class="anchored" data-anchor-id="the-spike-part-1-boot-and-run-is-done">The spike: part 1 (boot and run) is done</h3>
+<p>The spike this item gates on ran, on real hardware, against real toolchains, not just source-reading. Part (1), boot and run correctly under <code>libriscv</code>, stands resolved and achieved. A minimal host program handled it: it calls <code>libgodot_create_godot_instance()</code> directly, casts the result to a real <code>GodotInstance*</code>, then runs <code>start()</code> and a manual loop of <code>iteration()</code> calls. This exactly matches the shape this RFD already commits to (<code>zone-server-h2o</code>’s own tick loop driving the engine, not Godot’s own <code>main()</code>). It booted the pinned <code>fabric-godot-core</code> tag for real inside <code>libriscv</code>’s actual sandbox (<code>rvlinux</code>, not <code>qemu-riscv64</code>). The run produced real <code>_ready()</code>/<code>_process()</code> script output, five real <code>iteration()</code> calls, and a clean shutdown, confirmed byte for byte via a host-level <code>strace -f</code> capture.</p>
+<p>Getting there needed two changes: switching the embedded engine’s own guest libc from glibc to musl, and seven fixes to <code>libriscv</code> itself. All seven fixes are real and upstream-worthy. None of them change Godot’s own code.</p>
+<p>A genuine glibc <code>tcache</code> heap-consistency defect blocked every attempt under glibc specifically. Disassembly down to the exact faulting instruction confirmed this defect. It is independent of <code>threads=yes</code> versus <code>threads=no</code>. Musl has no comparable <code>tcache</code> mechanism, so switching to it sidesteps that defect entirely. The cost is that musl still needs to reach real POSIX-completeness parity with glibc as CastSpell’s actual requirements grow.</p>
+<p>The <code>libriscv</code> fixes cover four areas:</p>
+<ul>
+<li>Guest pipes forced non-blocking. A real host-level block on one syscall would otherwise stall <code>libriscv</code>’s single-threaded cooperative scheduler indefinitely.</li>
+<li>The real host fds 0/1/2 permanently reserved at startup. A coincidental fd-number collision was silently swallowing <code>libriscv</code>’s own crash reports at exactly the moment they mattered.</li>
+<li><code>mkdirat</code>/<code>chdir</code> implemented, previously entirely missing. Godot’s own <code>user://</code> data-directory setup needs both calls.</li>
+<li>A real, load-bearing bug fixed in <code>libriscv</code>’s own fd-translation layer. That bug collapsed the <code>AT_FDCWD</code> sentinel to an invalid <code>-1</code> instead of passing it through, breaking every relative-path <code>*at()</code> call while leaving absolute-path calls (the only ones exercised until this spike) unaffected.</li>
+</ul>
+<p>One of <code>libriscv</code>’s own open, unresolved upstream issues, <code>libriscv/libriscv#296</code>, independently reports the same underlying symptom class this spike’s fixes resolve.</p>
+<p>Full detail, the reproducible spike script, and the <code>libriscv</code> patch itself live at <code>v-sekai-multiplayer-fabric/godot-riscv-spike</code>, a separate repository this RFD points to rather than duplicates. Audio (<code>AudioDriverDummy</code>’s polled <code>mix_audio()</code> path) was not exercised in this specific spike, since the harness used a headless-with-no-audio-driver-needed test scene. That remains to confirm separately once real implementation starts.</p>
+</section>
+<section id="the-spike-part-2-performance-is-not-done" class="level3">
+<h3 class="anchored" data-anchor-id="the-spike-part-2-performance-is-not-done">The spike: part 2 (performance) is not done</h3>
+<p>Part (2), performance measurement against the real 10Hz/200-entity/ many-zones budget, is not yet done. No performance numbers exist yet for this exact configuration, in Godot’s own docs, in <code>libriscv</code>’s own benchmarks (which measure tiny guest calls, not an engine-sized binary), or from this spike (which validated correctness, not speed, under an interpreted, non-JIT <code>libriscv</code> configuration throughout). This stays the actual gate before real implementation work starts.</p>
+</section>
+<section id="maintainer-feedback" class="level3">
+<h3 class="anchored" data-anchor-id="maintainer-feedback">Maintainer feedback</h3>
+<p><code>fwsgonzo</code> (<code>libriscv</code>/<code>godot-sandbox</code>’s maintainer) confirmed this direction directly. It is technically achievable, and open to a real PR, conditioned on care and an explicit disable option, matching “the ethos of <code>godot-sandbox</code>.”</p>
+<p>Three concrete implications follow for the eventual implementation, not yet built:</p>
+<ul>
+<li>Virtual filesystem access should default-deny, scoped per <code>Sandbox</code> instance. It should build on <code>libriscv</code>’s existing <code>-A/--allow &lt;file&gt;</code> allowlist and its <code>sandbox_libdir</code>/<code>real_libdir</code> restriction pattern (<code>emulator/src/main.cpp</code>), not a broad proxy to the real host filesystem.</li>
+<li>Networking should stay off by default, reachable only through an explicit host-side opt-in via <code>ADD_API_FUNCTION</code>-style host-mediated calls. This matches <code>godot-sandbox</code>’s own existing pattern, not raw guest-visible socket syscalls.</li>
+<li>The embedded-engine mode should be a distinct, explicitly opt-in mode layered on top of <code>godot-sandbox</code>’s existing narrow API, not a change to that default. This gives it a real off switch.</li>
+</ul>
+<p>Signal handling already has real, working coverage (<code>sigaction</code>, <code>sigaltstack</code>, <code>tkill</code>, <code>tgkill</code>, confirmed via direct source read). It is stronger than expected going in, and worth a focused review rather than a rewrite. This spike’s own <code>mkdirat</code>/<code>chdir</code> fixes above are real host-filesystem passthrough, the opposite of this default-deny direction. Expect them to become virtualized, allowlist-gated calls in the real implementation, not to stay a direct proxy to the real host filesystem.</p>
+</section>
+<section id="fallback-options-ranked-below-the-chosen-one" class="level3">
+<h3 class="anchored" data-anchor-id="fallback-options-ranked-below-the-chosen-one">Fallback options, ranked below the chosen one</h3>
+<ol type="1">
+<li>Fall back to vendoring <code>godot-cpp</code>’s (<code>godotengine/godot-cpp</code>, MIT) <code>Vector3</code>/<code>Basis</code>/<code>Quaternion</code>/<code>Transform3D</code> and relevant <code>Variant</code> scalar sources, hand-written and purely local (no engine round-trip), <code>REAL_T_IS_DOUBLE</code>-compatible, if the spike’s threading or performance gate fails. <code>godot-sandbox</code>’s existing <code>add_sandbox_library</code> CMake helper confirms this is buildable. It also needs materially less integration work than vendoring raw Godot engine <code>core/math/</code> source directly. <code>godot-cpp</code>’s dependency graph already terminates at a handful of small, self-contained headers rather than the full <code>core/</code> monolith.</li>
+<li>Run an actual Godot engine process alongside <code>zone-server-h2o</code> itself, as a separate host process, backing the full <code>godot-sandbox</code> syscall surface the way a real Godot client does. This directly contradicts the minimal-components driver above. It adds the entire engine, GDExtension host included, as a dependency to a project built specifically to avoid exactly that. Reject.</li>
+<li>Hand-reimplement the full <code>godot-sandbox</code> API surface, <code>Node</code>/<code>Object</code>/<code>Callable</code>/ClassDB reflection included, from scratch, version-matched, with no live engine and no vendored source to check against. This is the largest and most drift-prone of the four options. Reject.</li>
+</ol>
+</section>
+</section>
+<section id="recommendation-and-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="recommendation-and-next-steps">Recommendation and next steps</h2>
+<ol type="1">
+<li>Build the pinned <code>fabric-godot-core</code> <code>libgodot</code> target for <code>arch=rv64</code>, headless, <code>threads=no</code>, <code>modules/sandbox</code> disabled, matching the build configuration above.</li>
+<li>Wire the embedding host program (<code>libgodot_create_godot_instance()</code> plus a manual <code>iteration()</code> loop) into the real CastSpell sandbox path, replacing the spike’s minimal standalone harness.</li>
+<li>Run part (2)’s performance measurement against the real 10Hz/200-entity/many-zones budget before committing further implementation work.</li>
+<li>Apply the four <code>libriscv</code> fixes from the spike upstream, per <code>fwsgonzo</code>’s stated openness to a real PR.</li>
+<li>Design the default-deny filesystem and networking gating the maintainer feedback above calls for, before any package outside this project’s own trusted builds can load.</li>
+</ol>
+</section>
+<section id="open-questions-and-verification" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions-and-verification">Open questions and verification</h2>
+<p>Resolved: which <code>Vector3</code>/<code>Basis</code>/<code>Transform3D</code>/<code>Quaternion</code> operations compute locally in <code>godot-sandbox</code>’s guest versus which route through the <code>METHOD</code>/<code>VMETHOD</code> syscall proxy. Reading <code>program/cpp/docker/api/vector.cpp</code> directly confirmed this with certainty. <code>Vector3</code>’s named math methods are hand-written inline RISC-V assembly issuing <code>ecall</code>. <code>Basis</code>/<code>Quaternion</code>/<code>Transform3D</code> have zero local computation at all. This settles the question the prior draft of <code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md</code> flagged as suggestive, not conclusive.</p>
+<p>Resolved, part (1) of the <code>libgodot</code>-in-sandbox spike. A real host program called <code>libgodot_create_godot_instance()</code> directly and drove <code>GodotInstance::iteration()</code> in a manual loop. It booted the pinned <code>fabric-godot-core</code> tag for real inside <code>libriscv</code>’s actual sandbox (<code>rvlinux</code>), not just <code>qemu-riscv64</code>. The run produced real script output, five real <code>iteration()</code> calls, and a clean shutdown, confirmed via <code>strace -f</code>.</p>
+<p>Open, part (2): measure real boot time and per-<code>iteration()</code> cost against the actual budget (10Hz, 200 entities/zone, many zones/process). Confirm the one-<code>GodotInstance</code>-per-<code>libriscv</code>- <code>Machine</code>-per-zone shape holds up at that cadence. No one measures either yet. This spike validated correctness under an interpreted, non-JIT <code>libriscv</code> configuration, not speed. Fall back to vendoring <code>godot-cpp</code>’s math/<code>Variant</code> subset if this gate fails.</p>
 
 
 </section>

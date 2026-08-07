@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0025-tenseless-continuous-present-voice/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -341,6 +349,57 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0026-commit-messages-sentence-case</code>: a commit body states what the change makes true of the system, the same voice.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>Comments and documentation drift out of sync with code as the system changes. A comment written as history (“added a cache”, “we removed the old path”) or as a plan (“will solve this”, “TODO: wire X”) describes a moment that has passed or has not yet arrived, so a reader cannot check it against the code in front of them. How should prose in this repo phrase what it says about the system?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>A reader trusts a comment when it matches the code as it stands.</li>
+<li>History lives in git; plans live in issues and decision records.</li>
+<li>The rule stays mechanical enough to apply in review without debate.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Free choice of tense per author.</li>
+<li>Past-tense changelog voice inside code comments.</li>
+<li>A tenseless continuous-present voice where every sentence states what is currently true of the system.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: a tenseless continuous-present voice, because a sentence that states a present truth stays correct as long as the code it describes stays the same, and goes stale visibly the moment the code changes.</p>
+<p>Every comment and documentation sentence states what is currently true of the system. Prose describes behaviour (“the parser streams tokens”), and an unfinished area reads as a present gap (“the parser handles no Unicode escapes yet”) rather than as a task or a past edit. The voice covers code comments, doc pages, and decision records alike.</p>
+<p>The voice rules out three habits:</p>
+<ul>
+<li>Past-tense narration of edits, such as “removed the legacy path” or “we switched to a queue”.</li>
+<li>Future or imperative planning, such as “will add validation” or “TODO: handle retries”.</li>
+<li>Temporal qualifiers that age, such as “now”, “currently changed”, or “previously”.</li>
+</ul>
+<p>A TODO document states each open item as a present gap, so the file reads as a description of where the system stands rather than a logbook of intentions.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good, because a stale sentence signals a real divergence from the code, which makes review catch it.</li>
+<li>Good, because one voice covers code comments, doc pages, and decision records.</li>
+<li>Bad, because a present-gap phrasing reads less naturally than an imperative TODO, and authors need practice to phrase work that way.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>Review checks that new comments and prose state present truths, with no past-tense edit narration, no future or imperative planning, and no aging temporal qualifiers. The existing decision records in this repo already read this way.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>This generalizes the house rule applied across the sinew Lean spec and its native viewer prose, where comments describe current behaviour and <code>todo.md</code> lists each open item as a present gap.</p>
 
 
 </section>

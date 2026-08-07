@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-2c5fcee0d7f02428ad313b253c7be3c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-ad3f51b41778a746c6b33af044c45787.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -293,6 +293,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0060-org-scoped-github-app-token-for-gh-access/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -342,6 +350,56 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code>: the same org’s repos carry the quadlet sources this token drives.</li>
 </ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>Repository operations against <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> — archiving, renaming, pushing, editing settings — run through <code>gh</code> from a working environment. <code>gh</code> was authenticated with a personal OAuth token (<code>gho_</code>, scopes <code>gist, read:org, repo, workflow</code>). The <code>repo</code> scope is not org-scoped: it grants read/write/<strong>admin/delete</strong> on every repository the personal account can reach, across every org and every private repo. A mistyped owner in a destructive command, or a leak of that single token, could damage anything the account touches anywhere on GitHub — far beyond the one org being worked on. <code>gh</code> authenticates per host, not per org, so the limit cannot live in <code>gh</code> config; it has to live in the token.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>Confine write/admin reach to the one org, so blast radius stops at its boundary.</li>
+<li>Short-lived credentials, so a leak expires on its own rather than living until revoked.</li>
+<li>Decouple automation from the personal account, so its cross-org access never rides along.</li>
+<li>Least privilege — only the permissions the repo work actually needs.</li>
+<li>Still usable from the CLI and from CI.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<ul>
+<li>Keep the broad personal OAuth token (<code>repo</code> scope).</li>
+<li>A fine-grained Personal Access Token with resource owner set to the org.</li>
+<li>A GitHub App installed on the org, minting installation access tokens.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
+<p>Chosen option: “a GitHub App installed on the org”. The App is installed on <code>v-sekai-multiplayer-fabric</code>; a helper (<code>~/bin/gh-fabric-token.sh</code>) reads the App id and private key from 1Password, signs an RS256 JWT, exchanges it for an installation access token, and exports it as <code>GH_TOKEN</code>. <code>gh</code> then uses that token with no <code>gh auth login</code>.</p>
+<p>An installation token is org-scoped by construction, expires ~1 hour after minting, and acts as the App rather than the personal account — covering all three of the top drivers in one mechanism, where a fine-grained PAT covers org-scoping but stays long-lived and a human-account secret. The cost is a token-minting step (JWT → installation token) and guarding the App private key, which 1Password holds.</p>
+<p>The everyday installation is granted <code>administration: write</code>, <code>contents: write</code>, <code>workflows: write</code>, <code>actions: read</code>, <code>metadata: read</code> on all repositories in the org — the set the repo work (push, edit workflows, archive/rename) needs.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Good: cross-org private access is impossible — the token cannot read or write any private repo outside the org, and cannot act as the personal account.</li>
+<li>Good: a leaked token is dead within ~1 hour, with no manual revocation step.</li>
+<li>Good: the App is its own identity, so audit-log entries and access are decoupled from the personal account’s lifecycle.</li>
+<li>Bad: minting needs a JWT-exchange helper rather than a single static secret.</li>
+<li>Bad: the App private key is itself high-value (it can mint tokens for every install of the App) and must be guarded as carefully as the token it replaces.</li>
+<li>Bad: <code>administration: write</code> on all repos means the token can still archive / rename / delete / transfer any repo <em>within</em> the org — the in-org fat-finger case is not mitigated by scoping alone.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>A minted token was probed against the live API. <code>GET /installation/repositories</code> reports 49 repos, <code>repository_selection: all</code>. Org repos are reachable; <code>GET /user</code> returns <code>403 Resource not accessible by integration</code> (the token is not the personal account); private repos in other orgs are unreachable. Public repos elsewhere stay readable, which is public-is-public and not a private exposure. The minted token’s permissions read back as <code>administration/contents/workflows: write, actions/metadata: read</code>.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More information</h2>
+<p>In-org blast radius — every repo, with <code>administration: write</code> — is narrowed further by installing on selected repositories instead of all, and by splitting off a separate, rarely-used admin App so the everyday token drops <code>administration: write</code>. The accidental destructive command <em>within</em> the org is caught only by an out-of-band confirmation step, not by token scoping. This pairs with the move to podman quadlets on Fedora 44 (<code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code>), where <code>gh</code> drives the same org’s repos that carry the quadlet sources.</p>
 
 
 </section>
