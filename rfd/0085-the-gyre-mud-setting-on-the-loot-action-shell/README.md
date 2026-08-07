@@ -5,6 +5,10 @@ state: discussion
 scope: zone-server-h2o game content, web client
 ---
 
+The premise:
+
+Players awaken as "Sparks" — digitized human consciousnesses legally owned by a defunct hyper-corporation. They are currently downloaded into "Frames," which are cheap, mass-produced synthetic worker chassis. Abandoned on The Gyre, a massive, slowly failing ring-station orbiting a toxic gas giant, players must survive cycle by cycle. They take on grueling localized contracts, scavenge for parts to prevent their Frames from seizing up, and try to buy their digital freedom from the station's automated debt-collection algorithms.
+
 ## Decision
 
 The Gyre is game content. It is not a new game architecture.
