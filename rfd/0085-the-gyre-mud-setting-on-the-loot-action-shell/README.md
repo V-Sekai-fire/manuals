@@ -35,21 +35,6 @@ party has fewer than 4 players, NPC companions can fill the empty
 spots. See "Party composition and tone" in `DETAILS.md` for more
 detail.
 
-Target client: the target client is a website, not the current
-SteamVR build. Players log in with GitHub OAuth. GitHub OAuth carries
-each player's save data between sessions. This design needs one new
-part: a save-data adapter for the Progression core. It does not need
-changes to the Combat core, the Loot core, or the Budgeter core. This
-RFD does not yet decide the OAuth design or the website design.
-
-Implementation status: `zone-server-h2o` pull request #5 builds the
-smallest part of this loop as real code. It adds a `the_gyre` MUD
-domain. (A MUD is a multi-user, text-based game.) It also adds a mode
-selector on the website. See "Smallest-loop implementation status" in
-`DETAILS.md` for which parts are complete and which parts are not
-complete. This RFD is the source of truth for the design, not
-`zone-server-h2o` issue #4 (closed).
-
 ## References
 
 - Room graph, NPCs, contract catalog, item table, session pacing,
