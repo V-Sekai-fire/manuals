@@ -136,3 +136,4 @@ elsewhere.
 | [0082](0082-zonefabric-scaling/README.md)                                     | Zonefabric scaling: hub/instanced-zone game-server benchmark shape                       | published     |
 | [0083](0083-zone-server-h2o-replaces-godot-fabriczone/README.md)              | Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)                   | published     |
 | [0084](0084-zstd-compression-for-zone-state/README.md)                        | zstd compression for batched zone-state FDB values                                       | published     |
+| [0085](0085-the-gyre-mud-setting-on-the-loot-action-shell/README.md)          | The Gyre: a MUD setting on the loot-action core-loop shell                               | prediscussion |
