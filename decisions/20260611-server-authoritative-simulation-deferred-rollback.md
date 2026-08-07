@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0046](../rfd/0046-server-authoritative-simulation-deferred-rollback/README.md).
+
 ## Context and Problem Statement
 
 The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt (the Maglev intercept smoke test) was rejected, and the one-week slice needs a simpler model that still resists client tampering.

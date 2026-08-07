@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0048](../rfd/0048-android-template-temurin-jdk21/README.md).
+
 ## Context and Problem Statement
 
 The Android export template of the merged double-precision assembly is needed for OpenXR builds. The box carries no Android SDK, and Fedora 44 packages only JDK 25 and 26; Gradle rejects Java 25 with "Unsupported class file major version 69".

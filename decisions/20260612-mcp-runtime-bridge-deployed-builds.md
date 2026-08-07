@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0054](../rfd/0054-mcp-runtime-bridge-deployed-builds/README.md).
+
 ## Context and Problem Statement
 
 The Godot MCP addon is an editor plugin, so it drives the editor over its `EditorInterface`. Debugging a deployed build — a headless zone server, a mobile client, an OpenXR app — needs the same inspection against the running game, where there is no editor.

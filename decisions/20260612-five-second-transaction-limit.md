@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0050](../rfd/0050-five-second-transaction-limit/README.md).
+
 ## Context and Problem Statement
 
 A connection that silently desyncs wastes a player's time: the loop bug had a client believe it was joined while the server had dropped it, and it waited forever. FoundationDB bounds every transaction to five seconds and aborts past that, so a stuck operation fails fast instead of hanging. The slice wants the same guarantee across the operations that can block — connection recovery, the runtime MCP round trips, and any commit.

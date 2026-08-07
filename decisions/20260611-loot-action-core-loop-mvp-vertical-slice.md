@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0045](../rfd/0045-loot-action-core-loop-mvp-vertical-slice/README.md).
+
 # Loot-action core-loop MVP vertical slice
 
 ## The Context

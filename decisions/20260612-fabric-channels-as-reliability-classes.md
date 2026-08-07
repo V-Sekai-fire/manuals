@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0049](../rfd/0049-fabric-channels-as-reliability-classes/README.md).
+
 ## Context and Problem Statement
 
 Transforms want unreliable, latest-wins delivery at tick rate; sparse control events (a teleport vote, a loot grab) want reliable, exactly-once delivery. Mixing both on one ordered stream lets a reliable event head-of-line-block the transform flow, and a separate text channel for control means two codecs and two reliability models to reason about.
