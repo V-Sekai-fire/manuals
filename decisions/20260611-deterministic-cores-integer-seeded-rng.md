@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0034](../rfd/0034-deterministic-cores-integer-seeded-rng/README.md).
+
 ## Context and Problem Statement
 
 Replay, recorded fixtures, and the future rollback adapter need the authoritative cores to be bit-exact across the RTX 4090 workstation and the Steam Deck. IEEE-754 floating point diverges across platforms through fused multiply-add, instruction reordering, and transcendental functions, so a float in the authoritative path breaks replay silently.

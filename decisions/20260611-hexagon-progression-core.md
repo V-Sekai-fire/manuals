@@ -6,6 +6,8 @@ tier: proof of concept
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0043](../rfd/0043-hexagon-progression-core/README.md).
+
 ## Context and Problem Statement
 
 The profile and inventory rules — the profile, the valid inventory transitions, and the affinity gate on arts — need to be durable across a session and testable with no database.

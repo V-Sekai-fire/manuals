@@ -6,6 +6,8 @@ tier: baseline
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0035](../rfd/0035-first-party-curated-content-zone-baker-budgets/README.md).
+
 ## Context and Problem Statement
 
 A user-generated-content runtime carries arbitrary, unpredictable per-frame cost, which is fatal on a mobile GPU holding a stereo VR frame. The MVP needs predictable cost and the freedom to co-optimize content against the engine.

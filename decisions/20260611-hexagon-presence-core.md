@@ -6,6 +6,8 @@ tier: proof of concept
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0042](../rfd/0042-hexagon-presence-core/README.md).
+
 ## Context and Problem Statement
 
 Remote-avatar presence is already decided in depth: head and hand orbs (the orb demo), human-readable markers (the marker decision), and a ghostly partial body (the body-model decision). The loop needs presence behind ports like the other cores, without redeciding the representation.

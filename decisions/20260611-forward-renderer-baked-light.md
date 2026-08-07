@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0036](../rfd/0036-forward-renderer-baked-light/README.md).
+
 ## Context and Problem Statement
 
 The mobile tile renderer rations bandwidth across file, memory, and network IO, and deferred rendering competes for it. The slice needs predictable frame cost regardless of light count.

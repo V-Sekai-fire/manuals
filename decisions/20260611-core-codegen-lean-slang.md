@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0032](../rfd/0032-core-codegen-lean-slang/README.md).
+
 ## Context and Problem Statement
 
 The cores carry compute kernels — hit raycasts, the budgeter solve, geometry costing — that need to be verified once and run as GPU compute, with the dispatch wrapped behind the flat C ABI port ([the Lean cores decision](20260611-lean4-kernel-cores-flat-c-host-adapters.md)). Hand-porting a kernel from a separate spec to a shader drifts.

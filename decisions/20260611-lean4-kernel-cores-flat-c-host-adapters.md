@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0044](../rfd/0044-lean4-kernel-cores-flat-c-host-adapters/README.md).
+
 ## Context and Problem Statement
 
 The hexagonal cores ([the hexagonal decision](20260610-hexagonal-core-ports-adapters.md)) hold dependency-free domain logic that Godot, the Elixir backend, and a CLI all bind. The team wants strong spec and proof guarantees on that logic without linking a heavy language runtime into every host. The `idtx-flow` repository already explores this shape in its `LEAN_KERNELS_HOST_ADAPTERS` investigation.
