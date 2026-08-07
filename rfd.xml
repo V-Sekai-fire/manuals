@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 09:10:03 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 09:24:25 GMT</lastBuildDate>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</link>
@@ -22,21 +22,20 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o game content, web client</p>
-<p>The premise:</p>
 <p>Players awaken as “Sparks” — digitized human consciousnesses legally owned by a defunct hyper-corporation. They are currently downloaded into “Frames,” which are cheap, mass-produced synthetic worker chassis. Abandoned on The Gyre, a massive, slowly failing ring-station orbiting a toxic gas giant, players must survive cycle by cycle. They take on grueling localized contracts, scavenge for parts to prevent their Frames from seizing up, and try to buy their digital freedom from the station’s automated debt-collection algorithms.</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The Gyre is game content. It is not a new game architecture.</p>
-<p>RFD 0045 defines a loop with two areas: a Hub area and a Field area. Players start in the Hub area. They travel to a Field area to do one task. Then they return to the Hub area. The Gyre reuses this same loop.</p>
+<p>The Gyre is content for a game and is not a new game architecture.</p>
+<p>We defined a loop with two areas: a Hub area and a Field area. Players start in the Hub area. They travel to a Field area to do one task. Then they return to the Hub area.</p>
 <p>In The Gyre, two Hub locations stand in for the Hub area: the Under-Market and the Commons. Each contract stands in for a Field task. A contract is one of these: a scavenge run, a hack run, an exploration run, or (sometimes) a short combat run.</p>
-<p>RFD 0045 also defines five core systems: Budgeter, Combat, Loot, Presence, and Progression. These five core systems stay as they are. The Gyre adds new content on top of them: rooms, non-player characters (NPCs), items, and a story frame called the Debt Clock.</p>
-<p>Party shape and tone: players explore more than they fight. Combat happens less often than in a typical Dungeons &amp; Dragons session. A party has 2 to 4 players. The RFD calls each player a Spark. If a party has fewer than 4 players, NPC companions can fill the empty spots. See “Party composition and tone” in <code>DETAILS.md</code> for more detail.</p>
+<p>We also defined five core systems: Budgeter, Combat, Loot, Presence, and Progression. These five core systems stay as they are. The Gyre adds new content on top of them: rooms, non-player characters (NPCs), items, and a story frame called the Debt Clock.</p>
+<p>Players explore more than they fight. Combat happens less often than in a typical Dungeons &amp; Dragons session. A party has 2 to 4 players. If a party has fewer than 4 players, NPC companions can fill the empty spots.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>Room graph, NPCs, contract catalog, item table, session pacing, party/tone detail, implementation status, and open questions: <code>DETAILS.md</code></li>
-<li>Implementation: <code>zone-server-h2o</code> PR #5</li>
+<li>Implementation: <code>zone-server-h2o</code></li>
 </ul>
 </section>
 <section id="related" class="level2">
@@ -51,7 +50,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -94,7 +93,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -133,7 +132,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -172,7 +171,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -215,7 +214,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -255,7 +254,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -294,7 +293,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -338,7 +337,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -378,7 +377,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -422,7 +421,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -461,7 +460,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -503,7 +502,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -542,7 +541,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</title>
@@ -584,7 +583,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0071: YAGNI times structure to the need, in code and in the record</title>
@@ -623,7 +622,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0071-yagni-times-structure-to-need/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0070: Export loop-slice server telemetry to the observability collector</title>
@@ -662,7 +661,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0069: Defer the loot-slice hardening scope until its need arrives</title>
@@ -702,7 +701,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0069-defer-loot-slice-hardening-until-needed/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0068: sccache with GitHub Actions cache for Godot container builds</title>
@@ -741,7 +740,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0068-sccache-github-actions-cache-for-godot-builds/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0067: Release tags progress chronologically through dev, beta, rc, and release</title>
@@ -780,7 +779,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0067-release-tag-progression-dev-beta-rc/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0066: Game-loop-first delivery sequence</title>
@@ -819,7 +818,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0066-game-loop-cluster-sequence/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 09:10:03 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 09:24:25 GMT</pubDate>
 </item>
 </channel>
 </rss>

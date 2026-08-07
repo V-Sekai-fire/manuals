@@ -320,21 +320,20 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o game content, web client</p>
-<p>The premise:</p>
 <p>Players awaken as “Sparks” — digitized human consciousnesses legally owned by a defunct hyper-corporation. They are currently downloaded into “Frames,” which are cheap, mass-produced synthetic worker chassis. Abandoned on The Gyre, a massive, slowly failing ring-station orbiting a toxic gas giant, players must survive cycle by cycle. They take on grueling localized contracts, scavenge for parts to prevent their Frames from seizing up, and try to buy their digital freedom from the station’s automated debt-collection algorithms.</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The Gyre is game content. It is not a new game architecture.</p>
-<p>RFD 0045 defines a loop with two areas: a Hub area and a Field area. Players start in the Hub area. They travel to a Field area to do one task. Then they return to the Hub area. The Gyre reuses this same loop.</p>
+<p>The Gyre is content for a game and is not a new game architecture.</p>
+<p>We defined a loop with two areas: a Hub area and a Field area. Players start in the Hub area. They travel to a Field area to do one task. Then they return to the Hub area.</p>
 <p>In The Gyre, two Hub locations stand in for the Hub area: the Under-Market and the Commons. Each contract stands in for a Field task. A contract is one of these: a scavenge run, a hack run, an exploration run, or (sometimes) a short combat run.</p>
-<p>RFD 0045 also defines five core systems: Budgeter, Combat, Loot, Presence, and Progression. These five core systems stay as they are. The Gyre adds new content on top of them: rooms, non-player characters (NPCs), items, and a story frame called the Debt Clock.</p>
-<p>Party shape and tone: players explore more than they fight. Combat happens less often than in a typical Dungeons &amp; Dragons session. A party has 2 to 4 players. The RFD calls each player a Spark. If a party has fewer than 4 players, NPC companions can fill the empty spots. See “Party composition and tone” in <code>DETAILS.md</code> for more detail.</p>
+<p>We also defined five core systems: Budgeter, Combat, Loot, Presence, and Progression. These five core systems stay as they are. The Gyre adds new content on top of them: rooms, non-player characters (NPCs), items, and a story frame called the Debt Clock.</p>
+<p>Players explore more than they fight. Combat happens less often than in a typical Dungeons &amp; Dragons session. A party has 2 to 4 players. If a party has fewer than 4 players, NPC companions can fill the empty spots.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>Room graph, NPCs, contract catalog, item table, session pacing, party/tone detail, implementation status, and open questions: <code>DETAILS.md</code></li>
-<li>Implementation: <code>zone-server-h2o</code> PR #5</li>
+<li>Implementation: <code>zone-server-h2o</code></li>
 </ul>
 </section>
 <section id="related" class="level2">
