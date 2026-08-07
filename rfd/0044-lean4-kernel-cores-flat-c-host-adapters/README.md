@@ -46,3 +46,7 @@ flat C ABI and never sees core internals or a Lean runtime.
   kernel codegen these cores dispatch.
 - `rfd/0033-core-contract-pure-reducer-byte-state`: the pure-reducer
   contract each core implements.
+
+## Detail
+
+{{< include DETAILS.md >}}

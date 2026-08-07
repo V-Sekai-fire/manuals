@@ -47,3 +47,7 @@ unbuilt and carry forward as deferred work.
   the five cores this slice wires together.
 - `rfd/0046-server-authoritative-simulation-deferred-rollback`: the
   authority model for the Field instance.
+
+## Detail
+
+{{< include DETAILS.md >}}

@@ -39,3 +39,7 @@ fast path.
 - `rfd/0073-async-fdb-callback-chain`: how each worker drives FDB
   without blocking its ring.
 - `rfd/0077-pert-critical-path-zonefabric`: task C in the build order.
+
+## Detail
+
+{{< include DETAILS.md >}}

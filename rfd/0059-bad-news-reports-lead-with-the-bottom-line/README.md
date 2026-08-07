@@ -37,3 +37,7 @@ does it delay it?
 
 - `rfd/0025-tenseless-continuous-present-voice`: the companion voice
   rule for prose across the repo.
+
+## Detail
+
+{{< include DETAILS.md >}}

@@ -36,3 +36,7 @@ name.
 
 - `rfd/0020-pin-engine-to-frozen-godot-4-7`: the tag fixes the
   assembly merged onto that pinned base.
+
+## Detail
+
+{{< include DETAILS.md >}}

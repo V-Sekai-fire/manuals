@@ -47,3 +47,7 @@ golden-vector differential the C++ must match.
   clients render rather than re-simulate.
 - `rfd/0049-fabric-channels-as-reliability-classes`: the channel this
   packet rides.
+
+## Detail
+
+{{< include DETAILS.md >}}

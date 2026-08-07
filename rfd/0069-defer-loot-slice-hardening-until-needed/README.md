@@ -42,3 +42,7 @@ a demonstrated need.
   whose unbuilt scope this record defers.
 - `rfd/0039-hexagon-budgeter-core` through
   `rfd/0043-hexagon-progression-core`: the deferred cores.
+
+## Detail
+
+{{< include DETAILS.md >}}

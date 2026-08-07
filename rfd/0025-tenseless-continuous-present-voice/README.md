@@ -38,3 +38,7 @@ code changes.
 
 - `rfd/0026-commit-messages-sentence-case`: a commit body states what
   the change makes true of the system, the same voice.
+
+## Detail
+
+{{< include DETAILS.md >}}

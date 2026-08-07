@@ -40,3 +40,7 @@ stretch goal layered on once the loop turns.
 ## Related
 
 `rfd/0018-feature-classification-poc-baseline-stretch/README.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

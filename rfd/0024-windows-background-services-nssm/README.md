@@ -42,3 +42,7 @@ port (and, for sccache, by S3 key prefix).
 
 - `rfd/0016-checking-sccache`
 - `rfd/0017-compiling-godot-engine`
+
+## Detail
+
+{{< include DETAILS.md >}}

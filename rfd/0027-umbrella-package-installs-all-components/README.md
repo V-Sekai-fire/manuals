@@ -33,3 +33,7 @@ in the umbrella beside the new component's own entry.
   `decisions/20260609-umbrella-package-installs-all-components.md`
 - `scoop-bucket/bucket/sinew.json`, `homebrew-sinew/Formula/sinew.rb`,
   the zone backend `docker-compose.yml`
+
+## Detail
+
+{{< include DETAILS.md >}}

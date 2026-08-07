@@ -42,3 +42,7 @@ of concept.
 
 `rfd/0014-art-game-loop-steel-thread/README.md` uses the cassie pen this
 classification tiers as proof of concept.
+
+## Detail
+
+{{< include DETAILS.md >}}

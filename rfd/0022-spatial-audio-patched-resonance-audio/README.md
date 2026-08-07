@@ -39,3 +39,7 @@ demo and benchmark scene.
 
 - `rfd/0020-pin-engine-to-frozen-godot-4-7`: fixes the engine API this
   module targets.
+
+## Detail
+
+{{< include DETAILS.md >}}

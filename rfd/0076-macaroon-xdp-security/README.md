@@ -48,3 +48,7 @@ of one core and still absorbs a spoofed-packet flood at line rate.
   slotmap handle.
 - `rfd/0072-actor-lite-worker-pool`: the orchestrator that validates
   Macaroons runs on this worker pool.
+
+## Detail
+
+{{< include DETAILS.md >}}

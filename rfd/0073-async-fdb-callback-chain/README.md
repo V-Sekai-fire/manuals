@@ -37,3 +37,7 @@ time.
 
 `rfd/0072-actor-lite-worker-pool`: the worker thread this callback
 chain runs inside.
+
+## Detail
+
+{{< include DETAILS.md >}}

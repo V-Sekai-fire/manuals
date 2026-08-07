@@ -47,3 +47,7 @@ systems together for no benefit.
 
 `taskweft/taskweft` RFD 0003/0004, and `rfd/0080-slotmap-entity-storage`
 (shared addressing scheme).
+
+## Detail
+
+{{< include DETAILS.md >}}

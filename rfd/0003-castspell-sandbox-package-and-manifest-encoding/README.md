@@ -34,3 +34,7 @@ inside the host, in pure C under Fil-C), and the rejected alternatives.
 
 `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md` (item 4),
 `rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

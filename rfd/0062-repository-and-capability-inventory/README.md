@@ -44,3 +44,7 @@ caused.
   the loot-action vertical slice.
 - `rfd/0018-feature-classification-poc-baseline-stretch`: the tier
   classification each capability follows.
+
+## Detail
+
+{{< include DETAILS.md >}}

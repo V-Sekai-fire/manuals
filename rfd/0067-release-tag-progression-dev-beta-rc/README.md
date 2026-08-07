@@ -40,3 +40,7 @@ pre-release, and a bare version builds as a full release.
 
 - `rfd/0065-fabric-platform-central-elixir-burrito-casync`: a release
   workflow that produces tags under this convention.
+
+## Detail
+
+{{< include DETAILS.md >}}

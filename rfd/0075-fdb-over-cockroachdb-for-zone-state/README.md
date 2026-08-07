@@ -36,3 +36,7 @@ SQL `BEGIN`/`COMMIT` wrapper.
 
 `rfd/0073-async-fdb-callback-chain`: the callback pattern this API
 surface drives.
+
+## Detail
+
+{{< include DETAILS.md >}}

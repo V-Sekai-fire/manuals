@@ -46,3 +46,7 @@ unaffected, because a single session per listener works end to end.
 
 - `rfd/0023-webtransport-http3-transport`: the HTTP/3 transport this
   finding constrains.
+
+## Detail
+
+{{< include DETAILS.md >}}

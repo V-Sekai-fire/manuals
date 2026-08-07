@@ -41,3 +41,7 @@ scope here.
 
 - `rfd/0009-ghcr-package-ownership-same-repo`: another repo-naming and
   ownership convention.
+
+## Detail
+
+{{< include DETAILS.md >}}

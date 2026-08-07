@@ -39,3 +39,7 @@ secrets, and ongoing cost.
 
 - `rfd/0016-checking-sccache`: an earlier sccache-checking record for
   the build cache.
+
+## Detail
+
+{{< include DETAILS.md >}}

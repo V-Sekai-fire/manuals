@@ -40,3 +40,7 @@ recording its capture date and archived path.
 
 - Decision drivers, considered options, and confirmation: `DETAILS.md`
 - Original record: `decisions/20260606-archival-file-naming-convention.md`
+
+## Detail
+
+{{< include DETAILS.md >}}

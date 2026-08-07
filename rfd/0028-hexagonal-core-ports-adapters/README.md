@@ -37,3 +37,7 @@ over a shared wire protocol.
   `decisions/20260610-hexagonal-core-ports-adapters.md`
 - `sinew-mocap` repos: `driver`, `mount_drift`, `solve`, `viewer`,
   `vr_bridge`
+
+## Detail
+
+{{< include DETAILS.md >}}

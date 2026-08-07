@@ -41,3 +41,7 @@ private key is itself high-value and stays guarded in 1Password.
 
 - `rfd/0061-quadlets-on-fedora-44-instead-of-harvester`: the same
   org's repos carry the quadlet sources this token drives.
+
+## Detail
+
+{{< include DETAILS.md >}}

@@ -44,3 +44,7 @@ design to runtime behavior.
 - `rfd/0078-plausible-witness-dag-feature-ablation`: extends
   plausible-witness-dag's runtime role to pre-implementation design
   ablation.
+
+## Detail
+
+{{< include DETAILS.md >}}

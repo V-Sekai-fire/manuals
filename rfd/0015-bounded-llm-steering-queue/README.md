@@ -38,3 +38,7 @@ the model's context window fills up. Externalizing avoids both.
 
 `rfd/0012-amend-pr-before-it-enters-the-queue/README.md` is the
 work-in-progress discipline this queue relies on.
+
+## Detail
+
+{{< include DETAILS.md >}}

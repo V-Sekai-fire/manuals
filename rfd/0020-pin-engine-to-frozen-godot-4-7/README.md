@@ -38,3 +38,7 @@ a deliberate update to `master`, never by following upstream.
   merged onto this pinned base.
 - `rfd/0022-spatial-audio-patched-resonance-audio`: targets this fixed
   engine API.
+
+## Detail
+
+{{< include DETAILS.md >}}
