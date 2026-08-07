@@ -6,6 +6,8 @@ tier: baseline
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0063](../rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.md).
+
 ## Context and Problem Statement
 
 An agent working a project over many sessions accumulates project knowledge:

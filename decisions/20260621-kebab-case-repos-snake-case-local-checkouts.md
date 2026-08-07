@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0064](../rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.md).
+
 ## Context and Problem Statement
 
 Repositories across our orgs grew inconsistent names. The loot-action slice

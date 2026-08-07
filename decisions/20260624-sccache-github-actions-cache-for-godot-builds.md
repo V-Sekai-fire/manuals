@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0068](../rfd/0068-sccache-github-actions-cache-for-godot-builds/README.md).
+
 # sccache with GitHub Actions cache for Godot container builds
 
 ## The Context

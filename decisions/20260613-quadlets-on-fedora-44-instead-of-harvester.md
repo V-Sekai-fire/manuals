@@ -7,6 +7,8 @@ tier: baseline
 supersedes: 20260606-self-host-on-harvester-hci.md
 ---
 
+> Moved to [rfd/0061](../rfd/0061-quadlets-on-fedora-44-instead-of-harvester/README.md).
+
 ## Context and Problem Statement
 
 The superseded Harvester decision ships each service as a qcow2 VM image on a

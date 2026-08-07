@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0070](../rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.md).
+
 # Export loop-slice server telemetry to the observability collector
 
 ## The Context

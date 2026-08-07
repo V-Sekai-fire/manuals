@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0067](../rfd/0067-release-tag-progression-dev-beta-rc/README.md).
+
 # Release tags progress chronologically through dev, beta, rc, and release
 
 ## The Context

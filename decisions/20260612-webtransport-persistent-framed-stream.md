@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0058](../rfd/0058-webtransport-persistent-framed-stream/README.md).
+
 ## Context and Problem Statement
 
 The fabric's reliability classes ([fabric channels](20260612-fabric-channels-as-reliability-classes.md)) run over ENet for the local slice. WebTransport carries the same classes for the browser and Quest paths over one QUIC connection per client. The picoquic WebTransport server goes silent within seconds once four or more sessions connect: some clients never finish the extended-CONNECT handshake, and once a few sessions are open every client stops sending and receiving while the network thread stays alive in `poll()`.

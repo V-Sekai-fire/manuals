@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0069](../rfd/0069-defer-loot-slice-hardening-until-needed/README.md).
+
 # Defer the loot-slice hardening scope until its need arrives
 
 ## The Context
