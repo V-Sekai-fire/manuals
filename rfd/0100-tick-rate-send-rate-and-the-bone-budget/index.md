@@ -7,7 +7,8 @@ scope: zone-server-h2o, zone-guest-godot
 
 ## Decision
 
-**256 kbps per client. One Fly machine. 47 concurrent at peak.**
+**256 kbps per client. One Fly machine plus a 1 GB volume. 46
+concurrent at peak.**
 
 The budget is 15 USD per month. Bandwidth is the only binding
 constraint, so spend the budget on bandwidth and not on machines.
@@ -15,7 +16,8 @@ constraint, so spend the budget on bandwidth and not on machines.
 ## Topology
 
     1 Fly machine, shared-cpu-1x, 256 MB, region iad
-      |- fdbserver, single process, memory storage
+      |- 1 GB volume, ssd storage engine, snapshots on
+      |- fdbserver, single process
       |- zone-server-h2o, one zone, ZONE_TICK_HZ 64
       |- UDP 7443 bound to fly-global-services -> WebTransport clients
       +- no TCP service: no HTTP surface remains
@@ -43,6 +45,35 @@ machine until a second zone is genuinely needed.
 Asia Pacific doubles the egress price, and Africa and India multiply it
 by six.
 
+## Durability: ssd engine and a volume, not redundancy
+
+A Fly volume is 0.15 USD per GB per month, and snapshots are 0.08 USD
+per GB with the first 10 GB free.
+
+So 1 GB of durable storage costs 0.15 USD, which is 0.5 concurrent
+users at peak. Three-machine RAM redundancy costs 4.04 USD, which is 14
+concurrent users. Durability through a volume is 28 times cheaper.
+
+They also protect different failures. A volume survives a restart and a
+crash. RAM redundancy survives the loss of one machine and does NOT
+survive an app restart, because every RAM disk goes at once.
+
+The ssd engine costs nothing in commit latency. Measured on the same
+probe as `rfd/0097`:
+
+| Engine | Commit    | Versionstamp append |
+| ------ | --------- | ------------------- |
+| memory | 2975.3 us | 2521.9 us           |
+| ssd    | 2396.6 us | 2952.7 us           |
+
+ssd commits FASTER. FoundationDB's memory engine still writes its
+transaction log to disk for durability, so the storage engine changes
+the read path and not the commit path. The memory engine also holds
+every key in RAM, which competes with the zone server for 212188 kB.
+
+Free snapshots below 10 GB cover disaster recovery, so streaming
+backups to an object store add nothing at this data size.
+
 ## What binds, and what does not
 
 | Resource                     | At 47 clients         | Ceiling     |
@@ -66,10 +97,10 @@ would cost roughly 1.3 MB each, which is 61 MB at 47 clients.
 
 ## Two corrections this depends on
 
-**Three rates, not one.** Simulation stays at `ZONE_TICK_HZ` 64 for the
-fixed integer step. State sends at 10 Hz. Voice sends at 50 Hz, from
-the 20 ms Opus packets already in `modules/speech`. `rfd/0096` through
-`rfd/0099` assumed one rate and produced 10.2 Mbit per second.
+**Three rates, not one.** Simulation stays at `ZONE_TICK_HZ` 64. State
+sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in
+`modules/speech`. `rfd/0096` through `rfd/0099` assumed one rate and
+produced 10.2 Mbit per second.
 
 **An entity is a bone.** VRM 1.0 gives 55 humanoid bones plus 1 root,
 so 56 per avatar, and only the root and hips translate. `rfd/0002`'s
@@ -79,11 +110,6 @@ so 56 per avatar, and only the root and hips translate. `rfd/0002`'s
 
 Interest management is required. 8 avatars fits 256 kbps. 47 does not,
 so a client sees 8 of the 47 at full rate.
-
-One machine means one FoundationDB process with memory storage, and a
-restart loses zone state. That is the price of spending the budget on
-bandwidth. A second machine buys durability and costs 7 concurrent
-users.
 
 `modules/speech` sets `OPUS_APPLICATION_AUDIO` and never calls
 `OPUS_SET_BITRATE`, so it takes the default near 64 kbps, which is 25
