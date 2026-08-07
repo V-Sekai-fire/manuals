@@ -1,5 +1,6 @@
 ---
 title: "RFD 0084: zstd compression for batched zone-state FDB values"
+rfd: "0084"
 state: published
 scope: zone-server-h2o FDB value compression
 ---

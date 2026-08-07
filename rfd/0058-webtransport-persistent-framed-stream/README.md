@@ -1,5 +1,6 @@
 ---
 title: "RFD 0058: WebTransport reliable delivery on one persistent framed stream per session"
+rfd: "0058"
 state: published
 scope: webtransportd WebTransport transport adapter
 ---

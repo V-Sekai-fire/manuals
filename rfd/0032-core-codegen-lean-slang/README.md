@@ -1,5 +1,6 @@
 ---
 title: "RFD 0032: Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)"
+rfd: "0032"
 state: published
 scope: GPU compute kernel codegen for the hexagonal cores
 ---

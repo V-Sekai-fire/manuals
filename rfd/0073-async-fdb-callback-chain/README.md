@@ -1,5 +1,6 @@
 ---
 title: "RFD 0073: Async FDB callback chain on the libh2o event loop"
+rfd: "0073"
 state: published
 scope: zone-server-h2o FDB transaction handling
 ---

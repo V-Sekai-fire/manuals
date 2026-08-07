@@ -1,5 +1,6 @@
 ---
 title: "RFD 0064: GitHub repos use kebab-case; local checkout dirs keep build-native names"
+rfd: "0064"
 state: published
 scope: repository naming across all orgs
 ---

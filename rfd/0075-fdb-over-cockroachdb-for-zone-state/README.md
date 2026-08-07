@@ -1,5 +1,6 @@
 ---
 title: "RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state"
+rfd: "0075"
 state: published
 scope: zone-server-h2o database backend
 ---

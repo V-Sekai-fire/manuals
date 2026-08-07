@@ -1,5 +1,6 @@
 ---
 title: "RFD 0004: CastSpell's sandboxed runtime: embed libgodot, not godot-sandbox's narrow API"
+rfd: "0004"
 state: discussion
 scope: zone-server-h2o CastSpell
 ---

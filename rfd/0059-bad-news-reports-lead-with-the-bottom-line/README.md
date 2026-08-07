@@ -1,5 +1,6 @@
 ---
 title: "RFD 0059: Status reports lead with the bottom line"
+rfd: "0059"
 state: published
 scope: prose voice for status reports (BLUF convention)
 ---

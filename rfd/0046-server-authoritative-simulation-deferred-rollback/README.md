@@ -1,5 +1,6 @@
 ---
 title: "RFD 0046: Server-authoritative simulation with deferred rollback"
+rfd: "0046"
 state: published
 scope: Field-instance authority model (zone-server)
 ---

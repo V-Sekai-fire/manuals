@@ -1,5 +1,6 @@
 ---
 title: "RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv"
+rfd: "0079"
 state: published
 scope: zone-server-h2o CastSpell sandboxing
 ---

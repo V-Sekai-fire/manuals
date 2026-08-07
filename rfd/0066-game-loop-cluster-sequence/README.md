@@ -1,5 +1,6 @@
 ---
 title: "RFD 0066: Game-loop-first delivery sequence"
+rfd: "0066"
 state: published
 scope: delivery sequencing across the loot-action concerns
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0070: Export loop-slice server telemetry to the observability collector"
+rfd: "0070"
 state: published
 scope: loop-slice server OpenTelemetry export
 ---

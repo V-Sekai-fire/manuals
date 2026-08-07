@@ -1,5 +1,6 @@
 ---
 title: "RFD 0020: Pin the engine to a frozen Godot 4.7 commit"
+rfd: "0020"
 state: published
 scope: engine fork base commit
 ---

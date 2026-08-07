@@ -1,5 +1,6 @@
 ---
 title: "RFD 0054: MCP runtime bridge for deployed builds"
+rfd: "0054"
 state: published
 scope: MCP inspection of deployed (non-editor) builds
 ---

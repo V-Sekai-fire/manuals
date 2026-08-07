@@ -1,5 +1,6 @@
 ---
 title: "RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)"
+rfd: "0081"
 state: published
 scope: zone-server-h2o / h2o-bench-tpcc verification
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0052: One transport listener per authority pending http3 multi-session fixes"
+rfd: "0052"
 state: published
 scope: WebTransport/HTTP3 module, multi-session routing
 ---

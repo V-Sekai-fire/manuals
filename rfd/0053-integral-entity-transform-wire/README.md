@@ -1,5 +1,6 @@
 ---
 title: "RFD 0053: Integral entity-transform wire (int64 micrometers, no origin shift)"
+rfd: "0053"
 state: published
 scope: entity-transform wire packet (XRGridEntityPacket)
 ---

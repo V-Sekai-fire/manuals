@@ -1,5 +1,6 @@
 ---
 title: "RFD 0026: Commit messages use sentence case without Conventional Commits prefixes"
+rfd: "0026"
 state: published
 scope: git commit message style
 ---

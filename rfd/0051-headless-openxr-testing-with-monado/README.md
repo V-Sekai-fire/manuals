@@ -1,5 +1,6 @@
 ---
 title: "RFD 0051: Headless OpenXR testing with Monado (null compositor + simulated HMD)"
+rfd: "0051"
 state: published
 scope: OpenXR functional and integration test coverage
 ---

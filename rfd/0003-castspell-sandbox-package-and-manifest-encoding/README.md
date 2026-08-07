@@ -1,5 +1,6 @@
 ---
 title: "RFD 0003: CastSpell sandbox package format and manifest encoding"
+rfd: "0003"
 state: discussion
 scope: zone-server-h2o CastSpell
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0057: Repository map of the loot-action vertical slice"
+rfd: "0057"
 state: published
 scope: repository ownership index for the whole fabric organization
 ---

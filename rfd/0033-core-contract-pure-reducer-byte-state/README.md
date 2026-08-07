@@ -1,5 +1,6 @@
 ---
 title: "RFD 0033: Cores as pure reducers over byte-serialized state"
+rfd: "0033"
 state: published
 scope: hexagonal core contract (state, replay, snapshots)
 ---

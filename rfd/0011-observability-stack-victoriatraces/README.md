@@ -1,5 +1,6 @@
 ---
 title: "RFD 0011: Replace Jaeger with VictoriaTraces for trace storage"
+rfd: "0011"
 state: published
 scope: observability
 ---

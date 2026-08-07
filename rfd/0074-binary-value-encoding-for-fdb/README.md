@@ -1,5 +1,6 @@
 ---
 title: "RFD 0074: Binary value encoding for FDB values"
+rfd: "0074"
 state: published
 scope: zone-server-h2o FDB value format
 ---

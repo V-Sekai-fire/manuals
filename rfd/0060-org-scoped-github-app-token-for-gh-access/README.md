@@ -1,5 +1,6 @@
 ---
 title: "RFD 0060: Org-scoped GitHub App installation token for gh access instead of a personal OAuth token"
+rfd: "0060"
 state: published
 scope: gh CLI authentication for v-sekai-multiplayer-fabric
 ---

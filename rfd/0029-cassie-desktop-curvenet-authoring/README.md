@@ -1,5 +1,6 @@
 ---
 title: "RFD 0029: CASSIE desktop curvenet authoring for content, no Blender"
+rfd: "0029"
 state: published
 scope: content pipeline authoring (feat/module-cassie)
 ---

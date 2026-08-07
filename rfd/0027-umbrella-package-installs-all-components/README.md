@@ -1,5 +1,6 @@
 ---
 title: "RFD 0027: An umbrella package installs every component in one command"
+rfd: "0027"
 state: published
 scope: package distribution (scoop, Homebrew, docker compose)
 ---

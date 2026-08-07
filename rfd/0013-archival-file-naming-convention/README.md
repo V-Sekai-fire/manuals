@@ -1,5 +1,6 @@
 ---
 title: "RFD 0013: Archival file naming convention for committed assets"
+rfd: "0013"
 state: published
 scope: decisions/attachments
 ---

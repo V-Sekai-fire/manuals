@@ -1,5 +1,6 @@
 ---
 title: "RFD 0038: Genre-generic naming, no trademarked proper nouns"
+rfd: "0038"
 state: published
 scope: project vocabulary (docs, filenames, game content)
 ---

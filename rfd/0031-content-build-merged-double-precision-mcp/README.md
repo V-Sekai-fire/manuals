@@ -1,5 +1,6 @@
 ---
 title: "RFD 0031: Content creation in a single merged double-precision build via the editor MCP"
+rfd: "0031"
 state: published
 scope: content authoring build and editor MCP
 ---

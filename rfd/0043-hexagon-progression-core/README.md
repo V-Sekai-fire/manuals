@@ -1,5 +1,6 @@
 ---
 title: "RFD 0043: Progression hexagon — core, ports, and adapters"
+rfd: "0043"
 state: published
 scope: progression hexagon (proof of concept)
 ---

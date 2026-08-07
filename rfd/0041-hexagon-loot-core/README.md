@@ -1,5 +1,6 @@
 ---
 title: "RFD 0041: Loot hexagon — core, ports, and adapters"
+rfd: "0041"
 state: published
 scope: loot hexagon (proof of concept)
 ---

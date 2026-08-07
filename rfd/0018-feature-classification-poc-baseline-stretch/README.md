@@ -1,5 +1,6 @@
 ---
 title: "RFD 0018: Feature classification — proof of concept, baseline, stretch"
+rfd: "0018"
 state: published
 scope: capabilities-table
 ---

@@ -1,5 +1,6 @@
 ---
 title: "RFD 0012: Amend a PR before it enters the merge queue, not after"
+rfd: "0012"
 state: published
 scope: CI
 ---

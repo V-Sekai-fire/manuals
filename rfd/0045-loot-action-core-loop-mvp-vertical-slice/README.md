@@ -1,5 +1,6 @@
 ---
 title: "RFD 0045: Loot-action core-loop MVP vertical slice"
+rfd: "0045"
 state: published
 scope: loot-action vertical slice (playable MVP)
 ---

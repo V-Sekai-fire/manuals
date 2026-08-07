@@ -1,5 +1,6 @@
 ---
 title: "RFD 0044: Lean 4 build-time kernel cores with flat-C host adapters"
+rfd: "0044"
 state: published
 scope: hexagonal core language boundary (Lean at build time, flat C at run time)
 ---

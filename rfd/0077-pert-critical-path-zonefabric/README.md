@@ -1,5 +1,6 @@
 ---
 title: "RFD 0077: PERT critical path for zonefabric implementation"
+rfd: "0077"
 state: published
 scope: zone-server-h2o build order
 ---

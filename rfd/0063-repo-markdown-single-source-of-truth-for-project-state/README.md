@@ -1,5 +1,6 @@
 ---
 title: "RFD 0063: Project state lives in repo markdown, not in agent auto-memory"
+rfd: "0063"
 state: published
 scope: project-state record keeping across agent sessions
 ---

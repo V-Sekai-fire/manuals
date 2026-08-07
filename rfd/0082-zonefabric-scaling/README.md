@@ -1,5 +1,6 @@
 ---
 title: "RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape"
+rfd: "0082"
 state: published
 scope: zone-server-h2o benchmark and keyspace design
 ---

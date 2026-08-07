@@ -1,5 +1,6 @@
 ---
 title: "RFD 0037: Generated behavior runs as sandboxed RISC-V"
+rfd: "0037"
 state: published
 scope: combat behavior_source port implementation
 ---

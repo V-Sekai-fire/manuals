@@ -1,5 +1,6 @@
 ---
 title: "RFD 0065: fabric-platform-central as Elixir OTP app with Burrito and casync"
+rfd: "0065"
 state: published
 scope: Windows platform-manager packaging (fabric-platform-central)
 ---

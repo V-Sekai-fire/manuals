@@ -1,5 +1,6 @@
 ---
 title: "RFD 0078: plausible-witness-dag for zonefabric feature ablation"
+rfd: "0078"
 state: published
 scope: zone-server-h2o feature scoping
 ---

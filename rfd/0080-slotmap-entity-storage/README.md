@@ -1,5 +1,6 @@
 ---
 title: "RFD 0080: Slotmap entity storage with generational IDs"
+rfd: "0080"
 state: published
 scope: zone-server-h2o in-memory entity storage
 ---

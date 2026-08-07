@@ -1,5 +1,6 @@
 ---
 title: "RFD 0062: Repository and capability inventory for the multiplayer fabric"
+rfd: "0062"
 state: published
 scope: org-wide repository and capability index
 ---

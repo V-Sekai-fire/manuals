@@ -1,5 +1,6 @@
 ---
 title: "RFD 0009: GHCR packages must be built by the repo that consumes them"
+rfd: "0009"
 state: published
 scope: CI
 ---

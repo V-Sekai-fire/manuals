@@ -8,14 +8,14 @@ listing:
   contents:
     - "rfd/**/README.md"
   sort:
-    - "title"
+    - "rfd"
   feed: true
-  fields: [title, state, scope, filename]
+  fields: [rfd, title, state, scope]
   field-display-names:
+    rfd: "RFD"
     title: "Title"
     state: "State"
     scope: "Scope"
-    filename: "File"
 ---
 
 Request-for-Discussion documents: longer-lived design records, numbered

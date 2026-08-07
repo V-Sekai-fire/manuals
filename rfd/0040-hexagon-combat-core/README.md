@@ -1,5 +1,6 @@
 ---
 title: "RFD 0040: Combat hexagon — core, ports, and adapters"
+rfd: "0040"
 state: published
 scope: combat hexagon (proof of concept)
 ---

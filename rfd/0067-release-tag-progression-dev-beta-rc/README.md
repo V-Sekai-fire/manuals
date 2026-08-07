@@ -1,5 +1,6 @@
 ---
 title: "RFD 0067: Release tags progress chronologically through dev, beta, rc, and release"
+rfd: "0067"
 state: published
 scope: fabric-godot-packaging release tag convention
 ---

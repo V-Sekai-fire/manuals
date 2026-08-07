@@ -1,5 +1,6 @@
 ---
 title: "RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI"
+rfd: "0061"
 state: published
 scope: deployment target for fabric runtime services
 ---
