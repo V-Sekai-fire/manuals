@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0055](../rfd/0055-r128-fixed-point-as-lean-library/README.md).
+
 ## Context and Problem Statement
 
 The deterministic cores ([the determinism decision](20260611-deterministic-cores-integer-seeded-rng.md)) need Q64.64 fixed-point math inside the Lean kernels, which lower to SPIR-V through [lean-slang](20260611-core-codegen-lean-slang.md). The engine already vendors the C `r128` library (`thirdparty/misc/r128`), but the kernels are authored in Lean.

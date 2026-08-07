@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0047](../rfd/0047-webtransportd-core-transport-adapter/README.md).
+
 ## Context and Problem Statement
 
 The cores expose a flat C ABI and need a transport adapter to carry their port traffic to clients. The fabric already runs WebTransport over QUIC for game traffic ([the transport decision](20260501-webtransport-over-quic-for-game-traffic.md)) and ships an in-engine implementation. A standalone bridge is also available: `webtransportd` pipes a connection's bytes to a child program over stdin and stdout.

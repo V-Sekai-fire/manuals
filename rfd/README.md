@@ -96,3 +96,16 @@ elsewhere.
 | [0042](0042-hexagon-presence-core/README.md)                             | Presence hexagon — wrapping the existing presence stack                       | published     |
 | [0043](0043-hexagon-progression-core/README.md)                          | Progression hexagon — core, ports, and adapters                               | published     |
 | [0044](0044-lean4-kernel-cores-flat-c-host-adapters/README.md)           | Lean 4 build-time kernel cores with flat-C host adapters                      | published     |
+| [0045](0045-loot-action-core-loop-mvp-vertical-slice/README.md)          | Loot-action core-loop MVP vertical slice                                      | published     |
+| [0046](0046-server-authoritative-simulation-deferred-rollback/README.md) | Server-authoritative simulation with deferred rollback                        | published     |
+| [0047](0047-webtransportd-core-transport-adapter/README.md)              | webtransportd as the out-of-process core transport adapter                    | published     |
+| [0048](0048-android-template-temurin-jdk21/README.md)                    | Android template builds with Temurin JDK 21 and config.gradle-pinned SDK      | published     |
+| [0049](0049-fabric-channels-as-reliability-classes/README.md)            | Fabric channels as reliability classes, control in payload                    | published     |
+| [0050](0050-five-second-transaction-limit/README.md)                     | Five-second transaction limit (bounded operations)                            | published     |
+| [0051](0051-headless-openxr-testing-with-monado/README.md)               | Headless OpenXR testing with Monado (null compositor + simulated HMD)         | published     |
+| [0052](0052-http3-listener-session-findings/README.md)                   | One transport listener per authority pending http3 multi-session fixes        | published     |
+| [0053](0053-integral-entity-transform-wire/README.md)                    | Integral entity-transform wire (int64 micrometers, no origin shift)           | published     |
+| [0054](0054-mcp-runtime-bridge-deployed-builds/README.md)                | MCP runtime bridge for deployed builds                                        | published     |
+| [0055](0055-r128-fixed-point-as-lean-library/README.md)                  | r128 Q64.64 fixed-point as a Lean library for the cores                       | published     |
+| [0056](0056-systemd-quadlet-verification-queue/README.md)                | Verification smokes as a systemd podman quadlet queue                         | published     |
+| [0057](0057-vertical-slice-repository-map/README.md)                     | Repository map of the loot-action vertical slice                              | published     |

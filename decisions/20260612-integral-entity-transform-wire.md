@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0053](../rfd/0053-integral-entity-transform-wire/README.md).
+
 ## Context and Problem Statement
 
 The fabric replicates entity transforms in a fixed 100-byte packet (`XRGridEntityPacket`). The determinism doctrine keeps the authoritative state in integers and r128 fixed point, yet the packet carried position as `f64` — three doubles whose 52-bit mantissa cannot even represent a Q64.64 value. Floating point on the wire reintroduces the cross-platform divergence the determinism decision rules out.

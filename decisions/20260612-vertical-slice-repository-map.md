@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0057](../rfd/0057-vertical-slice-repository-map/README.md).
+
 # Repository map of the loot-action vertical slice
 
 ## The Context

@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0052](../rfd/0052-http3-listener-session-findings/README.md).
+
 ## Context and Problem Statement
 
 The four-player contention smoke (the `loot` repo, `adapters/godot`) drives one `WebTransportPeer.create_server` listener in the merged assembly (`0518217f44`) with four concurrent client sessions. Three behaviors surface: incoming datagrams from every session multiplex into the server's packet queue correctly; replies reach only one session regardless of `set_target_peer` / `get_packet_peer`; and a session teardown during traffic aborts the process with a double free (`quic_picoquic_backend.cpp`). A second `create_server` in the same process fails with "server already listening", so the backend holds one listener per process.

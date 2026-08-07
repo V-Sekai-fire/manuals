@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0056](../rfd/0056-systemd-quadlet-verification-queue/README.md).
+
 ## Context and Problem Statement
 
 The slice's smokes — headless OpenXR, loot wire parity, combat wire parity, four-player contention — need to run as a repeatable queue on the workstation and on self-hosted runners, with ordering, logs, and per-job status, and the deployment decision already standardizes on podman quadlets.

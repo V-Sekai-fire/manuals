@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0051](../rfd/0051-headless-openxr-testing-with-monado/README.md).
+
 ## Context and Problem Statement
 
 The OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. Functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware.
