@@ -35,9 +35,10 @@ the same RFD folder. The `README.md` names that file in one line.
 `decisions/` (MADR, `YYYYMMDD-title.md`) still records a single point
 decision. `rfd/` records a longer-lived design that can carry a
 proposal forward and get amended over time. The project migrates
-existing MADR files into `rfd/` gradually; a MADR file gains a
-one-line pointer to its new `rfd/NNNN` home once migrated, instead of
-being deleted.
+existing MADR files into `rfd/` gradually. Once a MADR file has a
+matching `rfd/NNNN` folder, delete the MADR file. Do not keep a
+pointer stub. Git history still holds the deleted file's content and
+its old path.
 
 A new RFD takes the next unused four-digit number under `rfd/`; check
 `rfd.html`'s live listing (sorted newest first), not any other repo's
