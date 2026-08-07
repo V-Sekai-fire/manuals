@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -39,14 +42,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c8b36098594828138602e592b3b57366.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-c744e0ff86f5d87993c78b6cdbb23212.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-c8b36098594828138602e592b3b57366.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -384,6 +387,8 @@ The mathlib Community · 2020 · CPP 2020 · <a href="https://doi.org/10.1145/33
 <ul>
 <li><strong>Network Time Protocol Version 4: Protocol and Algorithms Specification</strong><br>
 Mills, David; Martin, Juergen; Burbank, Jack; and Kasch, William · 2010 · IETF · <a href="https://doi.org/10.17487/RFC5905">doi:10.17487/RFC5905</a></li>
+<li><strong>Concise Binary Object Representation (CBOR)</strong><br>
+Bormann, Carsten; and Hoffman, Paul · 2020 · IETF · <a href="https://doi.org/10.17487/RFC8949">doi:10.17487/RFC8949</a></li>
 </ul>
 </section>
 <section id="software" class="level2">
@@ -415,6 +420,22 @@ SUSE Rancher · 2026 · <a href="https://harvesterhci.io/">https://harvesterhci.
 NAVER · 2026 · <a href="https://github.com/naver/anny">https://github.com/naver/anny</a></li>
 <li><strong>SOMA-X: Unifying Parametric Human Body Models</strong><br>
 NVIDIA Labs · 2026 · <a href="https://github.com/NVlabs/SOMA-X">https://github.com/NVlabs/SOMA-X</a></li>
+<li><strong>ubpf: Userspace eBPF VM</strong><br>
+IO Visor Project · 2026 · <a href="https://github.com/iovisor/ubpf">https://github.com/iovisor/ubpf</a></li>
+<li><strong>zcbor: CDDL to Code Generator for Constrained Devices</strong><br>
+Nordic Semiconductor · 2026 · <a href="https://github.com/NordicSemiconductor/zcbor">https://github.com/NordicSemiconductor/zcbor</a></li>
+<li><strong>QCBOR: A Comprehensive, Powerful, Commercial-Quality CBOR Encoder/Decoder</strong><br>
+Lundblade, Laurence · 2026 · <a href="https://github.com/laurencelundblade/QCBOR">https://github.com/laurencelundblade/QCBOR</a></li>
+<li><strong>jsonld-cpp: A C++14 Implementation of the JSON-LD 1.1 Specification</strong><br>
+jsonld-cpp contributors · 2026 · <a href="https://github.com/dcdan/jsonld-cpp">https://github.com/dcdan/jsonld-cpp</a></li>
+<li><strong>cborld-c: A C Library for Encoding JSON-LD into CBOR-LD</strong><br>
+CoSWoT · 2026 · <a href="https://gitlab.com/coswot/cborld-c">https://gitlab.com/coswot/cborld-c</a></li>
+<li><strong>Godot Sandbox: Safe, Low-Latency Sandbox for the Godot Game Engine</strong><br>
+libriscv · 2026 · <a href="https://github.com/libriscv/godot-sandbox">https://github.com/libriscv/godot-sandbox</a></li>
+<li><strong>godot-sandbox-gdscript-compiler: A GDScript-to-RISC-V Compiler for Godot Sandbox</strong><br>
+V-Sekai Multiplayer Fabric · 2026 · <a href="https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler">https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler</a></li>
+<li><strong>godot-cpp: C++ Bindings for the Godot Script API</strong><br>
+Godot Engine contributors · 2026 · <a href="https://github.com/godotengine/godot-cpp">https://github.com/godotengine/godot-cpp</a></li>
 </ul>
 </section>
 <section id="source-code" class="level2">
@@ -422,6 +443,12 @@ NVIDIA Labs · 2026 · <a href="https://github.com/NVlabs/SOMA-X">https://github
 <ul>
 <li><strong>Godot 4.x Dynamic BVH Broadphase: Node Expansion Constants</strong><br>
 Godot Engine contributors · 2026 · <a href="https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h">https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h</a></li>
+<li><strong>fps: Example source code for Creating a First Person Shooter That Scales to Millions of Players</strong><br>
+mas-bandwidth · 2026 · <a href="https://github.com/mas-bandwidth/fps">https://github.com/mas-bandwidth/fps</a></li>
+<li><strong>LibGodot: Embed a Godot Instance in an External Codebase</strong><br>
+Godot Engine contributors; and Migeran · 2026 · <a href="https://github.com/godotengine/godot/pull/90510">https://github.com/godotengine/godot/pull/90510</a></li>
+<li><strong>godot-riscv-spike: rv64 libgodot-in-libriscv feasibility spike</strong><br>
+v-sekai-multiplayer-fabric · 2026 · <a href="https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike">https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike</a></li>
 </ul>
 </section>
 <section id="manuals-documentation" class="level2">
@@ -441,6 +468,12 @@ Helm project · 2026 · <a href="https://helm.sh/docs/">https://helm.sh/docs/</a
 Tailscale · 2026 · <a href="https://tailscale.com/kb/1132/tailscale-funnel/">https://tailscale.com/kb/1132/tailscale-funnel/</a></li>
 <li><strong>Dokku Documentation</strong><br>
 Dokku project · 2026 · <a href="http://dokku.viewdocs.io/dokku/">http://dokku.viewdocs.io/dokku/</a></li>
+<li><strong>ZeroMQ - The Guide: Chapter 7, Advanced Pub-Sub Patterns (The Cheap or Nasty Pattern)</strong><br>
+Hintjens, Pieter · 2026 · <a href="https://zguide.zeromq.org/docs/chapter7/#The-Cheap-or-Nasty-Pattern">https://zguide.zeromq.org/docs/chapter7/#The-Cheap-or-Nasty-Pattern</a></li>
+<li><strong>CBOR-LD 1.0</strong><br>
+W3C · 2026 · <a href="https://w3c.github.io/cbor-ld/">https://w3c.github.io/cbor-ld/</a></li>
+<li><strong>Verifiable Credential Barcodes v1.0</strong><br>
+W3C · 2026 · <a href="https://w3c.github.io/vc-barcodes/">https://w3c.github.io/vc-barcodes/</a></li>
 </ul>
 </section>
 <section id="websites" class="level2">
@@ -479,6 +512,10 @@ Khronos Group · 2026 · <a href="https://www.khronos.org/blog/an-introduction-t
 Preston-Werner, Tom · 2013 · <a href="https://semver.org/">https://semver.org/</a></li>
 <li><strong>xr-grid Debug Scene: Hero-Asset Landmark with Head and Hand Orientation-and-Translation Orbs</strong><br>
 V-Sekai Multiplayer Fabric · 2026</li>
+<li><strong>KHR_interactivity: glTF Interactivity Extension</strong><br>
+Khronos Group · 2026 · <a href="https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_interactivity">https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_interactivity</a></li>
+<li><strong>sqlite3 not work with libriscv (libriscv/libriscv#296)</strong><br>
+fwsgonzo · 2026 · <a href="https://github.com/libriscv/libriscv/issues/296">https://github.com/libriscv/libriscv/issues/296</a></li>
 </ul>
 
 
