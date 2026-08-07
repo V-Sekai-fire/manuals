@@ -10,10 +10,1129 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 18:40:11 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 19:00:59 GMT</lastBuildDate>
+<item>
+  <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0099: Server authority on Fly, and what the client is allowed to do</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0095</code> through <code>rfd/0098</code> decided how guests run, how they store data, how they talk, and what rollback costs. None of them says who decides what is true.</p>
+<p>The server must be authoritative. A client that reports its own position can report any position. <code>rfd/0092</code>’s ReBAC planes do not help here, because the client holds a legitimate relation to its own avatar.</p>
+<p>This RFD states the authority boundary. It also states the budget the boundary must fit, because a 256 MB machine with one shared vCPU cannot hold an unbounded design.</p>
+</section>
+<section id="what-the-code-already-provides" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-code-already-provides">What the code already provides</h2>
+<p>Three facts came out of reading the tree, and each one changes the design.</p>
+<section id="the-physics-is-already-integer-so-determinism-is-already-solved" class="level3">
+<h3 class="anchored" data-anchor-id="the-physics-is-already-integer-so-determinism-is-already-solved">The physics is already integer, so determinism is already solved</h3>
+<p><code>src/gen/xr_grid_entity_packet.h</code> is explicit: “no floats at all – position is int64 absolute micrometers, velocity is int16”.</p>
+<p><code>src/zf_zonetick.h</code> gives the update rule:</p>
+<pre><code>pos_um += (int64_t)vel_i16 * V_MAX_PHYSICAL_DEFAULT_UM_PER_TICK / INT16_MAX</code></pre>
+<p>That is integer arithmetic, applied per tick. It produces identical results on every machine, with no dependence on compiler, operating system, or instruction set.</p>
+<p>Glenn Fiedler rejects deterministic lockstep for a shooter because float determinism across platforms is nearly impossible. This codebase does not have that problem, and it does not need libriscv to avoid it. Fixed-point integers already avoid it.</p>
+<p>libriscv earns its place for UNTRUSTED guest code, per <code>rfd/0095</code>. It is not what makes the core entity update deterministic.</p>
+</section>
+<section id="the-packet-already-carries-an-owner-and-a-clock" class="level3">
+<h3 class="anchored" data-anchor-id="the-packet-already-carries-an-owner-and-a-clock">The packet already carries an owner and a clock</h3>
+<p><code>xr_grid_entity_packet_t</code> holds <code>class_owner</code>, which is <code>(class &lt;&lt; 24) | owner</code>, and <code>hlc</code>, which is <code>(frame &lt;&lt; 8) | counter</code>.</p>
+<p>So ownership and a hybrid logical clock exist on the wire already. The authority model does not need a new field. It needs a rule about what <code>owner</code> means.</p>
+</section>
+<section id="the-entity-record-is-100-bytes" class="level3">
+<h3 class="anchored" data-anchor-id="the-entity-record-is-100-bytes">The entity record is 100 bytes</h3>
+<p><code>XR_PACKET_SIZE</code> is 100. <code>rfd/0002</code> sizes a zone at 200 entities per tick.</p>
+</section>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="ownership-is-not-authority" class="level3">
+<h3 class="anchored" data-anchor-id="ownership-is-not-authority">1. Ownership is not authority</h3>
+<p><code>class_owner</code> names who a client speaks for. It does not make the client correct.</p>
+<p>A client sends INPUT. The server computes STATE. The server writes <code>zf/entity/{z_id}/{e_id}</code>, and a client never writes it.</p>
+<p>This is the whole boundary, and every decision below follows from it.</p>
+</section>
+<section id="clients-predict-with-the-same-integer-rule" class="level3">
+<h3 class="anchored" data-anchor-id="clients-predict-with-the-same-integer-rule">2. Clients predict with the same integer rule</h3>
+<p>A client runs the update rule from <code>zf_zonetick.h</code> locally, on its own inputs, and draws the result immediately.</p>
+<p>Because the rule is integer, the client and the server compute identical values from identical inputs. Divergence therefore means a missing input or a rejected input. It never means float drift.</p>
+<p>That is a stronger property than a float engine can offer, and it comes free with the existing packet format.</p>
+</section>
+<section id="server-side-lag-compensation-is-a-ring-of-packets-not-a-machine-snapshot" class="level3">
+<h3 class="anchored" data-anchor-id="server-side-lag-compensation-is-a-ring-of-packets-not-a-machine-snapshot">3. Server-side lag compensation is a ring of packets, not a machine snapshot</h3>
+<p>To validate a hit, the server rewinds entity positions to what the shooter saw, then tests the shot.</p>
+<p>That needs entity history, not a virtual machine snapshot. The size is small:</p>
+<pre><code>200 entities x 100 bytes x 7 ticks = 140000 bytes</code></pre>
+<p>140 KB covers about 100 ms of compensation at 64 Hz. A full second of history is 1.28 MB.</p>
+<p><code>rfd/0098</code> measured a libriscv snapshot of an engine guest at 64.04 MB, and 7 of them at 448.26 MB, which does not fit the machine. Lag compensation does not pay that cost, because it does not snapshot a machine. It copies 100-byte records.</p>
+<p>Keep these two mechanisms separate. Lag compensation uses the ring. Guest rollback uses forking, under <code>rfd/0098</code>’s 8 MB budget.</p>
+</section>
+<section id="interest-management-is-required-not-an-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="interest-management-is-required-not-an-optimization">4. Interest management is required, not an optimization</h3>
+<p>The bandwidth arithmetic settles this.</p>
+<pre><code>200 entities x 100 bytes            = 20000 bytes per tick
+20000 bytes x 64 Hz                 = 1280000 bytes per second
+                                    = 10.2 Mbit per second, per client</code></pre>
+<p>Ten clients on one zone is 102 Mbit per second of egress. That is implausible for a client connection and expensive on Fly.</p>
+<p>So a zone must not send every entity to every client. Interest management and delta compression are load-bearing requirements of the design. <code>rfd/0002</code> and the interest-management literature already cover the algorithms.</p>
+<p>State this in the fan-out work (<code>zone-server-h2o</code> issue #41) rather than discovering it after the loop exists.</p>
+</section>
+<section id="the-per-tick-budget-on-fly" class="level3">
+<h3 class="anchored" data-anchor-id="the-per-tick-budget-on-fly">5. The per-tick budget on Fly</h3>
+<p>One tick is 15625 us. Measured and known costs:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 49%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Cost</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FDB commit for the tick</td>
+<td>3552.9 us</td>
+<td><code>rfd/0097</code></td>
+</tr>
+<tr class="even">
+<td>Entity history ring write</td>
+<td>20000 byte copy</td>
+<td>this RFD</td>
+</tr>
+<tr class="odd">
+<td>Fan-out serialize</td>
+<td>one encode per entity</td>
+<td>issue #41</td>
+</tr>
+<tr class="even">
+<td>Fan-out send</td>
+<td>one queued datagram per subscriber</td>
+<td>issue #41</td>
+</tr>
+</tbody>
+</table>
+<p>The database commit is 23 percent of the tick before any game logic runs. That is the dominant fixed cost, and it grows on a real cluster, because <code>rfd/0097</code> measured a single node with memory storage.</p>
+</section>
+<section id="authority-must-not-stall-behind-the-database" class="level3">
+<h3 class="anchored" data-anchor-id="authority-must-not-stall-behind-the-database">6. Authority must not stall behind the database</h3>
+<p><code>zonetick_fdb_this_zone()</code> skips a tick while the previous FDB commit stays open. Fan-out must not sit inside that guard.</p>
+<p>If it does, a slow database freezes every client’s view of the world. Measured p99 commit is 5112.5 us against a 15625 us tick, so there is headroom today, and a real cluster removes some of it.</p>
+<p>Send authoritative state every tick. Let the database write fall behind when it must. The server stays authoritative either way, because authority lives in the server’s own state, and the database is where that state is made durable.</p>
+</section>
+<section id="rebac-gates-what-a-client-may-propose" class="level3">
+<h3 class="anchored" data-anchor-id="rebac-gates-what-a-client-may-propose">7. ReBAC gates what a client may propose</h3>
+<p><code>rfd/0092</code>’s use plane decides whether a client may act on an entity at all. <code>class_owner</code> decides which entity a client speaks for.</p>
+<p>Neither decides whether the result is correct. Decision 1 does.</p>
+</section>
+</section>
+<section id="stale-numbers-found-while-writing-this" class="level2">
+<h2 class="anchored" data-anchor-id="stale-numbers-found-while-writing-this">Stale numbers found while writing this</h2>
+<p>The tree names three tick rates. <code>webtransport_server.h:20</code> defines <code>ZONE_TICK_HZ</code> as 64, which is what runs. <code>zf_zonetick.h:19</code> refers to a “fixed 30Hz assumption”, and <code>webtransport_server.h:12</code> mentions <code>PBVH_SIM_TICK_HZ = 20</code> from the original Godot implementation.</p>
+<p>64 is correct. The other two are stale comments. Correct them, because every budget in <code>rfd/0096</code> through <code>rfd/0099</code> divides by 15625 us.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The client is a predictor and an input source. It is never a source of truth.</p>
+<p>Two rewind mechanisms exist, and they must not be confused. Lag compensation rewinds 100-byte entity records in a 140 KB ring. Guest rollback forks a libriscv machine under an 8 MB working-set budget.</p>
+<p>Interest management moves from future work to a requirement, because 10.2 Mbit per second per client is not shippable.</p>
+<p>Determinism of the core simulation does not depend on libriscv. It depends on the integer packet format, which already exists and already has golden vectors.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li><code>src/gen/xr_grid_entity_packet.h</code>, the integer packet format</li>
+<li><code>src/zf_zonetick.h</code>, the integer per-tick update rule</li>
+<li><a href="https://gafferongames.com/post/deterministic_lockstep/">Deterministic Lockstep, Gaffer On Games</a></li>
+<li><a href="https://gafferongames.com/post/floating_point_determinism/">Floating Point Determinism, Gaffer On Games</a></li>
+<li><a href="https://doi.org/10.1145/3519023">A Survey and Taxonomy of Latency Compensation Techniques for Network Computer Games</a></li>
+<li><a href="https://doi.org/10.1145/2535417">Interest Management for Distributed Virtual Environments: A Survey</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0098: The rollback snapshot budget, measured</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0098: The rollback snapshot budget, measured</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0095</code> puts hybrid rollback-kinematic networking on libriscv. The stated reason is that <code>serialize_to</code> (<code>machine.hpp:431</code>) and forking (<code>machine.hpp:61</code>) give bit-exact snapshot and replay, and that a Linux process cannot.</p>
+<p>That reason is correct and it was never measured. This RFD measures it.</p>
+<p>The measurement matters because rollback has a hard budget. One tick at 64 Hz is 15625 us. Lag compensation of 100 ms rewinds about 7 ticks. So the host takes one snapshot every tick and holds about 7 of them.</p>
+<p>If a snapshot costs more than a tick, rollback is impossible. If 7 snapshots do not fit in memory, rollback is impossible. Neither number was known.</p>
+</section>
+<section id="prior-art" class="level2">
+<h2 class="anchored" data-anchor-id="prior-art">Prior art</h2>
+<p>This approach is not new, and the reason to use a virtual machine is well understood.</p>
+<p>Glenn Fiedler rejects deterministic lockstep for a first-person shooter on two grounds. Float determinism across compilers, operating systems and instruction sets is nearly impossible. Also, every player waits for the most lagged player.</p>
+<p>A virtual machine answers the first objection, because the guest executes the same instructions everywhere. Rollback answers the second, because rollback predicts and re-simulates instead of waiting.</p>
+<p>WebAssembly is the common choice for this. <code>bevy_ggrs</code> runs rollback under WASM, and Easel builds a language that guarantees determinism. The requirement is the same in every case: snapshot the state, restore it, and re-simulate.</p>
+<p>No prior art was found for RISC-V as the determinism boundary. The technique is established. The choice of libriscv rather than WASM is what <code>rfd/0095</code> decides, and what this RFD tests.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>The probe loads a guest ELF, runs 2 million instructions to warm it, then measures <code>serialize_to</code>, <code>deserialize_from</code>, and fork construction 200 times each. It reports the median and the 99th percentile.</p>
+<p>It also replays the same snapshot twice and hashes all 32 integer registers plus the program counter. Rollback is worthless if two replays differ.</p>
+<p>Two guests, chosen as the two ends of the range:</p>
+<ul>
+<li><code>kv_smoke.elf</code>, a 4016 byte script guest.</li>
+<li><code>godot_instance_harness</code>, an 84982776 byte engine guest.</li>
+</ul>
+<p>Both ran with a 64 MB arena.</p>
+</section>
+<section id="finding-0-serialize_to-needs-the-fast-path-turned-off" class="level2">
+<h2 class="anchored" data-anchor-id="finding-0-serialize_to-needs-the-fast-path-turned-off">Finding 0: serialize_to needs the fast path turned off</h2>
+<p><code>serialize_to</code> refuses to run against libriscv’s default memory configuration. <code>serialize.cpp:99</code> throws <code>FEATURE_DISABLED</code>, with the message <code>Serialize is incompatible with flat read-write arena</code>.</p>
+<p>So <code>MachineOptions::use_memory_arena</code> must be false to snapshot at all. The flat arena is the fast memory path. Snapshotting costs it.</p>
+<p>Every number below therefore describes a machine that already gave up the arena.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 28%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Measure</th>
+<th>Script guest, 4016 B</th>
+<th>Engine guest, 84982776 B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Snapshot size</td>
+<td>41864 B (0.04 MB)</td>
+<td>67148424 B (<strong>64.04 MB</strong>)</td>
+</tr>
+<tr class="even">
+<td>7 live snapshots</td>
+<td>0.28 MB</td>
+<td><strong>448.26 MB</strong></td>
+</tr>
+<tr class="odd">
+<td><code>serialize_to</code> median</td>
+<td>0.8 us</td>
+<td><strong>12370.2 us</strong></td>
+</tr>
+<tr class="even">
+<td><code>serialize_to</code> p99</td>
+<td>1.2 us</td>
+<td><strong>17063.0 us</strong></td>
+</tr>
+<tr class="odd">
+<td><code>deserialize_from</code> median</td>
+<td>1.9 us</td>
+<td>15227.0 us</td>
+</tr>
+<tr class="even">
+<td>Fork construct median</td>
+<td>0.3 us</td>
+<td><strong>384.2 us</strong></td>
+</tr>
+<tr class="odd">
+<td>Determinism, 2 replays</td>
+<td>IDENTICAL</td>
+<td>IDENTICAL</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="determinism-holds-and-that-was-the-core-claim" class="level3">
+<h3 class="anchored" data-anchor-id="determinism-holds-and-that-was-the-core-claim">1. Determinism holds, and that was the core claim</h3>
+<p>Two replays of the same snapshot produced identical register state and program counter on both guests. <code>rfd/0095</code>’s central argument survives measurement.</p>
+</section>
+<section id="serialize_to-cannot-snapshot-an-engine-guest" class="level3">
+<h3 class="anchored" data-anchor-id="serialize_to-cannot-snapshot-an-engine-guest">2. <code>serialize_to</code> cannot snapshot an engine guest</h3>
+<p>The engine guest takes 12370 us to serialize. One tick is 15625 us. So a single snapshot consumes 79 percent of a tick at the median.</p>
+<p>At the 99th percentile it takes 17063 us, which is longer than the whole tick. The snapshot alone misses the deadline.</p>
+<p>Memory disqualifies it a second time. Seven live snapshots need 448.26 MB. A Fly machine in <code>fly/fly.toml</code> has 256 MB, and <code>rfd/0096</code> measured 212188 kB of that as usable. The rewind window does not fit.</p>
+</section>
+<section id="snapshot-cost-tracks-the-working-set-so-cap-the-working-set" class="level3">
+<h3 class="anchored" data-anchor-id="snapshot-cost-tracks-the-working-set-so-cap-the-working-set">3. Snapshot cost tracks the working set, so cap the working set</h3>
+<p>The script guest snapshots to 41864 bytes from the same 64 MB arena that produced 64.04 MB for the engine guest. Size follows what the guest touches, not what it may address.</p>
+<p>Both figures divide out near memory bandwidth, at roughly 5 to 50 GB per second. Snapshot cost is a memory copy, so it is predictable:</p>
+<pre><code>snapshot_us ~= working_set_bytes / 5 GB per second</code></pre>
+<p>Turned into a budget: keep snapshot cost under 10 percent of a tick, which is 1562 us. That allows a working set of approximately 8 MB.</p>
+<p><strong>8 MB is the rollback guest budget.</strong> A program on the rollback path must fit it. That is a design constraint on the guest, and it is not a tuning parameter of the host.</p>
+</section>
+<section id="prefer-forking-and-treat-serialize_to-as-the-fallback" class="level3">
+<h3 class="anchored" data-anchor-id="prefer-forking-and-treat-serialize_to-as-the-fallback">4. Prefer forking, and treat <code>serialize_to</code> as the fallback</h3>
+<p>Fork construction costs 384.2 us for the engine guest, against 12370.2 us to serialize the same machine. That is roughly 32 times faster, because copy-on-write does not copy untouched pages.</p>
+<p>For the script guest it is 0.3 us against 0.8 us.</p>
+<p>Fork is therefore the mechanism for the rollback window. <code>serialize_to</code> stays useful for a durable snapshot that must outlive the process, and for moving a machine between hosts.</p>
+</section>
+<section id="engine-guests-do-not-roll-back-and-that-is-already-the-design" class="level3">
+<h3 class="anchored" data-anchor-id="engine-guests-do-not-roll-back-and-that-is-already-the-design">5. Engine guests do not roll back, and that is already the design</h3>
+<p><code>rfd/0095</code> puts engine guests under Bubblewrap as separate processes. They were never on the rollback path.</p>
+<p>This measurement confirms that boundary rather than moving it. An engine-sized guest cannot meet the rollback budget under libriscv either. The split was right, and the reason is now numeric.</p>
+</section>
+</section>
+<section id="open-question-a-rolling-window-of-forks" class="level2">
+<h2 class="anchored" data-anchor-id="open-question-a-rolling-window-of-forks">Open question: a rolling window of forks</h2>
+<p><code>machine.hpp:61</code> states that the main machine must outlive its forks, and that it must not be modified while a fork runs.</p>
+<p>A rollback window needs about 7 snapshots at different ticks. Whether that is expressible as a chain of forks, or needs one frozen parent per tick, is not established here. It was not measured.</p>
+<p>Resolve this before building the rollback window, because decision 4 depends on it.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The rollback path carries an explicit size limit of approximately 8 MB of working set. State that limit in the guest ABI documentation, so a guest author learns it before writing a program that cannot roll back.</p>
+<p><code>use_memory_arena</code> must be false on any machine that will snapshot. Measure the cost of losing the arena before enabling snapshots on a hot path.</p>
+<p><code>rfd/0095</code> claimed <code>serialize_to</code> and forking as equivalent evidence for the same argument. They are not equivalent. Forking is roughly 32 times faster on an engine-sized machine, and <code>serialize_to</code> cannot meet the tick deadline there at all.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<p>Probe source is <code>rollback.cpp</code> beside this RFD.</p>
+<ul>
+<li><a href="https://gafferongames.com/post/floating_point_determinism/">Floating Point Determinism, Gaffer On Games</a></li>
+<li><a href="https://gafferongames.com/post/deterministic_lockstep/">Deterministic Lockstep, Gaffer On Games</a></li>
+<li><a href="https://github.com/mas-bandwidth/fps">mas-bandwidth/fps</a></li>
+<li><a href="https://johanhelsing.studio/posts/extreme-bevy">Extreme Bevy, rollback in Rust and WASM</a></li>
+<li><a href="https://easel.games/docs/learn/multiplayer/rollback-netcode">Easel, deterministic rollback netcode</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A zone fabric needs to publish. A zone server produces state at 64 Hz. Clients subscribe. Zones tell other zones about events.</p>
+<p>Three mechanisms were candidates. FoundationDB is already a dependency, it is linearizable, and it has a watch API that looks like exactly this. Userspace fan-out is already possible, because the zone server already holds every subscriber connection. eBPF was raised as a third option.</p>
+<p><code>rfd/0096</code> established that ranking these from documentation produces wrong answers. So this RFD measures first.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>A probe ran against FoundationDB in the CI image, single node, memory storage engine.</p>
+<p>That configuration is the FASTEST case. A real cluster replicates, crosses machines, and adds latency. Every FoundationDB number below is therefore a lower bound for production.</p>
+<p>The comparison figure is <code>rfd/0096</code>’s measured <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> round trip on Fly: 8910 ns. One ZoneTick at 64 Hz is 15.6 ms.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 48%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operation</th>
+<th>Median</th>
+<th>p99</th>
+<th>Fraction of one tick</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FDB commit, one publish</td>
+<td>3552.9 us</td>
+<td>5112.5 us</td>
+<td>23 percent</td>
+</tr>
+<tr class="even">
+<td>FDB watch fire, publish to subscriber</td>
+<td>12214.3 us</td>
+<td>12579.5 us</td>
+<td><strong>78 percent</strong></td>
+</tr>
+<tr class="odd">
+<td>FDB versionstamp log append</td>
+<td>2509.5 us</td>
+<td>3691.2 us</td>
+<td>16 percent</td>
+</tr>
+<tr class="even">
+<td><code>AF_UNIX</code> round trip, from <code>rfd/0096</code></td>
+<td>8.9 us</td>
+<td>–</td>
+<td>0.06 percent</td>
+</tr>
+</tbody>
+</table>
+<p>Concurrent watches, measured to the failure point:</p>
+<pre><code>FDBPUB concurrent watches held = 10000,
+       stopped at error 1032 (Too many watches currently set)</code></pre>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="real-time-pubsub-runs-in-userspace" class="level3">
+<h3 class="anchored" data-anchor-id="real-time-pubsub-runs-in-userspace">1. Real-time pubsub runs in userspace</h3>
+<p>A watch fires 12214 us after the publish. That is 78 percent of a 15.6 ms tick, on the fastest possible FoundationDB configuration.</p>
+<p>An <code>AF_UNIX</code> round trip is 8.9 us. The watch path is approximately 1371 times slower.</p>
+<p>A tick cannot spend 78 percent of itself on notification. The zone server already holds every subscriber connection through picoquic and WebTransport. Fan-out belongs there.</p>
+</section>
+<section id="foundationdb-is-not-a-message-bus-and-the-watch-cap-proves-it" class="level3">
+<h3 class="anchored" data-anchor-id="foundationdb-is-not-a-message-bus-and-the-watch-cap-proves-it">2. FoundationDB is not a message bus, and the watch cap proves it</h3>
+<p>The probe held exactly 10000 concurrent watches and then failed with error 1032, <code>Too many watches currently set</code>.</p>
+<p>That cap belongs to the database, not to a zone. A fabric of many zones shares it. Ten thousand subscribers is a plausible target for a multiplayer fabric, so this is a real ceiling and not a theoretical one.</p>
+<p>Watches also carry semantics that do not match a message bus. A watch is edge-triggered and reports only that a key changed. It does not report what the value became. A subscriber must read the key again, and values that changed between the fire and the re-read are lost.</p>
+<p>That behavior is correct for “configuration changed, load it again”. It is wrong for an event stream.</p>
+</section>
+<section id="foundationdb-keeps-the-durable-event-log" class="level3">
+<h3 class="anchored" data-anchor-id="foundationdb-keeps-the-durable-event-log">3. FoundationDB keeps the durable event log</h3>
+<p>A versionstamp append commits in 2509 us. Versionstamps give a total order, assigned by the cluster, without coordination between writers.</p>
+<p>This is the right tool for events that must survive a process, need an order across zones, and arrive at a low rate. Zone lifecycle, guest load and unload, administrative actions, and ReBAC changes all fit.</p>
+<p>The rate limit is explicit. At 2509 us per commit, a publisher gets approximately 400 appends per second in the best case. Do not put a 64 Hz state stream here.</p>
+</section>
+<section id="watches-are-for-rare-signals-only" class="level3">
+<h3 class="anchored" data-anchor-id="watches-are-for-rare-signals-only">4. Watches are for rare signals only</h3>
+<p>A watch is acceptable when the event is rare and the subscriber count is small. Configuration reload is the example.</p>
+<p>Never place a watch on a per-tick key. Never allocate a watch per subscriber, because decision 2 gives the ceiling.</p>
+</section>
+<section id="ebpf-does-not-fan-out" class="level3">
+<h3 class="anchored" data-anchor-id="ebpf-does-not-fan-out">5. eBPF does not fan out</h3>
+<p><code>SOCKMAP</code> and <code>sk_msg</code> redirect a message from one socket to another. Redirection moves a message. It does not copy one message to many.</p>
+<p>Pubsub fan-out is one message to N subscribers. That is not the operation these programs perform, so no custom eBPF program replaces the userspace loop.</p>
+<p>This is the same category error that <code>rfd/0096</code> corrected for uBPF. eBPF is a filter and redirect facility. It is not a transport, and it is not a message bus.</p>
+<p>One eBPF case stays open and unmeasured. <code>SOCKMAP</code> splicing suits a RELAY, which is what the zone server becomes between a Godot guest and a WebTransport guest. That is one to one, so decision 5 does not exclude it. It needs its own measurement.</p>
+</section>
+</section>
+<section id="the-pattern" class="level2">
+<h2 class="anchored" data-anchor-id="the-pattern">The pattern</h2>
+<p>This is the same split that <code>rfd/0095</code> made for storage, applied to messaging.</p>
+<p><code>rfd/0095</code> put small hot state in FoundationDB and content in an object store, because each store does one job well. The same reasoning applies here. FoundationDB gives durability, ordering, and linearizability. It does not give low latency or fan-out. Userspace gives low latency and fan-out. It does not give durability.</p>
+<p>Route by what the message needs:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 28%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Message</th>
+<th>Path</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Per-tick state to clients</td>
+<td>Userspace, WebTransport</td>
+<td>64 Hz, needs 8.9 us and not 12214 us</td>
+</tr>
+<tr class="even">
+<td>Guest to zone</td>
+<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
+<td><code>rfd/0096</code></td>
+</tr>
+<tr class="odd">
+<td>Durable cross-zone event</td>
+<td>FDB versionstamp log</td>
+<td>Ordering and survival matter, rate is low</td>
+</tr>
+<tr class="even">
+<td>Configuration changed</td>
+<td>FDB watch</td>
+<td>Rare, few subscribers</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The zone server owns fan-out. That work is a loop over subscriber connections, and it needs no new dependency.</p>
+<p>The 10000 watch ceiling is a fabric-wide budget. Any design that allocates a watch per subscriber, or per zone-and-subscriber pair, must state how it stays under that number.</p>
+<p>Every FoundationDB figure here is a lower bound, because the probe ran single node with memory storage. Re-measure against the deployed cluster before treating any of them as a headroom calculation.</p>
+<p><code>rfd/0096</code>’s lesson repeats. FoundationDB looked like a message bus because it has a watch API. Measurement showed the watch path costs 78 percent of a tick and stops at 10000 subscribers.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<p>Probe source and raw output live beside this RFD in <code>fdbpub.c</code>.</p>
+<ul>
+<li><a href="https://apple.github.io/foundationdb/developer-guide.html#watches">FoundationDB developer guide, watches</a></li>
+<li><a href="https://apple.github.io/foundationdb/known-limitations.html">FoundationDB known limitations</a></li>
+<li><code>rfd/0096</code> for the 8910 ns <code>AF_UNIX</code> measurement on Fly</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0096: Guest transport on Fly, measured</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0096: Guest transport on Fly, measured</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0095</code> says an engine guest reaches its zone over one <code>AF_UNIX</code> socket. It does not say why not something faster.</p>
+<p>That gap invited a reasonable question. Shared-memory rings are much faster than sockets in published benchmarks. io_uring can remove syscalls from an event loop. uBPF exists. Each looked like a candidate.</p>
+<p>The candidates were ranked twice from documentation. Both rankings were wrong in places. Documentation describes Linux. This system runs on one specific machine shape, and that shape decides the answer.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>A probe went to Fly.io and measured the machine that runs production.</p>
+<ul>
+<li>App: a throwaway app, destroyed after the run.</li>
+<li>Machine: <code>shared-cpu-1x</code>, 256 MB, region <code>iad</code>.</li>
+<li>Image: <code>ubuntu:24.04</code>, which is also the CI image.</li>
+<li>Kernel: <code>6.12.91-fly</code>.</li>
+<li>Reported memory: 212188 kB. Reported <code>nproc</code>: 1.</li>
+</ul>
+<p>Each latency figure is a round trip between two processes. Each test does 20000 iterations. The table reports the median.</p>
+<p>A second run on a 16-core development machine gives contrast.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 29%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Probe</th>
+<th>Fly <code>shared-cpu-1x</code></th>
+<th>Local, 16 cores</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
+<td>8910 ns</td>
+<td>59821 ns</td>
+</tr>
+<tr class="even">
+<td><code>AF_UNIX</code> <code>SOCK_STREAM</code></td>
+<td>9520 ns</td>
+<td>50181 ns</td>
+</tr>
+<tr class="odd">
+<td>Busy-polled shared-memory ring</td>
+<td>did not finish</td>
+<td>110 ns</td>
+</tr>
+</tbody>
+</table>
+<p>Capability results on Fly:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Probe</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bwrap --unshare-all</code> as root</td>
+<td>OK</td>
+</tr>
+<tr class="even">
+<td><code>bwrap --unshare-net</code></td>
+<td>OK</td>
+</tr>
+<tr class="odd">
+<td><code>bwrap</code> unprivileged, uid 1000</td>
+<td>OK</td>
+</tr>
+<tr class="even">
+<td>Interfaces inside <code>--unshare-net</code></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Interfaces outside</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td><code>kernel.io_uring_disabled</code></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><code>io_uring_setup</code></td>
+<td>OK, returned fd 3</td>
+</tr>
+<tr class="even">
+<td><code>memfd_create</code></td>
+<td>OK</td>
+</tr>
+<tr class="odd">
+<td><code>fly-global-services</code></td>
+<td>172.19.15.243, <code>AF_INET</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="af_unix-sock_seqpacket-is-the-guest-transport" class="level3">
+<h3 class="anchored" data-anchor-id="af_unix-sock_seqpacket-is-the-guest-transport">1. <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> is the guest transport</h3>
+<p>The measured round trip is 8910 ns. One ZoneTick at 64 Hz is 15.6 ms. Transport cost is therefore 0.06 percent of a tick.</p>
+<p>There is no performance problem to solve at this tick rate.</p>
+</section>
+<section id="no-busy-polled-shared-memory-ring" class="level3">
+<h3 class="anchored" data-anchor-id="no-busy-polled-shared-memory-ring">2. No busy-polled shared-memory ring</h3>
+<p>The ring is the fastest option on hardware with spare cores. It measured 110 ns on 16 cores, which is 81 times faster than the socket on the same machine.</p>
+<p>On Fly it did not complete 20000 round trips in more than 8 minutes. The socket completed the same 20000 in less than one second.</p>
+<p><code>ps</code> shows the cause. Both processes stayed in <code>R</code> state at 24 percent CPU each, on a machine where <code>nproc</code> is 1. They consumed the shared-cpu burst balance and then spun against the throttle floor.</p>
+<p>The published ring benchmarks assume a spare core to spin on. <code>shared-cpu-1x</code> does not give one. A number measured on a workstation does not transfer to this deployment.</p>
+<p>This decision is conditional on the machine shape. A dedicated-CPU machine would change it, and this RFD does not forbid revisiting the choice there.</p>
+</section>
+<section id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop" class="level3">
+<h3 class="anchored" data-anchor-id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop">3. Keep epoll. Do not adopt io_uring for the event loop</h3>
+<p>io_uring is reachable on Fly. <code>io_uring_setup</code> returned a descriptor, and <code>kernel.io_uring_disabled</code> is 0. Availability is not the obstacle.</p>
+<p>Value is the obstacle. io_uring saves syscalls, and it pays back at high event rates. This system ticks at 64 Hz, and its transport already costs 0.06 percent of a tick.</p>
+<p><code>IORING_SETUP_SQPOLL</code> is the mode that removes syscalls completely. It spawns a kernel poller thread. That is the same shape as the busy-poll ring, so decision 2 applies to it unchanged.</p>
+</section>
+<section id="guests-must-not-reach-io_uring" class="level3">
+<h3 class="anchored" data-anchor-id="guests-must-not-reach-io_uring">4. Guests must not reach io_uring</h3>
+<p>A seccomp filter examines the syscalls a task makes. io_uring operations run on <code>io-wq</code> kernel worker threads, outside the filter of the task that submitted them. A filter cannot screen a call the task never makes.</p>
+<p>A guest that holds an io_uring descriptor can therefore perform work that the rest of the filter denies.</p>
+<p>This is settled practice. Android 12 and later block <code>io_uring_setup</code> in the default application policy. Chrome OS does the same. The Chrome renderer and GPU sandboxes reject it. gVisor rejects it.</p>
+<p><code>rfd/0095</code>’s seccomp filter must deny <code>io_uring_setup</code>, <code>io_uring_enter</code>, and <code>io_uring_register</code> by name.</p>
+</section>
+<section id="ubpf-is-not-a-transport" class="level3">
+<h3 class="anchored" data-anchor-id="ubpf-is-not-a-transport">5. uBPF is not a transport</h3>
+<p>uBPF is a userspace virtual machine that executes eBPF bytecode. It has no sockets, no I/O, and no packet path. It exists because the kernel implementation is GPL, and uBPF carries an Apache license.</p>
+<p>uBPF is therefore an alternative to libriscv, not an alternative to an event loop. <code>rfd/0095</code> already selects libriscv, and it gives a reason that uBPF does not answer: <code>serialize_to</code> and forking give bit-exact snapshot and replay.</p>
+<p>Kernel eBPF does accelerate networking, through <code>SOCKMAP</code> and AF_XDP. Neither applies here. A guest under <code>--unshare-net</code> has no sockets to redirect, and decision 4 and <code>rfd/0095</code> both deny the bpf family to guests.</p>
+</section>
+<section id="udp-must-bind-fly-global-services-and-it-is-ipv4" class="level3">
+<h3 class="anchored" data-anchor-id="udp-must-bind-fly-global-services-and-it-is-ipv4">6. UDP must bind <code>fly-global-services</code>, and it is IPv4</h3>
+<p>Fly requires a UDP service to bind <code>fly-global-services</code>. <code>0.0.0.0</code>, <code>*</code>, and <code>INADDR_ANY</code> do not work, because Linux then selects the wrong source address for replies.</p>
+<p><code>src/transport/webtransport_server.c:233</code> binds <code>in6addr_any</code>. The socket binds, packets arrive, and replies leave with the wrong source address. <code>fly/fly.toml</code> already declares <code>protocol = "udp"</code> on <code>internal_port = 7443</code>, so this is live configuration.</p>
+<p>The probe found a second fact that a documentation-only fix would miss. <code>fly-global-services</code> resolves to <code>172.19.15.243</code>, which is <code>AF_INET</code>. The current socket is <code>AF_INET6</code>. The fix needs an <code>AF_INET</code> socket or a v4-mapped address. It is not an address substitution.</p>
+<p>TCP cannot use <code>fly-global-services</code> and must bind the wildcard. The application therefore needs asymmetric binds.</p>
+</section>
+<section id="bubblewrap-works-on-fly-including-unprivileged" class="level3">
+<h3 class="anchored" data-anchor-id="bubblewrap-works-on-fly-including-unprivileged">7. Bubblewrap works on Fly, including unprivileged</h3>
+<p>All three <code>bwrap</code> probes passed, including the unprivileged case at uid 1000. <code>--unshare-net</code> left 1 interface inside the sandbox against 4 outside.</p>
+<p><code>rfd/0095</code> predicted this, because a Fly machine is a Firecracker VM and the process is root in its own kernel. The prediction is now a measurement.</p>
+<p>Note that Docker is the harder case, not Fly. The same probe failed every <code>bwrap</code> test under Docker, where user namespaces are blocked by default. CI must therefore grant <code>--cap-add SYS_ADMIN</code> and <code>--security-opt seccomp=unconfined</code>, or use podman.</p>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The engine guest transport is a plain <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> socket. It needs no new dependency and no tuning.</p>
+<p><code>memfd_create</code> works, so a bulk path over <code>SCM_RIGHTS</code> stays available if a future measurement justifies it. Size any such buffer against 212 MB of usable memory, not against 256 MB.</p>
+<p>Two guest-facing denials are now mandatory rather than advisory: io_uring and bpf.</p>
+<p>The UDP bind defect is real and unfixed. Nothing that this RFD decides matters while replies leave with the wrong source address.</p>
+</section>
+<section id="what-this-rfd-corrects" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-rfd-corrects">What this RFD corrects</h2>
+<p>Three claims in earlier rankings were wrong, and the measurement corrected each one.</p>
+<p>Shared-memory rings were ranked as the fastest option. They are the fastest option on a machine with spare cores, and they are unusable on this one.</p>
+<p>io_uring was ranked as unverified. It is available, and it is undesirable for separate reasons.</p>
+<p>Dropping h2o for <code>picoquic_packet_loop()</code> was ranked first at one point. The asymmetric bind requirement needs a TCP listener as well, and <code>picoquic_packet_loop()</code> serves UDP only.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li><a href="https://fly.io/docs/networking/udp-and-tcp/">Running apps on UDP and TCP, Fly Docs</a></li>
+<li><a href="https://community.fly.io/t/fly-machines-security-update-dirtyfrag-fragnesia-and-copyfail/28018">Fly Machines Security Update, kernel v6.12.91</a></li>
+<li><a href="https://kernel-internals.org/io-uring/security/">io_uring security model</a></li>
+<li><a href="https://blog.0x74696d.com/posts/iouring-and-seccomp/">io_uring and seccomp</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/sysctl/kernel.html">Documentation for /proc/sys/kernel</a></li>
+<li><a href="https://github.com/iovisor/ubpf">uBPF</a></li>
+<li><a href="https://victoranderssen.com/blog/linux-ipc-benchmark/">Linux IPC Shootout, shared memory against Unix domain sockets</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot, fabric-godot-core</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0094</code> makes <code>zone-server-h2o</code> the host of the minimum UGC game loop. It says guests are CDN-delivered riscv64 ELFs. It does not say how a guest reaches the host, and it does not say that all guests are alike.</p>
+<p>The implementation found that both gaps are real.</p>
+<p><code>zone-server-h2o</code> PR #23 gave the host a POSIX filesystem on top of FoundationDB. The filesystem worked. A Godot engine ELF started under it, ran 57.9 million instructions, and read <code>project.godot</code> out of FoundationDB.</p>
+<p>The cost was 17 syscall handlers. The host supplied <code>/dev/urandom</code>, <code>/dev/null</code>, <code>/dev/zero</code>, <code>getrandom</code>, <code>chdir</code>, <code>getcwd</code>, <code>mkdirat</code>, <code>unlinkat</code>, and process-spawn stubs. The next two failures in the log were the mbedTLS entropy pool and the Godot scene loader. The list after those has no end. It ends when <code>zone-server-h2o</code> contains a Linux kernel.</p>
+<p>There are two causes. Neither one is libriscv.</p>
+<p><em>The file abstraction forces the emulation.</em> FoundationDB is a key-value store. The guest layer made it look like POSIX. It added handles, offsets, <code>lseek</code>, a working directory, and device nodes.</p>
+<p>This codebase invented every one of those concepts. This codebase then defends every one of them. The guests only ever wanted get and put.</p>
+<p><em>One runtime served two unlike guest classes.</em> A UGC script needs approximately ten host operations. It runs on every tick. A complete game engine needs a userland.</p>
+<p>libriscv calls a guest function 5.25 to 7.25 times in the time Wasmtime calls one. It is the best tool available for the first class. It is the wrong tool for the second.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>There are two guest classes. Each class gets the runtime that suits it. The host gives guests a domain ABI. The host does not emulate Linux.</p>
+<p>Stated as deployment, which is how it is built and paid for:</p>
+<ul>
+<li>Zone guests run under Bubblewrap on Fly.io.</li>
+<li>libriscv <code>.elf</code> programs carry hybrid rollback-kinematic networking between Godot zone servers and Godot zone clients.</li>
+</ul>
+<section id="guest-classes" class="level3">
+<h3 class="anchored" data-anchor-id="guest-classes">Guest classes</h3>
+<p>A <em>script guest</em> is user-generated content. It is small. It runs on every tick. It runs in-process under libriscv. This is the class that carries rollback-kinematic prediction and reconciliation.</p>
+<p>An <em>engine guest</em> is a complete application, such as a Godot server build. It is large. It runs for the life of a zone. It runs as a separate process under Bubblewrap.</p>
+</section>
+<section id="the-dividing-line-is-rollback-determinism" class="level3">
+<h3 class="anchored" data-anchor-id="the-dividing-line-is-rollback-determinism">The dividing line is rollback determinism</h3>
+<p>The two runtimes are not a compromise. Each one answers a different requirement.</p>
+<p>libriscv re-executes bit-exactly. <code>machine.serialize_to</code> (<code>machine.hpp:431</code>) writes complete machine state. Machine forking (<code>machine.hpp:61</code>) copies it. Together they give true snapshot and replay of a running guest.</p>
+<p>Hybrid rollback-kinematic networking needs exactly this. It runs between a Godot zone server and a Godot zone client. Both sides predict state from a kinematic model. Both sides then reconcile.</p>
+<p>Reconciliation replays inputs from a snapshot. If the replay diverges from the recorded run, the reconciliation is wrong. It is wrong silently, and it is wrong on the client that did nothing unusual.</p>
+<p>A Bubblewrap process cannot do this. It is a Linux process. It holds kernel state, timers, file descriptors, and scheduler position. Nothing snapshots it faithfully.</p>
+<p>Therefore, hybrid rollback-kinematic networking between Godot zone servers and Godot zone clients runs as libriscv <code>.elf</code> programs, in the style of godot-sandbox. Bubblewrap covers everything off that path, where isolation is the requirement and replay is not.</p>
+</section>
+<section id="the-domain-abi" class="level3">
+<h3 class="anchored" data-anchor-id="the-domain-abi">The domain ABI</h3>
+<p><code>src/sandbox/zone_abi.h</code> is the complete set of host operations a script guest can reach. The host and every guest include the same header, so the two cannot disagree about a number.</p>
+<p>The precedent is godot-sandbox. It is libriscv’s own production Godot integration. It numbers its ABI from 500. It emulates no Linux. Its guests call <code>ECALL_VCALL</code> and <code>ECALL_GET_NODE</code>, which are domain operations. This ABI numbers from 600, which leaves the 500 block free so one guest can speak both.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ZONE_KV_GET</code></td>
+<td>Read one key</td>
+</tr>
+<tr class="even">
+<td><code>ZONE_KV_SET</code></td>
+<td>Write one key</td>
+</tr>
+<tr class="odd">
+<td><code>ZONE_KV_DEL</code></td>
+<td>Delete one key</td>
+</tr>
+<tr class="even">
+<td><code>ZONE_KV_LIST</code></td>
+<td>List keys under a prefix</td>
+</tr>
+<tr class="odd">
+<td><code>ZONE_PRINT</code></td>
+<td>One zone-tagged log line</td>
+</tr>
+<tr class="even">
+<td><code>ZONE_ENTROPY</code></td>
+<td>Random bytes from the host</td>
+</tr>
+<tr class="odd">
+<td><code>ZONE_OBJ_GET</code></td>
+<td>Read object bytes</td>
+</tr>
+<tr class="even">
+<td><code>ZONE_OBJ_PUT</code></td>
+<td>Publish an object</td>
+</tr>
+</tbody>
+</table>
+<p>Below the ABI, the host installs 7 Linux syscalls. These are libriscv’s <code>setup_minimal_syscalls()</code>: <code>close</code>, <code>lseek</code>, <code>write</code>, <code>fstat</code>, <code>exit</code>, <code>brk</code>, and <code>ebreak</code>. They are a guest’s <code>printf</code> and heap. They are not a userland.</p>
+</section>
+<section id="two-stores-and-the-split-is-deliberate" class="level3">
+<h3 class="anchored" data-anchor-id="two-stores-and-the-split-is-deliberate">Two stores, and the split is deliberate</h3>
+<p><code>ZONE_KV_*</code> reaches FoundationDB. FoundationDB is used as what it is, which is a linearizable transactional datastore. It holds small, mutable, hot state. Values cap at 32768 bytes, which is well below FoundationDB’s 100000-byte limit. No chunking layer is needed. A value over the cap returns <code>-E2BIG</code>, because at that size the data is content and not state.</p>
+<p><code>ZONE_OBJ_*</code> reaches the object store. The format is casync content-defined chunking, with <code>.caibx</code> indexes over a CDN and an S3-shaped backend. Objects are immutable, deduplicated, and cached.</p>
+<p>Do not virtualize a filesystem over either store. The filesystem is what forced the 17 handlers.</p>
+<p>Content in FoundationDB would pay transaction cost, replication, and quota for bytes that never change and are identical in every zone. Hot state in an object store would give up linearizability. Each store does the one job it is good at.</p>
+<p>Two implementations of the casync format already exist. <code>aria-storage</code> is Elixir, and it is the publish side. <code>fabric-godot-core</code>’s <code>modules/multiplayer_fabric_asset</code> is C++, and it is the fetch and verify side. Its header states that its constants are canonical.</p>
+<p>Those constants are:</p>
+<ul>
+<li>SHA-512/256 chunk identifiers</li>
+<li>Chunks of 16 KB to 256 KB</li>
+<li>AES-128-GCM with a 24-hour key lifetime</li>
+<li>Uro for the access check</li>
+</ul>
+<p>The C++ module is the reference for this host. Do not write a third implementation.</p>
+</section>
+<section id="quota-pressure-is-latency-not-an-error" class="level3">
+<h3 class="anchored" data-anchor-id="quota-pressure-is-latency-not-an-error">Quota pressure is latency, not an error</h3>
+<p>A write past a zone’s storage quota blocks. It does not fail. Storage pressure is a slow disk. It is not a condition a guest must code around.</p>
+<p>The consequence is stated plainly. A single guest with nothing else freeing space stays blocked until an administrative actor deletes keys or raises the quota. That is <code>rfd/0092</code>’s budget extension as a ReBAC relation. It is not an error path.</p>
+</section>
+<section id="host-supplied-entropy-is-a-replay-requirement" class="level3">
+<h3 class="anchored" data-anchor-id="host-supplied-entropy-is-a-replay-requirement">Host-supplied entropy is a replay requirement</h3>
+<p><code>ZONE_ENTROPY</code> is not only a way to avoid emulating <code>/dev/urandom</code>.</p>
+<p>A zone server that replays a journal, in the shape <code>rfd/0083</code> gives, cannot let guests draw entropy from the host random number generator behind its back. The replay would diverge from the recorded run. Routing every guest random byte through one host call makes guest randomness reproducible, because the host owns the seed.</p>
+</section>
+<section id="a-guest-cannot-write-an-object-directly" class="level3">
+<h3 class="anchored" data-anchor-id="a-guest-cannot-write-an-object-directly">A guest cannot write an object directly</h3>
+<p><code>ZONE_OBJ_PUT</code> is an administrative-plane action. It is <code>rfd/0092</code>’s <code>CAN_GRANT</code> plane. A guest never holds that plane.</p>
+<p>A guest can hold a <em>delegation</em>. A delegation is a ReBAC edge from the guest subject to a principal that does hold administrative capability. The edge permits the guest to publish on that principal’s authority.</p>
+<p>The host answers <code>ZONE_OBJ_PUT</code> by checking for that edge. It does not check the guest. Without an edge the answer is <code>-EPERM</code>. With an edge the publish happens, attributed to the delegating principal, because authority stays with whoever holds it.</p>
+<p>This is the mechanism that lets UGC scripting produce content. The alternative is a host that refuses every guest write, or a host that gives guests administrative capability. Both are wrong.</p>
+</section>
+<section id="zone-guests-under-bubblewrap-on-fly.io" class="level3">
+<h3 class="anchored" data-anchor-id="zone-guests-under-bubblewrap-on-fly.io">Zone guests under Bubblewrap on Fly.io</h3>
+<p>Zone guests run under Bubblewrap, and they run on Fly.io. Name the deployment, because the deployment is what makes the choice work.</p>
+<p>A Fly machine is a Firecracker VM. The process is root in its own kernel. Unprivileged user namespaces are therefore available, and <code>bwrap</code> needs them. <code>rfd/0089</code> already selects Fly.</p>
+<p>Bubblewrap is one unprivileged binary. It is built on Linux namespaces. Flatpak uses it. There is no daemon and no userspace kernel.</p>
+<p><code>--unshare-net</code> gives the guest no network namespace. <code>rfd/0094</code>’s rule that guests never reach the networking loop stops being a property this codebase maintains by omission. It becomes a property the kernel enforces. The engine guest cannot reach the h2o loop or the FoundationDB port, because it has no interfaces.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Flag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No network</td>
+<td><code>--unshare-net</code></td>
+</tr>
+<tr class="even">
+<td>Read-only content pack</td>
+<td><code>--ro-bind &lt;pack&gt; /app</code></td>
+</tr>
+<tr class="odd">
+<td>Writable scratch only</td>
+<td><code>--bind &lt;dir&gt; /tmp</code></td>
+</tr>
+<tr class="even">
+<td>No host filesystem</td>
+<td><code>--unshare-all</code></td>
+</tr>
+<tr class="odd">
+<td>Dies with the zone</td>
+<td><code>--die-with-parent</code></td>
+</tr>
+<tr class="even">
+<td>Syscall limits</td>
+<td><code>--seccomp &lt;fd&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>An engine guest is a separate operating-system process. It cannot share a <code>libriscv::Machine</code> address space, so the in-process ABI does not apply to it. It reaches the zone over one <code>AF_UNIX</code> socket that is bind-mounted into the sandbox.</p>
+<p>Stated plainly: an engine guest is a subprocess with one pipe to the zone. This is a simpler system than an in-process engine guest. It is the same shape <code>rfd/0083</code> chose when it moved the server off Godot.</p>
+<p>Bubblewrap ships no seccomp filter by default. Namespaces alone do not restrict system calls. The filter is this project’s to write, and it is the piece that makes this a sandbox and not a chroot. Deny at minimum: <code>socket</code>, <code>execve</code> beyond the entry point, <code>ptrace</code>, <code>mount</code>, and the keyring and bpf families.</p>
+</section>
+</section>
+<section id="evidence" class="level2">
+<h2 class="anchored" data-anchor-id="evidence">Evidence</h2>
+<p><code>zone-server-h2o</code> PR #24 implements this decision. The test guest <code>test/guest/kv_smoke.c</code> ran against a real FoundationDB. All 8 assertions passed.</p>
+<pre><code>zone 0: guest booting (4016 byte ELF, 512 MB mem, 16000 Minstr budget)
+zone 0 guest: ok: set/get round-trip
+zone 0 guest: ok: missing key reports an error
+zone 0 guest: ok: multi-chunk value round-trip
+zone 0 guest: ok: short read reports the full length
+zone 0 guest: ok: list found the written keys
+zone 0 guest: ok: delete removes the key
+zone 0 guest: ok: entropy
+zone 0 guest: ok: openat/socket/execve denied, guest still running
+zone 0 guest: kv_smoke: PASS
+zone 0: guest exited, status 0, 221987 instructions</code></pre>
+<p>Storage is real and not an in-process buffer that behaves like one. <code>fdbcli getrange</code> shows the 20000-byte value. It shows a usage counter of <code>0x4e20</code>, which is 20000, and which is correct after the delete. The counter and the data agree because one transaction writes both.</p>
+<p>Isolation holds by omission. <code>openat</code> (56), <code>socket</code> (198), and <code>execve</code> (221) reach the <code>-ENOSYS</code> catch-all, and the guest survives. An unimplemented call is not a crash.</p>
+<p>The test guest is 4016 bytes and is built with <code>-nostdlib</code>. An earlier build linked static glibc. <code>__libc_start_main</code> then reached <code>writev</code>, <code>exit_group</code>, and <code>set_tid_address</code> before <code>main</code>. Those three looked like guest requirements. They were startup code for a userland the test does not use. An implementation of those three repeats this RFD’s own mistake, one layer lower.</p>
+</section>
+<section id="what-rfd0094-keeps" class="level2">
+<h2 class="anchored" data-anchor-id="what-rfd0094-keeps">What rfd/0094 keeps</h2>
+<p>This RFD amends <code>rfd/0094</code>. It does not replace it.</p>
+<p><code>rfd/0094</code> is correct that <code>zone-server-h2o</code> hosts the loop. It is correct that guests arrive over a CDN as riscv64 ELFs and are not in-tree code. It is correct that administrative capability loads guests and normal capability interacts with them. It is correct that guests never reach the networking loop.</p>
+<p><code>rfd/0092</code>’s two planes are unchanged.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The host implements 8 domain calls and installs 7 minimal Linux syscalls. It does not grow toward a kernel, because there is no next syscall to add.</p>
+<p>This project operates two runtimes instead of one. That is the cost of the rollback-determinism requirement, and this RFD accepts it.</p>
+<p><code>ZONE_OBJ_GET</code> and <code>ZONE_OBJ_PUT</code> return <code>-ENOSYS</code> until <code>modules/multiplayer_fabric_asset</code> is extracted from the Godot build. The alternative is a third casync implementation, which is worse.</p>
+<p>Bubblewrap needs unprivileged user namespaces. On Fly this is available, because a Fly machine is a Firecracker VM and the process is root in its own kernel. Inside Docker, <code>clone(CLONE_NEWUSER)</code> is blocked by default, so local runs need <code>--cap-add SYS_ADMIN</code> and <code>--security-opt seccomp=unconfined</code>, or podman with a user namespace. Ubuntu 24.04 and later restrict namespace creation through AppArmor, and the CI image is <code>ubuntu:24.04</code>. Verify this early.</p>
+</section>
+<section id="rebac-is-the-one-authorization-model" class="level2">
+<h2 class="anchored" data-anchor-id="rebac-is-the-one-authorization-model">ReBAC is the one authorization model</h2>
+<p><code>modules/multiplayer_fabric_asset</code> performs an <code>acl_check</code> against Uro. That looked like a second authorization system next to <code>rfd/0092</code>’s ReBAC planes. It is not one.</p>
+<p><code>acl_check</code> POSTs a tuple to Uro’s <code>/acl/check</code> endpoint. The tuple is <code>(object, relation, subject)</code>, and Uro resolves it against the relation graph. Its components are strings such as <code>"asset:123"</code>, <code>"viewer"</code>, and <code>"user:456"</code>. That is ReBAC.</p>
+<p>There is one model and two evaluators. Each evaluator answers a different question. The split is this:</p>
+<ul>
+<li>Uro resolves the graph. It answers which relations a subject holds on an object. It is the source of truth for the relation graph.</li>
+<li><code>zone-server-h2o</code> decides the action. <code>rebac_check</code> (<code>src/gen/rebac.h:62</code>) takes a resolved relation set and one of <code>REBAC_ACTION_OBSERVE</code>, <code>REBAC_ACTION_INTERACT</code>, or <code>REBAC_ACTION_MODIFY</code>. It does not walk a graph.</li>
+</ul>
+<p>ReBAC is the model everywhere. Where the two evaluators overlap, the host is authoritative for host actions. <code>rebac_check</code> decides whether the host performs an action. An <code>acl_check</code> boolean alone does not gate a host-side action.</p>
+<p><code>lean-rebac-core</code> generates <code>src/gen/rebac.c</code>. Keep the host decision there, and keep it generated. Do not add a second decision procedure that Uro and the host must then agree about.</p>
+<p>There is one consequence for the guest path. Guest calls must not block on an HTTP round trip to Uro. Relations resolve when the host loads a guest, and the host holds the resolved set for the life of that guest.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0094: zone-server-h2o hosts the minimum UGC game loop</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-middleham, zone-guest-gyre, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>zone-server-h2o</code>’s PR #22 removed the MUD subsystem (the phase-2 CDN-guest move). The first cut of that PR also deleted <code>thirdparty/libriscv</code> and <code>thirdparty/QCBOR</code>, because their only in-tree consumer was the MUD orchestrator. That deletion was wrong, and the review that caught it exposed an undocumented decision.</p>
+<p><code>rfd/0092</code> defines <em>how</em> the host gates guest access (ReBAC, a use plane and an admin plane). No RFD defines <em>what</em> the host repo must implement to close a user-generated-content game loop. No RFD says which repo is that host, or how many guests compose in one zone.</p>
+<p>Without that decision on record, the same mistake repeats. A cleanup of guest-adjacent code can delete host-side machinery that looks orphaned but is load-bearing for the loop.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><code>zone-server-h2o</code> is the host of the minimum UGC game loop. The loop is: a principal with administrative capability loads guest programs, and principals with normal capability interact with what those guests run. Guests are CDN-delivered riscv64 ELFs, not in-tree code.</p>
+<section id="what-the-host-keeps-vendored" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-host-keeps-vendored">What the host keeps vendored</h3>
+<ul>
+<li><code>thirdparty/libriscv</code>: the guest execution engine. It is not MUD-specific.</li>
+<li><code>thirdparty/QCBOR</code>: the serialization layer for the host-to-guest ABI. The host must speak the same CBOR encoding the guests do.</li>
+</ul>
+<p>Both stay in <code>zone-server-h2o</code> even while no in-tree consumer exists. The QCBOR build wiring stays live in <code>CMakeLists.txt</code>, so the vendored copy compiles in CI and does not rot.</p>
+</section>
+<section id="two-capability-tiers" class="level3">
+<h3 class="anchored" data-anchor-id="two-capability-tiers">Two capability tiers</h3>
+<p>The tiers are <code>rfd/0092</code>’s two planes, bound to the ReBAC actions that <code>src/gen/rebac.{c,h}</code> already generates from <code>lean-rebac-core</code>:</p>
+<ul>
+<li><strong>Administrative capabilities</strong> (admin plane): fetch a guest ELF, load it, unload it, and grant it capabilities. These map to <code>REBAC_ACTION_MODIFY</code>, which <code>Action.minRelation</code> gates at <code>REBAC_RELATION_OWNER</code>. The orchestrator runs every admin check. A guest never reaches this plane.</li>
+<li><strong>Normal capabilities</strong> (use plane): the verbs a running guest exposes to players. These map to <code>REBAC_ACTION_INTERACT</code> and <code>REBAC_ACTION_OBSERVE</code>. Observe is public. Interact needs a real relation.</li>
+</ul>
+</section>
+<section id="guest-composition" class="level3">
+<h3 class="anchored" data-anchor-id="guest-composition">Guest composition</h3>
+<p>One zone process loads more than one guest, each as its own <code>libriscv::Machine</code> and its own ReBAC subject (per <code>rfd/0092</code>). The initial composition is:</p>
+<ul>
+<li><code>zone-guest-middleham</code>: the game-logic guest, and the first to load. Its ELF recipe already worked in-tree, and it is the smallest.</li>
+<li><code>zone-guest-gyre</code>: the presentation guest (the web client and its deploy), CDN-delivered on the same pipeline.</li>
+<li><code>zone-guest-godot</code>: Godot rv64 under <code>rvlinux</code>. This is the stress test of the same capability table, not a separate design.</li>
+</ul>
+</section>
+<section id="what-closes-the-loop" class="level3">
+<h3 class="anchored" data-anchor-id="what-closes-the-loop">What closes the loop</h3>
+<p>The minimum loop closes when three items land in <code>zone-server-h2o</code>:</p>
+<ol type="1">
+<li>A guest loader that links <code>thirdparty/libriscv</code> and boots one ELF. The last loader lived in <code>mud/orchestrator/main.cpp</code> and moved to <code>zone-guest-middleham</code>.</li>
+<li>A capability table: which host functions a loaded guest may call, keyed by the guest subject’s ReBAC relations, with QCBOR as the wire format.</li>
+<li><code>rebac_check</code> call sites at both tiers: at load time (modify, owner only) and per guest syscall (interact or observe).</li>
+</ol>
+<p>Two prerequisites sit outside those three items. First, identity: the server’s TLS cert and key are still <code>NULL</code>/<code>NULL</code>, and the admin plane cannot authorize a subject that does not exist. Second, an artifact to fetch: <code>zone-guest-middleham</code>’s release workflow fails on a <code>fabric-godot-core@feat/sandbox</code> checkout for libriscv, so no guest ELF exists on a CDN yet.</p>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The <code>fly/Containerfile</code> libriscv build and the riscv64-musl cross toolchain stay removed until item 1 lands. Building a static lib that nothing links is dead image weight.</li>
+<li>Repo cleanups must treat <code>thirdparty/libriscv</code> and <code>thirdparty/QCBOR</code> as host infrastructure, not guest leftovers.</li>
+<li>The client-command path (parse a datagram payload, write an entity, gate it with <code>rebac_check</code>) can close a create-modify-observe loop before any sandbox work. That path is compatible with, and smaller than, items 1 through 3.</li>
+</ul>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code> PR #22: the removal that exposed this decision.</li>
+<li><code>v-sekai-multiplayer-fabric/zone-guest-middleham</code>, <code>zone-guest-gyre</code>, <code>zone-guest-godot</code>: the guests.</li>
+<li><code>sinew-mocap/solve</code> org’s <code>lean-rebac-core</code>, <code>Rebac/core/ReBAC.lean</code>: the source the C types generate from.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0092-rebac-gates-libriscv-guest-access</code>: the gating model this RFD binds to a host repo and a loop definition.</li>
+<li><code>rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv</code>: the sandboxing decision behind <code>zone-guest-godot</code>.</li>
+<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the rule that ReBAC types generate from <code>lean-rebac-core</code>.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0093: Compile taskweft relation expressions to linear automata</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> taskweft-nif evaluation, zone-server-h2o ReBAC</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>taskweft</code> evaluates a relation expression by recursive descent with a fuel counter (<code>check_expr</code>). It searches the graph with a depth-first walk that copies its visited set at every branch (<code>_rebac_dfs</code>). Both backtrack. Neither has a termination bound except fuel, and a fuel-zero result denies silently.</p>
+<p>This runs on two hot paths, not one. <code>tw_domain.hpp</code> routes every planner goal binding through <code>check_expr</code>, so a backtracking planner calls a backtracking evaluator. <code>rfd/0092</code> then puts the same evaluator in front of a <code>libriscv</code> guest host call, which costs 3ns.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Compile, the way <code>google/re2</code> compiles. Treat a relation expression as a regular path query over edge labels. Build the automaton once, per named definition, with a Thompson construction. Then evaluate by simulating that automaton against the graph, as a product of automaton state and graph node. No backtracking runs, and no visited set gets copied.</p>
+<p>Take the algorithm, not the library. <code>re2</code> matches bytes. This alphabet is relation labels.</p>
+<p>Build the deterministic automaton lazily, and hold it in a bounded cache. Flush that cache when it fills, exactly as <code>re2</code> does. This is the mechanism behind <code>rfd/0092</code>’s resolution-equivalence theorem, and it retires the <code>p_fuel</code> parameter, because termination becomes structural.</p>
+<p>Two constructs resist this. Zanzibar already answers the first one. <code>difference</code> is non-monotonic, so follow Leopard’s rule: denormalize the monotone fragment only, and evaluate exclusion at query time over the compiled sets.</p>
+<p>The second stays open, and it decides feasibility. <code>tuple_to_userset</code> moves the object as well as the subject, and nobody checked whether it stays regular.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Construction, the two hard constructs, and Zanzibar’s own answer to the negation problem: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code> and <code>tw_domain.hpp</code></li>
+<li><code>google/re2</code>, <code>doc/syntax.html</code> and its linear-time guarantee</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0092-rebac-gates-libriscv-guest-access</code>: supplies the hot path this compilation serves, and open questions 4 and 7 that it closes.</li>
+<li><code>rfd/0002-taskweft-value-narrowing-primitives-and-refs</code>: the value model these expressions carry.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Discussion only. Nobody wrote a compiler, and nobody proved the two hard constructs below stay regular. That proof decides whether this RFD is buildable at all.</p>
+</section>
+<section id="what-backtracks-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-backtracks-today">What backtracks today</h2>
+<p><code>tw_rebac.hpp</code> carries two evaluators, and both backtrack.</p>
+<p><code>check_expr</code> walks the expression tree by recursive descent. It decrements <code>p_fuel</code> at each <code>union</code>, <code>intersection</code>, <code>difference</code>, and <code>tuple_to_userset</code> node, and it returns <code>false</code> when fuel reaches zero. <code>check_base</code> recurses the same way through an <code>IS_MEMBER_OF</code> chain.</p>
+<p><code>_rebac_dfs</code> searches depth-first for a capability path. It copies its visited set at every branch:</p>
+<pre><code>std::vector&lt;std::string&gt; sub_path;
+std::unordered_set&lt;std::string&gt; sub_visited = p_visited;
+if (_rebac_dfs(p_g, e.object, p_target, sub_visited, sub_path, p_depth - 1)) {</code></pre>
+<p>Each element of that set is a heap-allocated string, so each branch allocates.</p>
+<p>Two hot paths call this work. <code>tw_domain.hpp</code>’s own goal-satisfaction comment records the first. A goal binding whose <code>var</code> is a JSON object gets:</p>
+<pre><code>parsed as a full RelationExpr (union, intersection, difference,
+tuple_to_userset, …) and evaluated via check_expr.</code></pre>
+<p>The planner therefore calls <code>check_expr</code> per binding, per candidate state, while it backtracks. <code>rfd/0092</code> adds the second: the same evaluator in front of a <code>libriscv</code> guest host call, whose own cost is 3ns.</p>
+</section>
+<section id="what-re2-does-instead" class="level2">
+<h2 class="anchored" data-anchor-id="what-re2-does-instead">What <code>re2</code> does instead</h2>
+<p><code>re2</code> refuses to backtrack. It compiles a pattern to a program, then simulates that program so every input position advances exactly once. Its guarantee is linear time in input length, with bounded memory, and no catastrophic blowup on an adversarial pattern. It builds the deterministic automaton lazily, and when the state cache fills, it flushes the cache rather than growing without limit.</p>
+<p>The same three moves apply here:</p>
+<ol type="1">
+<li>Compile once. A named definition in <code>TwReBACGraph::definitions</code> compiles to an automaton over relation labels, by a Thompson construction. <code>union</code> becomes an alternation. Concatenation comes from <code>tuple_to_userset</code>’s pivot. <code>IS_MEMBER_OF</code> inheritance becomes a Kleene star on that one label.</li>
+<li>Simulate, do not search. Evaluation runs the product of automaton state and graph node. States times edges bounds the work. Nothing copies a visited set, because the product state <em>is</em> the visited marker.</li>
+<li>Bound the cache. Hold the lazy deterministic states in a fixed budget, and flush when full.</li>
+</ol>
+<p><code>p_fuel</code> then disappears. It exists only because a backtracking search has no natural bound. A product simulation terminates because the product state space is finite.</p>
+</section>
+<section id="this-is-not-a-stretch-relation-expressions-are-path-queries" class="level2">
+<h2 class="anchored" data-anchor-id="this-is-not-a-stretch-relation-expressions-are-path-queries">This is not a stretch: relation expressions are path queries</h2>
+<p>A ReBAC relation expression describes a set of label paths from a subject to an object. That is a regular path query, the same object graph databases already evaluate. Zanzibar’s userset rewrite rules describe a restricted regular path language for the same reason. The <code>base</code> case is a single label. <code>IS_MEMBER_OF</code> inheritance is that label starred. So most of <code>check_expr</code> already denotes a regular language, and a compiler for it is a translation, not an invention.</p>
+</section>
+<section id="the-two-constructs-that-resist" class="level2">
+<h2 class="anchored" data-anchor-id="the-two-constructs-that-resist">The two constructs that resist</h2>
+<p><strong><code>difference</code> needs complement.</strong> Complement needs a deterministic automaton, and determinization is worst-case exponential in the number of states. <code>re2</code> lives with the same fact and answers it with a lazy deterministic automaton plus a flushable cache. The same answer applies here.</p>
+<p>The sharper problem is not cost. It is monotonicity. An expression of the form “A and not B” turns a grant into a denial as soon as an edge satisfies B. An earlier <code>rfd/0092</code> draft claimed the opposite, as an append-only monotonicity theorem, and used it to justify caching a resolved capability table. <strong><code>difference</code> makes that theorem false.</strong></p>
+<p>Zanzibar already answers this, because Zanzibar ships exclusion. A userset expression there combines sub-expressions:</p>
+<pre><code>by operations such as union, intersection, and exclusion</code></pre>
+<p>Google never claims monotonicity. Their cache correctness rests on a version instead:</p>
+<pre><code>We avoid reusing results evaluated from a different snapshot by
+encoding snapshot timestamps in cache keys.</code></pre>
+<p><code>rfd/0092</code> now carries that correction. Its table keys on the FoundationDB read version that <code>zf_zonetick.c</code> already opens per tick. That correction closes the conflict, and negation stays available.</p>
+<section id="leopards-rule-do-not-denormalize-through-exclusion" class="level3">
+<h3 class="anchored" data-anchor-id="leopards-rule-do-not-denormalize-through-exclusion">Leopard’s rule: do not denormalize through exclusion</h3>
+<p>Zanzibar’s index draws a sharper line, and this RFD adopts it. Leopard denormalizes only the monotone fragment. Its two set types are <code>GROUP2GROUP</code> and <code>MEMBER2GROUP</code>, and both express pure reachability:</p>
+<pre><code>Group membership can be considered as a reachability problem in a
+graph, where nodes represent groups and users and edges represent
+direct membership.</code></pre>
+<p>Exclusion never enters the index. It runs at query time over the indexed sets:</p>
+<pre><code>A query evaluates an expression of union, intersection, or exclusion
+of named sets</code></pre>
+<p>So the rule is not “ban <code>difference</code>”. The rule is: compile and denormalize the monotone fragment, then apply <code>union</code>, <code>intersection</code>, and <code>difference</code> at query time over those compiled sets. A negated sub-expression stays a live query, and it never becomes a cached edge set.</p>
+<p>Google also treats this indexing as opt-in, “For selected namespaces that exhibit such structure”, not as a universal transform. This RFD takes the same position for taskweft’s own definitions.</p>
+<p><strong><code>tuple_to_userset</code> moves the object.</strong> A plain regular path query fixes its target and varies the path. <code>tuple_to_userset</code> pivots through one relation and then evaluates an inner expression against a <em>different</em> subject, as <code>check_expr</code> shows:</p>
+<pre><code>for (size_t idx : sit-&gt;second) {
+    const TwEdge &amp;e = p_g.edges[idx];
+    if (e.rel == pivot) {
+        if (check_expr(p_g, e.object, iit-&gt;second, p_obj, p_fuel - 1)) {</code></pre>
+<p>Whether that stays regular is the open question that decides this whole design. Nobody checked it. If it does stay regular, the product construction above holds as written. If it does not, this RFD needs a pushdown model or a restriction on nesting depth, and the linear-time claim weakens accordingly.</p>
+</section>
+</section>
+<section id="verification-this-needs" class="level2">
+<h2 class="anchored" data-anchor-id="verification-this-needs">Verification this needs</h2>
+<p><code>taskweft</code> already sets the precedent for proving a fast path equal to a slow path. <code>tw_rebac.hpp</code>’s own comment on the <code>member_edges</code> index reads:</p>
+<pre><code>Formally justified by Planner.ExpandIndex: expand_index_equiv proves
+that iterating member_edges gives the same result as scanning all
+edges.</code></pre>
+<p>The same obligation applies, at a larger scale:</p>
+<ul>
+<li>Compilation equivalence. The compiled automaton accepts exactly the subject and object pairs <code>check_expr</code> grants. This is <code>rfd/0092</code>’s resolution-equivalence theorem, and this RFD supplies its mechanism.</li>
+<li>Termination without fuel. The product simulation halts on every input, with no fuel parameter.</li>
+<li>A cache flush changes no answer. Flushing lazy deterministic states affects speed only, never a grant or a denial.</li>
+<li>Differential test. Run the compiled evaluator and the existing <code>check_expr</code> against the same graphs, and compare every answer, in the same shape <code>test/unit/test_xr_grid_entity_packet.c</code> compares a generated codec against golden vectors.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>Good: one mechanism closes <code>rfd/0092</code>’s open question 4 (fuel has no owner) and open question 7 (cost on the 64 Hz path). The fuel parameter stops being a silent denial source. Planning and access control share one evaluator, because both already call <code>check_expr</code>.</p>
+<p>Bad: this is a compiler, and nobody wrote it. Nobody answered the <code>tuple_to_userset</code> regularity question, and a negative answer weakens the central claim. None of this work has a caller yet, because <code>thirdparty/taskweft-nif</code> is not wired into <code>zone-server-h2o</code>, and <code>rfd/0092</code>’s guest surface does not exist either. Adopting Leopard’s split also costs something real: a negated sub-expression stays a live query forever, so it never gains the compiled path’s speed.</p>
+</section>
+<section id="revisit-when" class="level2">
+<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
+<p>Somebody answers the <code>tuple_to_userset</code> regularity question. That answer decides whether to build the product construction as written, or to fall back to a pushdown model with a bounded nesting depth. It is now the one open question that decides this design, because Zanzibar already settled the <code>difference</code> question above.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</link>
   <description><![CDATA[ 
 
 
@@ -254,12 +1373,12 @@ encoding snapshot timestamps in cache keys.</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</link>
   <description><![CDATA[ 
 
 
@@ -320,12 +1439,12 @@ encoding snapshot timestamps in cache keys.</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</link>
   <description><![CDATA[ 
 
 
@@ -476,12 +1595,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</link>
   <description><![CDATA[ 
 
 
@@ -554,12 +1673,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</link>
   <description><![CDATA[ 
 
 
@@ -594,12 +1713,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</link>
   <description><![CDATA[ 
 
 
@@ -635,12 +1754,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/</link>
   <description><![CDATA[ 
 
 
@@ -675,12 +1794,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/</link>
   <description><![CDATA[ 
 
 
@@ -1031,12 +2150,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/</link>
   <description><![CDATA[ 
 
 
@@ -1439,12 +2558,12 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/</link>
   <description><![CDATA[ 
 
 
@@ -1520,12 +2639,12 @@ font-style: inherit;">zstd::zstd</span>)</span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/</link>
   <description><![CDATA[ 
 
 
@@ -2036,12 +3155,12 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/</link>
   <description><![CDATA[ 
 
 
@@ -2146,12 +3265,12 @@ zf/fanout/{ee_id}/{e_id}               -&gt; empty value (presence = fanout targ
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/</link>
   <description><![CDATA[ 
 
 
@@ -2429,1632 +3548,8 @@ return &amp;entries[entry_idx].entity</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o CastSpell sandboxing</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>CastSpell needs to run sandboxed Godot game logic inside <code>zone-server-h2o</code>. <code>godot-sandbox</code>’s <code>Sandbox</code> Node API needs its own separate live Godot process. Linking the guest directly into <code>zone-server-h2o</code>’s binary would tie two unrelated build systems together for no benefit.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use <code>godot-riscv-spike</code>’s proven whole-engine-in-<code>rvlinux</code> approach directly. Drive it with raw <code>libriscv</code> (<code>copy_to_guest</code>, <code>copy_from_guest</code>, <code>vmcall</code>). Run it as a separate <code>sandbox-orchestrator</code> process, not linked into <code>zone-server-h2o</code>’s binary. <code>zone-server-h2o</code> spawns this new binary and connects to it over a <code>socketpair()</code>, registered with h2o’s event loop the same way <code>udp_fd</code>/<code>timer_fd</code> already are. The guest ELF exposes <code>godot_boot(cbor_config)</code>, run once, and <code>godot_tick(input_addr, output_addr)</code>, run once per real tick at 64 Hz.</p>
-<p>The guest runs offline: no socket syscalls execute inside the sandbox, even though <code>libriscv</code> implements them for a later need. Control messages use CBOR with JSON-LD framing. The per-tick entity buffer stays bitpacked, reusing the existing 100-byte <code>xr_grid_entity_packet_t</code> format, and it addresses entities by the zonefabric slotmap index. The team chose this over <code>godot-sandbox</code>’s <code>Sandbox</code> Node API, which needs its own separate live Godot process. The team also rejected linking the guest directly into <code>zone-server-h2o</code>’s binary, which would tie two unrelated build systems together for no benefit.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full context, rejected designs, prior art, and consequences: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/godot-riscv-spike</code>, <code>FINDINGS.md</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>taskweft/taskweft</code> RFD 0003/0004, and <code>rfd/0080-slotmap-entity-storage</code> (shared addressing scheme).</p>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p><code>godot-riscv-spike</code> (RFD 0001 item 6) proved a real, full Godot engine instance boots and ticks inside <code>libriscv</code>’s own sandbox (<code>rvlinux</code>). This holds for the real sandbox, not just <code>qemu-riscv64</code>. Five real <code>libriscv</code> fixes made this work. Host-level <code>strace -f</code> confirmed the result. <code>syscalls.jsonld</code>’s own audit already named the target use case. The <code>socket</code> syscall’s own note reads: “Relevant to CastSpell effects that talk to zone-server-h2o.”</p>
-<p>This session raised and closed two designs before this one.</p>
-<ol type="1">
-<li><code>godot-sandbox</code>’s own <code>Sandbox</code> Node and <code>vmcall</code> API needs its own full native Godot host process, a separate engine instance from the one <code>godot-riscv-spike</code> already proved working. <code>taskweft/taskweft</code>’s own RFD 0004 independently rejects this option for the identical reason. Its own words: “bound to a live Godot process.” This confirms the concern is real, not unique to this project.</li>
-<li><strong>Linking the sandboxed guest directly into <code>zone-server-h2o</code>’s own binary.</strong> <code>zone-server-h2o</code> is a stock-clang CMake build. The guest needs <code>fabric-godot-core</code>’s own SCons, musl, and <code>rv64</code> cross-compile pipeline. Combining them ties two unrelated build systems together for no real benefit.</li>
-</ol>
-</section>
-<section id="design-detail" class="level2">
-<h2 class="anchored" data-anchor-id="design-detail">Design detail</h2>
-<ul>
-<li><strong><code>zone-server-h2o</code></strong> (unchanged build) spawns a new <strong><code>sandbox-orchestrator</code></strong> binary. This is new, and separate, and it links raw <code>libriscv</code>. It connects over a <code>socketpair()</code>, registered with <code>h2o</code>’s own event loop the same way <code>udp_fd</code>/<code>timer_fd</code> already are. It is not a blocking thread bolted on the side.</li>
-<li>The <strong>guest ELF</strong> builds from <code>godot-riscv-spike</code>’s own proven <code>godot_instance_harness.cpp</code>. It exposes two functions callable by name via <code>vmcall()</code>. <code>godot_boot(cbor_config)</code> runs once: <code>initialize()</code>/<code>start()</code>, the exact sequence <code>FINDINGS.md</code> already verified. <code>godot_tick(input_addr, output_addr)</code> runs once per real tick, at 64 Hz (<code>ZONE_TICK_HZ</code>).</li>
-<li>The guest runs <strong>offline</strong>. No socket syscalls run inside the sandbox. <code>libriscv</code> already has them implemented for a different, later need, confirmed real, not stubs, per <code>syscalls.jsonld</code>. This integration does not use them. All real networking stays in <code>zone-server-h2o</code>’s own process.</li>
-<li>The data format is CBOR, with JSON-LD framing for anything self-describing. This covers <code>godot_boot</code>’s one-time config and any other control message. One real hot path stays bitpacked instead: the per-tick entity buffer that crosses the boundary on every <code>GodotInstance::iteration()</code> call. It reuses <code>xr_grid_entity_packet_t</code>’s existing 100-byte wire format verbatim. It addresses entities by RFD 0002’s own slotmap index, not a flat scan. This shares one addressing scheme with RFD 0002’s own, still-deferred, <code>zone_state</code> batch, instead of inventing a second one.</li>
-</ul>
-</section>
-<section id="related-prior-art" class="level2">
-<h2 class="anchored" data-anchor-id="related-prior-art">Related prior art</h2>
-<p><code>taskweft/taskweft</code> RFD 0004 covers “KHR_interactivity Tier 2,” which embeds <code>libriscv</code> and compiles behavior graphs to riscv64. It independently reached the same conclusion: prefer <code>libriscv</code> over <code>godot-sandbox</code>. It set two precedents this decision reuses directly. First, values cross the ABI as JSON (<code>TwValue</code> (de)serialization), the same reasoning behind the CBOR choice here. Second, <code>libriscv</code>’s own machine-snapshot/resume capability is a real alternative to repeated <code>vmcall()</code>s for state persistence between ticks. This is worth a direct comparison during implementation.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: this reuses <code>godot-riscv-spike</code>’s own proven, <code>strace</code>-confirmed boot sequence and five real fixes as they stand. <code>zone-server-h2o</code>’s own build, transport, and FDB layers stay untouched. One process boundary needs reasoning about, not a merged build.</p>
-<p>Bad: this is a genuinely new subsystem. Guest-side exported functions, a new host orchestrator binary, and <code>h2o</code> evloop wiring are all real, unstarted implementation work, not just documentation. The exact <code>GodotInstance</code>/scene API <code>godot_tick</code> uses to apply entity input and read state back out is not yet nailed down.</p>
-</section>
-<section id="related-1" class="level2">
-<h2 class="anchored" data-anchor-id="related-1">Related</h2>
-<ul>
-<li><code>v-sekai-multiplayer-fabric/godot-riscv-spike</code>, <code>FINDINGS.md</code> and <code>syscalls.jsonld</code></li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-<li><code>taskweft/taskweft</code>, RFD 0003 and RFD 0004</li>
-<li>This repo’s own PR #126, the zonefabric decision docs ported here from <code>zone-server-h2o</code>’s own consolidation</li>
-<li>RFD 0002’s <code>zone_state</code> slotmap design (this repo), referenced by <code>zone-server-h2o</code>’s own <code>src/zf_kv.c</code> comments</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0078: plausible-witness-dag for zonefabric feature ablation</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o feature scoping</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The team needed to know, before writing implementation code, which zonefabric game features are load-bearing and which are safe to defer. Building a feature the wrong way once, then rebuilding it correctly, pays for that feature twice. The team also needed a dependency-ordered build order, so no feature would build on an unverified foundation.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use plausible-witness-dag to ablate zonefabric game features before writing implementation code. Model each feature as a set of Lean 4 invariants over game state. Then remove one feature’s invariants at a time, and search for a witness trace that violates a remaining invariant. A found witness marks the feature load-bearing: the team must build it correctly the first time, or it becomes speculator debt paid for twice. No witness at escalating scale (L0, L1, L2) marks the feature deferrable, an unspent-dollar feature safe to stub or skip. The ablation matrix also gives a dependency-ordered build order, so no feature is built on an unverified foundation.</p>
-<p>Slotmap generational IDs and ZoneTick are load-bearing and come first. CastSpell, GhostRelevance zone splitting, and rate limiting are independent of the core loop, so the team may defer or stub them.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full feature-invariant table, ablation matrix, dependency graph, Lean predicates, and economics: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-plausible-witness-dag-feature-ablation.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0019-feature-ablation.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0081-three-layer-verification-strategy</code>: plausible-witness-dag’s other role, as the runtime verification layer.</li>
-<li><code>rfd/0080-slotmap-entity-storage</code>: the first feature this ablation verifies as foundational.</li>
-<li><code>rfd/0076-macaroon-xdp-security</code>: security features ablated independently of game logic.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="problem-1" class="level2">
-<h2 class="anchored" data-anchor-id="problem-1">Problem</h2>
-<p>Building an MMO is expensive. Every feature is a bet:</p>
-<ul>
-<li><p><strong>Feature built that wasn’t needed</strong> = wasted engineering dollars. The code exists, must be maintained, adds complexity, slows down the hot path, and provides zero player value.</p></li>
-<li><p><strong>Feature built wrong, then rebuilt</strong> = speculator debt. You ship a feature based on assumption, discover the assumption was wrong in production, then pay to tear it out and rebuild it properly. You pay twice: once to build it wrong, once to build it right.</p></li>
-<li><p><strong>Feature not built that was needed</strong> = opportunity cost, but recoverable. You can always add it later if the architecture accommodates it. The dangerous case is building a <em>replacement</em> that conflicts with the missing feature’s invariants.</p></li>
-</ul>
-<p>Traditional game development resolves this with playtesting and prototyping, which are expensive, slow, and subjective. plausible-witness-dag resolves it with formal invariant search, which is fast, deterministic, and exhaustive within the modeled state space.</p>
-</section>
-<section id="approach" class="level2">
-<h2 class="anchored" data-anchor-id="approach">Approach</h2>
-<section id="step-1-model-features-as-invariant-sets" class="level3">
-<h3 class="anchored" data-anchor-id="step-1-model-features-as-invariant-sets">Step 1: Model features as invariant sets</h3>
-<p>Each zonefabric feature is modeled as a set of predicates over the game state. A feature is “present” when its invariants are enforced; “ablated” when they are removed.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 42%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Feature</th>
-<th>Invariants when present</th>
-<th>What breaks when ablated</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>ZoneTick</td>
-<td><code>∀ entity: pos' = pos + vel × dt</code></td>
-<td>Entities freeze; positions never update</td>
-</tr>
-<tr class="even">
-<td>CastSpell</td>
-<td><code>effect → fanout ⊆ entities_in_ghost_range</code></td>
-<td>Effects hit entities outside range; teleporting damage</td>
-</tr>
-<tr class="odd">
-<td>GhostRelevance</td>
-<td><code>ghost ⊆ entities_within_ghost_range(zone_boundary)</code></td>
-<td>Players see entities they shouldn’t; information leak</td>
-</tr>
-<tr class="even">
-<td>ZoneSplit</td>
-<td><code>population² &gt; threshold ⟹ split</code></td>
-<td>Hot zones never split; performance cliff</td>
-</tr>
-<tr class="odd">
-<td>EntityMigration</td>
-<td><code>entity leaves zone A ⟹ entity enters zone B</code></td>
-<td>Entities vanish or duplicate; state corruption</td>
-</tr>
-<tr class="even">
-<td>SlotmapGenIDs</td>
-<td><code>handle.gen == slot.gen ⟹ entity is live</code></td>
-<td>Dangling references; fireball hits wrong player</td>
-</tr>
-<tr class="odd">
-<td>SessionExpiry</td>
-<td><code>now &gt; expiry ⟹ XDP drops packets</code></td>
-<td>Expired sessions still route; security hole</td>
-</tr>
-<tr class="even">
-<td>RateLimit</td>
-<td><code>packets_per_sec ≤ rate_limit</code></td>
-<td>No flood protection; DDoS amplification</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="step-2-ablation-matrix" class="level3">
-<h3 class="anchored" data-anchor-id="step-2-ablation-matrix">Step 2: Ablation matrix</h3>
-<p>For each feature F, run plausible-witness-dag with F’s invariants removed and all other features’ invariants present. The witness search either:</p>
-<ul>
-<li><p><strong>Finds a witness</strong> (a state trace that violates a remaining invariant when F is absent) → F is load-bearing. Building it wrong or omitting it causes a cascade of invariant violations. This is speculator debt — build it correctly or pay twice.</p></li>
-<li><p><strong>Finds no witness</strong> → F’s invariants are independent of the rest. The feature can be safely deferred (unspent dollars preserved) or built in any order without risking the core system.</p></li>
-</ul>
-</section>
-<section id="step-3-dependency-ordering" class="level3">
-<h3 class="anchored" data-anchor-id="step-3-dependency-ordering">Step 3: Dependency ordering</h3>
-<p>The ablation matrix produces a dependency graph. If removing feature A breaks feature B’s invariants, then A must be built before B. This gives a build order that minimizes speculator debt: no feature is built on top of an unverified foundation.</p>
-<pre><code>SlotmapGenIDs ──────► CastSpell (needs valid entity handles)
-       │
-       ├────────────► GhostRelevance (needs valid ghost handles)
-       │
-       └────────────► EntityMigration (needs generational safety)
-
-SessionExpiry ──────► RateLimit (expired sessions shouldn't rate-limit)
-
-ZoneTick ───────────► ZoneSplit (split needs current population)
-       │
-       └────────────► CastSpell (spell needs current positions)
-
-GhostRelevance ─────► CastSpell (fanout scoped by ghost range)</code></pre>
-</section>
-<section id="step-4-cost-weighted-ablation" class="level3">
-<h3 class="anchored" data-anchor-id="step-4-cost-weighted-ablation">Step 4: Cost-weighted ablation</h3>
-<p>Each feature has an implementation cost (engineering hours) and a speculator-debt risk (probability × cost-of-rework). The ablation matrix tells us which features are safe to defer (low risk) and which must be built first (high risk if wrong).</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 12%">
-<col style="width: 37%">
-<col style="width: 5%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Feature</th>
-<th>Impl cost</th>
-<th>Load-bearing?</th>
-<th>Defer?</th>
-<th>Rationale</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>SlotmapGenIDs</td>
-<td>Low (~100 LoC)</td>
-<td>Yes — breaks CastSpell, Ghost, Migration</td>
-<td>No</td>
-<td>Cheap, foundational, do first</td>
-</tr>
-<tr class="even">
-<td>ZoneTick</td>
-<td>Medium</td>
-<td>Yes — breaks ZoneSplit, CastSpell</td>
-<td>No</td>
-<td>Core loop, can’t defer</td>
-</tr>
-<tr class="odd">
-<td>SessionExpiry</td>
-<td>Low</td>
-<td>Yes — breaks RateLimit, security</td>
-<td>No</td>
-<td>Cheap, security-critical</td>
-</tr>
-<tr class="even">
-<td>CastSpell</td>
-<td>High</td>
-<td>No — independent of ZoneSplit</td>
-<td>Yes</td>
-<td>Complex, defer until tick works</td>
-</tr>
-<tr class="odd">
-<td>GhostRelevance</td>
-<td>Medium</td>
-<td>No — independent of ZoneSplit</td>
-<td>Yes</td>
-<td>Can stub with full-mesh initially</td>
-</tr>
-<tr class="even">
-<td>ZoneSplit</td>
-<td>Medium</td>
-<td>No — independent of CastSpell</td>
-<td>Yes</td>
-<td>Only needed at scale</td>
-</tr>
-<tr class="odd">
-<td>EntityMigration</td>
-<td>Medium</td>
-<td>Yes — breaks on slotmap absence</td>
-<td>No</td>
-<td>Needed for correctness at scale</td>
-</tr>
-<tr class="even">
-<td>RateLimit</td>
-<td>Low</td>
-<td>No — independent of game logic</td>
-<td>Yes</td>
-<td>Can add after launch</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="plausible-witness-dag-integration" class="level2">
-<h2 class="anchored" data-anchor-id="plausible-witness-dag-integration">plausible-witness-dag integration</h2>
-<section id="predicate-language" class="level3">
-<h3 class="anchored" data-anchor-id="predicate-language">Predicate language</h3>
-<p>Each invariant is expressed as a Lean 4 predicate over the game state:</p>
-<pre class="lean"><code>-- ZoneTick invariant: position updates correctly
-def zone_tick_invariant (s : GameState) : Prop :=
-  ∀ e : Entity, e ∈ s.zone.entities →
-    e.position' = e.position + e.velocity * s.dt
-
--- CastSpell invariant: fanout is scoped to ghost range
-def cast_spell_invariant (s : GameState) : Prop :=
-  ∀ eff : EffectEntity, eff ∈ s.effects →
-    ∀ target : Entity, target ∈ eff.fanout →
-      dist(eff.position, target.position) ≤ GHOST_RANGE
-
--- Slotmap generational ID invariant
-def slotmap_gen_invariant (s : GameState) : Prop :=
-  ∀ h : EntityHandle, h ∈ s.pending_effects →
-    s.slotmap.lookup(h).isSome →
-      s.slotmap.lookup(h).gen = h.gen</code></pre>
-</section>
-<section id="witness-search" class="level3">
-<h3 class="anchored" data-anchor-id="witness-search">Witness search</h3>
-<p>plausible-witness-dag’s <code>resolve</code> function takes a candidate predicate and a deterministic readback, escalating through L0/L1/L2:</p>
-<ul>
-<li><strong>L0</strong> (10 transactions, 1 zone): Quick smoke test. Catches gross invariant violations in seconds.</li>
-<li><strong>L1</strong> (100 transactions, 5 zones): Medium scale. Catches interaction bugs between features (e.g., CastSpell + EntityMigration).</li>
-<li><strong>L2</strong> (1000 transactions, 20 zones): Large scale. Catches performance-adjacent invariants (ZoneSplit threshold, rate limiting).</li>
-</ul>
-</section>
-<section id="ablation-run" class="level3">
-<h3 class="anchored" data-anchor-id="ablation-run">Ablation run</h3>
-<p>For feature F being ablated:</p>
-<ol type="1">
-<li>Remove F’s invariants from the predicate set</li>
-<li>Keep all other features’ invariants</li>
-<li>Run <code>resolve</code> at L0, then L1, then L2</li>
-<li>If a witness is found at any level → F is load-bearing</li>
-<li>If no witness at L2 → F is deferrable</li>
-</ol>
-<p>The escalation ladder ensures we don’t waste compute: L0 runs in seconds, L2 in minutes. Most ablation results are determined at L0.</p>
-</section>
-</section>
-<section id="what-this-prevents" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-prevents">What this prevents</h2>
-<section id="speculator-debt-examples" class="level3">
-<h3 class="anchored" data-anchor-id="speculator-debt-examples">Speculator debt examples</h3>
-<ol type="1">
-<li><p>Building CastSpell before SlotmapGenIDs. Without generational handles, CastSpell’s fanout targets can dangle. The ablation matrix shows removing SlotmapGenIDs breaks CastSpell’s invariant. Build slotmap first, or pay to refactor CastSpell later.</p></li>
-<li><p>Building GhostRelevance with full-mesh fallback. If we stub ghost relevance with full-mesh broadcast initially, the ablation shows full-mesh doesn’t violate any invariant (it’s a superset of AOI). The stub is safe: we can ship with full-mesh and add AOI later without rework. This is unspent dollars preserved.</p></li>
-<li><p>Omitting EntityMigration. The ablation shows that without migration, entities that cross zone boundaries vanish (ZoneTick invariant broken). Migration is load-bearing and can’t be deferred.</p></li>
-<li><p>Building ZoneSplit before ZoneTick. The ablation shows ZoneSplit depends on ZoneTick’s population count. Building split first means building a mock population tracker, then replacing it with the real tick. That’s speculator debt: pay once for the mock, once for the real thing. Build tick first.</p></li>
-</ol>
-</section>
-</section>
-<section id="relationship-to-other-rfds" class="level2">
-<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
-<ul>
-<li><p><strong>RFD 0008</strong> (verification strategy): plausible-witness-dag is already the L2 runtime verification layer. This RFD extends its use from post-implementation verification to pre-implementation design validation.</p></li>
-<li><p><strong>RFD 0002</strong> (zonefabric): The feature set being ablated is the zonefabric runtime operations (ZoneTick, CastSpell, GhostRelevance, ZoneSplit, EntityMigration).</p></li>
-<li><p><strong>RFD 0017</strong> (slotmap): SlotmapGenIDs is the first feature to verify — it’s foundational and cheap. The ablation matrix confirms it must be built before CastSpell and GhostRelevance.</p></li>
-<li><p><strong>RFD 0018</strong> (security): SessionExpiry and RateLimit are security features that can be ablated independently of game logic. The matrix shows they’re load-bearing for security invariants but not for game logic invariants — so they can be built in parallel with game logic.</p></li>
-</ul>
-</section>
-<section id="economics" class="level2">
-<h2 class="anchored" data-anchor-id="economics">Economics</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 32%">
-<col style="width: 27%">
-<col style="width: 39%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Outcome</th>
-<th>Cost without ablation</th>
-<th>Cost with ablation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Feature built that wasn’t needed</td>
-<td>$10K-50K engineering</td>
-<td>$0 (deferred, unspent dollars preserved)</td>
-</tr>
-<tr class="even">
-<td>Feature built wrong, then rebuilt</td>
-<td>$20K-100K (build + rework)</td>
-<td>$5K-25K (build right first time)</td>
-</tr>
-<tr class="odd">
-<td>Feature built in wrong order</td>
-<td>$10K-30K (mock + replace)</td>
-<td>$0 (correct order from dependency graph)</td>
-</tr>
-<tr class="even">
-<td>Feature correctly deferred</td>
-<td>$0 (but risk of building it)</td>
-<td>$0 (confirmed safe to defer)</td>
-</tr>
-</tbody>
-</table>
-<p>For a 20-feature MMO backend, ablation testing costs ~1 week of engineering time (writing predicates + running the search). The expected savings from avoiding one speculator-debt cycle: $20K-100K. ROI: 10-50x.</p>
-</section>
-<section id="what-this-rfd-does-not-cover" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-rfd-does-not-cover">What this RFD does NOT cover</h2>
-<ul>
-<li><p>Player-facing feature decisions: this ablation covers backend system features (tick, spell, ghost, migration). Deciding whether players want fireballs vs.&nbsp;ice storms is a game design question, not an invariant question.</p></li>
-<li><p>Performance ablation: this RFD covers correctness invariants. Performance ablation (does feature X slow down the hot path?) is measured by the benchmark harness (RFD 0013), not by plausible-witness-dag.</p></li>
-<li><p>UI/UX features: not modeled. These are subjective and must be playtested, not formally verified.</p></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0077: PERT critical path for zonefabric implementation</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0077: PERT critical path for zonefabric implementation</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o build order</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The zonefabric implementation spans many RFDs with dependencies between them. The team had no critical path or task order for the remaining build work. Without that order, the team could not tell which tasks carry slack and which tasks block the whole build.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Model the zonefabric implementation as a PERT network. Each RFD’s implementation is a task with optimistic, most-likely, and pessimistic duration estimates, and expected duration follows <code>TE = (O + 4M + P) / 6</code>. The critical path is A (binary encoding) → B (FDB keyspace) → C (actor-lite pool) → F (ZoneTick) → I (CastSpell) → M (feature ablation), totaling 26.0 engineering days. CastSpell sits on the critical path because it depends on three upstream tasks and carries the highest variance.</p>
-<p>Zstd compression and Macaroon/XDP security both carry large slack (11.1 and 7.5 days), and the team can build them later or in parallel. The slotmap has only 2.1 days of slack, so the team must build it early. A second engineer can absorb the slack tasks in parallel without shortening the sequential critical path itself.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full task list, dependency graph, slack analysis, milestones, two-engineer parallelization, and risk register: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-pert-critical-path-zonefabric.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0020-pert-critical-path.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps</code>: adopts this task order (A, B, C, F, then I, then M) as the current build plan.</p>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>Expected duration (TE) for each task uses the PERT formula:</p>
-<pre><code>TE = (O + 4M + P) / 6</code></pre>
-<p>Variance (σ²) measures uncertainty:</p>
-<pre><code>σ² = ((P - O) / 6)²</code></pre>
-<p>The critical path is the chain of dependent tasks with the longest total TE. Any delay on the critical path delays the entire project. Tasks off the critical path have slack — they can slip without affecting the end date.</p>
-</section>
-<section id="task-list" class="level2">
-<h2 class="anchored" data-anchor-id="task-list">Task list</h2>
-<p>All durations in engineering days. One engineer, full-time.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 3%">
-<col style="width: 61%">
-<col style="width: 13%">
-<col style="width: 3%">
-<col style="width: 3%">
-<col style="width: 3%">
-<col style="width: 3%">
-<col style="width: 5%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>ID</th>
-<th>Task</th>
-<th>Depends on</th>
-<th>O</th>
-<th>M</th>
-<th>P</th>
-<th>TE</th>
-<th>σ²</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A</td>
-<td>Binary value encoding (RFD 0010)</td>
-<td>—</td>
-<td>1</td>
-<td>2</td>
-<td>4</td>
-<td>2.2</td>
-<td>0.25</td>
-</tr>
-<tr class="even">
-<td>B</td>
-<td>FDB keyspace + async callbacks (RFD 0009, 0011)</td>
-<td>A</td>
-<td>2</td>
-<td>3</td>
-<td>6</td>
-<td>3.3</td>
-<td>0.44</td>
-</tr>
-<tr class="odd">
-<td>C</td>
-<td>Actor-lite worker pool (RFD 0005)</td>
-<td>B</td>
-<td>3</td>
-<td>5</td>
-<td>9</td>
-<td>5.3</td>
-<td>1.00</td>
-</tr>
-<tr class="even">
-<td>D</td>
-<td>Slotmap entity storage (RFD 0017)</td>
-<td>A, B</td>
-<td>2</td>
-<td>3</td>
-<td>5</td>
-<td>3.2</td>
-<td>0.25</td>
-</tr>
-<tr class="odd">
-<td>E</td>
-<td>Zstd compression (RFD 0016)</td>
-<td>A</td>
-<td>1</td>
-<td>2</td>
-<td>3</td>
-<td>2.0</td>
-<td>0.11</td>
-</tr>
-<tr class="even">
-<td>F</td>
-<td>ZoneTick (read/write loop)</td>
-<td>C, D</td>
-<td>3</td>
-<td>4</td>
-<td>8</td>
-<td>4.5</td>
-<td>0.69</td>
-</tr>
-<tr class="odd">
-<td>G</td>
-<td>Zone-state blob persistence</td>
-<td>D, E, F</td>
-<td>2</td>
-<td>3</td>
-<td>5</td>
-<td>3.2</td>
-<td>0.25</td>
-</tr>
-<tr class="even">
-<td>H</td>
-<td>GhostRelevance (AOI query)</td>
-<td>D, F</td>
-<td>2</td>
-<td>3</td>
-<td>6</td>
-<td>3.3</td>
-<td>0.44</td>
-</tr>
-<tr class="odd">
-<td>I</td>
-<td>CastSpell (effect + fanout)</td>
-<td>D, F, H</td>
-<td>3</td>
-<td>5</td>
-<td>10</td>
-<td>5.5</td>
-<td>1.36</td>
-</tr>
-<tr class="even">
-<td>J</td>
-<td>EntityMigration (zone handoff)</td>
-<td>D, F</td>
-<td>2</td>
-<td>4</td>
-<td>7</td>
-<td>4.2</td>
-<td>0.69</td>
-</tr>
-<tr class="odd">
-<td>K</td>
-<td>ZoneSplit (cost threshold)</td>
-<td>F, G</td>
-<td>2</td>
-<td>3</td>
-<td>5</td>
-<td>3.2</td>
-<td>0.25</td>
-</tr>
-<tr class="even">
-<td>L</td>
-<td>Macaroon + XDP security (RFD 0018)</td>
-<td>C, D</td>
-<td>4</td>
-<td>7</td>
-<td>14</td>
-<td>7.7</td>
-<td>2.78</td>
-</tr>
-<tr class="odd">
-<td>M</td>
-<td>Feature ablation (RFD 0019)</td>
-<td>F, H, I</td>
-<td>3</td>
-<td>5</td>
-<td>8</td>
-<td>5.2</td>
-<td>0.69</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>Benchmark harness (wrk scripts)</td>
-<td>F, G</td>
-<td>1</td>
-<td>2</td>
-<td>3</td>
-<td>2.0</td>
-<td>0.11</td>
-</tr>
-<tr class="odd">
-<td>O</td>
-<td>Core-scaling measurement</td>
-<td>N</td>
-<td>2</td>
-<td>3</td>
-<td>5</td>
-<td>3.2</td>
-<td>0.25</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="dependency-graph" class="level2">
-<h2 class="anchored" data-anchor-id="dependency-graph">Dependency graph</h2>
-<pre><code>A (binary encoding)
-├── B (FDB keyspace + async)
-│   ├── C (actor-lite pool)
-│   │   ├── F (ZoneTick) ◄═══ CRITICAL PATH
-│   │   │   ├── G (zone-state blob)
-│   │   │   │   └── K (ZoneSplit)
-│   │   │   ├── H (GhostRelevance)
-│   │   │   │   └── I (CastSpell)
-│   │   │   │       └── M (ablation)
-│   │   │   ├── J (EntityMigration)
-│   │   │   └── N (benchmark harness)
-│   │   │       └── O (scaling measurement)
-│   │   └── L (Macaroon + XDP)
-│   └── D (slotmap) ──► (feeds into F, H, I, J, L)
-├── E (zstd) ──► (feeds into G)
-└── (A also feeds D, E directly)</code></pre>
-</section>
-<section id="critical-path" class="level2">
-<h2 class="anchored" data-anchor-id="critical-path">Critical path</h2>
-<p>The critical path is the longest chain through the dependency graph:</p>
-<pre><code>A → B → C → F → I → M</code></pre>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Step</th>
-<th>Task</th>
-<th>TE (days)</th>
-<th>Cumulative</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>A: Binary value encoding</td>
-<td>2.2</td>
-<td>2.2</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>B: FDB keyspace + async callbacks</td>
-<td>3.3</td>
-<td>5.5</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>C: Actor-lite worker pool</td>
-<td>5.3</td>
-<td>10.8</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>F: ZoneTick</td>
-<td>4.5</td>
-<td>15.3</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>I: CastSpell</td>
-<td>5.5</td>
-<td>20.8</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>M: Feature ablation</td>
-<td>5.2</td>
-<td>26.0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Critical path total: 26.0 engineering days (~5.2 weeks)</strong></p>
-<p>This is the minimum time to a verified, ablation-tested zonefabric benchmark with CastSpell. The critical path passes through CastSpell because it depends on three upstream tasks (slotmap, tick, ghost) and has the highest variance (σ² = 1.36) — it’s both the longest and the riskiest task.</p>
-</section>
-<section id="slack-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="slack-analysis">Slack analysis</h2>
-<p>Tasks NOT on the critical path have slack. Slack = (latest finish) − (earliest start + duration).</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 36%">
-<col style="width: 5%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 8%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Task</th>
-<th>TE</th>
-<th>Earliest start</th>
-<th>Latest finish</th>
-<th>Slack</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>D: Slotmap</td>
-<td>3.2</td>
-<td>5.5 (after A+B)</td>
-<td>10.8 (before F)</td>
-<td>2.1</td>
-</tr>
-<tr class="even">
-<td>E: Zstd</td>
-<td>2.0</td>
-<td>2.2 (after A)</td>
-<td>15.3 (before G)</td>
-<td>11.1</td>
-</tr>
-<tr class="odd">
-<td>G: Zone-state blob</td>
-<td>3.2</td>
-<td>15.3 (after F)</td>
-<td>19.8 (before K)</td>
-<td>1.3</td>
-</tr>
-<tr class="even">
-<td>H: GhostRelevance</td>
-<td>3.3</td>
-<td>15.3 (after F)</td>
-<td>20.8 (before I)</td>
-<td>2.2</td>
-</tr>
-<tr class="odd">
-<td>J: EntityMigration</td>
-<td>4.2</td>
-<td>15.3 (after F)</td>
-<td>26.0 (end)</td>
-<td>6.5</td>
-</tr>
-<tr class="even">
-<td>K: ZoneSplit</td>
-<td>3.2</td>
-<td>18.5 (after G)</td>
-<td>26.0 (end)</td>
-<td>4.3</td>
-</tr>
-<tr class="odd">
-<td>L: Macaroon + XDP</td>
-<td>7.7</td>
-<td>10.8 (after C)</td>
-<td>26.0 (end)</td>
-<td>7.5</td>
-</tr>
-<tr class="even">
-<td>N: Benchmark harness</td>
-<td>2.0</td>
-<td>18.5 (after G)</td>
-<td>26.0 (end)</td>
-<td>5.5</td>
-</tr>
-<tr class="odd">
-<td>O: Scaling measurement</td>
-<td>3.2</td>
-<td>20.5 (after N)</td>
-<td>26.0 (end)</td>
-<td>2.3</td>
-</tr>
-</tbody>
-</table>
-<section id="slack-interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="slack-interpretation">Slack interpretation</h3>
-<ul>
-<li><p>E (Zstd) has 11.1 days of slack. Compression can be added any time before zone-state blob persistence. This confirms RFD 0019’s ablation result: zstd is deferrable. Do NOT build it first.</p></li>
-<li><p>L (Macaroon + XDP) has 7.5 days of slack. Security can be built in parallel with game logic. This confirms RFD 0019: security features are independent of game-logic invariants.</p></li>
-<li><p>J (EntityMigration) has 6.5 days of slack. Migration is needed for correctness at scale but can be stubbed initially (entities stay in their birth zone). Build it after the core loop works.</p></li>
-<li><p>D (Slotmap) has only 2.1 days of slack and is near-critical. This confirms RFD 0019: slotmap is foundational and must be built early. Any delay on slotmap pushes the critical path.</p></li>
-</ul>
-</section>
-</section>
-<section id="milestones" class="level2">
-<h2 class="anchored" data-anchor-id="milestones">Milestones</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 11%">
-<col style="width: 71%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Milestone</th>
-<th>Cumulative days</th>
-<th>What’s working</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>M1: FDB reads/writes</td>
-<td>5.5</td>
-<td>Binary encoding + FDB keyspace. Can read/write entity rows.</td>
-</tr>
-<tr class="even">
-<td>M2: Worker pool</td>
-<td>10.8</td>
-<td>H2O event loop dispatches to worker threads via SPSC ring.</td>
-</tr>
-<tr class="odd">
-<td>M3: Zone tick</td>
-<td>15.3</td>
-<td>ZoneTick reads entities, updates positions, writes back. <strong>First benchmarkable milestone.</strong></td>
-</tr>
-<tr class="even">
-<td>M4: Ghost queries</td>
-<td>18.6</td>
-<td>GhostRelevance returns entities within GHOST_RANGE.</td>
-</tr>
-<tr class="odd">
-<td>M5: CastSpell</td>
-<td>20.8</td>
-<td>Effects + fanout work. <strong>Full game loop operational.</strong></td>
-</tr>
-<tr class="even">
-<td>M6: Ablation verified</td>
-<td>26.0</td>
-<td>Feature ablation confirms no speculator debt. <strong>Ship-ready.</strong></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="parallelization-with-two-engineers" class="level2">
-<h2 class="anchored" data-anchor-id="parallelization-with-two-engineers">Parallelization with two engineers</h2>
-<p>If a second engineer is available, the slack tasks can be parallelized:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 35%">
-<col style="width: 64%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Engineer 1 (critical path)</th>
-<th>Engineer 2 (slack tasks)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A: Binary encoding (2.2d)</td>
-<td>(pair on A)</td>
-</tr>
-<tr class="even">
-<td>B: FDB keyspace (3.3d)</td>
-<td>E: Zstd (2.0d) → slack</td>
-</tr>
-<tr class="odd">
-<td>C: Actor-lite pool (5.3d)</td>
-<td>D: Slotmap (3.2d) → L: XDP (7.7d, partial)</td>
-</tr>
-<tr class="even">
-<td>F: ZoneTick (4.5d)</td>
-<td>H: GhostRelevance (3.3d) → J: Migration (4.2d)</td>
-</tr>
-<tr class="odd">
-<td>I: CastSpell (5.5d)</td>
-<td>G: Zone-state blob (3.2d) → K: ZoneSplit (3.2d)</td>
-</tr>
-<tr class="even">
-<td>M: Ablation (5.2d)</td>
-<td>N: Benchmark harness (2.0d) → O: Scaling (3.2d)</td>
-</tr>
-</tbody>
-</table>
-<p>With two engineers, the critical path remains A→B→C→F→I→M at 26 days (Engineer 1), but all slack tasks are completed in parallel. Total project duration: ~26 days instead of ~38 days (serial sum).</p>
-<p>The critical path cannot be shortened by adding engineers — it’s sequential by dependency. Only reducing task scope (e.g., stubbing CastSpell’s fanout as a fixed-radius range scan without effect entities) can shorten it.</p>
-</section>
-<section id="risk-register" class="level2">
-<h2 class="anchored" data-anchor-id="risk-register">Risk register</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 32%">
-<col style="width: 7%">
-<col style="width: 16%">
-<col style="width: 42%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Risk</th>
-<th>Probability</th>
-<th>Impact</th>
-<th>Mitigation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>CastSpell fanout complexity exceeds estimate</td>
-<td>Medium</td>
-<td>+3 days on critical path</td>
-<td>Stub with full-radius scan first, optimize later</td>
-</tr>
-<tr class="even">
-<td>FDB async callback chain has memory bugs</td>
-<td>Low</td>
-<td>+5 days (debugging)</td>
-<td>CBMC verification (RFD 0008) before integration</td>
-</tr>
-<tr class="odd">
-<td>Slotmap serialization breaks generational IDs</td>
-<td>Low</td>
-<td>+2 days on D</td>
-<td>Test round-trip serialize/deserialize before F integration</td>
-</tr>
-<tr class="even">
-<td>XDP/eBPF program rejected by verifier</td>
-<td>Medium</td>
-<td>+4 days on L</td>
-<td>Start L early (has 7.5d slack), use libbpf skeletons</td>
-</tr>
-<tr class="odd">
-<td>Zstd dictionary training needed for good ratio</td>
-<td>Low</td>
-<td>+1 day on E</td>
-<td>Use level 3 default, skip dictionary training initially</td>
-</tr>
-<tr class="even">
-<td>Actor-lite SPSC ring has race condition</td>
-<td>Low</td>
-<td>+3 days on C</td>
-<td>Lean 4 proof of linearizability (RFD 0008) before C completes</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="build-order-recommended" class="level2">
-<h2 class="anchored" data-anchor-id="build-order-recommended">Build order (recommended)</h2>
-<p>Based on the PERT analysis and RFD 0019 ablation matrix:</p>
-<pre><code>Week 1: A (binary encoding) → B (FDB keyspace) → D (slotmap)
-Week 2: C (actor-lite pool) → F (ZoneTick) → E (zstd, parallel)
-Week 3: H (ghost) → G (zone-state blob) → N (benchmark harness)
-Week 4: I (CastSpell) → J (migration) → K (zone split)
-Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
-<p>This order respects all dependencies, keeps the critical path moving, and defers high-slack tasks (zstd, XDP, zone split) to later weeks.</p>
-</section>
-<section id="relationship-to-other-rfds" class="level2">
-<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
-<ul>
-<li><p><strong>RFD 0019</strong> (feature ablation): The dependency graph in this PERT chart is derived from the ablation matrix. The ablation confirms which tasks are load-bearing (on or near the critical path) and which are deferrable (high slack).</p></li>
-<li><p><strong>RFD 0008</strong> (verification): CBMC and Lean 4 verification happen during tasks C (SPSC ring) and D (slotmap), not as a separate phase. Verification is built into the task estimates.</p></li>
-<li><p><strong>RFD 0014</strong> (CI): The CI pipeline is assumed to exist from the start (building on every commit). It is infrastructure that supports all tasks, not a separate task.</p></li>
-<li><p><strong>RFD 0013</strong> (benchmark harness): Task N is the wrk script implementation, which depends on the zone-state blob (G) being writable to FDB.</p></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0076: Macaroon + eBPF/XDP security fabric</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o network security</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The packet path needs to check every packet at the NIC, inside a sub-10-microsecond packet budget. XDP itself cannot validate a chained-HMAC Macaroon, because the BPF verifier rejects the instruction count and variable-length parsing HMAC needs. A full Macaroon validation also costs 50 to 100 microseconds, far above that budget.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use a two-tier security architecture. Macaroon-based authentication runs in user space. eBPF/XDP session-key enforcement runs in kernel space. User space validates a cryptographic Macaroon once, at connection time. It then pushes a 64-bit session key into an eBPF whitelist map keyed by player IP. An XDP program checks every following packet at the NIC.</p>
-<p>The XDP program does one hash-map lookup and one integer comparison. This runs in roughly 10 to 50 nanoseconds per packet, with zero cryptographic operations in that path. XDP itself cannot validate a chained-HMAC Macaroon: the BPF verifier rejects the instruction count and variable-length parsing HMAC needs. A full validation also costs 50 to 100 microseconds, far above the sub-10-microsecond packet budget. At 25M concurrent users, this design keeps XDP filtering under 1 percent of one core and still absorbs a spoofed-packet flood at line rate.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full architecture, packet-rate analysis, Macaroon caveat design, session lifecycle, and scope exclusions: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-macaroon-xdp-security.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0018-macaroon-xdp-security.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps</code>: prefers <code>iovisor/ubpf</code> over <code>libbpf</code>/<code>libxdp</code> for later eBPF work.</li>
-<li><code>rfd/0080-slotmap-entity-storage</code>: the <code>entity_id</code> caveat maps to a slotmap handle.</li>
-<li><code>rfd/0072-actor-lite-worker-pool</code>: the orchestrator that validates Macaroons runs on this worker pool.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="rationale" class="level2">
-<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<p>Directly validating a chained-HMAC Macaroon inside an XDP packet filter is impossible and undesirable:</p>
-<ol type="1">
-<li><p>The eBPF verifier rejects it. The BPF verifier imposes strict limits on instruction count, loops, and stack size. HMAC-SHA256 with caveat chaining requires hundreds of instructions and variable-length parsing, so the verifier would reject the program.</p></li>
-<li><p>Parsing complex tokens at the network interface destroys the sub-10µs latency target from RFD 0002. A single Macaroon validation costs ~50-100µs (HMAC + caveat walk); at 60Hz × 200 entities per zone, that’s 15,360 validations/sec per zone, or 1.5 seconds of CPU per second on crypto alone.</p></li>
-<li><p>It is the wrong layer. Macaroons are authorization tokens (who can do what). XDP is a packet filter (which packets are allowed). Mixing authorization logic into packet filtering violates separation of concerns.</p></li>
-</ol>
-</section>
-<section id="architecture" class="level2">
-<h2 class="anchored" data-anchor-id="architecture">Architecture</h2>
-<pre><code>                    CONTROL PLANE (once per connection)
-                    ─────────────────────────────────────
-
-  Player ──connect──► Matchmaker
-                        │ authenticate (OAuth, password, etc.)
-                        │ issue Macaroon with caveats:
-                        │   "zone_id = 45"
-                        │   "server_ip = 192.168.1.50"
-                        │   "expires &lt; 5min"
-                        │ generate 64-bit session_key
-                        │
-                        ▼
-  Player ──hello(Macaroon, session_key)──► User-space orchestrator
-                                            (weft-warp-loop zone server)
-                        │
-                        │ validate Macaroon HMAC signature
-                        │ verify caveats (zone_id, server_ip, expiry)
-                        │ if valid:
-                        │   bpf_map_update_elem(WHITELIST_MAP,
-                        │     key=player_ip,
-                        │     value={session_key, zone_id, core_id})
-                        │
-                        ▼
-                     WHITELIST_MAP (eBPF)
-                    ┌─────────────────────────────┐
-                    │ player_ip → session_key      │
-                    │             zone_id          │
-                    │             core_id          │
-                    │             expiry_timestamp │
-                    └─────────────────────────────┘
-
-                    DATA PLANE (every packet, 60Hz)
-                    ──────────────────────────────
-
-  Player ──UDP(session_key, payload)──► NIC
-                                        │
-                                        ▼
-                                     XDP program
-                                        │ lookup src_ip in WHITELIST_MAP
-                                        │
-                                        ├── valid: route to core_id
-                                        │         (zero crypto, ~10ns)
-                                        │
-                                        └── invalid: DROP
-                                                   (DDoS, spoof, expired)</code></pre>
-</section>
-<section id="three-components" class="level2">
-<h2 class="anchored" data-anchor-id="three-components">Three components</h2>
-<section id="matchmaker-control-plane-infrequent" class="level3">
-<h3 class="anchored" data-anchor-id="matchmaker-control-plane-infrequent">1. Matchmaker (control plane, infrequent)</h3>
-<p>The Matchmaker is a central service (or distributed with consensus) that:</p>
-<ul>
-<li>Authenticates the player (OAuth, password, device attestation)</li>
-<li>Determines target zone via load balancing + spatial locality</li>
-<li>Issues a Macaroon attenuated with caveats:
-<ul>
-<li><code>zone_id = N</code> — player is assigned to zone N</li>
-<li><code>server_ip = A.B.C.D</code> — player must connect to this server</li>
-<li><code>expires &lt; T</code> — token valid until timestamp T</li>
-<li><code>rate_limit = R</code> — max packets/sec from this player</li>
-</ul></li>
-<li>Generates a cryptographically random 64-bit session key</li>
-<li>Returns Macaroon + session_key + server address to player</li>
-</ul>
-<p>The Matchmaker runs in user space with full access to crypto libraries. It is not in the hot path — it runs once per connection (every ~5 minutes for session renewal).</p>
-</section>
-<section id="user-space-orchestrator-control-plane-once-per-session" class="level3">
-<h3 class="anchored" data-anchor-id="user-space-orchestrator-control-plane-once-per-session">2. User-space orchestrator (control plane, once per session)</h3>
-<p>The zone server (weft-warp-loop) receives the player’s initial Hello packet containing the Macaroon. In user space:</p>
-<ul>
-<li>Validate the Macaroon’s HMAC signature against the root key</li>
-<li>Walk the caveat chain: verify zone_id matches a local zone, server_ip matches this server, expiry is in the future</li>
-<li>If valid: call <code>bpf_map_update_elem()</code> to insert the player’s IP + session_key + zone_id + core_id into the eBPF WHITELIST_MAP</li>
-<li>If invalid: reject the connection</li>
-</ul>
-<p>This is the bridge between cryptographic security (user space) and kernel-bypass enforcement (eBPF). It runs once per session, not per packet.</p>
-</section>
-<section id="xdpebpf-data-plane-every-packet" class="level3">
-<h3 class="anchored" data-anchor-id="xdpebpf-data-plane-every-packet">3. XDP/eBPF (data plane, every packet)</h3>
-<p>The XDP program intercepts every UDP packet at the NIC, before the Linux kernel does any allocation or processing:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// XDP program (runs at line rate, ~10ns per packet)</span></span>
-<span id="cb2-2">SEC<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"xdp"</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb2-3"><span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">int</span> zone_router<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">struct</span> xdp_md <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>ctx<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb2-4">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// Parse packet headers (IP + UDP + custom session header)</span></span>
-<span id="cb2-5">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint32_t</span> src_ip <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> parse_src_ip<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">);</span></span>
-<span id="cb2-6">    <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">uint64_t</span> session_key <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> parse_session_key<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">);</span></span>
-<span id="cb2-7"></span>
-<span id="cb2-8">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// Lookup in whitelist map (BPF hash map, O(1))</span></span>
-<span id="cb2-9">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">struct</span> session_info <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>info<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb2-10">    info <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> bpf_map_lookup_elem<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(&amp;</span>whitelist_map<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">,</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span>src_ip<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">);</span></span>
-<span id="cb2-11">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(!</span>info<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb2-12">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">return</span> XDP_DROP<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// unauthenticated — drop instantly</span></span>
-<span id="cb2-13"></span>
-<span id="cb2-14">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// Validate session key</span></span>
-<span id="cb2-15">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span>info<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-&gt;</span>session_key <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">!=</span> session_key<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb2-16">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">return</span> XDP_DROP<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// wrong key — spoofed or stale</span></span>
-<span id="cb2-17"></span>
-<span id="cb2-18">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// Check expiry</span></span>
-<span id="cb2-19">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span>bpf_ktime_get_ns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">()</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> info<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-&gt;</span>expiry_ns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb2-20">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">return</span> XDP_DROP<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span>  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// session expired</span></span>
-<span id="cb2-21"></span>
-<span id="cb2-22">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// Route to the CPU core handling this zone</span></span>
-<span id="cb2-23">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">// (via CPU steering or redirect to the right ring buffer)</span></span>
-<span id="cb2-24">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">return</span> route_to_core<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">(</span>info<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-&gt;</span>core_id<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">,</span> ctx<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">);</span></span>
-<span id="cb2-25"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span></span></code></pre></div></div>
-<p><strong>No cryptographic operations in the XDP path.</strong> Only a hash map lookup and integer comparison. This executes in ~10-50 nanoseconds per packet.</p>
-</section>
-</section>
-<section id="why-this-works-for-25m-ccu" class="level2">
-<h2 class="anchored" data-anchor-id="why-this-works-for-25m-ccu">Why this works for 25M CCU</h2>
-<section id="packet-rate-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="packet-rate-analysis">Packet rate analysis</h3>
-<p>At 25M CCU, 60Hz tick rate, 200 entities/zone:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Metric</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Total players</td>
-<td>25,000,000</td>
-</tr>
-<tr class="even">
-<td>Packets/player/sec</td>
-<td>60</td>
-</tr>
-<tr class="odd">
-<td>Total packets/sec</td>
-<td>1,500,000,000 (1.5 Gpps)</td>
-</tr>
-<tr class="even">
-<td>Zones (200 entities each)</td>
-<td>125,000</td>
-</tr>
-<tr class="odd">
-<td>Packets/zone/sec</td>
-<td>12,000 (200 entities × 60Hz)</td>
-</tr>
-<tr class="even">
-<td>XDP cost/packet</td>
-<td>~50ns</td>
-</tr>
-<tr class="odd">
-<td>XDP CPU/zone/sec</td>
-<td>0.6ms (12,000 × 50ns)</td>
-</tr>
-<tr class="even">
-<td>XDP CPU/core (16 zones/core)</td>
-<td>9.6ms/sec (1% of one core)</td>
-</tr>
-</tbody>
-</table>
-<p>The XDP filter consumes &lt;1% of a single core’s CPU. The remaining 99% is available for ZoneTick computation and FDB batch writes.</p>
-</section>
-<section id="ddos-resistance" class="level3">
-<h3 class="anchored" data-anchor-id="ddos-resistance">DDoS resistance</h3>
-<p>A DDoS attack sends millions of spoofed packets. Without XDP, each packet traverses the full kernel network stack (allocation, socket lookup, conntrack, userspace wakeup) — ~5µs per packet, saturating all cores.</p>
-<p>With XDP, spoofed packets are dropped at the NIC in ~50ns. A 100 Gbps NIC can process 150M packets/sec in XDP. At 50ns/drop, that’s 7.5ms of CPU/sec — one core handles the entire DDoS while the other 31 cores run the game simulation uninterrupted.</p>
-</section>
-<section id="session-key-entropy" class="level3">
-<h3 class="anchored" data-anchor-id="session-key-entropy">Session key entropy</h3>
-<p>64-bit session key: 2⁶⁴ = 1.8 × 10¹⁹ possible keys. At 1.5 Gpps brute-force rate, expected time to forge one key: ~385 years. With session expiry at 5 minutes, the attacker has 300 seconds × 1.5 Gpps = 4.5 × 10¹¹ attempts, giving a forgery probability of 2.5 × 10⁻⁸ — negligible.</p>
-</section>
-<section id="whitelist_map-memory" class="level3">
-<h3 class="anchored" data-anchor-id="whitelist_map-memory">WHITELIST_MAP memory</h3>
-<p>Each entry: 4 bytes (IP) + 8 bytes (session_key) + 4 bytes (zone_id)</p>
-<ul>
-<li>4 bytes (core_id) + 8 bytes (expiry) = 28 bytes. For 25M entries: 700MB. BPF maps support up to 2GB on modern kernels. Alternatively, use a per-CPU map (per-core whitelist) to reduce each map to ~44MB.</li>
-</ul>
-</section>
-</section>
-<section id="macaroon-caveat-design" class="level2">
-<h2 class="anchored" data-anchor-id="macaroon-caveat-design">Macaroon caveat design</h2>
-<pre><code>location = "zf://zone-server.example.com"
-identifier = "player-12345-session"
-caveats = [
-    "zone_id = 45",
-    "server_ip = 192.168.1.50",
-    "expires &lt; 1718984700",
-    "rate_limit = 120",        // max 120 packets/sec (2x 60Hz)
-    "entity_id = 12345",       // player's entity slot in zone
-]
-discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre>
-<p>The user-space orchestrator verifies:</p>
-<ol type="1">
-<li>HMAC signature matches (token not forged)</li>
-<li><code>zone_id</code> is a zone hosted on this server</li>
-<li><code>server_ip</code> matches this server’s IP</li>
-<li><code>expires</code> is in the future</li>
-<li><code>entity_id</code> is a valid slot in the zone’s slotmap (<code>rfd/0080-slotmap-entity-storage</code>)</li>
-</ol>
-<p>The <code>entity_id</code> caveat ties the Macaroon to a specific slotmap entry. If the player’s entity is destroyed (slot freed, generation bumped), the session is invalidated — the orchestrator removes the entry from WHITELIST_MAP on the next tick.</p>
-</section>
-<section id="session-lifecycle" class="level2">
-<h2 class="anchored" data-anchor-id="session-lifecycle">Session lifecycle</h2>
-<pre><code>1. Player authenticates → Matchmaker issues Macaroon (5min TTL)
-2. Player sends Hello + Macaroon → orchestrator validates → WHITELIST_MAP update
-3. Player sends UDP packets at 60Hz → XDP validates + routes (every packet)
-4. At 4min30sec: orchestrator sends renewal prompt to player
-5. Player re-authenticates → new Macaroon → WHITELIST_MAP update (refresh)
-6. If player disconnects: orchestrator removes from WHITELIST_MAP on next tick
-7. If Macaroon expires without renewal: XDP drops packets (expiry check in XDP)</code></pre>
-</section>
-<section id="relationship-to-other-rfds" class="level2">
-<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
-<ul>
-<li><p><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps</code> (zonefabric): XDP routes packets to the core handling each zone. The zone’s slotmap (<code>rfd/0080-slotmap-entity-storage</code>) stores the entity state. XDP does not touch the slotmap; it only routes packets.</p></li>
-<li><p><code>rfd/0080-slotmap-entity-storage</code>: The <code>entity_id</code> caveat in the Macaroon maps to a slotmap handle. When the entity is destroyed, the slotmap generation bump invalidates the session.</p></li>
-<li><p><code>rfd/0072-actor-lite-worker-pool</code>: The user-space orchestrator runs on the H2O event loop. The worker thread that handles the Hello packet makes the <code>bpf_map_update_elem()</code> call.</p></li>
-<li><p><code>rfd/0084-zstd-compression-for-zone-state</code>: This is orthogonal. zstd compresses FDB values, and XDP handles packet routing. They operate on different layers.</p></li>
-<li><p>mas-bandwidth/fps: Glenn Fiedler’s architecture mentions XDP for packet processing and relays but does not detail authentication. This RFD fills that gap: Macaroons provide the authentication, XDP provides the enforcement.</p></li>
-</ul>
-</section>
-<section id="what-this-rfd-does-not-cover" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-rfd-does-not-cover">What this RFD does NOT cover</h2>
-<ul>
-<li><p>Macaroon implementation: use libmacaroons (C library) or py-macaroons. The Matchmaker implementation is out of scope; this RFD defines the interface (issue, validate, attenuate) and the eBPF handoff.</p></li>
-<li><p>eBPF program compilation: the XDP program is compiled with clang/llvm to BPF bytecode and loaded with libbpf. This is a build- time concern, documented in the CI pipeline RFD.</p></li>
-<li><p>TLS/mTLS: the control-plane connection (Hello + Macaroon) uses TLS. The data-plane (UDP game packets) does not; XDP enforces authenticity via the session key, and game state is not sensitive (positions, velocities). Encryption of game packets is a future concern if anti-cheat requires it.</p></li>
-<li><p>Player-to-player security: this RFD secures the server from unauthenticated clients. It does not prevent an authenticated player from sending malicious game actions (aimbots, speed hacks). Server-side validation of game actions is a game-logic concern, not a network-security concern.</p></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o database backend</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>TPC-C is 88 percent writes. CockroachDB’s Raft consensus path gives higher write latency than a log-structured MVCC store for a write-heavy load. The project’s CockroachDB fork also carries no upstream activity.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use the raw FoundationDB C API (<code>libfdb_c</code>) as the database for h2o-bench-tpcc, not CockroachDB. TPC-C is 88 percent writes, and FDB’s log-structured MVCC gives lower write latency than CockroachDB’s Raft consensus path for a write-heavy load. FDB 7.3.79 stays under active Apple development, while the project’s CockroachDB fork has no upstream activity. <code>libfdb_c</code> is a native C shared library with a callback-based API that integrates directly with h2o’s event loop. It needs no JVM, no JNI, no gRPC bridge, and no SQL parsing or planning overhead. FDB transactions are native ACID objects, not a SQL <code>BEGIN</code>/<code>COMMIT</code> wrapper.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full API surface, tradeoffs, and revisit criteria: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-fdb-over-cockroachdb-for-zone-state.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0006-fdb-selection.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>rfd/0073-async-fdb-callback-chain</code>: the callback pattern this API surface drives.</p>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="rationale" class="level2">
-<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<p><strong>1. Write throughput.</strong> TPC-C is 88% writes (NewOrder + Payment). FDB’s log-structured MVCC separates transaction processing from storage, giving fundamentally lower write latency than CockroachDB’s Raft consensus path. For a write-heavy benchmark, the database is the bottleneck.</p>
-<p><strong>2. Active Apple development.</strong> FDB 7.3.79 (July 2026), actively maintained by Apple. CockroachDB’s v-sekai fork is a dead engine with no upstream activity.</p>
-<p><strong>3. Pure C client.</strong> <code>libfdb_c</code> is a native C shared library — no JVM, no JNI, no gRPC bridge. The C API is callback-based (<code>fdb_future_set_callback</code>), integrating naturally with h2o’s event loop.</p>
-<p><strong>4. Native ACID transactions.</strong> FDB transactions are built in: <code>fdb_database_create_transaction</code> / <code>fdb_transaction_set</code> / <code>fdb_transaction_commit</code>. No <code>BEGIN</code>/<code>COMMIT</code> SQL parsing, no pipeline mode complexity. The transaction object IS the transaction.</p>
-<p><strong>5. No SQL layer overhead.</strong> Raw key-value operations eliminate SQL parsing, planning, and optimization. The framework’s throughput is measured against the raw storage engine, not an SQL interpreter.</p>
-</section>
-<section id="api-surface-fdb-c-api-7.3" class="level2">
-<h2 class="anchored" data-anchor-id="api-surface-fdb-c-api-7.3">API surface (FDB C API 7.3)</h2>
-<pre><code>fdb_select_api_version_impl(730, 730)
-fdb_setup_network()           // start FDB network thread
-fdb_create_database(cluster)  // get database handle
-fdb_database_create_transaction(db, &amp;tr)  // create transaction
-fdb_transaction_get(tr, key, len, snapshot, &amp;future)  // read
-fdb_transaction_set(tr, key, klen, val, vlen)  // write
-fdb_transaction_commit(tr, &amp;future)  // commit
-fdb_transaction_on_error(tr, err, &amp;future)  // retry
-fdb_future_set_callback(future, cb, ctx)  // async callback
-fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
-</section>
-<section id="what-we-lose" class="level2">
-<h2 class="anchored" data-anchor-id="what-we-lose">What we lose</h2>
-<ul>
-<li>SQL comparability with other TFB entries (they all use Postgres)</li>
-<li>TPC-C’s SQL schema must be re-mapped to FDB key-value subspace design</li>
-<li>StockLevel’s COUNT requires a range scan instead of SQL aggregate</li>
-</ul>
-</section>
-<section id="when-to-revisit" class="level2">
-<h2 class="anchored" data-anchor-id="when-to-revisit">When to revisit</h2>
-<p>If TFB-comparable numbers become the goal, add CockroachDB as a second adapter behind the same h2o handler interface. The FDB adapter stays primary.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0074: Binary value encoding for FDB values</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0074: Binary value encoding for FDB values</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o FDB value format</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>A warehouse row costs roughly 350 bytes in JSON. A protobuf or JSON payload also needs a parsing step before code can use FDB’s returned value pointer. The project needed a value format that avoids both costs.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Encode TPC-C row values as packed C structs with network byte order (big-endian) integers, using <code>#pragma pack(push, 1)</code> for a deterministic layout. No protobuf, no JSON, and no FDB tuple layer for values. A packed struct casts directly from FDB’s returned value pointer, so there is no parsing step. A warehouse row is 109 bytes packed, versus roughly 350 bytes in JSON. The tuple layer stays reserved for keys, where lexicographic ordering matters. Values do not need that ordering.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full rationale, tradeoffs, and rejected alternatives: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-binary-value-encoding-for-fdb.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0010-binary-value-encoding.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0080-slotmap-entity-storage</code>: stores the same packed struct in memory, <code>memcpy</code> from FDB value to slotmap entry.</li>
-<li><code>rfd/0084-zstd-compression-for-zone-state</code>: compresses the packed byte stream this RFD produces.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="rationale" class="level2">
-<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<ol type="1">
-<li><p>Zero-copy deserialization: a packed struct can be cast directly from FDB’s <code>FDBKeyValue.value</code> pointer. No parsing step. The callback handler does <code>(stock_val_t *)kv-&gt;value</code> and reads fields.</p></li>
-<li><p>Minimal size: no type tags, no field names, no separators. A warehouse row is 109 bytes packed vs ~350 bytes in JSON.</p></li>
-<li><p>Deterministic layout: <code>#pragma pack(push, 1)</code> ensures no padding. The same struct compiles identically on the loader, the server, and the verification harness. Cross-platform safe as long as all parties use the same header file.</p></li>
-<li><p>Endianness is fixed: network byte order for all integers. x86_64 and ARM both support unaligned access, so the byte-swap cost is negligible.</p></li>
-</ol>
-</section>
-<section id="tradeoffs" class="level2">
-<h2 class="anchored" data-anchor-id="tradeoffs">Tradeoffs</h2>
-<ul>
-<li>Schema evolution: adding a field breaks compatibility. Solution: version the struct (include a <code>uint8_t version</code> field) or use FDB key prefixes to distinguish row formats.</li>
-<li>Debugging: binary values are not human-readable in fdbcli. Solution: the loader and verification harness have debug print functions that decode the struct.</li>
-<li>Portability: requires matching <code>#pragma pack</code> behavior across compilers. GCC and Clang both support this correctly.</li>
-</ul>
-</section>
-<section id="what-we-did-not-use" class="level2">
-<h2 class="anchored" data-anchor-id="what-we-did-not-use">What we did not use</h2>
-<ul>
-<li>FDB tuple layer for values: the tuple layer is for keys (where lexicographic ordering matters). Values don’t need ordering, so the tuple layer’s overhead is unnecessary.</li>
-<li>Protocol Buffers / Cap’n Proto: adds a dependency and codegen step. For fixed-schema TPC-C, a C struct is simpler and faster.</li>
-<li>JSON: 3-5x larger, requires a parser, and yajl allocation per row would dominate the hot path.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0073: Async FDB callback chain on the libh2o event loop</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o FDB transaction handling</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>FDB’s C API is callback-based by design. A worker that blocks on <code>fdb_future_block_until_ready</code> cannot process the next request from its SPSC ring. Each TPC-C transaction needed a way to chain FDB futures without blocking the worker.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Implement TPC-C transactions as async callback chains over FDB futures. Each transaction step submits an FDB future and registers a callback for when it resolves, and the callback runs the next step. On any FDB error, the callback calls <code>fdb_transaction_on_error</code> and restarts the chain from the first read. FDB’s C API is callback-based by design, and a worker that blocks on <code>fdb_future_block_until_ready</code> cannot process the next request from its SPSC ring. Each transaction allocates one heap context struct that flows through the whole chain, and the final callback frees it. The chain needs no reference counting: it is linear, and only one future stays outstanding at a time.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full callback pattern, error handling, and memory rules: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260806-async-fdb-callback-chain.md</code></li>
-<li>Source: <code>weftspun/h2o-bench-tpcc</code>, <code>rfd/0011-async-fdb-callback-chain.md</code></li>
-<li>Consolidation target: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<p><code>rfd/0072-actor-lite-worker-pool</code>: the worker thread this callback chain runs inside.</p>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="pattern" class="level2">
-<h2 class="anchored" data-anchor-id="pattern">Pattern</h2>
-<pre><code>create_transaction
-  -&gt; get(district)        [async future]
-    -&gt; on_district_read   [callback: extract next_o_id]
-      -&gt; get(customer)    [async future]
-        -&gt; on_customer_read [callback: extract discount]
-          -&gt; get(stock[0]) [async future]
-            -&gt; on_stock_read [callback: update stock, next item]
-              -&gt; ... (loop for 5-15 items)
-              -&gt; set(oorder, new_order, order_line[], stock[])
-              -&gt; commit [async future]
-                -&gt; on_commit [callback: send HTTP response]</code></pre>
-</section>
-<section id="why-async-not-blocking" class="level2">
-<h2 class="anchored" data-anchor-id="why-async-not-blocking">Why async, not blocking</h2>
-<p>FDB’s C API is callback-based by design. <code>fdb_future_set_callback()</code> fires when the future resolves. Blocking with <code>fdb_future_block_until_ready()</code> would stall the event loop thread.</p>
-<p>In the actor-lite architecture (<code>rfd/0072-actor-lite-worker-pool</code>), the H2O network thread dispatches work to worker threads via SPSC rings. If a worker blocks on FDB, it can’t process the next request from its ring.</p>
-</section>
-<section id="error-handling-and-retry" class="level2">
-<h2 class="anchored" data-anchor-id="error-handling-and-retry">Error handling and retry</h2>
-<p>On any FDB error (conflict, timeout, etc.), call <code>fdb_transaction_on_error(tr, err)</code>. This returns a future. When it resolves, the transaction has been reset. The callback re-reads the first key and restarts the chain.</p>
-<p>The retry is transparent: the same <code>new_order_ctx_t</code> struct flows through the chain, carrying the transaction parameters. On reset, the read state is cleared and the chain restarts from step 1.</p>
-</section>
-<section id="memory-management" class="level2">
-<h2 class="anchored" data-anchor-id="memory-management">Memory management</h2>
-<p>Each transaction allocates a context struct (<code>new_order_ctx_t</code>, <code>payment_ctx_t</code>, etc.) on the heap. The context is freed in the final callback (commit success or unrecoverable error). The FDB transaction handle is destroyed in the same callback.</p>
-<p>No reference counting needed: the callback chain is linear, each step has exactly one outstanding future, and the context outlives all callbacks.</p>
-</section>
-<section id="limitations" class="level2">
-<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
-<ul>
-<li>No batching across transactions: each HTTP request creates its own FDB transaction. Batching multiple requests into one transaction would improve throughput but violate TPC-C spec (each terminal executes one transaction at a time).</li>
-<li>Stack depth is bounded: the callback chain is finite (max 15 stock reads + writes + commit), so no stack overflow risk.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 18:40:11 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/</guid>
+  <pubDate>Fri, 07 Aug 2026 19:00:59 GMT</pubDate>
 </item>
 </channel>
 </rss>
