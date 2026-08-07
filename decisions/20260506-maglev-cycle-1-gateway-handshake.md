@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0010](../rfd/0010-maglev-cycle-1-gateway-handshake/README.md).
+
 # Godot client transport handshake against the authoritative server
 
 ## The Context

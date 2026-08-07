@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0006](../rfd/0006-cockroachdb-with-mtls-role-separation/README.md).
+
 ## Context
 
 The stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised.

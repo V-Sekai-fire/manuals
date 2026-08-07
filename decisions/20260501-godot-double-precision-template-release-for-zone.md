@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0007](../rfd/0007-godot-double-precision-template-release-for-zone/README.md).
+
 ## Context
 
 Zone servers run the game simulation headlessly. Two Godot build targets are candidates: `editor` (includes import tools) and `template_release` (runtime only). Precision must match the rest of the V-Sekai stack.

@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0013](../rfd/0013-archival-file-naming-convention/README.md).
+
 ## Context and Problem Statement
 
 The manuals repo now commits binary assets alongside prose, starting with

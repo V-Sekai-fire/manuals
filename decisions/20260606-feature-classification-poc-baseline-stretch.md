@@ -7,6 +7,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 consulted: lyuma
 ---
 
+> Moved to [rfd/0018](../rfd/0018-feature-classification-poc-baseline-stretch/README.md).
+
 ## Context and Problem Statement
 
 The capabilities table lists features with a free-text status ("working", "loses

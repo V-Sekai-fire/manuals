@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: proof of concept
 ---
 
+> Moved to [rfd/0014](../rfd/0014-art-game-loop-steel-thread/README.md).
+
 ## Context and Problem Statement
 
 We want a small workspace where friends make tiny art-games together, watch them,
