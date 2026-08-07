@@ -112,8 +112,6 @@ website:
     left:
       - text: "Changes"
         file: changelog.qmd
-      - text: "Decisions"
-        file: decisions.qmd
       - text: "RFDs"
         file: rfd.qmd
       - text: "References"

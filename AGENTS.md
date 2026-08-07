@@ -77,8 +77,7 @@ sequence), and add a matching `references.bib` entry. See the naming-convention 
 | ---------------------------- | ----------------------------- |
 | `_quarto.yml`                | Site config                   |
 | `index.md`                   | Landing page                  |
-| `decisions/`                 | Architecture Decision Records |
-| `decisions.qmd`              | ADR index                     |
+| `decisions/`                 | Architecture Decision Records not yet migrated to an RFD |
 | `changelog/`                 | Changelog entries by year     |
 | `changelog.qmd`              | Changelog index               |
 | `create_changelog_entry.exs` | Generate new changelog entry  |
