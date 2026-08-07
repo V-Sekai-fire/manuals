@@ -34,7 +34,7 @@ round trip.
 
 ## Related
 
-`rfd/0010-maglev-cycle-1-gateway-handshake/README.md` exercises this
+`rfd/0010-maglev-cycle-1-gateway-handshake/index.md` exercises this
 transport from a real Godot client.
 
 ## Detail

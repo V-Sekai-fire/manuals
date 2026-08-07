@@ -34,5 +34,5 @@ with the `--headless` flag.
 
 ## Related
 
-`rfd/0017-compiling-godot-engine/README.md` covers the engine build
+`rfd/0017-compiling-godot-engine/index.md` covers the engine build
 tooling this target uses.

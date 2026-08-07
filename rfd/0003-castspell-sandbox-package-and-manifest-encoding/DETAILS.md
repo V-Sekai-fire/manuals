@@ -1,6 +1,6 @@
 ## Summary
 
-`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md`, item 4, commits
+`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.md`, item 4, commits
 CastSpell's effect step to a sandboxed `libriscv` package. This RFD is
 the detail that item pointed to. It settles three things. The package
 stays a single `.elf` file. Its manifest is CBOR-LD. Its runtime FFI
@@ -212,7 +212,7 @@ would have kept even the offline authoring tool free of a C++
 dependency. It ships under the CeCILL v1.1 license, a strong-copyleft
 license, which conflicts with this project's preference for permissive
 licensing elsewhere (see `iovisor/ubpf` in
-`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md`). It also reads
+`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.md`). It also reads
 as a research and embedded prototype rather than a vetted production
 dependency. Revisit it only if `jsonld-cpp` plus `QCBOR` turns out not
 to fit the offline authoring tool well in practice.

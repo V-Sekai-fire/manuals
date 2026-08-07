@@ -1,6 +1,6 @@
 ## Summary
 
-`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md`, item 5, described
+`rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.md`, item 5, described
 `gltf_interactivity`'s value-type system as a two-way split: primitive
 types versus `ref`. The real specification, vendored at
 `taskweft/thirdparty/gltf_interactivity/`, defines three signature
@@ -57,7 +57,7 @@ directly:
 
 `zone-server-h2o` implements only the first two categories today.
 CastSpell's bitpacked struct layout (`rfd/0001`, item 4's cross
-reference to `rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md`)
+reference to `rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md`)
 gives a primitive field its value inline, and a `ref` field a slotmap
 handle from `RFD 0017 (slotmap-entity-storage)`. Nothing in the
 current CastSpell design needs `custom`. Every value a CastSpell
@@ -73,7 +73,7 @@ must happen before this project's struct layout could carry it.
 
 ## Recommendation and next steps
 
-1. Correct `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md`, item
+1. Correct `rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.md`, item
    5, to cite this RFD instead of restating the (incomplete) two-way
    split inline.
 2. When a future CastSpell parameter needs a `custom`-signature value,

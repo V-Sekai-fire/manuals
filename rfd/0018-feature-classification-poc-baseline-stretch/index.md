@@ -40,7 +40,7 @@ of concept.
 
 ## Related
 
-`rfd/0014-art-game-loop-steel-thread/README.md` uses the cassie pen this
+`rfd/0014-art-game-loop-steel-thread/index.md` uses the cassie pen this
 classification tiers as proof of concept.
 
 ## Detail
