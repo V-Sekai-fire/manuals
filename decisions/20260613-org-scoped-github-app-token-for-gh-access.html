@@ -338,6 +338,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0060-org-scoped-github-app-token-for-gh-access/README.md">rfd/0060</a>.</p>
+</blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>Repository operations against <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> — archiving, renaming, pushing, editing settings — run through <code>gh</code> from a working environment. <code>gh</code> was authenticated with a personal OAuth token (<code>gho_</code>, scopes <code>gist, read:org, repo, workflow</code>). The <code>repo</code> scope is not org-scoped: it grants read/write/<strong>admin/delete</strong> on every repository the personal account can reach, across every org and every private repo. A mistyped owner in a destructive command, or a leak of that single token, could damage anything the account touches anywhere on GitHub — far beyond the one org being worked on. <code>gh</code> authenticates per host, not per org, so the limit cannot live in <code>gh</code> config; it has to live in the token.</p>
@@ -391,6 +394,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="20260613-quadlets-on-fedora-44-instead-of-harvester.html">Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</a></p></li>
+<li><p><a href="../rfd/0060-org-scoped-github-app-token-for-gh-access/README.html">RFD 0060: Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</a></p></li>
 </ul>
 </section>
 

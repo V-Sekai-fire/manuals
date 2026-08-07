@@ -303,6 +303,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul></li>
   <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260621-kebab-case-repos-snake-case-local-checkouts.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -337,6 +338,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › GitHub repos use kebab-case; local checkout dirs keep build-native names</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.md">rfd/0064</a>.</p>
+</blockquote>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>Repositories across our orgs grew inconsistent names. The loot-action slice under <code>v-sekai-multiplayer-fabric</code> mixed kebab-case (<code>combat-core</code>, <code>loot-core</code>) with snake_case (<code>entity_packet</code>), and the <code>sinew-mocap</code> org carried <code>mount_drift</code> and <code>vr_bridge</code> alongside kebab-case peers. We want one repo-naming convention so clones, links, and code search stay predictable.</p>
@@ -393,6 +397,12 @@ ul.task-list li input[type="checkbox"] {
 <p>Relates to the org split that created <code>v-sekai-multiplayer-fabric</code> and to the GHCR package-ownership decision; both concern how repositories are organized and referenced. See <code>20260606-org-split-v-sekai-multiplayer-fabric</code> and <code>20260506-ghcr-package-ownership-same-repo</code>.</p>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.html">RFD 0064: GitHub repos use kebab-case; local checkout dirs keep build-native names</a></p></li>
+</ul>
 </section>
 
 </main> <!-- /main -->

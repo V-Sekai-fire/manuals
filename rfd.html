@@ -349,14 +349,8 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#related" id="toc-related" class="nav-link active" data-scroll-target="#related">Related</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -381,74 +375,11 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › RFDs</em></p>
+<p><em><a href="index.html">Manuals</a> › RFDs</em></p>
 <p>Request-for-Discussion documents: longer-lived design records, numbered rather than dated. See <code>rfd/0000-conventions/README.md</code> for the format and the state values.</p>
 
 
 
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="0000-conventions/README.html">RFD 0000: Conventions</a></p></li>
-<li><p><a href="0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.html">RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes</a></p></li>
-<li><p><a href="0002-taskweft-value-narrowing-primitives-and-refs/README.html">RFD 0002: taskweft/nif's value narrowing: primitives, and refs as pointer strings</a></p></li>
-<li><p><a href="0003-castspell-sandbox-package-and-manifest-encoding/README.html">RFD 0003: CastSpell sandbox package format and manifest encoding</a></p></li>
-<li><p><a href="0004-castspell-libgodot-sandbox-runtime-scope/README.html">RFD 0004: CastSpell's sandboxed runtime: embed libgodot, not godot-sandbox's narrow API</a></p></li>
-<li><p><a href="0005-gltf-interactivity-value-type-taxonomy-correction/README.html">RFD 0005: gltf_interactivity's value types: primitive, ref, and custom</a></p></li>
-<li><p><a href="0006-cockroachdb-with-mtls-role-separation/README.html">RFD 0006: CockroachDB with mTLS and role-separated access</a></p></li>
-<li><p><a href="0007-godot-double-precision-template-release-for-zone/README.html">RFD 0007: Godot double precision template_release for zone servers</a></p></li>
-<li><p><a href="0008-webtransport-over-quic-for-game-traffic/README.html">RFD 0008: Use WebTransport over QUIC for game traffic</a></p></li>
-<li><p><a href="0009-ghcr-package-ownership-same-repo/README.html">RFD 0009: GHCR packages must be built by the repo that consumes them</a></p></li>
-<li><p><a href="0010-maglev-cycle-1-gateway-handshake/README.html">RFD 0010: Godot client transport handshake against the authoritative server</a></p></li>
-<li><p><a href="0011-observability-stack-victoriatraces/README.html">RFD 0011: Replace Jaeger with VictoriaTraces for trace storage</a></p></li>
-<li><p><a href="0012-amend-pr-before-it-enters-the-queue/README.html">RFD 0012: Amend a PR before it enters the merge queue, not after</a></p></li>
-<li><p><a href="0013-archival-file-naming-convention/README.html">RFD 0013: Archival file naming convention for committed assets</a></p></li>
-<li><p><a href="0014-art-game-loop-steel-thread/README.html">RFD 0014: Recursive art-game loop and its minimal steel thread</a></p></li>
-<li><p><a href="0015-bounded-llm-steering-queue/README.html">RFD 0015: Bound the LLM steering queue to avoid context overflow</a></p></li>
-<li><p><a href="0016-checking-sccache/README.html">RFD 0016: Checking the sccache build cache</a></p></li>
-<li><p><a href="0017-compiling-godot-engine/README.html">RFD 0017: Compiling the Godot engine</a></p></li>
-<li><p><a href="0018-feature-classification-poc-baseline-stretch/README.html">RFD 0018: Feature classification — proof of concept, baseline, stretch</a></p></li>
-<li><p><a href="0019-gitassembly-tag-release/README.html">RFD 0019: Cut gitassembly tag releases for the assembled engine</a></p></li>
-<li><p><a href="0020-pin-engine-to-frozen-godot-4-7/README.html">RFD 0020: Pin the engine to a frozen Godot 4.7 commit</a></p></li>
-<li><p><a href="0021-require-pr-and-merge-queue-on-main/README.html">RFD 0021: Require pull requests and a merge queue on main</a></p></li>
-<li><p><a href="0022-spatial-audio-patched-resonance-audio/README.html">RFD 0022: Spatial audio via a patched Resonance Audio (HRTF and audio probes)</a></p></li>
-<li><p><a href="0023-webtransport-http3-transport/README.html">RFD 0023: WebTransport over HTTP/3 transport</a></p></li>
-<li><p><a href="0024-windows-background-services-nssm/README.html">RFD 0024: Running background services on Windows with nssm</a></p></li>
-<li><p><a href="0025-tenseless-continuous-present-voice/README.html">RFD 0025: Comments and docs use a tenseless continuous-present voice</a></p></li>
-<li><p><a href="0026-commit-messages-sentence-case/README.html">RFD 0026: Commit messages use sentence case without Conventional Commits prefixes</a></p></li>
-<li><p><a href="0027-umbrella-package-installs-all-components/README.html">RFD 0027: An umbrella package installs every component in one command</a></p></li>
-<li><p><a href="0028-hexagonal-core-ports-adapters/README.html">RFD 0028: Hexagonal core/ports/adapters as the component convention</a></p></li>
-<li><p><a href="0029-cassie-desktop-curvenet-authoring/README.html">RFD 0029: CASSIE desktop curvenet authoring for content, no Blender</a></p></li>
-<li><p><a href="0030-cicd-runners-as-queueing-system/README.html">RFD 0030: CI/CD runners operate as a finite queueing system</a></p></li>
-<li><p><a href="0031-content-build-merged-double-precision-mcp/README.html">RFD 0031: Content creation in a single merged double-precision build via the editor MCP</a></p></li>
-<li><p><a href="0032-core-codegen-lean-slang/README.html">RFD 0032: Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)</a></p></li>
-<li><p><a href="0033-core-contract-pure-reducer-byte-state/README.html">RFD 0033: Cores as pure reducers over byte-serialized state</a></p></li>
-<li><p><a href="0034-deterministic-cores-integer-seeded-rng/README.html">RFD 0034: Deterministic cores via r128 fixed-point and seeded RNG</a></p></li>
-<li><p><a href="0035-first-party-curated-content-zone-baker-budgets/README.html">RFD 0035: First-party curated content with zone-baker budgets</a></p></li>
-<li><p><a href="0036-forward-renderer-baked-light/README.html">RFD 0036: Forward renderer with baked light for the mobile floor</a></p></li>
-<li><p><a href="0037-generated-behavior-sandboxed-riscv/README.html">RFD 0037: Generated behavior runs as sandboxed RISC-V</a></p></li>
-<li><p><a href="0038-genre-generic-naming-no-trademarks/README.html">RFD 0038: Genre-generic naming, no trademarked proper nouns</a></p></li>
-<li><p><a href="0039-hexagon-budgeter-core/README.html">RFD 0039: Budgeter hexagon — core, ports, and adapters</a></p></li>
-<li><p><a href="0040-hexagon-combat-core/README.html">RFD 0040: Combat hexagon — core, ports, and adapters</a></p></li>
-<li><p><a href="0041-hexagon-loot-core/README.html">RFD 0041: Loot hexagon — core, ports, and adapters</a></p></li>
-<li><p><a href="0042-hexagon-presence-core/README.html">RFD 0042: Presence hexagon — wrapping the existing presence stack</a></p></li>
-<li><p><a href="0043-hexagon-progression-core/README.html">RFD 0043: Progression hexagon — core, ports, and adapters</a></p></li>
-<li><p><a href="0044-lean4-kernel-cores-flat-c-host-adapters/README.html">RFD 0044: Lean 4 build-time kernel cores with flat-C host adapters</a></p></li>
-<li><p><a href="0045-loot-action-core-loop-mvp-vertical-slice/README.html">RFD 0045: Loot-action core-loop MVP vertical slice</a></p></li>
-<li><p><a href="0046-server-authoritative-simulation-deferred-rollback/README.html">RFD 0046: Server-authoritative simulation with deferred rollback</a></p></li>
-<li><p><a href="0047-webtransportd-core-transport-adapter/README.html">RFD 0047: webtransportd as the out-of-process core transport adapter</a></p></li>
-<li><p><a href="0048-android-template-temurin-jdk21/README.html">RFD 0048: Android template builds with Temurin JDK 21 and config.gradle-pinned SDK</a></p></li>
-<li><p><a href="0049-fabric-channels-as-reliability-classes/README.html">RFD 0049: Fabric channels as reliability classes, control in payload</a></p></li>
-<li><p><a href="0050-five-second-transaction-limit/README.html">RFD 0050: Five-second transaction limit (bounded operations)</a></p></li>
-<li><p><a href="0051-headless-openxr-testing-with-monado/README.html">RFD 0051: Headless OpenXR testing with Monado (null compositor + simulated HMD)</a></p></li>
-<li><p><a href="0052-http3-listener-session-findings/README.html">RFD 0052: One transport listener per authority pending http3 multi-session fixes</a></p></li>
-<li><p><a href="0053-integral-entity-transform-wire/README.html">RFD 0053: Integral entity-transform wire (int64 micrometers, no origin shift)</a></p></li>
-<li><p><a href="0054-mcp-runtime-bridge-deployed-builds/README.html">RFD 0054: MCP runtime bridge for deployed builds</a></p></li>
-<li><p><a href="0055-r128-fixed-point-as-lean-library/README.html">RFD 0055: r128 Q64.64 fixed-point as a Lean library for the cores</a></p></li>
-<li><p><a href="0056-systemd-quadlet-verification-queue/README.html">RFD 0056: Verification smokes as a systemd podman quadlet queue</a></p></li>
-<li><p><a href="0057-vertical-slice-repository-map/README.html">RFD 0057: Repository map of the loot-action vertical slice</a></p></li>
-</ul>
-</section>
 
 <div class="quarto-listing quarto-listing-container-table" id="listing-listing">
 <div class="listing-actions-group">
@@ -491,7 +422,7 @@ Scope
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-listing-file-modified-sort="1786064845767" data-listing-filename-sort="README.md">
+<tr data-index="0" data-listing-file-modified-sort="1786065826669" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0000-conventions/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -507,7 +438,7 @@ Scope
 
 </tr>
 
-<tr data-index="1" data-listing-file-modified-sort="1786064845767" data-listing-filename-sort="README.md">
+<tr data-index="1" data-listing-file-modified-sort="1786065826669" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -523,7 +454,7 @@ Scope
 
 </tr>
 
-<tr data-index="2" data-listing-file-modified-sort="1786064845767" data-listing-filename-sort="README.md">
+<tr data-index="2" data-listing-file-modified-sort="1786065826669" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -539,7 +470,7 @@ Scope
 
 </tr>
 
-<tr data-index="3" data-listing-file-modified-sort="1786064845767" data-listing-filename-sort="README.md">
+<tr data-index="3" data-listing-file-modified-sort="1786065826669" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -555,7 +486,7 @@ Scope
 
 </tr>
 
-<tr data-index="4" data-listing-file-modified-sort="1786064845767" data-listing-filename-sort="README.md">
+<tr data-index="4" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -571,7 +502,7 @@ Scope
 
 </tr>
 
-<tr data-index="5" data-listing-file-modified-sort="1786064845767" data-listing-filename-sort="README.md">
+<tr data-index="5" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -587,7 +518,7 @@ Scope
 
 </tr>
 
-<tr data-index="6" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="6" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0006-cockroachdb-with-mtls-role-separation/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -603,7 +534,7 @@ Scope
 
 </tr>
 
-<tr data-index="7" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="7" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0007-godot-double-precision-template-release-for-zone/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -619,7 +550,7 @@ Scope
 
 </tr>
 
-<tr data-index="8" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="8" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0008-webtransport-over-quic-for-game-traffic/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -635,7 +566,7 @@ Scope
 
 </tr>
 
-<tr data-index="9" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="9" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0009-ghcr-package-ownership-same-repo/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -651,7 +582,7 @@ Scope
 
 </tr>
 
-<tr data-index="10" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="10" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0010-maglev-cycle-1-gateway-handshake/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -667,7 +598,7 @@ Scope
 
 </tr>
 
-<tr data-index="11" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="11" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0011-observability-stack-victoriatraces/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -683,7 +614,7 @@ Scope
 
 </tr>
 
-<tr data-index="12" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="12" data-listing-file-modified-sort="1786065826670" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0012-amend-pr-before-it-enters-the-queue/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -699,7 +630,7 @@ Scope
 
 </tr>
 
-<tr data-index="13" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="13" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0013-archival-file-naming-convention/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -715,7 +646,7 @@ Scope
 
 </tr>
 
-<tr data-index="14" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="14" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0014-art-game-loop-steel-thread/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -731,7 +662,7 @@ Scope
 
 </tr>
 
-<tr data-index="15" data-listing-file-modified-sort="1786064845768" data-listing-filename-sort="README.md">
+<tr data-index="15" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0015-bounded-llm-steering-queue/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -747,7 +678,7 @@ Scope
 
 </tr>
 
-<tr data-index="16" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="16" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0016-checking-sccache/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -763,7 +694,7 @@ Scope
 
 </tr>
 
-<tr data-index="17" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="17" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0017-compiling-godot-engine/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -779,7 +710,7 @@ Scope
 
 </tr>
 
-<tr data-index="18" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="18" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0018-feature-classification-poc-baseline-stretch/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -795,7 +726,7 @@ Scope
 
 </tr>
 
-<tr data-index="19" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="19" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0019-gitassembly-tag-release/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -811,7 +742,7 @@ Scope
 
 </tr>
 
-<tr data-index="20" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="20" data-listing-file-modified-sort="1786065826671" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0020-pin-engine-to-frozen-godot-4-7/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -827,7 +758,7 @@ Scope
 
 </tr>
 
-<tr data-index="21" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="21" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0021-require-pr-and-merge-queue-on-main/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -843,7 +774,7 @@ Scope
 
 </tr>
 
-<tr data-index="22" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="22" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0022-spatial-audio-patched-resonance-audio/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -859,7 +790,7 @@ Scope
 
 </tr>
 
-<tr data-index="23" data-listing-file-modified-sort="1786064845769" data-listing-filename-sort="README.md">
+<tr data-index="23" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0023-webtransport-http3-transport/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -875,7 +806,7 @@ Scope
 
 </tr>
 
-<tr data-index="24" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="24" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0024-windows-background-services-nssm/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -891,7 +822,7 @@ Scope
 
 </tr>
 
-<tr data-index="25" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="25" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0025-tenseless-continuous-present-voice/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -907,7 +838,7 @@ Scope
 
 </tr>
 
-<tr data-index="26" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="26" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0026-commit-messages-sentence-case/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -923,7 +854,7 @@ Scope
 
 </tr>
 
-<tr data-index="27" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="27" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0027-umbrella-package-installs-all-components/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -939,7 +870,7 @@ Scope
 
 </tr>
 
-<tr data-index="28" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="28" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0028-hexagonal-core-ports-adapters/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -955,7 +886,7 @@ Scope
 
 </tr>
 
-<tr data-index="29" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="29" data-listing-file-modified-sort="1786065826672" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0029-cassie-desktop-curvenet-authoring/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -971,7 +902,7 @@ Scope
 
 </tr>
 
-<tr data-index="30" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="30" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0030-cicd-runners-as-queueing-system/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -987,7 +918,7 @@ Scope
 
 </tr>
 
-<tr data-index="31" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="31" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0031-content-build-merged-double-precision-mcp/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1003,7 +934,7 @@ Scope
 
 </tr>
 
-<tr data-index="32" data-listing-file-modified-sort="1786064845770" data-listing-filename-sort="README.md">
+<tr data-index="32" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0032-core-codegen-lean-slang/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1019,7 +950,7 @@ Scope
 
 </tr>
 
-<tr data-index="33" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="33" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0033-core-contract-pure-reducer-byte-state/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1035,7 +966,7 @@ Scope
 
 </tr>
 
-<tr data-index="34" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="34" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0034-deterministic-cores-integer-seeded-rng/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1051,7 +982,7 @@ Scope
 
 </tr>
 
-<tr data-index="35" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="35" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0035-first-party-curated-content-zone-baker-budgets/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1067,7 +998,7 @@ Scope
 
 </tr>
 
-<tr data-index="36" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="36" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0036-forward-renderer-baked-light/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1083,7 +1014,7 @@ Scope
 
 </tr>
 
-<tr data-index="37" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="37" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0037-generated-behavior-sandboxed-riscv/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1099,7 +1030,7 @@ Scope
 
 </tr>
 
-<tr data-index="38" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="38" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0038-genre-generic-naming-no-trademarks/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1115,7 +1046,7 @@ Scope
 
 </tr>
 
-<tr data-index="39" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="39" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0039-hexagon-budgeter-core/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1131,7 +1062,7 @@ Scope
 
 </tr>
 
-<tr data-index="40" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="40" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0040-hexagon-combat-core/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1147,7 +1078,7 @@ Scope
 
 </tr>
 
-<tr data-index="41" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="41" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0041-hexagon-loot-core/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1163,7 +1094,7 @@ Scope
 
 </tr>
 
-<tr data-index="42" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="42" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0042-hexagon-presence-core/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1179,7 +1110,7 @@ Scope
 
 </tr>
 
-<tr data-index="43" data-listing-file-modified-sort="1786064845771" data-listing-filename-sort="README.md">
+<tr data-index="43" data-listing-file-modified-sort="1786065826673" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0043-hexagon-progression-core/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1195,7 +1126,7 @@ Scope
 
 </tr>
 
-<tr data-index="44" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="44" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0044-lean4-kernel-cores-flat-c-host-adapters/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1211,7 +1142,7 @@ Scope
 
 </tr>
 
-<tr data-index="45" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="45" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0045-loot-action-core-loop-mvp-vertical-slice/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1227,7 +1158,7 @@ Scope
 
 </tr>
 
-<tr data-index="46" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="46" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0046-server-authoritative-simulation-deferred-rollback/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1243,7 +1174,7 @@ Scope
 
 </tr>
 
-<tr data-index="47" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="47" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0047-webtransportd-core-transport-adapter/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1259,7 +1190,7 @@ Scope
 
 </tr>
 
-<tr data-index="48" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="48" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0048-android-template-temurin-jdk21/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1275,7 +1206,7 @@ Scope
 
 </tr>
 
-<tr data-index="49" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="49" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0049-fabric-channels-as-reliability-classes/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1291,7 +1222,7 @@ Scope
 
 </tr>
 
-<tr data-index="50" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="50" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0050-five-second-transaction-limit/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1307,7 +1238,7 @@ Scope
 
 </tr>
 
-<tr data-index="51" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="51" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0051-headless-openxr-testing-with-monado/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1323,7 +1254,7 @@ Scope
 
 </tr>
 
-<tr data-index="52" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="52" data-listing-file-modified-sort="1786065826674" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0052-http3-listener-session-findings/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1339,7 +1270,7 @@ Scope
 
 </tr>
 
-<tr data-index="53" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="53" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0053-integral-entity-transform-wire/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1355,7 +1286,7 @@ Scope
 
 </tr>
 
-<tr data-index="54" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="54" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0054-mcp-runtime-bridge-deployed-builds/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1371,7 +1302,7 @@ Scope
 
 </tr>
 
-<tr data-index="55" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="55" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0055-r128-fixed-point-as-lean-library/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1387,7 +1318,7 @@ Scope
 
 </tr>
 
-<tr data-index="56" data-listing-file-modified-sort="1786064845772" data-listing-filename-sort="README.md">
+<tr data-index="56" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0056-systemd-quadlet-verification-queue/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1403,7 +1334,7 @@ Scope
 
 </tr>
 
-<tr data-index="57" data-listing-file-modified-sort="1786064845773" data-listing-filename-sort="README.md">
+<tr data-index="57" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/0057-vertical-slice-repository-map/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1419,7 +1350,215 @@ Scope
 
 </tr>
 
-<tr data-index="58" data-listing-file-modified-sort="1786064845773" data-listing-filename-sort="README.md">
+<tr data-index="58" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0058-webtransport-persistent-framed-stream/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0058-webtransport-persistent-framed-stream/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="59" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="60" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0060-org-scoped-github-app-token-for-gh-access/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0060-org-scoped-github-app-token-for-gh-access/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="61" data-listing-file-modified-sort="1786065826675" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0061-quadlets-on-fedora-44-instead-of-harvester/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0061-quadlets-on-fedora-44-instead-of-harvester/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="62" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0062-repository-and-capability-inventory/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0062-repository-and-capability-inventory/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="63" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="64" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="65" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0065-fabric-platform-central-elixir-burrito-casync/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0065-fabric-platform-central-elixir-burrito-casync/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="66" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0066-game-loop-cluster-sequence/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0066-game-loop-cluster-sequence/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="67" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0067-release-tag-progression-dev-beta-rc/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0067-release-tag-progression-dev-beta-rc/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="68" data-listing-file-modified-sort="1786065826676" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0068-sccache-github-actions-cache-for-godot-builds/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0068-sccache-github-actions-cache-for-godot-builds/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="69" data-listing-file-modified-sort="1786065826677" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0069-defer-loot-slice-hardening-until-needed/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0069-defer-loot-slice-hardening-until-needed/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="70" data-listing-file-modified-sort="1786065826677" data-listing-filename-sort="README.md">
+<td>
+<a href="./rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.md" class="title listing-title">&nbsp;</a>
+</td>
+<td>
+<span class="listing-state">&nbsp;</span>
+</td>
+<td>
+<span class="listing-scope">&nbsp;</span>
+</td>
+<td>
+<a href="./rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.md" class="filename listing-filename">README.md</a>
+</td>
+
+</tr>
+
+<tr data-index="71" data-listing-file-modified-sort="1786065826677" data-listing-filename-sort="README.md">
 <td>
 <a href="./rfd/README.md" class="title listing-title">&nbsp;</a>
 </td>
@@ -1863,7 +2002,7 @@ Scope
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
