@@ -789,3 +789,112 @@ references:
       - name: "v-sekai-multiplayer-fabric"
     year: 2026
     url: "https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike"
+
+  # ── Guest sandboxing, determinism, and measured transport (rfd/0095-0098) ─
+
+  - type: software
+    title: "libriscv: A Fast and Compact RISC-V Sandbox for Games and Embedded Use"
+    authors:
+      - family-names: Walla
+        given-names: "Alf-André"
+    year: 2026
+    url: "https://github.com/libriscv/libriscv"
+
+  - type: software
+    title: "Bubblewrap: Unprivileged Sandboxing Tool"
+    authors:
+      - name: "containers project"
+    year: 2026
+    url: "https://github.com/containers/bubblewrap"
+
+  - type: article
+    title: "Floating Point Determinism"
+    authors:
+      - family-names: Fiedler
+        given-names: Glenn
+    year: 2010
+    url: "https://gafferongames.com/post/floating_point_determinism/"
+
+  - type: article
+    title: "Deterministic Lockstep"
+    authors:
+      - family-names: Fiedler
+        given-names: Glenn
+    year: 2014
+    url: "https://gafferongames.com/post/deterministic_lockstep/"
+
+  - type: article
+    title: "Snapshot Interpolation"
+    authors:
+      - family-names: Fiedler
+        given-names: Glenn
+    year: 2015
+    url: "https://gafferongames.com/post/snapshot_interpolation/"
+
+  - type: software
+    title: "GGPO: Good Game, Peace Out Rollback Network SDK"
+    authors:
+      - family-names: Cannon
+        given-names: Tony
+    year: 2026
+    url: "https://github.com/pond3r/ggpo"
+
+  - type: software
+    title: "casync: Content-Addressable Data Synchronizer"
+    authors:
+      - family-names: Poettering
+        given-names: Lennart
+    year: 2026
+    url: "https://github.com/systemd/casync"
+
+  - type: software
+    title: "picoquic: A Minimalist Implementation of the QUIC Protocol"
+    authors:
+      - family-names: Huitema
+        given-names: Christian
+    year: 2026
+    url: "https://github.com/private-octopus/picoquic"
+
+  - type: software
+    title: "H2O: An Optimized HTTP/1, HTTP/2, HTTP/3 Server"
+    authors:
+      - family-names: Oku
+        given-names: Kazuho
+    year: 2026
+    url: "https://github.com/h2o/h2o"
+
+  - type: manual
+    title: "Running Apps on UDP and TCP"
+    authors:
+      - name: "Fly.io"
+    year: 2026
+    url: "https://fly.io/docs/networking/udp-and-tcp/"
+
+  - type: software
+    title: "Firecracker: Secure and Fast microVMs for Serverless Computing"
+    authors:
+      - name: "Amazon Web Services"
+    year: 2026
+    url: "https://github.com/firecracker-microvm/firecracker"
+
+  - type: generic
+    title: "io_uring and seccomp: Why Seccomp Filters Do Not Cover io-wq Operations"
+    authors:
+      - name: "0x74696d"
+    year: 2022
+    url: "https://blog.0x74696d.com/posts/iouring-and-seccomp/"
+
+  - type: manual
+    title: "Documentation for /proc/sys/kernel: io_uring_disabled"
+    authors:
+      - name: "The Linux Kernel documentation"
+    year: 2026
+    url: "https://docs.kernel.org/admin-guide/sysctl/kernel.html"
+
+  - type: generic
+    title: "Linux IPC Shootout: Shared Memory versus Unix Domain Sockets"
+    authors:
+      - family-names: Anderssén
+        given-names: Victor
+    year: 2026
+    url: "https://victoranderssen.com/blog/linux-ipc-benchmark/"
