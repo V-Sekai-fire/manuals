@@ -73,14 +73,14 @@ sequence), and add a matching `references.bib` entry. See the naming-convention 
 
 ## Key files
 
-| Path                         | Purpose                       |
-| ---------------------------- | ----------------------------- |
-| `_quarto.yml`                | Site config                   |
-| `index.md`                   | Landing page                  |
+| Path                         | Purpose                                                  |
+| ---------------------------- | -------------------------------------------------------- |
+| `_quarto.yml`                | Site config                                              |
+| `index.md`                   | Landing page                                             |
 | `decisions/`                 | Architecture Decision Records not yet migrated to an RFD |
-| `changelog/`                 | Changelog entries by year     |
-| `changelog.qmd`              | Changelog index               |
-| `create_changelog_entry.exs` | Generate new changelog entry  |
+| `changelog/`                 | Changelog entries by year                                |
+| `changelog.qmd`              | Changelog index                                          |
+| `create_changelog_entry.exs` | Generate new changelog entry                             |
 
 ## Conventions
 
