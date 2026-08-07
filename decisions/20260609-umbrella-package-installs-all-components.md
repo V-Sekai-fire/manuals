@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0027](../rfd/0027-umbrella-package-installs-all-components/README.md).
+
 ## Context and Problem Statement
 
 A project ships as several components, each with its own install entry. The sinew mocap

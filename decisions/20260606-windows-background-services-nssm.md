@@ -6,6 +6,8 @@ tier: baseline
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0024](../rfd/0024-windows-background-services-nssm/README.md).
+
 ## Context and Problem Statement
 
 Several pieces of the workstation stack need to run as long-lived background

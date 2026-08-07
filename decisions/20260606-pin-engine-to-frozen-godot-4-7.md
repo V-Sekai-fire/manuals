@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0020](../rfd/0020-pin-engine-to-frozen-godot-4-7/README.md).
+
 ## Context and Problem Statement
 
 The engine fork carries many feature branches (cassie, resonance audio, native

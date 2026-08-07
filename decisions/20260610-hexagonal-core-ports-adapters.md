@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0028](../rfd/0028-hexagonal-core-ports-adapters/README.md).
+
 ## Context and Problem Statement
 
 Components in the stack span several languages (C, C++, Python, Elixir, GDScript), run as

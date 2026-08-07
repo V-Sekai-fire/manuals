@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0031](../rfd/0031-content-build-merged-double-precision-mcp/README.md).
+
 ## Context and Problem Statement
 
 Content creation needs the full engine, every `feat/*` capability at double precision, without Blender, and the team budgets a single such build for the slice.

@@ -6,6 +6,8 @@ decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
+> Moved to [rfd/0021](../rfd/0021-require-pr-and-merge-queue-on-main/README.md).
+
 ## Context and Problem Statement
 
 The `manuals` repo had no branch protection on `main`. Changes landed by pushing

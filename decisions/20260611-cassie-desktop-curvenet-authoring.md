@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0029](../rfd/0029-cassie-desktop-curvenet-authoring/README.md).
+
 ## Context and Problem Statement
 
 The content pipeline needs budget-bounded geometry for the slice without standing up Blender. The `feat/module-cassie` curve-and-surface sketcher produces curve networks that triangulate to a controllable poly count.

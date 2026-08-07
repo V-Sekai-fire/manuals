@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0025](../rfd/0025-tenseless-continuous-present-voice/README.md).
+
 ## Context and Problem Statement
 
 Comments and documentation drift out of sync with code as the system changes. A

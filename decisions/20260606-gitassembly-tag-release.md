@@ -5,6 +5,8 @@ status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 
+> Moved to [rfd/0019](../rfd/0019-gitassembly-tag-release/README.md).
+
 ## Context and Problem Statement
 
 The [`merge`](https://github.com/v-sekai-multiplayer-fabric/merge) repo's
