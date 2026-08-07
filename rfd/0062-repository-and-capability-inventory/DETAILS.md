@@ -28,22 +28,22 @@ implements it; the Tier column follows the feature classification
 
 ### Capabilities and where they live
 
-| Capability                                                                               | Tier             | Engine branch                                                                        | Supporting repos                                                                                                                                                                                                             | Status                                                                                |
-| ----------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Native video playback                                                                    | Baseline         | `feat/native-media` (MediaFoundation, GStreamer)                                     | [native-media-test](https://github.com/v-sekai-multiplayer-fabric/native-media-test), [vulkan-video-godot](https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot)                                                 | Working; builds on Windows and Linux.                                                 |
-| Networking transport (WebTransport / HTTP/3, `rfd/0023-webtransport-http3-transport`)    | Baseline         | `feat/module-http3` (picoquic + web/wasm backends)                                   | [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)                                                                                                                                                     | Working; `WebTransportPeer`/`QUICClient`/`QUICServer`, demos, Lean termination proof. |
-| Scene baking via OpenUSD                                                                 | Baseline         | —                                                                                      | [openusd-fabric](https://github.com/v-sekai-multiplayer-fabric/openusd-fabric), [zone-baker](https://github.com/v-sekai-multiplayer-fabric/zone-baker), [idtx-flow](https://github.com/v-sekai-multiplayer-fabric/idtx-flow) | Working; USD schema, Blender export hooks, scene validation, headless export.         |
-| Spatial audio (HRTF + audio probes, `rfd/0022-spatial-audio-patched-resonance-audio`)     | Baseline         | `feat/spatial-audio-server`, `feat/module-resonance-audio` (patched Resonance Audio) | [sponza-godot-audio](https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio)                                                                                                                                       | Working; demo and benchmark scene.                                                    |
-| Speech                                                                                    | Baseline         | `feat/module-speech`                                                                 | —                                                                                                                                                                                                                              | Working.                                                                              |
-| Pen stroke creation (codename cassie)                                                     | Proof of concept | `feat/module-cassie`                                                                 | [vsekai-materialx](https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx), [materialx-shaders-lean](https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean)                                           | Pen stroke creation is solid; patch surface creation is buggy (loses about 90%).      |
-| Multiplayer presence (tracker orbs)                                                       | Proof of concept | `feat/module-xr-grid`                                                                | [xr-grid](https://github.com/v-sekai-multiplayer-fabric/xr-grid)                                                                                                                                                              | Proposed; head and hand pose orbs sent over low-level WebTransport.                   |
+| Capability                                                                            | Tier             | Engine branch                                                                        | Supporting repos                                                                                                                                                                                                             | Status                                                                                |
+| ------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Native video playback                                                                 | Baseline         | `feat/native-media` (MediaFoundation, GStreamer)                                     | [native-media-test](https://github.com/v-sekai-multiplayer-fabric/native-media-test), [vulkan-video-godot](https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot)                                                 | Working; builds on Windows and Linux.                                                 |
+| Networking transport (WebTransport / HTTP/3, `rfd/0023-webtransport-http3-transport`) | Baseline         | `feat/module-http3` (picoquic + web/wasm backends)                                   | [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)                                                                                                                                                     | Working; `WebTransportPeer`/`QUICClient`/`QUICServer`, demos, Lean termination proof. |
+| Scene baking via OpenUSD                                                              | Baseline         | —                                                                                    | [openusd-fabric](https://github.com/v-sekai-multiplayer-fabric/openusd-fabric), [zone-baker](https://github.com/v-sekai-multiplayer-fabric/zone-baker), [idtx-flow](https://github.com/v-sekai-multiplayer-fabric/idtx-flow) | Working; USD schema, Blender export hooks, scene validation, headless export.         |
+| Spatial audio (HRTF + audio probes, `rfd/0022-spatial-audio-patched-resonance-audio`) | Baseline         | `feat/spatial-audio-server`, `feat/module-resonance-audio` (patched Resonance Audio) | [sponza-godot-audio](https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio)                                                                                                                                       | Working; demo and benchmark scene.                                                    |
+| Speech                                                                                | Baseline         | `feat/module-speech`                                                                 | —                                                                                                                                                                                                                            | Working.                                                                              |
+| Pen stroke creation (codename cassie)                                                 | Proof of concept | `feat/module-cassie`                                                                 | [vsekai-materialx](https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx), [materialx-shaders-lean](https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean)                                           | Pen stroke creation is solid; patch surface creation is buggy (loses about 90%).      |
+| Multiplayer presence (tracker orbs)                                                   | Proof of concept | `feat/module-xr-grid`                                                                | [xr-grid](https://github.com/v-sekai-multiplayer-fabric/xr-grid)                                                                                                                                                             | Proposed; head and hand pose orbs sent over low-level WebTransport.                   |
 
 ### Repositories — `v-sekai-multiplayer-fabric`
 
 #### Engine
 
 | Repo                                                                                                             | Purpose                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --- |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | [godot](https://github.com/v-sekai-multiplayer-fabric/godot)                                                     | V-Sekai fork of the Godot engine. Feature branches per topic.                                                  |
 | [merge](https://github.com/v-sekai-multiplayer-fabric/merge)                                                     | `gitassembly` recipe and `update_godot_v_sekai.exs` driver that composes the engine from its feature branches. |
 | [godot-images](https://github.com/v-sekai-multiplayer-fabric/godot-images)                                       | Single-source-of-truth engine builds: editor (baker) and template_release (zone server). Publishes to GHCR.    |
@@ -55,7 +55,7 @@ implements it; the Tier column follows the feature classification
 #### Runtime services
 
 | Repo                                                                         | Purpose                                                                        |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)     | Headless Godot zone server (template_release, double precision).               |
 | [zone-backend](https://github.com/v-sekai-multiplayer-fabric/zone-backend)   | URO: Phoenix/Elixir backend for identity, the zone directory, and the planner. |
 | [zone-baker](https://github.com/v-sekai-multiplayer-fabric/zone-baker)       | Minimal headless Godot project that validates and exports VSK assets.          |
@@ -71,7 +71,7 @@ repos below are being repointed from qcow2 VM images to OCI images per
 that decision.
 
 | Repo                                                                                           | Purpose                                                                                 |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | [linux-base-image](https://github.com/v-sekai-multiplayer-fabric/linux-base-image)             | Shared base image with podman, chrony, and a guest agent. Base for every service image. |
 | [zone-server-image](https://github.com/v-sekai-multiplayer-fabric/zone-server-image)           | Headless Godot zone server runtime image.                                               |
 | [zone-baker-image](https://github.com/v-sekai-multiplayer-fabric/zone-baker-image)             | Headless Godot asset validator and exporter image.                                      |
@@ -84,7 +84,7 @@ that decision.
 #### Rendering, shaders, and USD
 
 | Repo                                                                                           | Purpose                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | [godot-toon-shaders](https://github.com/v-sekai-multiplayer-fabric/godot-toon-shaders)         | Godot toon shader ports and a shared parameter map (MToon 0.x / MToon10, planned SCSS and lilToon).          |
 | [vsekai-materialx](https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx)             | PBR/NPR/Slug as MaterialX nodes compiled to Slang; ThorVG-to-Slug vectorization, differentiable via SlangPy. |
 | [materialx-shaders-lean](https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean) | Lean 4 formalization of PBR, NPR, and vector shaders under MaterialX.                                        |
@@ -96,13 +96,13 @@ that decision.
 #### Spatial and verification
 
 | Repo                                                                                     | Purpose                                                                       |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | [lean-predictive-bvh](https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh) | Lean 4 formal verification and codegen for the Predictive BVH spatial oracle. |
 
 #### Tooling and integration
 
 | Repo                                                                               | Purpose                                                                               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | [vsekai-godot-mcp](https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp) | In-editor MCP server addon for Godot (Streamable-HTTP, constant-work command buffer). |
 | [viser](https://github.com/v-sekai-multiplayer-fabric/viser)                       | Web-based 3D visualization in Python (fork).                                          |
 | [xr-grid](https://github.com/v-sekai-multiplayer-fabric/xr-grid)                   | VR interaction tool (fork).                                                           |
@@ -110,14 +110,14 @@ that decision.
 #### Infrastructure and docs
 
 | Repo                                                             | Purpose                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | [infra](https://github.com/v-sekai-multiplayer-fabric/infra)     | OpenTofu config that provisions the self-hosted hosts and delivers the podman-quadlet units. |
 | [manuals](https://github.com/v-sekai-multiplayer-fabric/manuals) | This Quarto site.                                                                            |
 
 #### Archived
 
 | Repo                                                                                                 | Purpose                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------- |
 | [friends-art-game-loop](https://github.com/v-sekai-multiplayer-fabric/friends-art-game-loop)         | Local-first art-game loop experiment.   |
 | [sandbox-gdextension-godot](https://github.com/v-sekai-multiplayer-fabric/sandbox-gdextension-godot) | Earlier GDExtension sandbox approach.   |
 | [usd-converter-for-vrchat](https://github.com/v-sekai-multiplayer-fabric/usd-converter-for-vrchat)   | VRChat-to-VRM 1.0 converter UPM (fork). |
@@ -130,7 +130,7 @@ Links in the decisions and changelog that point at them are correct
 and still resolve.
 
 | Repo                                                                                                       | Purpose                                                             |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | [multiplayer-fabric](https://github.com/V-Sekai-fire/multiplayer-fabric)                                   | Umbrella monorepo registering the V-Sekai-fire repos as submodules. |
 | [multiplayer-fabric-gateway](https://github.com/V-Sekai-fire/multiplayer-fabric-gateway)                   | Elixir WebTransport gateway on UDP 443.                             |
 | [multiplayer-fabric-zone-console](https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console)         | Operator console for zone health and shard rotations.               |

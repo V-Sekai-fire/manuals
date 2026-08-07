@@ -65,7 +65,7 @@ The rules:
 - Good: remote names are uniform and code search / links are
   predictable.
 - Good: a rename is just `gh repo rename` plus a local `git remote
-  set-url`; CI that still clones the old name keeps working through
+set-url`; CI that still clones the old name keeps working through
   the redirect.
 - Good: no build breakage — sibling-by-path repos retain the directory
   name the build hardcodes.
