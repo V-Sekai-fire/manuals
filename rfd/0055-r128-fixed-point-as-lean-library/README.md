@@ -5,6 +5,15 @@ state: published
 scope: fixed-point math library for the Lean kernel cores
 ---
 
+## Problem
+
+The deterministic cores need Q64.64 fixed-point math inside the Lean
+kernels. The engine already vendors a C `r128` library, but the
+kernels are authored in Lean, not C. Calling the vendored C library
+from the host only would leave the kernels in floating point, and
+floating point in the kernels breaks determinism. An ad-hoc Q64.64
+implementation inside each kernel would also drift from the others.
+
 ## Decision
 
 The deterministic cores need Q64.64 fixed-point math inside the Lean

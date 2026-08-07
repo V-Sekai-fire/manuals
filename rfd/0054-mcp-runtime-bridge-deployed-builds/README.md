@@ -5,6 +5,14 @@ state: published
 scope: MCP inspection of deployed (non-editor) builds
 ---
 
+## Problem
+
+The Godot MCP addon is an editor plugin. It drives the editor over
+its `EditorInterface`, and the editor does not run inside a deployed
+build. Debugging a deployed build, such as a headless zone server, a
+mobile client, or an OpenXR app, needs the same inspection with no
+editor present.
+
 ## Decision
 
 The Godot MCP addon is an editor plugin, so it drives the editor over

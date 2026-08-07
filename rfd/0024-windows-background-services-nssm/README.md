@@ -5,6 +5,16 @@ state: published
 scope: Windows workstation service supervision
 ---
 
+## Problem
+
+Several workstation processes must survive shells, log-offs, and
+reboots, and restart on crash. Examples include sccache servers, Godot
+dedicated servers, a CockroachDB node, and zone servers. Running them by
+hand, or through a Scheduled Task, fails to give this. Neither method
+gives boot start with true Service Control Manager (SCM) restart
+semantics, because the target programs are plain executables, not
+SCM-aware services.
+
 ## Decision
 
 Several workstation processes (sccache servers, Godot dedicated

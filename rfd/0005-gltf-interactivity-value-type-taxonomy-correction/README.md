@@ -5,6 +5,14 @@ state: discussion
 scope: zone-server-h2o CastSpell
 ---
 
+## Problem
+
+RFD 0001 item 5 described `gltf_interactivity`'s value types as a
+two-way split: primitive types and `ref` types. The vendored
+`gltf_interactivity` specification actually defines three value-type
+categories, not two. This mismatch left CastSpell's bitpacked struct
+design without a correct taxonomy to implement against.
+
 ## Decision
 
 `gltf_interactivity`'s vendored specification defines three value-type

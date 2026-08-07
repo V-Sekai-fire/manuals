@@ -5,6 +5,14 @@ state: published
 scope: zone server implementation
 ---
 
+## Problem
+
+The Godot `FabricZone` engine ran the zone server side.
+`FabricZone`/`FabricZoneJournal` stored its journal in local SQLite,
+so state did not share across zone-server processes. The project
+also needed memory safety against untrusted client input, which the
+existing engine did not give.
+
 ## Decision
 
 Build `zone-server-h2o`, a native `libh2o` and FoundationDB zone

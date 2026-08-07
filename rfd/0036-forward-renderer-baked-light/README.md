@@ -5,6 +5,13 @@ state: published
 scope: rendering pipeline (mobile VR floor)
 ---
 
+## Problem
+
+The mobile tile renderer rations bandwidth across file, memory, and
+network IO. Deferred rendering competes for that same bandwidth. The
+content slice needs predictable frame cost regardless of light count,
+and deferred rendering does not give this.
+
 ## Decision
 
 The mobile tile renderer rations bandwidth across file, memory, and

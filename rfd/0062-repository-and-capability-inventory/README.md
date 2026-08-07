@@ -5,6 +5,14 @@ state: published
 scope: org-wide repository and capability index
 ---
 
+## Problem
+
+The landing page carried the full repository list, a
+capability-to-branch table, and a deployment description. Those facts
+already had homes elsewhere, so the landing page drifted every time a
+fact changed somewhere else. No single record owned the org-wide
+repository and capability inventory.
+
 ## Decision
 
 This record is the one place that owns the org-wide repository and

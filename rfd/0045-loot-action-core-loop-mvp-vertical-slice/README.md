@@ -5,6 +5,14 @@ state: published
 scope: loot-action vertical slice (playable MVP)
 ---
 
+## Problem
+
+The project needed one playable slice of the instanced, four-player
+loot-action loop, small enough to build in one week. The slice also
+needed to exercise every integration seam, such as transport, server
+authority, loot contention, inventory persistence, and performance
+budgeting.
+
 ## Decision
 
 The project ships one vertical slice of an instanced, four-player

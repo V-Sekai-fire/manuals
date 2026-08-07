@@ -5,6 +5,13 @@ state: published
 scope: process
 ---
 
+## Problem
+
+The project steered an LLM with a task queue held only in the
+conversation. An unbounded queue held only in conversation overflows
+two scarce resources. The operator loses track of what is still open
+versus done, and the model's context window fills up.
+
 ## Decision
 
 The project steers an LLM by externalizing, bounding, and compacting the

@@ -5,6 +5,15 @@ state: published
 scope: Windows platform-manager packaging (fabric-platform-central)
 ---
 
+## Problem
+
+The platform manager that installs and updates the game client and
+dedicated server ran as a Godot placeholder. An earlier .NET 8
+self-contained launcher added a dependency the team does not
+otherwise use, and it only wrapped a shell invocation. Neither
+approach reused the content-sync protocol the `zone-backend` already
+uses.
+
 ## Decision
 
 The platform manager that installs and updates the game client and

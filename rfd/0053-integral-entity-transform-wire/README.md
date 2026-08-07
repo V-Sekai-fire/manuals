@@ -5,6 +5,14 @@ state: published
 scope: entity-transform wire packet (XRGridEntityPacket)
 ---
 
+## Problem
+
+The determinism doctrine keeps the authoritative state in integers
+and r128 fixed point. The entity-transform packet instead carried
+position as `f64`, three doubles whose 52-bit mantissa cannot even
+represent a Q64.64 value. This reintroduced cross-platform divergence
+into an otherwise deterministic wire format.
+
 ## Decision
 
 The fabric replicates entity transforms in a fixed 100-byte packet.

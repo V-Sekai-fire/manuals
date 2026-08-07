@@ -5,6 +5,15 @@ state: published
 scope: CI
 ---
 
+## Problem
+
+GitHub Container Registry ties package write access to the repository
+whose `GITHUB_TOKEN` created the package. A cross-repo pull failed with
+a 403 Forbidden error when the zone deploy tried to pull an image the
+baker repo owned. A `workflow_run` trigger also fires only inside its
+own repository, so a build workflow in one repo cannot trigger a deploy
+in another.
+
 ## Decision
 
 Each repository builds and publishes only the GHCR images its own deploy

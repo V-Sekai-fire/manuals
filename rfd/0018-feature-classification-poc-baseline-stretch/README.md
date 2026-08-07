@@ -5,6 +5,14 @@ state: published
 scope: capabilities-table
 ---
 
+## Problem
+
+Each feature in the capabilities table needs a stated commitment
+level. Free text does not state whether a feature is a proof of
+concept, a shipped baseline, or a stretch goal. A maturity ladder, such
+as alpha, beta, or stable, states how polished a feature is, not how
+committed the project is to shipping it.
+
 ## Decision
 
 Each feature in the capabilities table carries one of three commitment

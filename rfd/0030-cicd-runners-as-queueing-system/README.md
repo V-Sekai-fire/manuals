@@ -5,6 +5,14 @@ state: published
 scope: GitHub Actions runner pool operating discipline
 ---
 
+## Problem
+
+The organization shares one GitHub Actions runner pool, with 14 to 20
+runners available at a time. A single Godot push triggers about 20
+jobs, and the slowest jobs hold a runner for one to two hours.
+Arrivals easily outpace the pool, so a queued job then waits behind
+work that may carry no useful information at all.
+
 ## Decision
 
 The organization shares one GitHub Actions runner pool, observed at

@@ -5,6 +5,13 @@ state: published
 scope: prose voice for status reports (BLUF convention)
 ---
 
+## Problem
+
+A status report in this project had no fixed order for its content
+before this rule. A report that opens with a progress buffer saves
+the outcome for the end. A reader who reads only the first line then
+does not yet know where the work stands.
+
 ## Decision
 
 A status report in this project states the outcome first: the slip,

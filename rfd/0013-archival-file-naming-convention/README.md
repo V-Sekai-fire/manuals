@@ -5,6 +5,14 @@ state: published
 scope: decisions/attachments
 ---
 
+## Problem
+
+Committed binary assets, such as screenshots under
+`decisions/attachments/`, had no fixed naming convention. Source file
+names and content-hash names do not sort chronologically or explain
+themselves. Without a convention, same-day captures had no way to stay
+unique and ordered.
+
 ## Decision
 
 Committed binary assets (screenshots and similar files under

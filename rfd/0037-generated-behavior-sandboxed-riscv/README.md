@@ -5,6 +5,12 @@ state: published
 scope: combat behavior_source port implementation
 ---
 
+## Problem
+
+A generator can produce enemy and ability behavior. Running generated
+logic in-process risks the whole instance. The combat hexagon's
+`behavior_source` port had no safe implementation for this risk.
+
 ## Decision
 
 Enemy and ability behavior may be generated, and running generated

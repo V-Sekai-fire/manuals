@@ -5,6 +5,14 @@ state: discussion
 scope: zone-server-h2o CastSpell
 ---
 
+## Problem
+
+CastSpell's effect step needed a package format and a manifest
+encoding, and no RFD fixed either one. Without a fixed format, each
+effect step package could use a different, incompatible layout. The
+design also needed a runtime FFI format between the host and a loaded
+package, instead of adding a third, unrelated binary format.
+
 ## Decision
 
 CastSpell's effect step ships as a single `.elf` file: an embedded,

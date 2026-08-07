@@ -5,6 +5,12 @@ state: published
 scope: project vocabulary (docs, filenames, game content)
 ---
 
+## Problem
+
+The core loop draws on a trademarked action RPG. The project reuses
+none of that game's trademarks. The docs and the game needed a
+neutral vocabulary that carries the mechanics without the marks.
+
 ## Decision
 
 The core loop draws on a trademarked action RPG. The project reuses

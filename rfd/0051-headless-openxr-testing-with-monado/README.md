@@ -5,6 +5,13 @@ state: published
 scope: OpenXR functional and integration test coverage
 ---
 
+## Problem
+
+The OpenXR path needs to run on Linux with no headset, both on the
+workstation for iteration and inside a podman quadlet for CI. The
+project had no way to reach a conformant OpenXR runtime under these
+conditions.
+
 ## Decision
 
 The OpenXR path needs to run on Linux without a headset: on the

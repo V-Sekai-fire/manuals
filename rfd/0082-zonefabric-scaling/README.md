@@ -5,6 +5,13 @@ state: published
 scope: zone-server-h2o benchmark and keyspace design
 ---
 
+## Problem
+
+Glenn Fiedler's mas-bandwidth/fps architecture calls for a "world
+database" and leaves it unbuilt. A per-entity keyspace also costs 200
+times more FDB keys than a per-zone keyspace. Full-mesh O(N²)
+broadcast also does not scale replication across many zones.
+
 ## Decision
 
 Model weft-warp-loop's hub/instanced-zone game server as zonefabric: a

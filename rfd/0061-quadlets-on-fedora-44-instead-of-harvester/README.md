@@ -5,6 +5,14 @@ state: published
 scope: deployment target for fabric runtime services
 ---
 
+## Problem
+
+The earlier Harvester HCI plan wraps a full virtualization tier
+around the same podman quadlets that already drive the workloads.
+This tier adds a hypervisor, a VM lifecycle, and a qcow2 image
+pipeline. Fedora 44 can run those same quadlets under systemd without
+that tier.
+
 ## Decision
 
 Services run as systemd podman quadlets directly on Fedora 44 hosts,

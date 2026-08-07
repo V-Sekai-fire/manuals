@@ -5,6 +5,12 @@ state: published
 scope: repo branch protection and CI gating
 ---
 
+## Problem
+
+`main` had no branch protection. Pushes landed directly on the
+branch. Concurrent pull requests, each validated against an older tip
+of the branch, could conflict with each other once both landed.
+
 ## Decision
 
 `main` had no branch protection: pushes landed directly, and

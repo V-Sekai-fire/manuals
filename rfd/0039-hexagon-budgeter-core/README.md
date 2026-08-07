@@ -5,6 +5,14 @@ state: published
 scope: budgeter hexagon (proof of concept)
 ---
 
+## Problem
+
+The content slice needs graceful degradation under load on the
+mobile floor. Quality knobs, such as avatar level-of-detail and voice
+radius, must adjust per frame so the player stays inside the
+experience during a burst. The budgeter had no structure that could
+measure the device and adjust these knobs.
+
 ## Decision
 
 The slice needs graceful degradation under load on the mobile floor,

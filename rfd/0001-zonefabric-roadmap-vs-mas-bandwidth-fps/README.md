@@ -5,6 +5,16 @@ state: discussion
 scope: zone-server-h2o
 ---
 
+## Problem
+
+The project had no fixed order for the remaining zonefabric work.
+Two encoding choices, the CastSpell sandbox boundary format and its
+package manifest format, had no settled answer. The `mas-bandwidth/fps`
+reference design lacks delta compression, client prediction,
+multicast, and a kernel-bypass ingest layer, and no RFD stated whether
+this gap was acceptable. No RFD picked a license-safe library for
+future kernel-bypass or eBPF work.
+
 ## Decision
 
 Build the remaining `zone-server-h2o` zonefabric work in the PERT

@@ -5,6 +5,14 @@ state: published
 scope: repository naming across all orgs
 ---
 
+## Problem
+
+GitHub repository names carried no fixed case convention. A build
+that consumes a sibling repository by path, such as a CMake
+`add_subdirectory` or a homebrew `resource`, hardcodes a directory
+name in its own case. A repository rename could break that hardcoded
+path.
+
 ## Decision
 
 GitHub repository names are kebab-case, for example `combat-core`,

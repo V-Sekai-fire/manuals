@@ -5,6 +5,14 @@ state: published
 scope: zone-server-h2o FDB value compression
 ---
 
+## Problem
+
+Large value blobs, such as entity batches, zone snapshots, and asset
+content, wrote to FDB uncompressed. Uncompressed entity batches and
+zone snapshots take more FDB storage and bandwidth than needed.
+Compressing small fixed-size structs the same way would pay
+compression overhead that exceeds the savings.
+
 ## Decision
 
 Compress FDB values with zstd before writing, and decompress after

@@ -5,6 +5,13 @@ state: published
 scope: prose style for comments, docs, and decision records
 ---
 
+## Problem
+
+A comment written as history, such as "added a cache", names a
+past moment. A comment written as a plan, such as "will solve this",
+describes a future moment. A reader cannot check either kind of
+comment against the code in front of them.
+
 ## Decision
 
 A comment written as history ("added a cache") or as a plan ("will

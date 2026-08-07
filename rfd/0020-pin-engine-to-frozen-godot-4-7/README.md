@@ -5,6 +5,13 @@ state: published
 scope: engine fork base commit
 ---
 
+## Problem
+
+The engine fork's base commit tracked a moving upstream. A base that
+tracks a moving upstream lets patches shift underneath the assembly.
+A green build could break the next day from upstream churn alone, with
+no change to the fork's own feature branches.
+
 ## Decision
 
 The engine fork carries many feature branches that the `merge` recipe

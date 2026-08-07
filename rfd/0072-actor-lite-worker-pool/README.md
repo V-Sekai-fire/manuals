@@ -5,6 +5,14 @@ state: published
 scope: zone-server-h2o worker dispatch
 ---
 
+## Problem
+
+zone-server-h2o needs to dispatch HTTP requests from the H2O network
+thread to worker threads. A generalized actor framework adds
+scheduler overhead and lock contention on the fast path. The design
+targets top-10 TechEmpower R23 data update throughput, and that
+target needs a dispatch path with neither cost.
+
 ## Decision
 
 zone-server-h2o dispatches HTTP requests from the H2O network thread

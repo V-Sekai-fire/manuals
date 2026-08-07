@@ -5,6 +5,14 @@ state: discussion
 scope: zf_kv.c / mud_kv.c FDB value encoding
 ---
 
+## Problem
+
+This project plans new FDB value types for `zf_kv.c` and `mud_kv.c`.
+No RFD defined a shared encoding scheme for these new types. Without
+a shared design, each new value type could use its own, incompatible
+representation for references. `taskweft/nif` already solves this same
+problem for its own interpreter and ABI boundaries.
+
 ## Decision
 
 `taskweft/nif` narrows every value crossing an interpreter or ABI

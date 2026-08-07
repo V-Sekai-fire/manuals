@@ -5,6 +5,14 @@ state: published
 scope: observability
 ---
 
+## Problem
+
+The single-machine observability stack ran Jaeger all-in-one for trace
+storage. Jaeger's Badger backend carries a single-node limit. Jaeger
+also put traces under a separate vendor from the stack's metrics and
+logs backends, and its ports and CLI flags did not match the
+conventions the rest of the stack already used.
+
 ## Decision
 
 The single-machine observability stack replaces Jaeger all-in-one with

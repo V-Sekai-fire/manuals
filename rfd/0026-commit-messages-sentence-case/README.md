@@ -5,6 +5,14 @@ state: published
 scope: git commit message style
 ---
 
+## Problem
+
+Repositories here run no tooling that reads a Conventional Commits
+type prefix. A `feat:`, `fix:`, or `chore:` prefix buys nothing
+without that tooling, and it pushes the actual meaning after a colon.
+Picking the right type prefix for each commit also needs per-commit
+judgement.
+
 ## Decision
 
 A commit subject opens with a capital letter and reads as a plain

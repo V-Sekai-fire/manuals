@@ -5,6 +5,13 @@ state: published
 scope: decision records and build scripts
 ---
 
+## Problem
+
+Building structure ahead of the feature that needs it spends an
+option and delays a return. Cheap code generation does not remove
+either cost. Some decision records and build scripts in the project
+carried structure ahead of a demonstrated need.
+
 ## Decision
 
 YAGNI is a timing rule, not a thrift rule. Building structure ahead of

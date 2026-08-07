@@ -5,6 +5,14 @@ state: published
 scope: gateway/db
 ---
 
+## Problem
+
+The Elixir gateway and the Phoenix zone backend needed a shared
+database. No RFD fixed how they would connect securely, or with what
+access level. A single, undifferentiated database credential would let
+any leaked credential alter the schema. The project needed a
+deployment and certificate plan before either service could connect.
+
 ## Decision
 
 The stack runs a single-node CockroachDB on Fly.io. The Elixir gateway and

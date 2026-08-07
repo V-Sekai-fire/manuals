@@ -5,6 +5,13 @@ state: published
 scope: transport adapter for the event-driven hexagonal cores
 ---
 
+## Problem
+
+The cores expose a flat C ABI and need a transport adapter to carry
+their port traffic to clients. The in-engine `feat/module-http3`
+transport fits the in-process authoritative tick core. It does not
+fit the event-driven cores, which need a piped child process instead.
+
 ## Decision
 
 The cores expose a flat C ABI and need a transport adapter to carry

@@ -5,6 +5,14 @@ state: published
 scope: fabric wire protocol (entity packet and channel layout)
 ---
 
+## Problem
+
+Transforms need unreliable, latest-wins delivery at tick rate. Sparse
+control events, such as a teleport vote or a loot grab, need
+reliable, exactly-once delivery instead. Mixing both on one ordered
+stream lets a reliable event block the transform flow. A separate
+text channel for control also needs two codecs to reason about.
+
 ## Decision
 
 Transforms want unreliable, latest-wins delivery at tick rate; sparse

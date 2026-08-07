@@ -5,6 +5,13 @@ state: published
 scope: merge repo / assembled-engine release tagging
 ---
 
+## Problem
+
+The `merge` repo's `gitassembly` recipe assembles the engine by
+merging feature branches onto a base branch. Branch tips move, so a
+branch name alone does not point at one fixed tree. A consumer pinning to a branch name could point at a tree that
+later changed under it.
+
 ## Decision
 
 The `merge` repo's `gitassembly` recipe assembles the engine by merging

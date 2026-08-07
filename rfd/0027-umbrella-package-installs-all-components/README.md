@@ -5,6 +5,13 @@ state: published
 scope: package distribution (scoop, Homebrew, docker compose)
 ---
 
+## Problem
+
+The project ships as several components, such as the sinew mocap apps
+and the zone backend services. A newcomer had to know and install
+each component name one at a time. No single file listed the full set
+of components the project contains.
+
 ## Decision
 
 A project that ships as several components (the sinew mocap apps, the
