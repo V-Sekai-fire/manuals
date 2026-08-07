@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0063: Project state lives in repo markdown, not in agent auto-memory</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> project-state record keeping across agent sessions</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Project state lived in an agent’s private auto-memory. A fact in private auto-memory desyncs silently, because no diff reviews it and it does not travel with the code. The project had no single, versioned home for decisions, open work, and dead ends.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Project state lives in three versioned repo-root markdown files, not in an agent’s private auto-memory. <code>CHANGELOG.md</code> holds decisions and completed, verified work. <code>OPEN_GAPS.md</code> holds unfinished work and open problems. <code>TOMBSTONES.md</code> holds dead ends and disproven hypotheses. Each fact has exactly one home, and it moves between files as its status changes. Auto-memory stays thin: it holds only durable behavioural rules plus one pointer telling a future session to read the three docs first. A fact in repo markdown travels with the code it describes, shows up in review, and goes stale visibly the moment the code changes; a fact in private auto-memory desyncs silently, because it is not reviewed in diffs and does not travel with the code.</p>

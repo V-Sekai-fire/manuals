@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0077: PERT critical path for zonefabric implementation</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o build order</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The zonefabric implementation spans many RFDs with dependencies between them. The team had no critical path or task order for the remaining build work. Without that order, the team could not tell which tasks carry slack and which tasks block the whole build.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Model the zonefabric implementation as a PERT network. Each RFD’s implementation is a task with optimistic, most-likely, and pessimistic duration estimates, and expected duration follows <code>TE = (O + 4M + P) / 6</code>. The critical path is A (binary encoding) → B (FDB keyspace) → C (actor-lite pool) → F (ZoneTick) → I (CastSpell) → M (feature ablation), totaling 26.0 engineering days. CastSpell sits on the critical path because it depends on three upstream tasks and carries the highest variance.</p>

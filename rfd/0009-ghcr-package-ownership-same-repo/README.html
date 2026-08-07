@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0009: GHCR packages must be built by the repo that consumes them</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> CI</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>GitHub Container Registry ties package write access to the repository whose <code>GITHUB_TOKEN</code> created the package. A cross-repo pull failed with a 403 Forbidden error when the zone deploy tried to pull an image the baker repo owned. A <code>workflow_run</code> trigger also fires only inside its own repository, so a build workflow in one repo cannot trigger a deploy in another.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Each repository builds and publishes only the GHCR images its own deploy uses directly. <code>multiplayer-fabric-baker</code> builds and owns <code>godot-editor-double</code>. <code>multiplayer-fabric-zone</code> builds and owns <code>multiplayer-fabric-zone-godot</code>, renamed from <code>godot-zone-double</code> to show the new ownership. GitHub Container Registry ties package write access to the repository whose <code>GITHUB_TOKEN</code> created the package, so a cross-repo pull failed with 403 Forbidden when the zone deploy tried to pull an image the baker repo owned. A <code>workflow_run</code> trigger fires only inside its own repository, so the binary build workflow must live in the same repo as the deploy it triggers.</p>

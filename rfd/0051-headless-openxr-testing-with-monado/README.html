@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0051: Headless OpenXR testing with Monado (null compositor + simulated HMD)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> OpenXR functional and integration test coverage</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The OpenXR path needs to run on Linux with no headset, both on the workstation for iteration and inside a podman quadlet for CI. The project had no way to reach a conformant OpenXR runtime under these conditions.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. The project runs Monado with the null compositor and a simulated HMD, headless, because it is a conformant OpenXR runtime that an app reaches over the loader with no display and no device, on the workstation and inside a quadlet. <code>XRT_COMPOSITOR_NULL</code> discards submitted frames, so this covers the runtime, the tracking, and frame submission, with no rendered output and no performance signal. <code>SIMULATED_ENABLE</code> supplies a head and controllers driven programmatically. This is functional and integration coverage; the standalone OpenXR build stays the performance and comfort gate. <code>openxr_runtime_list</code>, and any OpenXR app, reaches <code>xrCreateInstance</code> against the running service, and the service log reports the null compositor and a simulated HMD.</p>

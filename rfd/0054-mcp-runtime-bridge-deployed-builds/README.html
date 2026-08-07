@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0054: MCP runtime bridge for deployed builds</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> MCP inspection of deployed (non-editor) builds</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The Godot MCP addon is an editor plugin. It drives the editor over its <code>EditorInterface</code>, and the editor does not run inside a deployed build. Debugging a deployed build, such as a headless zone server, a mobile client, or an OpenXR app, needs the same inspection with no editor present.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The Godot MCP addon is an editor plugin, so it drives the editor over its <code>EditorInterface</code>. Debugging a deployed build — a headless zone server, a mobile client, an OpenXR app — needs the same inspection against the running game, where there is no editor. A runtime autoload (<code>mcp_runtime.gd</code>) serves the same MCP from inside the running game, injecting the live <code>SceneTree</code> where the editor plugin injects the editor. An MCP client reaches it over <code>adb forward</code> (or any port forward). Scene, node, property, <code>call_method</code>, <code>run_script</code>, <code>get_render_info</code>, and a runtime-capable <code>screenshot</code> operate on the running game; editor-only commands return an error. The contribution lands upstream as <code>vsekai-godot-mcp#1</code>. A deployed OpenXR build becomes inspectable and drivable from the workstation: frame stats, the live scene tree, and arbitrary GDScript against the running game. Under XR, <code>screenshot</code> reads the flat Window viewport, which stays black because the rendered frames go to the XR compositor’s per-eye swapchain and that is not host-readable; <code>get_render_info</code> and <code>run_script</code> cover XR diagnostics instead. Over <code>adb forward</code>, <code>get_render_info</code> returns 13 draw calls and 46476 primitives from the running OpenXR app, and <code>run_script</code> reads the live client state.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o CastSpell sandboxing</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>CastSpell needs to run sandboxed Godot game logic inside <code>zone-server-h2o</code>. <code>godot-sandbox</code>’s <code>Sandbox</code> Node API needs its own separate live Godot process. Linking the guest directly into <code>zone-server-h2o</code>’s binary would tie two unrelated build systems together for no benefit.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use <code>godot-riscv-spike</code>’s proven whole-engine-in-<code>rvlinux</code> approach directly. Drive it with raw <code>libriscv</code> (<code>copy_to_guest</code>, <code>copy_from_guest</code>, <code>vmcall</code>). Run it as a separate <code>sandbox-orchestrator</code> process, not linked into <code>zone-server-h2o</code>’s binary. <code>zone-server-h2o</code> spawns this new binary and connects to it over a <code>socketpair()</code>, registered with h2o’s event loop the same way <code>udp_fd</code>/<code>timer_fd</code> already are. The guest ELF exposes <code>godot_boot(cbor_config)</code>, run once, and <code>godot_tick(input_addr, output_addr)</code>, run once per real tick at 64 Hz.</p>

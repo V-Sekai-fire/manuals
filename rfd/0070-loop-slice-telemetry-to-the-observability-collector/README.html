@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0070: Export loop-slice server telemetry to the observability collector</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> loop-slice server OpenTelemetry export</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The loop-slice server already emits spans, counters, gauges, and logs through its <code>OpenTelemetry</code> engine module. Export stays idle with no endpoint set. A deployed server with no configured endpoint stays unobservable.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The loop-slice deploy exports OpenTelemetry over HTTP to the observability collector at <code>http://host.containers.internal:4318</code>, with <code>OTEL_SERVICE_NAME=loop-server</code>. The server already emits spans, counters, gauges, and logs through its <code>OpenTelemetry</code> engine module, but export stays idle with no endpoint set, so a deployed server with no configured endpoint stays unobservable. <code>host.containers.internal</code> resolves to the host, not the loop-slice container’s own loopback, because the server runs as a separate rootless container outside the observability pod’s network namespace. HTTP on 4318 matches the export protocol the rest of the fabric already uses. Export stays opt-in in the engine and the image; only the deploy’s environment sets the endpoint, because only there is the collector a co-located, declared dependency. Applying these values to the deploy’s environment file and quadlet is follow-up work; this record fixes the address and the protocol.</p>

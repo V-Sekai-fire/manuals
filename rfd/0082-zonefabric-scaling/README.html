@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o benchmark and keyspace design</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Glenn Fiedler’s mas-bandwidth/fps architecture calls for a “world database” and leaves it unbuilt. A per-entity keyspace also costs 200 times more FDB keys than a per-zone keyspace. Full-mesh O(N²) broadcast also does not scale replication across many zones.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Model weft-warp-loop’s hub/instanced-zone game server as zonefabric: a FoundationDB-backed benchmark scaled by zone count, with 200 entities per zone at fixed constants (WORLD_EXTENT=10000.0, GHOST_RANGE=150.0, AUTHORITY_CAPACITY=256, SPLIT_COST_THRESHOLD=40000.0). Persistence uses a single zstd-compressed <code>zf/zone_state/{z_id}</code> blob per zone, per 10Hz tick, holding the slotmap and effect state. This cuts FDB key count 200-fold against the per-entity keyspace, which the design retains only for migration, ghost-relevance range scans, and point lookups. Zonefabric is the “world database” that Glenn Fiedler’s mas-bandwidth/fps architecture calls for and leaves unbuilt. It builds this on FDB instead of Redis, with AOI-filtered replication (GHOST_RANGE covers 0.02 percent of world space per zone) in place of full-mesh O(N²) broadcast. Per-zone independent FDB transactions and thread-local slotmaps give near-linear core scaling, with no cross-zone conflicts.</p>

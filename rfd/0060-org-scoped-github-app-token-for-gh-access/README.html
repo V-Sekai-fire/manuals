@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0060: Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> gh CLI authentication for v-sekai-multiplayer-fabric</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>gh</code> ran on a personal OAuth token with the <code>repo</code> scope. That scope grants read, write, admin, and delete access on every repository the personal account can reach, across every org. A leaked personal token could then reach far more than the one org’s repositories this project needs.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p><code>gh</code> used to run on a personal OAuth token with the <code>repo</code> scope. That scope grants read, write, admin, and delete on every repository the personal account can reach, across every org. A GitHub App installed on <code>v-sekai-multiplayer-fabric</code> now mints the token instead. A helper script reads the App id and private key from 1Password, signs a JWT, and exchanges it for an installation access token, which <code>gh</code> uses directly. The installation token is org-scoped by construction: it cannot read or write any private repo outside the org, and it expires about one hour after minting, so a leak dies on its own. The installation is granted <code>administration: write</code>, <code>contents: write</code>, <code>workflows: write</code>, <code>actions: read</code>, and <code>metadata: read</code> on every repository in the org — the set the repo work needs. The GitHub App’s private key is itself high-value and stays guarded in 1Password.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0027-umbrella-package-installs-all-components/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -319,6 +320,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0027: An umbrella package installs every component in one command</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> package distribution (scoop, Homebrew, docker compose)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The project ships as several components, such as the sinew mocap apps and the zone backend services. A newcomer had to know and install each component name one at a time. No single file listed the full set of components the project contains.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>A project that ships as several components (the sinew mocap apps, the zone backend services) forces a newcomer to know and install each component name one at a time. Each distribution channel now carries one thin umbrella entry that depends on every component and installs nothing of its own: a scoop metapackage manifest, a Homebrew formula, and a <code>docker-compose.yml</code>, each naming the full component set in its dependency list. The channel’s own resolver installs the whole set from a single command, and the umbrella file doubles as the canonical list of what the project contains. Adding a component touches one line in the umbrella beside the new component’s own entry.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
@@ -321,6 +322,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0049: Fabric channels as reliability classes, control in payload</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> fabric wire protocol (entity packet and channel layout)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Transforms need unreliable, latest-wins delivery at tick rate. Sparse control events, such as a teleport vote or a loot grab, need reliable, exactly-once delivery instead. Mixing both on one ordered stream lets a reliable event block the transform flow. A separate text channel for control also needs two codecs to reason about.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Transforms want unreliable, latest-wins delivery at tick rate; sparse control events (a teleport vote, a loot grab) want reliable, exactly-once delivery. Mixing both on one ordered stream lets a reliable event head-of-line-block the transform flow, and a separate text channel for control means two codecs to reason about. The fabric’s logical channels are the reliability classes, and the 100-byte entity packet carries everything. <code>FabricMultiplayerPeer</code> runs one ENet host per channel, so channels are head-of-line-free: CH_INTEREST (1) carries unreliable transforms, CH_MIGRATION (0) carries reliable-ordered control and state. The lane is chosen with <code>set_transfer_channel</code> plus <code>set_transfer_mode</code>; a <code>cmd</code>/<code>action</code> byte in the payload picks the meaning within a lane. Control rides the same packet as the transform that produced it, so a hit validates against the exact transform and tick, atomically, with no sequence counter or dedupe, since the transport gives exactly-once delivery per channel. Server-to-client state (phase, grant, reject) uses the same format under reserved global ids; a display name is a byte field, so even names stay integral and deterministic.</p>

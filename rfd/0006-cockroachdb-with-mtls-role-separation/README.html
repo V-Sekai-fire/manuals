@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0006-cockroachdb-with-mtls-role-separation/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -319,6 +320,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0006: CockroachDB with mTLS and role-separated access</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> gateway/db</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The Elixir gateway and the Phoenix zone backend needed a shared database. No RFD fixed how they would connect securely, or with what access level. A single, undifferentiated database credential would let any leaked credential alter the schema. The project needed a deployment and certificate plan before either service could connect.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The stack runs a single-node CockroachDB on Fly.io. The Elixir gateway and the Phoenix zone backend both connect to it. All connections use mTLS. The database defines three application roles: <code>gateway_admin</code> for schema migrations, <code>gateway_writer</code> for normal queries, and <code>gateway_reader</code> for read-only access. This role split limits the damage if one credential leaks; a leaked writer credential cannot alter the schema.</p>

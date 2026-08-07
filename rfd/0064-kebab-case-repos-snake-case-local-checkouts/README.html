@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0064: GitHub repos use kebab-case; local checkout dirs keep build-native names</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> repository naming across all orgs</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>GitHub repository names carried no fixed case convention. A build that consumes a sibling repository by path, such as a CMake <code>add_subdirectory</code> or a homebrew <code>resource</code>, hardcodes a directory name in its own case. A repository rename could break that hardcoded path.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>GitHub repository names are kebab-case, for example <code>combat-core</code>, <code>loot-core</code>, <code>mount-drift</code>, and <code>vr-bridge</code>. Local checkout directory names match what the build expects instead. Where a repo is consumed as a sibling by path — a CMake <code>add_subdirectory</code>, a CI <code>path:</code>, a homebrew <code>resource</code> — the local directory keeps the snake_case name the build hardcodes, so local <code>mount_drift</code> maps to remote <code>sinew-mocap/mount-drift</code>. Where no build path depends on the directory name, the local directory may match the kebab-case repo name instead. Old remote URLs keep working through GitHub’s automatic redirects, so a rename does not break an existing clone or CI checkout. This gives uniform, discoverable remote names without touching the build files that hardcode sibling directory paths; fully propagating kebab-case into those build files stays out of scope here.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0007: Godot double precision template_release for zone servers</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Zone servers needed a Godot engine build that matches the physics and networking precision the rest of the stack uses. An editor build carries import and export tools a zone server does not need, making it larger and slower to start. Without a fixed build target, the headless zone server role had no matching binary.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Zone servers build the Godot engine as <code>target=template_release precision=double</code>, with no Mono module. The build source is the V-Sekai fork <code>V-Sekai-fire/multiplayer-fabric-build@b27142e94</code>. Double precision matches the physics and networking precision the rest of the stack uses. <code>template_release</code> carries no import or export tools, so it is smaller and starts faster than an <code>editor</code> build, and it fits the headless role a zone server runs.</p>

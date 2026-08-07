@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0062: Repository and capability inventory for the multiplayer fabric</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> org-wide repository and capability index</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The landing page carried the full repository list, a capability-to-branch table, and a deployment description. Those facts already had homes elsewhere, so the landing page drifted every time a fact changed somewhere else. No single record owned the org-wide repository and capability inventory.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>This record is the one place that owns the org-wide repository and capability inventory. The landing page used to carry the full repository list, a capability-to-branch table, and a deployment description; those facts already have homes elsewhere, so the landing page drifted every time a fact changed. The landing page now links here instead of restating the list. Each capability maps to the engine feature branch in <code>godot</code> that implements it, and its tier follows the feature-classification record. The inventory spans the full <code>v-sekai-multiplayer-fabric</code> org plus the repos still on <code>V-Sekai-fire</code>, grouped by area: engine, runtime services, service images, rendering and shaders, spatial and verification, tooling, infrastructure, and archived repos. Keeping one page as the source of truth costs hand maintenance, but it stops the drift a second copy caused.</p>

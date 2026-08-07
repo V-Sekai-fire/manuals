@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
@@ -321,6 +322,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0050: Five-second transaction limit (bounded operations)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> connection recovery and blocking operations across the fabric</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A connection that silently desyncs wastes a player’s time. A past loop bug let a client believe it joined while the server dropped it, and the client waited forever with no bound. No operation across the fabric carried a fixed time limit before this.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>A connection that silently desyncs wastes a player’s time: a past loop bug had a client believe it was joined while the server had dropped it, and the client waited forever. FoundationDB bounds every transaction to five seconds and aborts past that, so a stuck operation fails fast instead of hanging. The project applies the same guarantee across every operation that can block: connection recovery, runtime MCP round trips, and any commit. No operation waits longer than five seconds; past that it aborts or self-heals. The connection state machine re-joins a client that stops hearing the server. A Lean plus Plausible model proves the protocol sound — the client’s belief never disagrees with the server once settled — and complete within a five-second budget: an awake client returns to a healthy joined state within five ticks. The buggy protocol without the re-join rule is shown incomplete, since Plausible finds a permanent ghost that stays unhealthy after a hundred seconds. Runtime MCP operator calls carry a five-second deadline, and a commit past that budget aborts rather than blocking the loop. The bound is a proof, not a hope: the model is the source of truth, and the loop client’s connection logic matches it.</p>

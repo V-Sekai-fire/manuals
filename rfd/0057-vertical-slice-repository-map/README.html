@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0057: Repository map of the loot-action vertical slice</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> repository ownership index for the whole fabric organization</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The loot-action core-loop slice spans more than a dozen repositories in the organization. Without an index, a contributor cannot tell which repository owns which concern, or which name is current. A contributor also cannot tell whether the playable slice imports the cores or carries its own copies.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The loot-action core-loop slice spans more than a dozen repositories in the <code>v-sekai-multiplayer-fabric</code> organization: a playable app, one proven core per loop concern, the wire and transport specs, the engine fork and its assembly recipe, the backend and infrastructure services, the verification queue, and these docs. Without an index, a contributor cannot tell which repository owns which concern, which name is current, or how the pieces relate — in particular whether the playable slice imports the cores or carries its own copies. One repository owns each concern; this record is that index. The playable slice (<code>godot-loop-slice</code>) does not import the core repositories. It transcribes the proven cores into GDScript reducers, with the cores’ wire-parity vectors pinning the behavior; the core repositories stay the canonical, proven reference. The full map — playable slice, proven cores, wire and determinism specs, the engine and its assembly, backend and infrastructure services, platform tooling, and verification and docs — lives in <code>DETAILS.md</code>, one repository link per concern.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0046: Server-authoritative simulation with deferred rollback</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> Field-instance authority model (zone-server)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt, the Maglev intercept smoke test, did not work. The one-week slice needed a simpler model that still resists client tampering.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt (the Maglev intercept smoke test) was rejected, and the one-week slice needs a simpler model that still resists client tampering. The headless <code>zone-server</code> owns entity transforms, health, combat state, and loot contention. Clients reconcile to the server snapshot. A single authority per instance keeps the slice simple and tamper-resistant. For the deadline the model runs with client interpolation and no client prediction; the rollback adapter lands after the gate behind the same <code>input_source</code> and <code>state_sink</code>, so the swap never touches a core. One authority per instance means a per-connection transport child relays to that single core rather than holding state itself. The deadline trades input snappiness for a far smaller build. A divergent client reconciles to the server snapshot, and combat and loot resolve identically across the four clients.</p>

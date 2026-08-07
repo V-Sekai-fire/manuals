@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0080: Slotmap entity storage with generational IDs</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o in-memory entity storage</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>In-memory entity storage per zone used a hash map or a linked list approach. A hash map of 200 entities touches about 8 random cache lines per iteration. A linked list needs pointer-chasing, and both approaches cost more than a sequential scan.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use a slotmap for in-memory entity storage per zone, replacing hash map and linked list approaches. A slotmap is a sparse set with generational indices. Each zone owns one thread-local slotmap. FDB stays the durable backing store, and the slotmap is the hot in-memory index for tick processing. Iterating 200 entities in a slotmap’s dense array touches about 8KB sequentially, roughly one L1 miss after warmup. A hash map of the same size touches about 8 random cache lines, and a linked list needs pointer-chasing.</p>

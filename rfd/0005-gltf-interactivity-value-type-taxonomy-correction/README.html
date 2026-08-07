@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -319,6 +320,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o CastSpell</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>RFD 0001 item 5 described <code>gltf_interactivity</code>’s value types as a two-way split: primitive types and <code>ref</code> types. The vendored <code>gltf_interactivity</code> specification actually defines three value-type categories, not two. This mismatch left CastSpell’s bitpacked struct design without a correct taxonomy to implement against.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p><code>gltf_interactivity</code>’s vendored specification defines three value-type categories, not the two-way primitive/<code>ref</code> split <code>RFD 0001</code> item 5 first described: primitive types (<code>bool</code>, <code>float</code>, the <code>float2</code>/<code>3</code>/<code>4</code> vectors and matrices, <code>int</code>), <code>ref</code> (an opaque reference, null by default), and <code>custom</code> (a signature that defers all type semantics to an extension). <code>zone-server-h2o</code> implements only the first two today; CastSpell’s bitpacked struct gives a primitive field its value inline and a <code>ref</code> field a slotmap handle. Leave <code>custom</code> unimplemented, not rejected, until a CastSpell parameter needs an extension-defined type.</p>

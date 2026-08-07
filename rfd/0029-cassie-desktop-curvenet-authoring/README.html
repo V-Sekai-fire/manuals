@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0029: CASSIE desktop curvenet authoring for content, no Blender</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> content pipeline authoring (feat/module-cassie)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The content pipeline needs budget-bounded geometry for the Hub, the Field, and the enemy content slice. Standing up Blender for this work adds a dependency the one-week build does not need. In-headset sketching ergonomics also were not ready in time for this build.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The content pipeline needs budget-bounded geometry for the slice without standing up Blender. The project authors the Hub, the Field, and the enemy as CASSIE curvenets through the desktop path, with no Blender, because a curvenet is a bounded, inspectable graph the <code>zone-baker</code> can cost, and the desktop path skips the in-headset ergonomics for the one-week build. The <code>feat/module-cassie</code> curve-and-surface sketcher produces curve networks that triangulate to a controllable poly count. The geometry arrives near budget, so it passes the baker with little rework; the in-headset sketching ergonomics land after the gate; and the pipeline carries no Blender dependency.</p>

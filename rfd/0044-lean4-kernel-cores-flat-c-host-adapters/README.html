@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0044: Lean 4 build-time kernel cores with flat-C host adapters</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> hexagonal core language boundary (Lean at build time, flat C at run time)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The hexagonal cores hold dependency-free domain logic that Godot, the Elixir backend, and a CLI all bind. The team wants strong spec and proof guarantees on that logic. Linking a heavy language runtime into every host would work against this goal.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The hexagonal cores (<code>rfd/0028-hexagonal-core-ports-adapters</code>) hold dependency-free domain logic that Godot, the Elixir backend, and a CLI all bind. The team wants strong spec and proof guarantees on that logic without linking a heavy language runtime into every host. The project uses Lean 4 at build time as the kernel, the spec, and the code generator, and ships each runtime core as a flat C ABI behind the port ring, with no Lean runtime linked into any host, because this keeps the proof leverage while the hosts bind only a flat C surface. Each core models a pure reducer over byte-serialized state (<code>rfd/0033-core-contract-pure-reducer-byte-state</code>). Its compute kernels lower through <code>lean-slang</code> to SPIR-V (<code>rfd/0032-core-codegen-lean-slang</code>), and the spec suite drives the C ABI through Python ctypes, with property tests on Plausible and a handful of theorems pinning invariants that never break. This mirrors <code>idtx-flow</code>, where <code>flow/core</code> compiles to a flat-C library, <code>flow/ports</code> is the flat C ABI, and <code>flow/core/spec</code> drives that ABI through ctypes with no engine and no hardware. A host binds only the flat C ABI and never sees core internals or a Lean runtime.</p>

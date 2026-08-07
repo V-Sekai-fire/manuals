@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0043: Progression hexagon — core, ports, and adapters</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> progression hexagon (proof of concept)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The profile, the valid inventory transitions, and the affinity gate on arts need to be durable across a session. They also need to be testable with no database. Progression had no structure that gave it these properties.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The profile and inventory rules — the profile, the valid inventory transitions, and the affinity gate on arts — need to be durable across a session and testable with no database. The project structures progression as a hexagon. The core defines the profile and the inventory, the valid transitions, and the affinity gate, as a pure reducer. The driving port <code>profile_source</code> carries a profile load at login. The driven port <code>commit_sink</code> carries a durable write of the profile and the inventory. <code>zone-backend</code> with <code>cockroach</code> commits through the mTLS store (<code>rfd/0006-cockroachdb-with-mtls-role-separation</code>). <code>feat/module-sqlite</code> caches on the instance and stands in as a degraded commit, and a fixture adapter holds a recorded profile for CI. The persistence degrades from the <code>cockroach</code> adapter to the <code>feat/module-sqlite</code> adapter behind one <code>commit_sink</code>, so a slipping commit path does not block the loop. Inventory transitions validate in the core, so a bad transition fails a fixture rather than a live write, and the affinity gate holds an art out of reach below its requirement. The core validates inventory transitions against a recorded profile fixture, and a drop commits through the adapter and survives a round trip.</p>

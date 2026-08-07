@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> deployment target for fabric runtime services</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The earlier Harvester HCI plan wraps a full virtualization tier around the same podman quadlets that already drive the workloads. This tier adds a hypervisor, a VM lifecycle, and a qcow2 image pipeline. Fedora 44 can run those same quadlets under systemd without that tier.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Services run as systemd podman quadlets directly on Fedora 44 hosts, not inside VMs on a Harvester HCI cluster. The superseded Harvester plan wraps a full virtualization tier — hypervisor, VM lifecycle, qcow2 pipeline — around the same podman quadlets that already drive the workloads. Fedora 44 runs those quadlets under systemd without that tier. Each service deploys as an OCI container image launched by a quadlet <code>.container</code> unit, with <code>.network</code> and <code>.volume</code> units alongside, copied into <code>~/.config/containers/systemd</code>. OpenTofu in the <code>infra</code> repo provisions the Fedora 44 hosts and delivers the quadlet units, in place of baking and booting qcow2 images. This decision supersedes the earlier Harvester HCI record; Fly.io stays off the table from that record, and Harvester HCI joins it.</p>

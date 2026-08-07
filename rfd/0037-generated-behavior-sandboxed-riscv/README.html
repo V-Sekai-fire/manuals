@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0037: Generated behavior runs as sandboxed RISC-V</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> combat behavior_source port implementation</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A generator can produce enemy and ability behavior. Running generated logic in-process risks the whole instance. The combat hexagon’s <code>behavior_source</code> port had no safe implementation for this risk.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Enemy and ability behavior may be generated, and running generated logic in-process risks the whole instance. The combat hexagon’s <code>behavior_source</code> port needs a safe implementation. The project runs generated enemy and art behavior as sandboxed RISC-V programs through <code>feat/sandbox</code>, implementing the combat <code>behavior_source</code> port, because the sandbox contains a misbehaving program rather than letting it take down the instance. This is the runtime guarantee under the bounded, declarative vocabulary the AI emits. Generated logic is isolated, so a bad program degrades one entity rather than the instance. Behavior is an adapter behind a port, so a fixture adapter replays scripted intents for CI, and the same port accepts hand-written and generated behavior. A misbehaving generated program stays contained without taking down the instance, and the fixture adapter reproduces scripted intents with no sandbox.</p>

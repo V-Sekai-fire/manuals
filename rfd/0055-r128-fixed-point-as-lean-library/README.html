@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0055: r128 Q64.64 fixed-point as a Lean library for the cores</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> fixed-point math library for the Lean kernel cores</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The deterministic cores need Q64.64 fixed-point math inside the Lean kernels. The engine already vendors a C <code>r128</code> library, but the kernels are authored in Lean, not C. Calling the vendored C library from the host only would leave the kernels in floating point, and floating point in the kernels breaks determinism. An ad-hoc Q64.64 implementation inside each kernel would also drift from the others.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The deterministic cores need Q64.64 fixed-point math inside the Lean kernels, which lower to SPIR-V through lean-slang. The engine already vendors the C <code>r128</code> library (<code>thirdparty/misc/r128</code>), but the kernels are authored in Lean. The team considered calling the vendored C <code>r128</code> from the host only and keeping the kernels in floating point, and reimplementing Q64.64 ad hoc inside each kernel. Both are rejected: floating point in the kernels breaks determinism, and an ad-hoc Q64.64 per kernel drifts. The project ports <code>r128</code> to a Lean library that the cores import for their Q64.64 fixed-point math, because one Lean implementation feeds every kernel and lowers to SPIR-V over 64-bit integer pairs, while the vendored C <code>thirdparty/misc/r128</code> stays the host reference the Lean library matches. The cores share one fixed-point implementation, so the host reference and the SPIR-V kernels agree bit-for-bit. A Plausible suite checks the Lean <code>r128</code> against the vendored C <code>r128</code> for matching results, and the lowered SPIR-V reproduces the same results.</p>

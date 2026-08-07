@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o / h2o-bench-tpcc verification</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>CBMC proves C implementation invariants for bounded inputs, but it does not prove the specification is sound. Lean 4 proves the specification is sound, but it does not verify the C code itself. plausible-witness-dag searches for runtime invariant violations, but it does not prove their absence.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Verify h2o-bench-tpcc with three complementary tools. Each tool targets a different layer of the stack. CBMC proves C implementation invariants (SPSC ring FIFO, bounds, head-tail, NURand range) for bounded inputs. Lean 4 proves the specification is sound (SPSC linearizability, push/pop preserve bounds), but does not verify the C code itself. plausible-witness-dag searches for runtime invariant violations over HTTP (NewOrder atomicity, Delivery correctness, Stock non-negative), but does not prove their absence.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0011-observability-stack-victoriatraces/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -319,6 +320,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0011: Replace Jaeger with VictoriaTraces for trace storage</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> observability</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The single-machine observability stack ran Jaeger all-in-one for trace storage. Jaeger’s Badger backend carries a single-node limit. Jaeger also put traces under a separate vendor from the stack’s metrics and logs backends. Its ports and CLI flags did not match the conventions the rest of the stack already used.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The single-machine observability stack replaces Jaeger all-in-one with VictoriaTraces, an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7 times less RAM and 2.6 times less CPU than Tempo. This choice puts all three storage backends — metrics, logs, and traces — under one vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions the stack already uses. Jaeger is removed entirely; no separate query UI process remains.</p>

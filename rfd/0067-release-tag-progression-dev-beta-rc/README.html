@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0067: Release tags progress chronologically through dev, beta, rc, and release</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> fabric-godot-packaging release tag convention</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Plain lexicographic sort, and <code>--sort=version:refname</code>, both give the wrong cross-stage order for release tags. The <code>beta</code> string sorts before <code>dev</code> alphabetically, even though <code>beta</code> comes later in the pipeline. A bare <code>v0.1.0</code> also sorts before every suffixed pre-release form, as a string prefix.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Release tags for <code>fabric-godot-packaging</code> use semver pre-release identifiers: <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;-&lt;stage&gt;.&lt;N&gt;</code> for a pre-release, and the bare <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code> for a final release. The stage runs <code>dev</code>, <code>beta</code>, <code>rc</code>, then release; the counter stays unpadded, because ordering does not depend on it. Tags are always created in forward chronological order, so <code>git tag --sort=creatordate</code> recovers the correct progression. Neither plain lexicographic sort nor <code>--sort=version:refname</code> gives the right cross-stage order: <code>beta</code> sorts before <code>dev</code> alphabetically even though it comes later in the pipeline, and bare <code>v0.1.0</code> sorts before every suffixed pre-release form as a string prefix. The <code>version</code> workflow input maps directly to <code>LOOP_PKG_VERSION</code>; any version containing a <code>-</code> builds as a pre-release, and a bare version builds as a full release.</p>

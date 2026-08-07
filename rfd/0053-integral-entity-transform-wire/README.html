@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0053: Integral entity-transform wire (int64 micrometers, no origin shift)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> entity-transform wire packet (XRGridEntityPacket)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The determinism doctrine keeps the authoritative state in integers and r128 fixed point. The entity-transform packet instead carried position as <code>f64</code>, three doubles whose 52-bit mantissa cannot even represent a Q64.64 value. This reintroduced cross-platform divergence into an otherwise deterministic wire format.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The fabric replicates entity transforms in a fixed 100-byte packet. The determinism doctrine keeps the authoritative state in integers and r128 fixed point, yet the packet carried position as <code>f64</code> — three doubles whose 52-bit mantissa cannot even represent a Q64.64 value, reintroducing cross-platform divergence. Every field on the wire becomes integral. Position becomes int64 absolute micrometers — the integer twin of the <code>precision=double</code> large-world coordinate, so there is no camera-relative origin shifting. Velocity stays i16, scaled to <code>PBVH_V_MAX_PHYSICAL_DEFAULT</code> so it shares the predictive BVH’s units; rotation stays i16 swing-twist; a 42-byte userdata payload carries control and state; the packet keeps its 100 bytes. The authoritative position stays r128, and the wire is its micrometer-scale integer projection. Clients render rather than re-simulate, so quantization stays below perception while the exact state remains server-side. A Lean 4 plus Plausible model is the source of truth: a roundtrip property, a size invariant, and a golden-vector differential the C++ must match.</p>

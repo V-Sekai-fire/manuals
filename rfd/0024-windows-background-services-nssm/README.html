@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0024: Running background services on Windows with nssm</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> Windows workstation service supervision</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Several workstation processes must survive shells, log-offs, and reboots, and restart on crash. Examples include sccache servers, Godot dedicated servers, a CockroachDB node, and zone servers. Running them by hand, or through a Scheduled Task, fails to give this. Neither method gives boot start with true Service Control Manager (SCM) restart semantics, because the target programs are plain executables, not SCM-aware services.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Several workstation processes (sccache servers, Godot dedicated servers, a CockroachDB node, zone servers) must survive shells, log-offs, and reboots, and restart on crash. Running them by hand or via a Scheduled Task fails: neither gives boot start with true Service Control Manager (SCM) restart semantics, and the target programs are plain executables, not SCM-aware services. The project wraps each target with nssm (the Non-Sucking Service Manager), one Windows service per instance. Each instance runs in the foreground under an absolute-path launcher script that reads secrets at runtime from their existing secured location, an elevated installer script registers it with auto-start and restart-on-exit, and instances stay isolated by port (and, for sccache, by S3 key prefix).</p>

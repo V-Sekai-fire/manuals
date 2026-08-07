@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0040: Combat hexagon — core, ports, and adapters</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> combat hexagon (proof of concept)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The combat concern, combo timing, hit validation, the enemy spawn-invulnerability window, and damage, needs to be deterministic and testable with no server and no headset. Combat had no structure that gave it this property.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The combat concern — combo timing, hit validation, the enemy spawn-invulnerability window, and damage — needs to be deterministic and testable with no server and no headset. The project structures combat as a hexagon (<code>rfd/0028-hexagonal-core-ports-adapters</code>). The core resolves the combo timing, validates each hit against the authoritative positions, holds the enemy invulnerable for its spawn window, and deducts health, as a pure reducer (<code>rfd/0033-core-contract-pure-reducer-byte-state</code>) over deterministic state (<code>rfd/0034-deterministic-cores-integer-seeded-rng</code>). Driving ports: <code>input_source</code> (player commands), <code>tick_source</code> (the constant-step clock), <code>behavior_source</code> (enemy intents). Driven ports: <code>state_sink</code> (authoritative entity state), <code>event_sink</code> (hits, deaths, door unlocks). <code>feat/module-http3</code> feeds <code>input_source</code>. The <code>zone-server</code> hosts the core and drives <code>tick_source</code> under server authority. Sandboxed behavior (<code>rfd/0037-generated-behavior-sandboxed-riscv</code>) implements <code>behavior_source</code>, and a fixture adapter replays recorded inputs for CI. The server-authoritative adapter binds <code>input_source</code> and <code>state_sink</code> with interpolation and no prediction for the deadline; a rollback adapter lands after the gate behind the same ports. The combat core runs headless against fixtures, so a flaky adapter fails in isolation. The melee archetype ships first, and ranged and caster land after the gate.</p>

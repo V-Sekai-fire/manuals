@@ -35,6 +35,13 @@
     "text": "Manuals › RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)\nState: published · Scope: zone server implementation"
   },
   {
+    "objectID": "rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html#problem",
+    "href": "rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html#problem",
+    "title": "RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)",
+    "section": "Problem",
+    "text": "Problem\nThe Godot FabricZone engine ran the zone server side. FabricZone/FabricZoneJournal stored its journal in local SQLite, so state did not share across zone-server processes. The project also needed memory safety against untrusted client input, which the existing engine did not give."
+  },
+  {
     "objectID": "rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html#decision",
     "href": "rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html#decision",
     "title": "RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)",
@@ -61,6 +68,13 @@
     "title": "RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)",
     "section": "",
     "text": "Manuals › RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)\nState: published · Scope: zone-server-h2o / h2o-bench-tpcc verification"
+  },
+  {
+    "objectID": "rfd/0081-three-layer-verification-strategy/README.html#problem",
+    "href": "rfd/0081-three-layer-verification-strategy/README.html#problem",
+    "title": "RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)",
+    "section": "Problem",
+    "text": "Problem\nCBMC proves C implementation invariants for bounded inputs, but it does not prove the specification is sound. Lean 4 proves the specification is sound, but it does not verify the C code itself. plausible-witness-dag searches for runtime invariant violations, but it does not prove their absence."
   },
   {
     "objectID": "rfd/0081-three-layer-verification-strategy/README.html#decision",
@@ -91,6 +105,13 @@
     "text": "Manuals › RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv\nState: published · Scope: zone-server-h2o CastSpell sandboxing"
   },
   {
+    "objectID": "rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html#problem",
+    "href": "rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html#problem",
+    "title": "RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv",
+    "section": "Problem",
+    "text": "Problem\nCastSpell needs to run sandboxed Godot game logic inside zone-server-h2o. godot-sandbox’s Sandbox Node API needs its own separate live Godot process. Linking the guest directly into zone-server-h2o’s binary would tie two unrelated build systems together for no benefit."
+  },
+  {
     "objectID": "rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html#decision",
     "href": "rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html#decision",
     "title": "RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv",
@@ -117,6 +138,13 @@
     "title": "RFD 0077: PERT critical path for zonefabric implementation",
     "section": "",
     "text": "Manuals › RFD 0077: PERT critical path for zonefabric implementation\nState: published · Scope: zone-server-h2o build order"
+  },
+  {
+    "objectID": "rfd/0077-pert-critical-path-zonefabric/README.html#problem",
+    "href": "rfd/0077-pert-critical-path-zonefabric/README.html#problem",
+    "title": "RFD 0077: PERT critical path for zonefabric implementation",
+    "section": "Problem",
+    "text": "Problem\nThe zonefabric implementation spans many RFDs with dependencies between them. The team had no critical path or task order for the remaining build work. Without that order, the team could not tell which tasks carry slack and which tasks block the whole build."
   },
   {
     "objectID": "rfd/0077-pert-critical-path-zonefabric/README.html#decision",
@@ -147,6 +175,13 @@
     "text": "Manuals › RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state\nState: published · Scope: zone-server-h2o database backend"
   },
   {
+    "objectID": "rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html#problem",
+    "href": "rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html#problem",
+    "title": "RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state",
+    "section": "Problem",
+    "text": "Problem\nTPC-C is 88 percent writes. CockroachDB’s Raft consensus path gives higher write latency than a log-structured MVCC store for a write-heavy load. The project’s CockroachDB fork also carries no upstream activity."
+  },
+  {
     "objectID": "rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html#decision",
     "href": "rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html#decision",
     "title": "RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state",
@@ -173,6 +208,13 @@
     "title": "RFD 0073: Async FDB callback chain on the libh2o event loop",
     "section": "",
     "text": "Manuals › RFD 0073: Async FDB callback chain on the libh2o event loop\nState: published · Scope: zone-server-h2o FDB transaction handling"
+  },
+  {
+    "objectID": "rfd/0073-async-fdb-callback-chain/README.html#problem",
+    "href": "rfd/0073-async-fdb-callback-chain/README.html#problem",
+    "title": "RFD 0073: Async FDB callback chain on the libh2o event loop",
+    "section": "Problem",
+    "text": "Problem\nFDB’s C API is callback-based by design. A worker that blocks on fdb_future_block_until_ready cannot process the next request from its SPSC ring. Each TPC-C transaction needed a way to chain FDB futures without blocking the worker."
   },
   {
     "objectID": "rfd/0073-async-fdb-callback-chain/README.html#decision",
@@ -203,6 +245,13 @@
     "text": "Manuals › RFD 0071: YAGNI times structure to the need, in code and in the record\nState: published · Scope: decision records and build scripts"
   },
   {
+    "objectID": "rfd/0071-yagni-times-structure-to-need/README.html#problem",
+    "href": "rfd/0071-yagni-times-structure-to-need/README.html#problem",
+    "title": "RFD 0071: YAGNI times structure to the need, in code and in the record",
+    "section": "Problem",
+    "text": "Problem\nBuilding structure ahead of the feature that needs it spends an option and delays a return. Cheap code generation does not remove either cost. Some decision records and build scripts in the project carried structure ahead of a demonstrated need."
+  },
+  {
     "objectID": "rfd/0071-yagni-times-structure-to-need/README.html#decision",
     "href": "rfd/0071-yagni-times-structure-to-need/README.html#decision",
     "title": "RFD 0071: YAGNI times structure to the need, in code and in the record",
@@ -229,6 +278,13 @@
     "title": "RFD 0069: Defer the loot-slice hardening scope until its need arrives",
     "section": "",
     "text": "Manuals › RFD 0069: Defer the loot-slice hardening scope until its need arrives\nState: published · Scope: loot-action vertical slice deferred hardening scope"
+  },
+  {
+    "objectID": "rfd/0069-defer-loot-slice-hardening-until-needed/README.html#problem",
+    "href": "rfd/0069-defer-loot-slice-hardening-until-needed/README.html#problem",
+    "title": "RFD 0069: Defer the loot-slice hardening scope until its need arrives",
+    "section": "Problem",
+    "text": "Problem\nThe loot-action vertical slice’s decided scope goes beyond its stated goal, a slice complete enough to exercise every integration seam. The running godot-loop-slice already meets that integration goal. The rest of the decided scope risks conflating the shipped deliverable with pending work, and building structure ahead of a demonstrated need."
   },
   {
     "objectID": "rfd/0069-defer-loot-slice-hardening-until-needed/README.html#decision",
@@ -259,6 +315,13 @@
     "text": "Manuals › RFD 0067: Release tags progress chronologically through dev, beta, rc, and release\nState: published · Scope: fabric-godot-packaging release tag convention"
   },
   {
+    "objectID": "rfd/0067-release-tag-progression-dev-beta-rc/README.html#problem",
+    "href": "rfd/0067-release-tag-progression-dev-beta-rc/README.html#problem",
+    "title": "RFD 0067: Release tags progress chronologically through dev, beta, rc, and release",
+    "section": "Problem",
+    "text": "Problem\nPlain lexicographic sort, and --sort=version:refname, both give the wrong cross-stage order for release tags. The beta string sorts before dev alphabetically, even though beta comes later in the pipeline. A bare v0.1.0 also sorts before every suffixed pre-release form, as a string prefix."
+  },
+  {
     "objectID": "rfd/0067-release-tag-progression-dev-beta-rc/README.html#decision",
     "href": "rfd/0067-release-tag-progression-dev-beta-rc/README.html#decision",
     "title": "RFD 0067: Release tags progress chronologically through dev, beta, rc, and release",
@@ -285,6 +348,13 @@
     "title": "RFD 0065: fabric-platform-central as Elixir OTP app with Burrito and casync",
     "section": "",
     "text": "Manuals › RFD 0065: fabric-platform-central as Elixir OTP app with Burrito and casync\nState: published · Scope: Windows platform-manager packaging (fabric-platform-central)"
+  },
+  {
+    "objectID": "rfd/0065-fabric-platform-central-elixir-burrito-casync/README.html#problem",
+    "href": "rfd/0065-fabric-platform-central-elixir-burrito-casync/README.html#problem",
+    "title": "RFD 0065: fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "Problem",
+    "text": "Problem\nThe platform manager that installs and updates the game client and dedicated server ran as a Godot placeholder. An earlier .NET 8 self-contained launcher added a dependency the team does not otherwise use, and it only wrapped a shell invocation. Neither approach reused the content-sync protocol the zone-backend already uses."
   },
   {
     "objectID": "rfd/0065-fabric-platform-central-elixir-burrito-casync/README.html#decision",
@@ -315,6 +385,13 @@
     "text": "Manuals › RFD 0063: Project state lives in repo markdown, not in agent auto-memory\nState: published · Scope: project-state record keeping across agent sessions"
   },
   {
+    "objectID": "rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.html#problem",
+    "href": "rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.html#problem",
+    "title": "RFD 0063: Project state lives in repo markdown, not in agent auto-memory",
+    "section": "Problem",
+    "text": "Problem\nProject state lived in an agent’s private auto-memory. A fact in private auto-memory desyncs silently, because no diff reviews it and it does not travel with the code. The project had no single, versioned home for decisions, open work, and dead ends."
+  },
+  {
     "objectID": "rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.html#decision",
     "href": "rfd/0063-repo-markdown-single-source-of-truth-for-project-state/README.html#decision",
     "title": "RFD 0063: Project state lives in repo markdown, not in agent auto-memory",
@@ -341,6 +418,13 @@
     "title": "RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI",
     "section": "",
     "text": "Manuals › RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI\nState: published · Scope: deployment target for fabric runtime services"
+  },
+  {
+    "objectID": "rfd/0061-quadlets-on-fedora-44-instead-of-harvester/README.html#problem",
+    "href": "rfd/0061-quadlets-on-fedora-44-instead-of-harvester/README.html#problem",
+    "title": "RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI",
+    "section": "Problem",
+    "text": "Problem\nThe earlier Harvester HCI plan wraps a full virtualization tier around the same podman quadlets that already drive the workloads. This tier adds a hypervisor, a VM lifecycle, and a qcow2 image pipeline. Fedora 44 can run those same quadlets under systemd without that tier."
   },
   {
     "objectID": "rfd/0061-quadlets-on-fedora-44-instead-of-harvester/README.html#decision",
@@ -371,6 +455,13 @@
     "text": "Manuals › RFD 0059: Status reports lead with the bottom line\nState: published · Scope: prose voice for status reports (BLUF convention)"
   },
   {
+    "objectID": "rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.html#problem",
+    "href": "rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.html#problem",
+    "title": "RFD 0059: Status reports lead with the bottom line",
+    "section": "Problem",
+    "text": "Problem\nA status report in this project had no fixed order for its content before this rule. A report that opens with a progress buffer saves the outcome for the end. A reader who reads only the first line then does not yet know where the work stands."
+  },
+  {
     "objectID": "rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.html#decision",
     "href": "rfd/0059-bad-news-reports-lead-with-the-bottom-line/README.html#decision",
     "title": "RFD 0059: Status reports lead with the bottom line",
@@ -397,6 +488,13 @@
     "title": "RFD 0057: Repository map of the loot-action vertical slice",
     "section": "",
     "text": "Manuals › RFD 0057: Repository map of the loot-action vertical slice\nState: published · Scope: repository ownership index for the whole fabric organization"
+  },
+  {
+    "objectID": "rfd/0057-vertical-slice-repository-map/README.html#problem",
+    "href": "rfd/0057-vertical-slice-repository-map/README.html#problem",
+    "title": "RFD 0057: Repository map of the loot-action vertical slice",
+    "section": "Problem",
+    "text": "Problem\nThe loot-action core-loop slice spans more than a dozen repositories in the organization. Without an index, a contributor cannot tell which repository owns which concern, or which name is current. A contributor also cannot tell whether the playable slice imports the cores or carries its own copies."
   },
   {
     "objectID": "rfd/0057-vertical-slice-repository-map/README.html#decision",
@@ -427,6 +525,13 @@
     "text": "Manuals › RFD 0055: r128 Q64.64 fixed-point as a Lean library for the cores\nState: published · Scope: fixed-point math library for the Lean kernel cores"
   },
   {
+    "objectID": "rfd/0055-r128-fixed-point-as-lean-library/README.html#problem",
+    "href": "rfd/0055-r128-fixed-point-as-lean-library/README.html#problem",
+    "title": "RFD 0055: r128 Q64.64 fixed-point as a Lean library for the cores",
+    "section": "Problem",
+    "text": "Problem\nThe deterministic cores need Q64.64 fixed-point math inside the Lean kernels. The engine already vendors a C r128 library, but the kernels are authored in Lean, not C. Calling the vendored C library from the host only would leave the kernels in floating point, and floating point in the kernels breaks determinism. An ad-hoc Q64.64 implementation inside each kernel would also drift from the others."
+  },
+  {
     "objectID": "rfd/0055-r128-fixed-point-as-lean-library/README.html#decision",
     "href": "rfd/0055-r128-fixed-point-as-lean-library/README.html#decision",
     "title": "RFD 0055: r128 Q64.64 fixed-point as a Lean library for the cores",
@@ -453,6 +558,13 @@
     "title": "RFD 0053: Integral entity-transform wire (int64 micrometers, no origin shift)",
     "section": "",
     "text": "Manuals › RFD 0053: Integral entity-transform wire (int64 micrometers, no origin shift)\nState: published · Scope: entity-transform wire packet (XRGridEntityPacket)"
+  },
+  {
+    "objectID": "rfd/0053-integral-entity-transform-wire/README.html#problem",
+    "href": "rfd/0053-integral-entity-transform-wire/README.html#problem",
+    "title": "RFD 0053: Integral entity-transform wire (int64 micrometers, no origin shift)",
+    "section": "Problem",
+    "text": "Problem\nThe determinism doctrine keeps the authoritative state in integers and r128 fixed point. The entity-transform packet instead carried position as f64, three doubles whose 52-bit mantissa cannot even represent a Q64.64 value. This reintroduced cross-platform divergence into an otherwise deterministic wire format."
   },
   {
     "objectID": "rfd/0053-integral-entity-transform-wire/README.html#decision",
@@ -483,6 +595,13 @@
     "text": "Manuals › RFD 0051: Headless OpenXR testing with Monado (null compositor + simulated HMD)\nState: published · Scope: OpenXR functional and integration test coverage"
   },
   {
+    "objectID": "rfd/0051-headless-openxr-testing-with-monado/README.html#problem",
+    "href": "rfd/0051-headless-openxr-testing-with-monado/README.html#problem",
+    "title": "RFD 0051: Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "section": "Problem",
+    "text": "Problem\nThe OpenXR path needs to run on Linux with no headset, both on the workstation for iteration and inside a podman quadlet for CI. The project had no way to reach a conformant OpenXR runtime under these conditions."
+  },
+  {
     "objectID": "rfd/0051-headless-openxr-testing-with-monado/README.html#decision",
     "href": "rfd/0051-headless-openxr-testing-with-monado/README.html#decision",
     "title": "RFD 0051: Headless OpenXR testing with Monado (null compositor + simulated HMD)",
@@ -509,6 +628,13 @@
     "title": "RFD 0049: Fabric channels as reliability classes, control in payload",
     "section": "",
     "text": "Manuals › RFD 0049: Fabric channels as reliability classes, control in payload\nState: published · Scope: fabric wire protocol (entity packet and channel layout)"
+  },
+  {
+    "objectID": "rfd/0049-fabric-channels-as-reliability-classes/README.html#problem",
+    "href": "rfd/0049-fabric-channels-as-reliability-classes/README.html#problem",
+    "title": "RFD 0049: Fabric channels as reliability classes, control in payload",
+    "section": "Problem",
+    "text": "Problem\nTransforms need unreliable, latest-wins delivery at tick rate. Sparse control events, such as a teleport vote or a loot grab, need reliable, exactly-once delivery instead. Mixing both on one ordered stream lets a reliable event block the transform flow. A separate text channel for control also needs two codecs to reason about."
   },
   {
     "objectID": "rfd/0049-fabric-channels-as-reliability-classes/README.html#decision",
@@ -539,6 +665,13 @@
     "text": "Manuals › RFD 0047: webtransportd as the out-of-process core transport adapter\nState: published · Scope: transport adapter for the event-driven hexagonal cores"
   },
   {
+    "objectID": "rfd/0047-webtransportd-core-transport-adapter/README.html#problem",
+    "href": "rfd/0047-webtransportd-core-transport-adapter/README.html#problem",
+    "title": "RFD 0047: webtransportd as the out-of-process core transport adapter",
+    "section": "Problem",
+    "text": "Problem\nThe cores expose a flat C ABI and need a transport adapter to carry their port traffic to clients. The in-engine feat/module-http3 transport fits the in-process authoritative tick core. It does not fit the event-driven cores, which need a piped child process instead."
+  },
+  {
     "objectID": "rfd/0047-webtransportd-core-transport-adapter/README.html#decision",
     "href": "rfd/0047-webtransportd-core-transport-adapter/README.html#decision",
     "title": "RFD 0047: webtransportd as the out-of-process core transport adapter",
@@ -565,6 +698,13 @@
     "title": "RFD 0045: Loot-action core-loop MVP vertical slice",
     "section": "",
     "text": "Manuals › RFD 0045: Loot-action core-loop MVP vertical slice\nState: published · Scope: loot-action vertical slice (playable MVP)"
+  },
+  {
+    "objectID": "rfd/0045-loot-action-core-loop-mvp-vertical-slice/README.html#problem",
+    "href": "rfd/0045-loot-action-core-loop-mvp-vertical-slice/README.html#problem",
+    "title": "RFD 0045: Loot-action core-loop MVP vertical slice",
+    "section": "Problem",
+    "text": "Problem\nThe project needed one playable slice of the instanced, four-player loot-action loop, small enough to build in one week. The slice also needed to exercise every integration seam, such as transport, server authority, loot contention, inventory persistence, and performance budgeting."
   },
   {
     "objectID": "rfd/0045-loot-action-core-loop-mvp-vertical-slice/README.html#decision",
@@ -595,6 +735,13 @@
     "text": "Manuals › RFD 0043: Progression hexagon — core, ports, and adapters\nState: published · Scope: progression hexagon (proof of concept)"
   },
   {
+    "objectID": "rfd/0043-hexagon-progression-core/README.html#problem",
+    "href": "rfd/0043-hexagon-progression-core/README.html#problem",
+    "title": "RFD 0043: Progression hexagon — core, ports, and adapters",
+    "section": "Problem",
+    "text": "Problem\nThe profile, the valid inventory transitions, and the affinity gate on arts need to be durable across a session. They also need to be testable with no database. Progression had no structure that gave it these properties."
+  },
+  {
     "objectID": "rfd/0043-hexagon-progression-core/README.html#decision",
     "href": "rfd/0043-hexagon-progression-core/README.html#decision",
     "title": "RFD 0043: Progression hexagon — core, ports, and adapters",
@@ -621,6 +768,13 @@
     "title": "RFD 0041: Loot hexagon — core, ports, and adapters",
     "section": "",
     "text": "Manuals › RFD 0041: Loot hexagon — core, ports, and adapters\nState: published · Scope: loot hexagon (proof of concept)"
+  },
+  {
+    "objectID": "rfd/0041-hexagon-loot-core/README.html#problem",
+    "href": "rfd/0041-hexagon-loot-core/README.html#problem",
+    "title": "RFD 0041: Loot hexagon — core, ports, and adapters",
+    "section": "Problem",
+    "text": "Problem\nLoot generation and first-touch contention need to be deterministic and replayable. A drop and its winner must reproduce from the seed and the receipt order. Loot generation had no structure that gave it this property."
   },
   {
     "objectID": "rfd/0041-hexagon-loot-core/README.html#decision",
@@ -651,6 +805,13 @@
     "text": "Manuals › RFD 0039: Budgeter hexagon — core, ports, and adapters\nState: published · Scope: budgeter hexagon (proof of concept)"
   },
   {
+    "objectID": "rfd/0039-hexagon-budgeter-core/README.html#problem",
+    "href": "rfd/0039-hexagon-budgeter-core/README.html#problem",
+    "title": "RFD 0039: Budgeter hexagon — core, ports, and adapters",
+    "section": "Problem",
+    "text": "Problem\nThe content slice needs graceful degradation under load on the mobile floor. Quality knobs, such as avatar level-of-detail and voice radius, must adjust per frame so the player stays inside the experience during a burst. The budgeter had no structure that could measure the device and adjust these knobs."
+  },
+  {
     "objectID": "rfd/0039-hexagon-budgeter-core/README.html#decision",
     "href": "rfd/0039-hexagon-budgeter-core/README.html#decision",
     "title": "RFD 0039: Budgeter hexagon — core, ports, and adapters",
@@ -677,6 +838,13 @@
     "title": "RFD 0037: Generated behavior runs as sandboxed RISC-V",
     "section": "",
     "text": "Manuals › RFD 0037: Generated behavior runs as sandboxed RISC-V\nState: published · Scope: combat behavior_source port implementation"
+  },
+  {
+    "objectID": "rfd/0037-generated-behavior-sandboxed-riscv/README.html#problem",
+    "href": "rfd/0037-generated-behavior-sandboxed-riscv/README.html#problem",
+    "title": "RFD 0037: Generated behavior runs as sandboxed RISC-V",
+    "section": "Problem",
+    "text": "Problem\nA generator can produce enemy and ability behavior. Running generated logic in-process risks the whole instance. The combat hexagon’s behavior_source port had no safe implementation for this risk."
   },
   {
     "objectID": "rfd/0037-generated-behavior-sandboxed-riscv/README.html#decision",
@@ -707,6 +875,13 @@
     "text": "Manuals › RFD 0035: First-party curated content with zone-baker budgets\nState: published · Scope: content pipeline (zone-baker budget enforcement)"
   },
   {
+    "objectID": "rfd/0035-first-party-curated-content-zone-baker-budgets/README.html#problem",
+    "href": "rfd/0035-first-party-curated-content-zone-baker-budgets/README.html#problem",
+    "title": "RFD 0035: First-party curated content with zone-baker budgets",
+    "section": "Problem",
+    "text": "Problem\nA user-generated-content runtime carries arbitrary, unpredictable per-frame cost. This cost is fatal on a mobile GPU holding a stereo VR frame. The MVP needs predictable cost, and the freedom to co-optimize content against the engine, and an unpredictable runtime gives neither."
+  },
+  {
     "objectID": "rfd/0035-first-party-curated-content-zone-baker-budgets/README.html#decision",
     "href": "rfd/0035-first-party-curated-content-zone-baker-budgets/README.html#decision",
     "title": "RFD 0035: First-party curated content with zone-baker budgets",
@@ -733,6 +908,13 @@
     "title": "RFD 0033: Cores as pure reducers over byte-serialized state",
     "section": "",
     "text": "Manuals › RFD 0033: Cores as pure reducers over byte-serialized state\nState: published · Scope: hexagonal core contract (state, replay, snapshots)"
+  },
+  {
+    "objectID": "rfd/0033-core-contract-pure-reducer-byte-state/README.html#problem",
+    "href": "rfd/0033-core-contract-pure-reducer-byte-state/README.html#problem",
+    "title": "RFD 0033: Cores as pure reducers over byte-serialized state",
+    "section": "Problem",
+    "text": "Problem\nEvery hexagonal core needs to be replayable, snapshot-able, fixture-testable, and transport-agnostic. A stateful object that hides mutation behind its own methods defeats all four needs. The project had no shared contract that gave a core all four properties at once."
   },
   {
     "objectID": "rfd/0033-core-contract-pure-reducer-byte-state/README.html#decision",
@@ -763,6 +945,13 @@
     "text": "Manuals › RFD 0031: Content creation in a single merged double-precision build via the editor MCP\nState: published · Scope: content authoring build and editor MCP"
   },
   {
+    "objectID": "rfd/0031-content-build-merged-double-precision-mcp/README.html#problem",
+    "href": "rfd/0031-content-build-merged-double-precision-mcp/README.html#problem",
+    "title": "RFD 0031: Content creation in a single merged double-precision build via the editor MCP",
+    "section": "Problem",
+    "text": "Problem\nContent creation needs the full engine, every feat/* capability, at double precision. The team can budget only one such build for the content slice. The pipeline also needs to avoid a Blender dependency, and a content tool needs a way to drive the editor directly."
+  },
+  {
     "objectID": "rfd/0031-content-build-merged-double-precision-mcp/README.html#decision",
     "href": "rfd/0031-content-build-merged-double-precision-mcp/README.html#decision",
     "title": "RFD 0031: Content creation in a single merged double-precision build via the editor MCP",
@@ -789,6 +978,13 @@
     "title": "RFD 0029: CASSIE desktop curvenet authoring for content, no Blender",
     "section": "",
     "text": "Manuals › RFD 0029: CASSIE desktop curvenet authoring for content, no Blender\nState: published · Scope: content pipeline authoring (feat/module-cassie)"
+  },
+  {
+    "objectID": "rfd/0029-cassie-desktop-curvenet-authoring/README.html#problem",
+    "href": "rfd/0029-cassie-desktop-curvenet-authoring/README.html#problem",
+    "title": "RFD 0029: CASSIE desktop curvenet authoring for content, no Blender",
+    "section": "Problem",
+    "text": "Problem\nThe content pipeline needs budget-bounded geometry for the Hub, the Field, and the enemy content slice. Standing up Blender for this work adds a dependency the one-week build does not need. In-headset sketching ergonomics also were not ready in time for this build."
   },
   {
     "objectID": "rfd/0029-cassie-desktop-curvenet-authoring/README.html#decision",
@@ -819,6 +1015,13 @@
     "text": "Manuals › RFD 0027: An umbrella package installs every component in one command\nState: published · Scope: package distribution (scoop, Homebrew, docker compose)"
   },
   {
+    "objectID": "rfd/0027-umbrella-package-installs-all-components/README.html#problem",
+    "href": "rfd/0027-umbrella-package-installs-all-components/README.html#problem",
+    "title": "RFD 0027: An umbrella package installs every component in one command",
+    "section": "Problem",
+    "text": "Problem\nThe project ships as several components, such as the sinew mocap apps and the zone backend services. A newcomer had to know and install each component name one at a time. No single file listed the full set of components the project contains."
+  },
+  {
     "objectID": "rfd/0027-umbrella-package-installs-all-components/README.html#decision",
     "href": "rfd/0027-umbrella-package-installs-all-components/README.html#decision",
     "title": "RFD 0027: An umbrella package installs every component in one command",
@@ -838,6 +1041,13 @@
     "title": "RFD 0025: Comments and docs use a tenseless continuous-present voice",
     "section": "",
     "text": "Manuals › RFD 0025: Comments and docs use a tenseless continuous-present voice\nState: published · Scope: prose style for comments, docs, and decision records"
+  },
+  {
+    "objectID": "rfd/0025-tenseless-continuous-present-voice/README.html#problem",
+    "href": "rfd/0025-tenseless-continuous-present-voice/README.html#problem",
+    "title": "RFD 0025: Comments and docs use a tenseless continuous-present voice",
+    "section": "Problem",
+    "text": "Problem\nA comment written as history, such as “added a cache”, names a past moment. A comment written as a plan, such as “will solve this”, describes a future moment. A reader cannot check either kind of comment against the code in front of them."
   },
   {
     "objectID": "rfd/0025-tenseless-continuous-present-voice/README.html#decision",
@@ -868,6 +1078,13 @@
     "text": "Manuals › RFD 0023: WebTransport over HTTP/3 transport\nState: published · Scope: engine network transport (modules/http3)"
   },
   {
+    "objectID": "rfd/0023-webtransport-http3-transport/README.html#problem",
+    "href": "rfd/0023-webtransport-http3-transport/README.html#problem",
+    "title": "RFD 0023: WebTransport over HTTP/3 transport",
+    "section": "Problem",
+    "text": "Problem\nThe stack needs one client/server transport that carries reliable control messages and high-rate unreliable state, over one connection, on both native and web clients. The standard MultiplayerPeer transports, ENet, WebSocket, and WebRTC, give none of this combination. None of them give one connection with both datagram and stream semantics across native and browser clients."
+  },
+  {
     "objectID": "rfd/0023-webtransport-http3-transport/README.html#decision",
     "href": "rfd/0023-webtransport-http3-transport/README.html#decision",
     "title": "RFD 0023: WebTransport over HTTP/3 transport",
@@ -894,6 +1111,13 @@
     "title": "RFD 0021: Require pull requests and a merge queue on main",
     "section": "",
     "text": "Manuals › RFD 0021: Require pull requests and a merge queue on main\nState: published · Scope: repo branch protection and CI gating"
+  },
+  {
+    "objectID": "rfd/0021-require-pr-and-merge-queue-on-main/README.html#problem",
+    "href": "rfd/0021-require-pr-and-merge-queue-on-main/README.html#problem",
+    "title": "RFD 0021: Require pull requests and a merge queue on main",
+    "section": "Problem",
+    "text": "Problem\nmain had no branch protection. Pushes landed directly on the branch. Concurrent pull requests, each validated against an older tip of the branch, could conflict with each other once both landed."
   },
   {
     "objectID": "rfd/0021-require-pr-and-merge-queue-on-main/README.html#decision",
@@ -924,6 +1148,13 @@
     "text": "Manuals › RFD 0019: Cut gitassembly tag releases for the assembled engine\nState: published · Scope: merge repo / assembled-engine release tagging"
   },
   {
+    "objectID": "rfd/0019-gitassembly-tag-release/README.html#problem",
+    "href": "rfd/0019-gitassembly-tag-release/README.html#problem",
+    "title": "RFD 0019: Cut gitassembly tag releases for the assembled engine",
+    "section": "Problem",
+    "text": "Problem\nThe merge repo’s gitassembly recipe assembles the engine by merging feature branches onto a base branch. Branch tips move, so a branch name alone does not point at one fixed tree. A consumer pinning to a branch name could point at a tree that later changed under it."
+  },
+  {
     "objectID": "rfd/0019-gitassembly-tag-release/README.html#decision",
     "href": "rfd/0019-gitassembly-tag-release/README.html#decision",
     "title": "RFD 0019: Cut gitassembly tag releases for the assembled engine",
@@ -950,6 +1181,13 @@
     "title": "RFD 0017: Compiling the Godot engine",
     "section": "",
     "text": "Manuals › RFD 0017: Compiling the Godot engine\nState: published · Scope: build"
+  },
+  {
+    "objectID": "rfd/0017-compiling-godot-engine/README.html#problem",
+    "href": "rfd/0017-compiling-godot-engine/README.html#problem",
+    "title": "RFD 0017: Compiling the Godot engine",
+    "section": "Problem",
+    "text": "Problem\nDevelopers build the V-Sekai multiplayer-fabric Godot engine on two different hosts from one workstation. Without a shared build cache, each host recompiles the same objects, wasting time. The project also needed a way to share cache objects across hosts without committing access keys or other secrets."
   },
   {
     "objectID": "rfd/0017-compiling-godot-engine/README.html#decision",
@@ -980,6 +1218,13 @@
     "text": "Manuals › RFD 0015: Bound the LLM steering queue to avoid context overflow\nState: published · Scope: process"
   },
   {
+    "objectID": "rfd/0015-bounded-llm-steering-queue/README.html#problem",
+    "href": "rfd/0015-bounded-llm-steering-queue/README.html#problem",
+    "title": "RFD 0015: Bound the LLM steering queue to avoid context overflow",
+    "section": "Problem",
+    "text": "Problem\nThe project steered an LLM with a task queue held only in the conversation. An unbounded queue held only in conversation overflows two scarce resources. The operator loses track of what is still open versus done, and the model’s context window fills up."
+  },
+  {
     "objectID": "rfd/0015-bounded-llm-steering-queue/README.html#decision",
     "href": "rfd/0015-bounded-llm-steering-queue/README.html#decision",
     "title": "RFD 0015: Bound the LLM steering queue to avoid context overflow",
@@ -1008,6 +1253,13 @@
     "text": "Manuals › RFD 0013: Archival file naming convention for committed assets\nState: published · Scope: decisions/attachments"
   },
   {
+    "objectID": "rfd/0013-archival-file-naming-convention/README.html#problem",
+    "href": "rfd/0013-archival-file-naming-convention/README.html#problem",
+    "title": "RFD 0013: Archival file naming convention for committed assets",
+    "section": "Problem",
+    "text": "Problem\nCommitted binary assets, such as screenshots under decisions/attachments/, had no fixed naming convention. Source file names and content-hash names do not sort chronologically or explain themselves. Without a convention, same-day captures had no way to stay unique and ordered."
+  },
+  {
     "objectID": "rfd/0013-archival-file-naming-convention/README.html#decision",
     "href": "rfd/0013-archival-file-naming-convention/README.html#decision",
     "title": "RFD 0013: Archival file naming convention for committed assets",
@@ -1029,6 +1281,13 @@
     "text": "Manuals › RFD 0011: Replace Jaeger with VictoriaTraces for trace storage\nState: published · Scope: observability"
   },
   {
+    "objectID": "rfd/0011-observability-stack-victoriatraces/README.html#problem",
+    "href": "rfd/0011-observability-stack-victoriatraces/README.html#problem",
+    "title": "RFD 0011: Replace Jaeger with VictoriaTraces for trace storage",
+    "section": "Problem",
+    "text": "Problem\nThe single-machine observability stack ran Jaeger all-in-one for trace storage. Jaeger’s Badger backend carries a single-node limit. Jaeger also put traces under a separate vendor from the stack’s metrics and logs backends. Its ports and CLI flags did not match the conventions the rest of the stack already used."
+  },
+  {
     "objectID": "rfd/0011-observability-stack-victoriatraces/README.html#decision",
     "href": "rfd/0011-observability-stack-victoriatraces/README.html#decision",
     "title": "RFD 0011: Replace Jaeger with VictoriaTraces for trace storage",
@@ -1048,6 +1307,13 @@
     "title": "RFD 0009: GHCR packages must be built by the repo that consumes them",
     "section": "",
     "text": "Manuals › RFD 0009: GHCR packages must be built by the repo that consumes them\nState: published · Scope: CI"
+  },
+  {
+    "objectID": "rfd/0009-ghcr-package-ownership-same-repo/README.html#problem",
+    "href": "rfd/0009-ghcr-package-ownership-same-repo/README.html#problem",
+    "title": "RFD 0009: GHCR packages must be built by the repo that consumes them",
+    "section": "Problem",
+    "text": "Problem\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created the package. A cross-repo pull failed with a 403 Forbidden error when the zone deploy tried to pull an image the baker repo owned. A workflow_run trigger also fires only inside its own repository, so a build workflow in one repo cannot trigger a deploy in another."
   },
   {
     "objectID": "rfd/0009-ghcr-package-ownership-same-repo/README.html#decision",
@@ -1078,6 +1344,13 @@
     "text": "Manuals › RFD 0007: Godot double precision template_release for zone servers\nState: published · Scope: zone-server"
   },
   {
+    "objectID": "rfd/0007-godot-double-precision-template-release-for-zone/README.html#problem",
+    "href": "rfd/0007-godot-double-precision-template-release-for-zone/README.html#problem",
+    "title": "RFD 0007: Godot double precision template_release for zone servers",
+    "section": "Problem",
+    "text": "Problem\nZone servers needed a Godot engine build that matches the physics and networking precision the rest of the stack uses. An editor build carries import and export tools a zone server does not need, making it larger and slower to start. Without a fixed build target, the headless zone server role had no matching binary."
+  },
+  {
     "objectID": "rfd/0007-godot-double-precision-template-release-for-zone/README.html#decision",
     "href": "rfd/0007-godot-double-precision-template-release-for-zone/README.html#decision",
     "title": "RFD 0007: Godot double precision template_release for zone servers",
@@ -1104,6 +1377,13 @@
     "title": "RFD 0005: gltf_interactivity’s value types: primitive, ref, and custom",
     "section": "",
     "text": "State: discussion · Scope: zone-server-h2o CastSpell"
+  },
+  {
+    "objectID": "rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.html#problem",
+    "href": "rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.html#problem",
+    "title": "RFD 0005: gltf_interactivity’s value types: primitive, ref, and custom",
+    "section": "Problem",
+    "text": "Problem\nRFD 0001 item 5 described gltf_interactivity’s value types as a two-way split: primitive types and ref types. The vendored gltf_interactivity specification actually defines three value-type categories, not two. This mismatch left CastSpell’s bitpacked struct design without a correct taxonomy to implement against."
   },
   {
     "objectID": "rfd/0005-gltf-interactivity-value-type-taxonomy-correction/README.html#decision",
@@ -1134,6 +1414,13 @@
     "text": "Manuals › RFD 0003: CastSpell sandbox package format and manifest encoding\nState: discussion · Scope: zone-server-h2o CastSpell"
   },
   {
+    "objectID": "rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.html#problem",
+    "href": "rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.html#problem",
+    "title": "RFD 0003: CastSpell sandbox package format and manifest encoding",
+    "section": "Problem",
+    "text": "Problem\nCastSpell’s effect step needed a package format and a manifest encoding, and no RFD fixed either one. Without a fixed format, each effect step package could use a different, incompatible layout. The design also needed a runtime FFI format between the host and a loaded package, instead of adding a third, unrelated binary format."
+  },
+  {
     "objectID": "rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.html#decision",
     "href": "rfd/0003-castspell-sandbox-package-and-manifest-encoding/README.html#decision",
     "title": "RFD 0003: CastSpell sandbox package format and manifest encoding",
@@ -1160,6 +1447,13 @@
     "title": "RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes",
     "section": "",
     "text": "Manuals › RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes\nState: discussion · Scope: zone-server-h2o"
+  },
+  {
+    "objectID": "rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.html#problem",
+    "href": "rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.html#problem",
+    "title": "RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes",
+    "section": "Problem",
+    "text": "Problem\nThe project had no fixed order for the remaining zonefabric work. Two encoding choices, the CastSpell sandbox boundary format and its package manifest format, had no settled answer. The mas-bandwidth/fps reference design lacks delta compression, client prediction, multicast, and a kernel-bypass ingest layer, and no RFD stated whether this gap was acceptable. No RFD picked a license-safe library for future kernel-bypass or eBPF work."
   },
   {
     "objectID": "rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/README.html#decision",
@@ -4781,6 +5075,13 @@
     "text": "State: discussion · Scope: zf_kv.c / mud_kv.c FDB value encoding"
   },
   {
+    "objectID": "rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.html#problem",
+    "href": "rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.html#problem",
+    "title": "RFD 0002: taskweft/nif’s value narrowing: primitives, and refs as pointer strings",
+    "section": "Problem",
+    "text": "Problem\nThis project plans new FDB value types for zf_kv.c and mud_kv.c. No RFD defined a shared encoding scheme for these new types. Without a shared design, each new value type could use its own, incompatible representation for references. taskweft/nif already solves this same problem for its own interpreter and ABI boundaries."
+  },
+  {
     "objectID": "rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.html#decision",
     "href": "rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.html#decision",
     "title": "RFD 0002: taskweft/nif’s value narrowing: primitives, and refs as pointer strings",
@@ -4800,6 +5101,13 @@
     "title": "RFD 0004: CastSpell’s sandboxed runtime: embed libgodot, not godot-sandbox’s narrow API",
     "section": "",
     "text": "State: discussion · Scope: zone-server-h2o CastSpell"
+  },
+  {
+    "objectID": "rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.html#problem",
+    "href": "rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.html#problem",
+    "title": "RFD 0004: CastSpell’s sandboxed runtime: embed libgodot, not godot-sandbox’s narrow API",
+    "section": "Problem",
+    "text": "Problem\nCastSpell needed a sandboxed runtime for each zone. The existing godot-sandbox project exposes only a narrow, syscall-proxied API. Reimplementing that narrow API inside libriscv risked missing needed engine functionality. No RFD proved that a real libgodot instance could run inside a libriscv sandbox, or measured its performance against the project’s 10Hz/200-entity/many-zones budget."
   },
   {
     "objectID": "rfd/0004-castspell-libgodot-sandbox-runtime-scope/README.html#decision",
@@ -4830,6 +5138,13 @@
     "text": "Manuals › RFD 0006: CockroachDB with mTLS and role-separated access\nState: published · Scope: gateway/db"
   },
   {
+    "objectID": "rfd/0006-cockroachdb-with-mtls-role-separation/README.html#problem",
+    "href": "rfd/0006-cockroachdb-with-mtls-role-separation/README.html#problem",
+    "title": "RFD 0006: CockroachDB with mTLS and role-separated access",
+    "section": "Problem",
+    "text": "Problem\nThe Elixir gateway and the Phoenix zone backend needed a shared database. No RFD fixed how they would connect securely, or with what access level. A single, undifferentiated database credential would let any leaked credential alter the schema. The project needed a deployment and certificate plan before either service could connect."
+  },
+  {
     "objectID": "rfd/0006-cockroachdb-with-mtls-role-separation/README.html#decision",
     "href": "rfd/0006-cockroachdb-with-mtls-role-separation/README.html#decision",
     "title": "RFD 0006: CockroachDB with mTLS and role-separated access",
@@ -4849,6 +5164,13 @@
     "title": "RFD 0008: Use WebTransport over QUIC for game traffic",
     "section": "",
     "text": "Manuals › RFD 0008: Use WebTransport over QUIC for game traffic\nState: published · Scope: gateway/zone-server"
+  },
+  {
+    "objectID": "rfd/0008-webtransport-over-quic-for-game-traffic/README.html#problem",
+    "href": "rfd/0008-webtransport-over-quic-for-game-traffic/README.html#problem",
+    "title": "RFD 0008: Use WebTransport over QUIC for game traffic",
+    "section": "Problem",
+    "text": "Problem\nTCP-based transports, including HTTP/1.1 and WebSocket, suffer head-of-line blocking on packet loss. This blocking degraded real-time game state each time a packet was lost. The project needed a transport for game traffic that did not carry this problem."
   },
   {
     "objectID": "rfd/0008-webtransport-over-quic-for-game-traffic/README.html#decision",
@@ -4879,6 +5201,13 @@
     "text": "Manuals › RFD 0010: Godot client transport handshake against the authoritative server\nState: published · Scope: zone-server-h2o"
   },
   {
+    "objectID": "rfd/0010-maglev-cycle-1-gateway-handshake/README.html#problem",
+    "href": "rfd/0010-maglev-cycle-1-gateway-handshake/README.html#problem",
+    "title": "RFD 0010: Godot client transport handshake against the authoritative server",
+    "section": "Problem",
+    "text": "Problem\nThe project had no proof that a real Godot client could complete a transport handshake against the authoritative server. A non-Godot ping, such as curl or a Python script, tests only the wire. It does not test Godot’s own multiplayer peer, thread model, and datagram path. Engine-specific bugs could then surface later, deep in a gameplay scene, where they are harder to isolate."
+  },
+  {
     "objectID": "rfd/0010-maglev-cycle-1-gateway-handshake/README.html#decision",
     "href": "rfd/0010-maglev-cycle-1-gateway-handshake/README.html#decision",
     "title": "RFD 0010: Godot client transport handshake against the authoritative server",
@@ -4905,6 +5234,13 @@
     "title": "RFD 0012: Amend a PR before it enters the merge queue, not after",
     "section": "",
     "text": "Manuals › RFD 0012: Amend a PR before it enters the merge queue, not after\nState: published · Scope: CI"
+  },
+  {
+    "objectID": "rfd/0012-amend-pr-before-it-enters-the-queue/README.html#problem",
+    "href": "rfd/0012-amend-pr-before-it-enters-the-queue/README.html#problem",
+    "title": "RFD 0012: Amend a PR before it enters the merge queue, not after",
+    "section": "Problem",
+    "text": "Problem\nEnqueueing a pull request marks its current head commit ready to merge. The merge queue snapshots that head commit the instant it enters the queue. A push made after enqueueing can race the merge and get orphaned. A correction pushed seconds after enqueueing once merged the earlier commit and orphaned the fix, and the fix then needed a second PR to land."
   },
   {
     "objectID": "rfd/0012-amend-pr-before-it-enters-the-queue/README.html#decision",
@@ -4935,6 +5271,13 @@
     "text": "Manuals › RFD 0014: Recursive art-game loop and its minimal steel thread\nState: prediscussion · Scope: friends-art-game-loop"
   },
   {
+    "objectID": "rfd/0014-art-game-loop-steel-thread/README.html#problem",
+    "href": "rfd/0014-art-game-loop-steel-thread/README.html#problem",
+    "title": "RFD 0014: Recursive art-game loop and its minimal steel thread",
+    "section": "Problem",
+    "text": "Problem\nThe friends-art-game-loop workspace had no proof that its recursive loop worked end to end. Building the full tool-chain first, or running the loop by hand with no tooling, both skip that proof. The project needed a minimal way to test every link in the loop once, before the workspace grew further."
+  },
+  {
     "objectID": "rfd/0014-art-game-loop-steel-thread/README.html#decision",
     "href": "rfd/0014-art-game-loop-steel-thread/README.html#decision",
     "title": "RFD 0014: Recursive art-game loop and its minimal steel thread",
@@ -4961,6 +5304,13 @@
     "title": "RFD 0016: Checking the sccache build cache",
     "section": "",
     "text": "Manuals › RFD 0016: Checking the sccache build cache\nState: published · Scope: build"
+  },
+  {
+    "objectID": "rfd/0016-checking-sccache/README.html#problem",
+    "href": "rfd/0016-checking-sccache/README.html#problem",
+    "title": "RFD 0016: Checking the sccache build cache",
+    "section": "Problem",
+    "text": "Problem\nThe project had no reliable way to confirm that sccache used the shared remote bucket and was healthy. A misconfigured cache degrades silently. The build still succeeds even when the shared cache is not in use. Inferring health from build time or a debug log needs secrets or log parsing."
   },
   {
     "objectID": "rfd/0016-checking-sccache/README.html#decision",
@@ -4991,6 +5341,13 @@
     "text": "Manuals › RFD 0018: Feature classification — proof of concept, baseline, stretch\nState: published · Scope: capabilities-table"
   },
   {
+    "objectID": "rfd/0018-feature-classification-poc-baseline-stretch/README.html#problem",
+    "href": "rfd/0018-feature-classification-poc-baseline-stretch/README.html#problem",
+    "title": "RFD 0018: Feature classification — proof of concept, baseline, stretch",
+    "section": "Problem",
+    "text": "Problem\nEach feature in the capabilities table needs a stated commitment level. Free text does not state whether a feature is a proof of concept, a shipped baseline, or a stretch goal. A maturity ladder, such as alpha, beta, or stable, states how polished a feature is, not how committed the project is to shipping it."
+  },
+  {
     "objectID": "rfd/0018-feature-classification-poc-baseline-stretch/README.html#decision",
     "href": "rfd/0018-feature-classification-poc-baseline-stretch/README.html#decision",
     "title": "RFD 0018: Feature classification — proof of concept, baseline, stretch",
@@ -5017,6 +5374,13 @@
     "title": "RFD 0020: Pin the engine to a frozen Godot 4.7 commit",
     "section": "",
     "text": "Manuals › RFD 0020: Pin the engine to a frozen Godot 4.7 commit\nState: published · Scope: engine fork base commit"
+  },
+  {
+    "objectID": "rfd/0020-pin-engine-to-frozen-godot-4-7/README.html#problem",
+    "href": "rfd/0020-pin-engine-to-frozen-godot-4-7/README.html#problem",
+    "title": "RFD 0020: Pin the engine to a frozen Godot 4.7 commit",
+    "section": "Problem",
+    "text": "Problem\nThe engine fork’s base commit tracked a moving upstream. A base that tracks a moving upstream lets patches shift underneath the assembly. A green build could break the next day from upstream churn alone, with no change to the fork’s own feature branches."
   },
   {
     "objectID": "rfd/0020-pin-engine-to-frozen-godot-4-7/README.html#decision",
@@ -5047,6 +5411,13 @@
     "text": "Manuals › RFD 0022: Spatial audio via a patched Resonance Audio (HRTF and audio probes)\nState: published · Scope: engine audio module (feat/module-resonance-audio)"
   },
   {
+    "objectID": "rfd/0022-spatial-audio-patched-resonance-audio/README.html#problem",
+    "href": "rfd/0022-spatial-audio-patched-resonance-audio/README.html#problem",
+    "title": "RFD 0022: Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
+    "section": "Problem",
+    "text": "Problem\nThe zone server needs binaural HRTF rendering and audio probes for occlusion. Godot’s built-in AudioServer gives neither feature. Google also archived the Resonance Audio project upstream, so no maintained upstream source remained to build this on."
+  },
+  {
     "objectID": "rfd/0022-spatial-audio-patched-resonance-audio/README.html#decision",
     "href": "rfd/0022-spatial-audio-patched-resonance-audio/README.html#decision",
     "title": "RFD 0022: Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
@@ -5073,6 +5444,13 @@
     "title": "RFD 0024: Running background services on Windows with nssm",
     "section": "",
     "text": "Manuals › RFD 0024: Running background services on Windows with nssm\nState: published · Scope: Windows workstation service supervision"
+  },
+  {
+    "objectID": "rfd/0024-windows-background-services-nssm/README.html#problem",
+    "href": "rfd/0024-windows-background-services-nssm/README.html#problem",
+    "title": "RFD 0024: Running background services on Windows with nssm",
+    "section": "Problem",
+    "text": "Problem\nSeveral workstation processes must survive shells, log-offs, and reboots, and restart on crash. Examples include sccache servers, Godot dedicated servers, a CockroachDB node, and zone servers. Running them by hand, or through a Scheduled Task, fails to give this. Neither method gives boot start with true Service Control Manager (SCM) restart semantics, because the target programs are plain executables, not SCM-aware services."
   },
   {
     "objectID": "rfd/0024-windows-background-services-nssm/README.html#decision",
@@ -5103,6 +5481,13 @@
     "text": "Manuals › RFD 0026: Commit messages use sentence case without Conventional Commits prefixes\nState: published · Scope: git commit message style"
   },
   {
+    "objectID": "rfd/0026-commit-messages-sentence-case/README.html#problem",
+    "href": "rfd/0026-commit-messages-sentence-case/README.html#problem",
+    "title": "RFD 0026: Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "Problem",
+    "text": "Problem\nRepositories here run no tooling that reads a Conventional Commits type prefix. A feat:, fix:, or chore: prefix buys nothing without that tooling, and it pushes the actual meaning after a colon. Picking the right type prefix for each commit also needs per-commit judgement."
+  },
+  {
     "objectID": "rfd/0026-commit-messages-sentence-case/README.html#decision",
     "href": "rfd/0026-commit-messages-sentence-case/README.html#decision",
     "title": "RFD 0026: Commit messages use sentence case without Conventional Commits prefixes",
@@ -5131,6 +5516,13 @@
     "text": "Manuals › RFD 0028: Hexagonal core/ports/adapters as the component convention\nState: published · Scope: cross-language component architecture"
   },
   {
+    "objectID": "rfd/0028-hexagonal-core-ports-adapters/README.html#problem",
+    "href": "rfd/0028-hexagonal-core-ports-adapters/README.html#problem",
+    "title": "RFD 0028: Hexagonal core/ports/adapters as the component convention",
+    "section": "Problem",
+    "text": "Problem\nComponents in the stack span several languages and run as separate processes. Each component binds to hardware, a GPU, the network, or an engine runtime. A shared monolith or one in-memory object model cannot hold across these boundaries."
+  },
+  {
     "objectID": "rfd/0028-hexagonal-core-ports-adapters/README.html#decision",
     "href": "rfd/0028-hexagonal-core-ports-adapters/README.html#decision",
     "title": "RFD 0028: Hexagonal core/ports/adapters as the component convention",
@@ -5152,6 +5544,13 @@
     "text": "Manuals › RFD 0030: CI/CD runners operate as a finite queueing system\nState: published · Scope: GitHub Actions runner pool operating discipline"
   },
   {
+    "objectID": "rfd/0030-cicd-runners-as-queueing-system/README.html#problem",
+    "href": "rfd/0030-cicd-runners-as-queueing-system/README.html#problem",
+    "title": "RFD 0030: CI/CD runners operate as a finite queueing system",
+    "section": "Problem",
+    "text": "Problem\nThe organization shares one GitHub Actions runner pool, with 14 to 20 runners available at a time. A single Godot push triggers about 20 jobs, and the slowest jobs hold a runner for one to two hours. Arrivals easily outpace the pool, so a queued job then waits behind work that may carry no useful information at all."
+  },
+  {
     "objectID": "rfd/0030-cicd-runners-as-queueing-system/README.html#decision",
     "href": "rfd/0030-cicd-runners-as-queueing-system/README.html#decision",
     "title": "RFD 0030: CI/CD runners operate as a finite queueing system",
@@ -5171,6 +5570,13 @@
     "title": "RFD 0032: Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)",
     "section": "",
     "text": "Manuals › RFD 0032: Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)\nState: published · Scope: GPU compute kernel codegen for the hexagonal cores"
+  },
+  {
+    "objectID": "rfd/0032-core-codegen-lean-slang/README.html#problem",
+    "href": "rfd/0032-core-codegen-lean-slang/README.html#problem",
+    "title": "RFD 0032: Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)",
+    "section": "Problem",
+    "text": "Problem\nThe hexagonal cores carry compute kernels, such as hit raycasts, the budgeter solve, and geometry costing. These kernels need one verified source. A hand-ported shader, written from a separate specification, can drift from that source with no way to detect the drift."
   },
   {
     "objectID": "rfd/0032-core-codegen-lean-slang/README.html#decision",
@@ -5201,6 +5607,13 @@
     "text": "Manuals › RFD 0034: Deterministic cores via r128 fixed-point and seeded RNG\nState: published · Scope: authoritative-core numerics (fixed-point, RNG)"
   },
   {
+    "objectID": "rfd/0034-deterministic-cores-integer-seeded-rng/README.html#problem",
+    "href": "rfd/0034-deterministic-cores-integer-seeded-rng/README.html#problem",
+    "title": "RFD 0034: Deterministic cores via r128 fixed-point and seeded RNG",
+    "section": "Problem",
+    "text": "Problem\nReplay, recorded fixtures, and the future rollback adapter need the authoritative cores to be bit-exact across the RTX 4090 workstation and the Steam Deck. IEEE-754 floating point diverges across platforms, through fused multiply-add, instruction reordering, and transcendental functions. A float value in the authoritative path breaks replay silently."
+  },
+  {
     "objectID": "rfd/0034-deterministic-cores-integer-seeded-rng/README.html#decision",
     "href": "rfd/0034-deterministic-cores-integer-seeded-rng/README.html#decision",
     "title": "RFD 0034: Deterministic cores via r128 fixed-point and seeded RNG",
@@ -5227,6 +5640,13 @@
     "title": "RFD 0036: Forward renderer with baked light for the mobile floor",
     "section": "",
     "text": "Manuals › RFD 0036: Forward renderer with baked light for the mobile floor\nState: published · Scope: rendering pipeline (mobile VR floor)"
+  },
+  {
+    "objectID": "rfd/0036-forward-renderer-baked-light/README.html#problem",
+    "href": "rfd/0036-forward-renderer-baked-light/README.html#problem",
+    "title": "RFD 0036: Forward renderer with baked light for the mobile floor",
+    "section": "Problem",
+    "text": "Problem\nThe mobile tile renderer rations bandwidth across file, memory, and network IO. Deferred rendering competes for that same bandwidth. The content slice needs predictable frame cost regardless of light count, and deferred rendering does not give this."
   },
   {
     "objectID": "rfd/0036-forward-renderer-baked-light/README.html#decision",
@@ -5257,6 +5677,13 @@
     "text": "Manuals › RFD 0038: Genre-generic naming, no trademarked proper nouns\nState: published · Scope: project vocabulary (docs, filenames, game content)"
   },
   {
+    "objectID": "rfd/0038-genre-generic-naming-no-trademarks/README.html#problem",
+    "href": "rfd/0038-genre-generic-naming-no-trademarks/README.html#problem",
+    "title": "RFD 0038: Genre-generic naming, no trademarked proper nouns",
+    "section": "Problem",
+    "text": "Problem\nThe core loop draws on a trademarked action RPG. The project reuses none of that game’s trademarks. The docs and the game needed a neutral vocabulary that carries the mechanics without the marks."
+  },
+  {
     "objectID": "rfd/0038-genre-generic-naming-no-trademarks/README.html#decision",
     "href": "rfd/0038-genre-generic-naming-no-trademarks/README.html#decision",
     "title": "RFD 0038: Genre-generic naming, no trademarked proper nouns",
@@ -5276,6 +5703,13 @@
     "title": "RFD 0040: Combat hexagon — core, ports, and adapters",
     "section": "",
     "text": "Manuals › RFD 0040: Combat hexagon — core, ports, and adapters\nState: published · Scope: combat hexagon (proof of concept)"
+  },
+  {
+    "objectID": "rfd/0040-hexagon-combat-core/README.html#problem",
+    "href": "rfd/0040-hexagon-combat-core/README.html#problem",
+    "title": "RFD 0040: Combat hexagon — core, ports, and adapters",
+    "section": "Problem",
+    "text": "Problem\nThe combat concern, combo timing, hit validation, the enemy spawn-invulnerability window, and damage, needs to be deterministic and testable with no server and no headset. Combat had no structure that gave it this property."
   },
   {
     "objectID": "rfd/0040-hexagon-combat-core/README.html#decision",
@@ -5306,6 +5740,13 @@
     "text": "Manuals › RFD 0042: Presence hexagon — wrapping the existing presence stack\nState: published · Scope: presence hexagon (proof of concept)"
   },
   {
+    "objectID": "rfd/0042-hexagon-presence-core/README.html#problem",
+    "href": "rfd/0042-hexagon-presence-core/README.html#problem",
+    "title": "RFD 0042: Presence hexagon — wrapping the existing presence stack",
+    "section": "Problem",
+    "text": "Problem\nRemote-avatar presence is already decided in depth, through the orb demo, the marker decision, and the body-model decision. The loop needs presence behind ports, the same way the other cores sit behind ports. Presence had no such structure yet, and redeciding its representation was not needed."
+  },
+  {
     "objectID": "rfd/0042-hexagon-presence-core/README.html#decision",
     "href": "rfd/0042-hexagon-presence-core/README.html#decision",
     "title": "RFD 0042: Presence hexagon — wrapping the existing presence stack",
@@ -5332,6 +5773,13 @@
     "title": "RFD 0044: Lean 4 build-time kernel cores with flat-C host adapters",
     "section": "",
     "text": "Manuals › RFD 0044: Lean 4 build-time kernel cores with flat-C host adapters\nState: published · Scope: hexagonal core language boundary (Lean at build time, flat C at run time)"
+  },
+  {
+    "objectID": "rfd/0044-lean4-kernel-cores-flat-c-host-adapters/README.html#problem",
+    "href": "rfd/0044-lean4-kernel-cores-flat-c-host-adapters/README.html#problem",
+    "title": "RFD 0044: Lean 4 build-time kernel cores with flat-C host adapters",
+    "section": "Problem",
+    "text": "Problem\nThe hexagonal cores hold dependency-free domain logic that Godot, the Elixir backend, and a CLI all bind. The team wants strong spec and proof guarantees on that logic. Linking a heavy language runtime into every host would work against this goal."
   },
   {
     "objectID": "rfd/0044-lean4-kernel-cores-flat-c-host-adapters/README.html#decision",
@@ -5362,6 +5810,13 @@
     "text": "Manuals › RFD 0046: Server-authoritative simulation with deferred rollback\nState: published · Scope: Field-instance authority model (zone-server)"
   },
   {
+    "objectID": "rfd/0046-server-authoritative-simulation-deferred-rollback/README.html#problem",
+    "href": "rfd/0046-server-authoritative-simulation-deferred-rollback/README.html#problem",
+    "title": "RFD 0046: Server-authoritative simulation with deferred rollback",
+    "section": "Problem",
+    "text": "Problem\nThe loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt, the Maglev intercept smoke test, did not work. The one-week slice needed a simpler model that still resists client tampering."
+  },
+  {
     "objectID": "rfd/0046-server-authoritative-simulation-deferred-rollback/README.html#decision",
     "href": "rfd/0046-server-authoritative-simulation-deferred-rollback/README.html#decision",
     "title": "RFD 0046: Server-authoritative simulation with deferred rollback",
@@ -5388,6 +5843,13 @@
     "title": "RFD 0048: Android template builds with Temurin JDK 21 and config.gradle-pinned SDK",
     "section": "",
     "text": "Manuals › RFD 0048: Android template builds with Temurin JDK 21 and config.gradle-pinned SDK\nState: published · Scope: Android export template build toolchain"
+  },
+  {
+    "objectID": "rfd/0048-android-template-temurin-jdk21/README.html#problem",
+    "href": "rfd/0048-android-template-temurin-jdk21/README.html#problem",
+    "title": "RFD 0048: Android template builds with Temurin JDK 21 and config.gradle-pinned SDK",
+    "section": "Problem",
+    "text": "Problem\nThe project needs an Android export template of the merged double-precision assembly for OpenXR builds. The build box carries no Android SDK. Fedora 44 packages only JDK 25 and 26, and Gradle rejects Java 25 with an “Unsupported class file major version 69” error."
   },
   {
     "objectID": "rfd/0048-android-template-temurin-jdk21/README.html#decision",
@@ -5418,6 +5880,13 @@
     "text": "Manuals › RFD 0050: Five-second transaction limit (bounded operations)\nState: published · Scope: connection recovery and blocking operations across the fabric"
   },
   {
+    "objectID": "rfd/0050-five-second-transaction-limit/README.html#problem",
+    "href": "rfd/0050-five-second-transaction-limit/README.html#problem",
+    "title": "RFD 0050: Five-second transaction limit (bounded operations)",
+    "section": "Problem",
+    "text": "Problem\nA connection that silently desyncs wastes a player’s time. A past loop bug let a client believe it joined while the server dropped it, and the client waited forever with no bound. No operation across the fabric carried a fixed time limit before this."
+  },
+  {
     "objectID": "rfd/0050-five-second-transaction-limit/README.html#decision",
     "href": "rfd/0050-five-second-transaction-limit/README.html#decision",
     "title": "RFD 0050: Five-second transaction limit (bounded operations)",
@@ -5444,6 +5913,13 @@
     "title": "RFD 0052: One transport listener per authority pending http3 multi-session fixes",
     "section": "",
     "text": "Manuals › RFD 0052: One transport listener per authority pending http3 multi-session fixes\nState: published · Scope: WebTransport/HTTP3 module, multi-session routing"
+  },
+  {
+    "objectID": "rfd/0052-http3-listener-session-findings/README.html#problem",
+    "href": "rfd/0052-http3-listener-session-findings/README.html#problem",
+    "title": "RFD 0052: One transport listener per authority pending http3 multi-session fixes",
+    "section": "Problem",
+    "text": "Problem\nThe four-player contention smoke test drives one WebTransportPeer.create_server listener with four concurrent client sessions. Replies reach only one session, regardless of set_target_peer or get_packet_peer. A session teardown during traffic also aborts the process with a double free, and a second create_server call in the same process fails."
   },
   {
     "objectID": "rfd/0052-http3-listener-session-findings/README.html#decision",
@@ -5474,6 +5950,13 @@
     "text": "Manuals › RFD 0054: MCP runtime bridge for deployed builds\nState: published · Scope: MCP inspection of deployed (non-editor) builds"
   },
   {
+    "objectID": "rfd/0054-mcp-runtime-bridge-deployed-builds/README.html#problem",
+    "href": "rfd/0054-mcp-runtime-bridge-deployed-builds/README.html#problem",
+    "title": "RFD 0054: MCP runtime bridge for deployed builds",
+    "section": "Problem",
+    "text": "Problem\nThe Godot MCP addon is an editor plugin. It drives the editor over its EditorInterface, and the editor does not run inside a deployed build. Debugging a deployed build, such as a headless zone server, a mobile client, or an OpenXR app, needs the same inspection with no editor present."
+  },
+  {
     "objectID": "rfd/0054-mcp-runtime-bridge-deployed-builds/README.html#decision",
     "href": "rfd/0054-mcp-runtime-bridge-deployed-builds/README.html#decision",
     "title": "RFD 0054: MCP runtime bridge for deployed builds",
@@ -5500,6 +5983,13 @@
     "title": "RFD 0056: Verification smokes as a systemd podman quadlet queue",
     "section": "",
     "text": "Manuals › RFD 0056: Verification smokes as a systemd podman quadlet queue\nState: published · Scope: CI/local verification queue for the loop smokes"
+  },
+  {
+    "objectID": "rfd/0056-systemd-quadlet-verification-queue/README.html#problem",
+    "href": "rfd/0056-systemd-quadlet-verification-queue/README.html#problem",
+    "title": "RFD 0056: Verification smokes as a systemd podman quadlet queue",
+    "section": "Problem",
+    "text": "Problem\nThe slice has four smokes: headless OpenXR, loot wire parity, combat wire parity, and four-player contention. They need to run as a repeatable queue on the workstation and on self-hosted runners. The queue also needs ordering, logs, and per-job status. No orchestrator gave this yet, on top of the project’s podman quadlet deployment choice."
   },
   {
     "objectID": "rfd/0056-systemd-quadlet-verification-queue/README.html#decision",
@@ -5530,6 +6020,13 @@
     "text": "Manuals › RFD 0058: WebTransport reliable delivery on one persistent framed stream per session\nState: published · Scope: webtransportd WebTransport transport adapter"
   },
   {
+    "objectID": "rfd/0058-webtransport-persistent-framed-stream/README.html#problem",
+    "href": "rfd/0058-webtransport-persistent-framed-stream/README.html#problem",
+    "title": "RFD 0058: WebTransport reliable delivery on one persistent framed stream per session",
+    "section": "Problem",
+    "text": "Problem\nThe picoquic WebTransport server goes silent once four or more sessions connect. A fresh bidirectional stream per reliable message uses up the connection’s stream credit. The used-up credit blocks the connect-accepted response on the control stream, so a late session never finishes its handshake."
+  },
+  {
     "objectID": "rfd/0058-webtransport-persistent-framed-stream/README.html#decision",
     "href": "rfd/0058-webtransport-persistent-framed-stream/README.html#decision",
     "title": "RFD 0058: WebTransport reliable delivery on one persistent framed stream per session",
@@ -5556,6 +6053,13 @@
     "title": "RFD 0060: Org-scoped GitHub App installation token for gh access instead of a personal OAuth token",
     "section": "",
     "text": "Manuals › RFD 0060: Org-scoped GitHub App installation token for gh access instead of a personal OAuth token\nState: published · Scope: gh CLI authentication for v-sekai-multiplayer-fabric"
+  },
+  {
+    "objectID": "rfd/0060-org-scoped-github-app-token-for-gh-access/README.html#problem",
+    "href": "rfd/0060-org-scoped-github-app-token-for-gh-access/README.html#problem",
+    "title": "RFD 0060: Org-scoped GitHub App installation token for gh access instead of a personal OAuth token",
+    "section": "Problem",
+    "text": "Problem\ngh ran on a personal OAuth token with the repo scope. That scope grants read, write, admin, and delete access on every repository the personal account can reach, across every org. A leaked personal token could then reach far more than the one org’s repositories this project needs."
   },
   {
     "objectID": "rfd/0060-org-scoped-github-app-token-for-gh-access/README.html#decision",
@@ -5586,6 +6090,13 @@
     "text": "Manuals › RFD 0062: Repository and capability inventory for the multiplayer fabric\nState: published · Scope: org-wide repository and capability index"
   },
   {
+    "objectID": "rfd/0062-repository-and-capability-inventory/README.html#problem",
+    "href": "rfd/0062-repository-and-capability-inventory/README.html#problem",
+    "title": "RFD 0062: Repository and capability inventory for the multiplayer fabric",
+    "section": "Problem",
+    "text": "Problem\nThe landing page carried the full repository list, a capability-to-branch table, and a deployment description. Those facts already had homes elsewhere, so the landing page drifted every time a fact changed somewhere else. No single record owned the org-wide repository and capability inventory."
+  },
+  {
     "objectID": "rfd/0062-repository-and-capability-inventory/README.html#decision",
     "href": "rfd/0062-repository-and-capability-inventory/README.html#decision",
     "title": "RFD 0062: Repository and capability inventory for the multiplayer fabric",
@@ -5612,6 +6123,13 @@
     "title": "RFD 0064: GitHub repos use kebab-case; local checkout dirs keep build-native names",
     "section": "",
     "text": "Manuals › RFD 0064: GitHub repos use kebab-case; local checkout dirs keep build-native names\nState: published · Scope: repository naming across all orgs"
+  },
+  {
+    "objectID": "rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.html#problem",
+    "href": "rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.html#problem",
+    "title": "RFD 0064: GitHub repos use kebab-case; local checkout dirs keep build-native names",
+    "section": "Problem",
+    "text": "Problem\nGitHub repository names carried no fixed case convention. A build that consumes a sibling repository by path, such as a CMake add_subdirectory or a homebrew resource, hardcodes a directory name in its own case. A repository rename could break that hardcoded path."
   },
   {
     "objectID": "rfd/0064-kebab-case-repos-snake-case-local-checkouts/README.html#decision",
@@ -5642,6 +6160,13 @@
     "text": "Manuals › RFD 0066: Game-loop-first delivery sequence\nState: published · Scope: delivery sequencing across the loot-action concerns"
   },
   {
+    "objectID": "rfd/0066-game-loop-cluster-sequence/README.html#problem",
+    "href": "rfd/0066-game-loop-cluster-sequence/README.html#problem",
+    "title": "RFD 0066: Game-loop-first delivery sequence",
+    "section": "Problem",
+    "text": "Problem\nFour other concerns, uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o, all need a verified game loop as their integration target. None of them tests end to end without one. Advancing another concern in parallel risks landing work on a loop that is still changing."
+  },
+  {
     "objectID": "rfd/0066-game-loop-cluster-sequence/README.html#decision",
     "href": "rfd/0066-game-loop-cluster-sequence/README.html#decision",
     "title": "RFD 0066: Game-loop-first delivery sequence",
@@ -5668,6 +6193,13 @@
     "title": "RFD 0068: sccache with GitHub Actions cache for Godot container builds",
     "section": "",
     "text": "Manuals › RFD 0068: sccache with GitHub Actions cache for Godot container builds\nState: published · Scope: fabric-godot-images CI build cache"
+  },
+  {
+    "objectID": "rfd/0068-sccache-github-actions-cache-for-godot-builds/README.html#problem",
+    "href": "rfd/0068-sccache-github-actions-cache-for-godot-builds/README.html#problem",
+    "title": "RFD 0068: sccache with GitHub Actions cache for Godot container builds",
+    "section": "Problem",
+    "text": "Problem\nThe fabric-godot-images CI build lost its docker/build-push-action layer cache when the build moved to plain podman build. Every push then recompiled the Godot engine from scratch, spending 30 to 60 minutes each run. An earlier Tigris S3 sccache bucket also needed an external account, five repo secrets, and ongoing cost."
   },
   {
     "objectID": "rfd/0068-sccache-github-actions-cache-for-godot-builds/README.html#decision",
@@ -5698,6 +6230,13 @@
     "text": "Manuals › RFD 0070: Export loop-slice server telemetry to the observability collector\nState: published · Scope: loop-slice server OpenTelemetry export"
   },
   {
+    "objectID": "rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html#problem",
+    "href": "rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html#problem",
+    "title": "RFD 0070: Export loop-slice server telemetry to the observability collector",
+    "section": "Problem",
+    "text": "Problem\nThe loop-slice server already emits spans, counters, gauges, and logs through its OpenTelemetry engine module. Export stays idle with no endpoint set. A deployed server with no configured endpoint stays unobservable."
+  },
+  {
     "objectID": "rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html#decision",
     "href": "rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html#decision",
     "title": "RFD 0070: Export loop-slice server telemetry to the observability collector",
@@ -5724,6 +6263,13 @@
     "title": "RFD 0072: Actor-lite worker pool architecture for zone-server-h2o",
     "section": "",
     "text": "Manuals › RFD 0072: Actor-lite worker pool architecture for zone-server-h2o\nState: published · Scope: zone-server-h2o worker dispatch"
+  },
+  {
+    "objectID": "rfd/0072-actor-lite-worker-pool/README.html#problem",
+    "href": "rfd/0072-actor-lite-worker-pool/README.html#problem",
+    "title": "RFD 0072: Actor-lite worker pool architecture for zone-server-h2o",
+    "section": "Problem",
+    "text": "Problem\nzone-server-h2o needs to dispatch HTTP requests from the H2O network thread to worker threads. A generalized actor framework adds scheduler overhead and lock contention on the fast path. The design targets top-10 TechEmpower R23 data update throughput, and that target needs a dispatch path with neither cost."
   },
   {
     "objectID": "rfd/0072-actor-lite-worker-pool/README.html#decision",
@@ -5754,6 +6300,13 @@
     "text": "Manuals › RFD 0074: Binary value encoding for FDB values\nState: published · Scope: zone-server-h2o FDB value format"
   },
   {
+    "objectID": "rfd/0074-binary-value-encoding-for-fdb/README.html#problem",
+    "href": "rfd/0074-binary-value-encoding-for-fdb/README.html#problem",
+    "title": "RFD 0074: Binary value encoding for FDB values",
+    "section": "Problem",
+    "text": "Problem\nA warehouse row costs roughly 350 bytes in JSON. A protobuf or JSON payload also needs a parsing step before code can use FDB’s returned value pointer. The project needed a value format that avoids both costs."
+  },
+  {
     "objectID": "rfd/0074-binary-value-encoding-for-fdb/README.html#decision",
     "href": "rfd/0074-binary-value-encoding-for-fdb/README.html#decision",
     "title": "RFD 0074: Binary value encoding for FDB values",
@@ -5780,6 +6333,13 @@
     "title": "RFD 0076: Macaroon + eBPF/XDP security fabric",
     "section": "",
     "text": "Manuals › RFD 0076: Macaroon + eBPF/XDP security fabric\nState: published · Scope: zone-server-h2o network security"
+  },
+  {
+    "objectID": "rfd/0076-macaroon-xdp-security/README.html#problem",
+    "href": "rfd/0076-macaroon-xdp-security/README.html#problem",
+    "title": "RFD 0076: Macaroon + eBPF/XDP security fabric",
+    "section": "Problem",
+    "text": "Problem\nThe packet path needs to check every packet at the NIC, inside a sub-10-microsecond packet budget. XDP itself cannot validate a chained-HMAC Macaroon, because the BPF verifier rejects the instruction count and variable-length parsing HMAC needs. A full Macaroon validation also costs 50 to 100 microseconds, far above that budget."
   },
   {
     "objectID": "rfd/0076-macaroon-xdp-security/README.html#decision",
@@ -5810,6 +6370,13 @@
     "text": "Manuals › RFD 0078: plausible-witness-dag for zonefabric feature ablation\nState: published · Scope: zone-server-h2o feature scoping"
   },
   {
+    "objectID": "rfd/0078-plausible-witness-dag-feature-ablation/README.html#problem",
+    "href": "rfd/0078-plausible-witness-dag-feature-ablation/README.html#problem",
+    "title": "RFD 0078: plausible-witness-dag for zonefabric feature ablation",
+    "section": "Problem",
+    "text": "Problem\nThe team needed to know, before writing implementation code, which zonefabric game features are load-bearing and which are safe to defer. Building a feature the wrong way once, then rebuilding it correctly, pays for that feature twice. The team also needed a dependency-ordered build order, so no feature would build on an unverified foundation."
+  },
+  {
     "objectID": "rfd/0078-plausible-witness-dag-feature-ablation/README.html#decision",
     "href": "rfd/0078-plausible-witness-dag-feature-ablation/README.html#decision",
     "title": "RFD 0078: plausible-witness-dag for zonefabric feature ablation",
@@ -5836,6 +6403,13 @@
     "title": "RFD 0080: Slotmap entity storage with generational IDs",
     "section": "",
     "text": "Manuals › RFD 0080: Slotmap entity storage with generational IDs\nState: published · Scope: zone-server-h2o in-memory entity storage"
+  },
+  {
+    "objectID": "rfd/0080-slotmap-entity-storage/README.html#problem",
+    "href": "rfd/0080-slotmap-entity-storage/README.html#problem",
+    "title": "RFD 0080: Slotmap entity storage with generational IDs",
+    "section": "Problem",
+    "text": "Problem\nIn-memory entity storage per zone used a hash map or a linked list approach. A hash map of 200 entities touches about 8 random cache lines per iteration. A linked list needs pointer-chasing, and both approaches cost more than a sequential scan."
   },
   {
     "objectID": "rfd/0080-slotmap-entity-storage/README.html#decision",
@@ -5866,6 +6440,13 @@
     "text": "Manuals › RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape\nState: published · Scope: zone-server-h2o benchmark and keyspace design"
   },
   {
+    "objectID": "rfd/0082-zonefabric-scaling/README.html#problem",
+    "href": "rfd/0082-zonefabric-scaling/README.html#problem",
+    "title": "RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape",
+    "section": "Problem",
+    "text": "Problem\nGlenn Fiedler’s mas-bandwidth/fps architecture calls for a “world database” and leaves it unbuilt. A per-entity keyspace also costs 200 times more FDB keys than a per-zone keyspace. Full-mesh O(N²) broadcast also does not scale replication across many zones."
+  },
+  {
     "objectID": "rfd/0082-zonefabric-scaling/README.html#decision",
     "href": "rfd/0082-zonefabric-scaling/README.html#decision",
     "title": "RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape",
@@ -5892,6 +6473,13 @@
     "title": "RFD 0084: zstd compression for batched zone-state FDB values",
     "section": "",
     "text": "Manuals › RFD 0084: zstd compression for batched zone-state FDB values\nState: published · Scope: zone-server-h2o FDB value compression"
+  },
+  {
+    "objectID": "rfd/0084-zstd-compression-for-zone-state/README.html#problem",
+    "href": "rfd/0084-zstd-compression-for-zone-state/README.html#problem",
+    "title": "RFD 0084: zstd compression for batched zone-state FDB values",
+    "section": "Problem",
+    "text": "Problem\nLarge value blobs, such as entity batches, zone snapshots, and asset content, wrote to FDB uncompressed. Uncompressed entity batches and zone snapshots take more FDB storage and bandwidth than needed. Compressing small fixed-size structs the same way would pay compression overhead that exceeds the savings."
   },
   {
     "objectID": "rfd/0084-zstd-compression-for-zone-state/README.html#decision",

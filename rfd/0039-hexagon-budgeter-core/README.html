@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0039: Budgeter hexagon — core, ports, and adapters</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> budgeter hexagon (proof of concept)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The content slice needs graceful degradation under load on the mobile floor. Quality knobs, such as avatar level-of-detail and voice radius, must adjust per frame so the player stays inside the experience during a burst. The budgeter had no structure that could measure the device and adjust these knobs.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The slice needs graceful degradation under load on the mobile floor, dialing quality knobs per frame so the player stays inside the experience during a burst. The project structures the budgeter as a hexagon. The core is a constraint solver that maps on-device measurements to knob settings, such as avatar level-of-detail, interpolation against extrapolation, voice radius, and audio sample quality, as a pure reducer. It dials the knobs every frame, never overrules itself, and never dictates how the artists work. The driving port <code>measurement_source</code> carries frame time, thermals, and entity counts. The driven port <code>knob_sink</code> carries the settings the runtime applies. <code>feat/module-open-telemetry</code> feeds <code>measurement_source</code>, the engine runtime applies <code>knob_sink</code>, and a fixture adapter replays a load spike for CI. As a hundred extra players land in the hub, the budgeter degrades gracefully so the player stays inside the experience. The solve runs against a recorded spike in CI with no device, and the budgeter stays advisory, so it never overrules the artists.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0017: Compiling the Godot engine</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> build</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Developers build the V-Sekai multiplayer-fabric Godot engine on two different hosts from one workstation. Without a shared build cache, each host recompiles the same objects, wasting time. The project also needed a way to share cache objects across hosts without committing access keys or other secrets.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: Windows (PowerShell and MinGW) and WSL/Linux (<code>linuxbsd</code>). The build standardizes on <code>sccache</code> as the only object cache, wired in as the SCons compiler launcher through a <code>gscons</code> shell function on each host. SCons’s own <code>CacheDir</code> (<code>cache_path=</code>) stays disabled, because sccache already caches every compiled object first; running both would double-cache the same artifacts for no extra hits.</p>

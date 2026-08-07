@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 03:55:55 GMT</lastBuildDate>
+<lastBuildDate>Fri, 07 Aug 2026 04:05:56 GMT</lastBuildDate>
 <item>
   <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</link>
@@ -51,7 +51,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0084: zstd compression for batched zone-state FDB values</title>
@@ -64,6 +64,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0084: zstd compression for batched zone-state FDB values</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o FDB value compression</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Large value blobs, such as entity batches, zone snapshots, and asset content, wrote to FDB uncompressed. Uncompressed entity batches and zone snapshots take more FDB storage and bandwidth than needed. Compressing small fixed-size structs the same way would pay compression overhead that exceeds the savings.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Compress FDB values with zstd before writing, and decompress after reading. Apply this to large value blobs: entity batches, zone snapshots, asset content. Skip it for small fixed-size structs, where compression overhead exceeds the savings. The threshold is 512 bytes. Entity batches (~8KB) and zone snapshots compress 2 to 3 times at level 3. Asset blobs (~5MB) compress 3 to 5 times at level 19.</p>
@@ -90,7 +94,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0084-zstd-compression-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</title>
@@ -103,6 +107,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone server implementation</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The Godot <code>FabricZone</code> engine ran the zone server side. <code>FabricZone</code>/<code>FabricZoneJournal</code> stored its journal in local SQLite, so state did not share across zone-server processes. The project also needed memory safety against untrusted client input, which the existing engine did not give.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Build <code>zone-server-h2o</code>, a native <code>libh2o</code> and FoundationDB zone server. Build it with Fil-C for memory safety against untrusted client input. It fully replaces the Godot <code>FabricZone</code> engine on the server side. The client stays Godot, unchanged. Scope carries over from <code>FabricZone</code>/<code>FabricZoneJournal</code>, not a blank-slate design: entity slots, zone-to-zone migration, ghost/AOI state, and a durable journal. The team reimplements these against FDB instead of local SQLite, so they share state across zone-server processes.</p>
@@ -125,7 +133,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</title>
@@ -138,6 +146,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0082: Zonefabric scaling: hub/instanced-zone game-server benchmark shape</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o benchmark and keyspace design</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Glenn Fiedler’s mas-bandwidth/fps architecture calls for a “world database” and leaves it unbuilt. A per-entity keyspace also costs 200 times more FDB keys than a per-zone keyspace. Full-mesh O(N²) broadcast also does not scale replication across many zones.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Model weft-warp-loop’s hub/instanced-zone game server as zonefabric: a FoundationDB-backed benchmark scaled by zone count, with 200 entities per zone at fixed constants (WORLD_EXTENT=10000.0, GHOST_RANGE=150.0, AUTHORITY_CAPACITY=256, SPLIT_COST_THRESHOLD=40000.0). Persistence uses a single zstd-compressed <code>zf/zone_state/{z_id}</code> blob per zone, per 10Hz tick, holding the slotmap and effect state. This cuts FDB key count 200-fold against the per-entity keyspace, which the design retains only for migration, ghost-relevance range scans, and point lookups. Zonefabric is the “world database” that Glenn Fiedler’s mas-bandwidth/fps architecture calls for and leaves unbuilt. It builds this on FDB instead of Redis, with AOI-filtered replication (GHOST_RANGE covers 0.02 percent of world space per zone) in place of full-mesh O(N²) broadcast. Per-zone independent FDB transactions and thread-local slotmaps give near-linear core scaling, with no cross-zone conflicts.</p>
@@ -160,7 +172,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0082-zonefabric-scaling/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</title>
@@ -173,6 +185,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0081: Three-layer verification strategy (CBMC, Lean 4, plausible-witness-dag)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o / h2o-bench-tpcc verification</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>CBMC proves C implementation invariants for bounded inputs, but it does not prove the specification is sound. Lean 4 proves the specification is sound, but it does not verify the C code itself. plausible-witness-dag searches for runtime invariant violations, but it does not prove their absence.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Verify h2o-bench-tpcc with three complementary tools. Each tool targets a different layer of the stack. CBMC proves C implementation invariants (SPSC ring FIFO, bounds, head-tail, NURand range) for bounded inputs. Lean 4 proves the specification is sound (SPSC linearizability, push/pop preserve bounds), but does not verify the C code itself. plausible-witness-dag searches for runtime invariant violations over HTTP (NewOrder atomicity, Delivery correctness, Stock non-negative), but does not prove their absence.</p>
@@ -199,7 +215,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0081-three-layer-verification-strategy/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0080: Slotmap entity storage with generational IDs</title>
@@ -212,6 +228,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0080: Slotmap entity storage with generational IDs</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o in-memory entity storage</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>In-memory entity storage per zone used a hash map or a linked list approach. A hash map of 200 entities touches about 8 random cache lines per iteration. A linked list needs pointer-chasing, and both approaches cost more than a sequential scan.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use a slotmap for in-memory entity storage per zone, replacing hash map and linked list approaches. A slotmap is a sparse set with generational indices. Each zone owns one thread-local slotmap. FDB stays the durable backing store, and the slotmap is the hot in-memory index for tick processing. Iterating 200 entities in a slotmap’s dense array touches about 8KB sequentially, roughly one L1 miss after warmup. A hash map of the same size touches about 8 random cache lines, and a linked list needs pointer-chasing.</p>
@@ -235,7 +255,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0080-slotmap-entity-storage/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</title>
@@ -248,6 +268,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o CastSpell sandboxing</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>CastSpell needs to run sandboxed Godot game logic inside <code>zone-server-h2o</code>. <code>godot-sandbox</code>’s <code>Sandbox</code> Node API needs its own separate live Godot process. Linking the guest directly into <code>zone-server-h2o</code>’s binary would tie two unrelated build systems together for no benefit.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use <code>godot-riscv-spike</code>’s proven whole-engine-in-<code>rvlinux</code> approach directly. Drive it with raw <code>libriscv</code> (<code>copy_to_guest</code>, <code>copy_from_guest</code>, <code>vmcall</code>). Run it as a separate <code>sandbox-orchestrator</code> process, not linked into <code>zone-server-h2o</code>’s binary. <code>zone-server-h2o</code> spawns this new binary and connects to it over a <code>socketpair()</code>, registered with h2o’s event loop the same way <code>udp_fd</code>/<code>timer_fd</code> already are. The guest ELF exposes <code>godot_boot(cbor_config)</code>, run once, and <code>godot_tick(input_addr, output_addr)</code>, run once per real tick at 64 Hz.</p>
@@ -270,7 +294,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0078: plausible-witness-dag for zonefabric feature ablation</title>
@@ -283,6 +307,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0078: plausible-witness-dag for zonefabric feature ablation</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o feature scoping</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The team needed to know, before writing implementation code, which zonefabric game features are load-bearing and which are safe to defer. Building a feature the wrong way once, then rebuilding it correctly, pays for that feature twice. The team also needed a dependency-ordered build order, so no feature would build on an unverified foundation.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use plausible-witness-dag to ablate zonefabric game features before writing implementation code. Model each feature as a set of Lean 4 invariants over game state. Then remove one feature’s invariants at a time, and search for a witness trace that violates a remaining invariant. A found witness marks the feature load-bearing: the team must build it correctly the first time, or it becomes speculator debt paid for twice. No witness at escalating scale (L0, L1, L2) marks the feature deferrable, an unspent-dollar feature safe to stub or skip. The ablation matrix also gives a dependency-ordered build order, so no feature is built on an unverified foundation.</p>
@@ -310,7 +338,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0078-plausible-witness-dag-feature-ablation/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0077: PERT critical path for zonefabric implementation</title>
@@ -323,6 +351,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0077: PERT critical path for zonefabric implementation</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o build order</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The zonefabric implementation spans many RFDs with dependencies between them. The team had no critical path or task order for the remaining build work. Without that order, the team could not tell which tasks carry slack and which tasks block the whole build.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Model the zonefabric implementation as a PERT network. Each RFD’s implementation is a task with optimistic, most-likely, and pessimistic duration estimates, and expected duration follows <code>TE = (O + 4M + P) / 6</code>. The critical path is A (binary encoding) → B (FDB keyspace) → C (actor-lite pool) → F (ZoneTick) → I (CastSpell) → M (feature ablation), totaling 26.0 engineering days. CastSpell sits on the critical path because it depends on three upstream tasks and carries the highest variance.</p>
@@ -346,7 +378,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0077-pert-critical-path-zonefabric/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0076: Macaroon + eBPF/XDP security fabric</title>
@@ -359,6 +391,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0076: Macaroon + eBPF/XDP security fabric</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o network security</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The packet path needs to check every packet at the NIC, inside a sub-10-microsecond packet budget. XDP itself cannot validate a chained-HMAC Macaroon, because the BPF verifier rejects the instruction count and variable-length parsing HMAC needs. A full Macaroon validation also costs 50 to 100 microseconds, far above that budget.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use a two-tier security architecture. Macaroon-based authentication runs in user space. eBPF/XDP session-key enforcement runs in kernel space. User space validates a cryptographic Macaroon once, at connection time. It then pushes a 64-bit session key into an eBPF whitelist map keyed by player IP. An XDP program checks every following packet at the NIC.</p>
@@ -386,7 +422,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0076-macaroon-xdp-security/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</title>
@@ -399,6 +435,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o database backend</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>TPC-C is 88 percent writes. CockroachDB’s Raft consensus path gives higher write latency than a log-structured MVCC store for a write-heavy load. The project’s CockroachDB fork also carries no upstream activity.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use the raw FoundationDB C API (<code>libfdb_c</code>) as the database for h2o-bench-tpcc, not CockroachDB. TPC-C is 88 percent writes, and FDB’s log-structured MVCC gives lower write latency than CockroachDB’s Raft consensus path for a write-heavy load. FDB 7.3.79 stays under active Apple development, while the project’s CockroachDB fork has no upstream activity. <code>libfdb_c</code> is a native C shared library with a callback-based API that integrates directly with h2o’s event loop. It needs no JVM, no JNI, no gRPC bridge, and no SQL parsing or planning overhead. FDB transactions are native ACID objects, not a SQL <code>BEGIN</code>/<code>COMMIT</code> wrapper.</p>
@@ -421,7 +461,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0074: Binary value encoding for FDB values</title>
@@ -434,6 +474,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0074: Binary value encoding for FDB values</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o FDB value format</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A warehouse row costs roughly 350 bytes in JSON. A protobuf or JSON payload also needs a parsing step before code can use FDB’s returned value pointer. The project needed a value format that avoids both costs.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Encode TPC-C row values as packed C structs with network byte order (big-endian) integers, using <code>#pragma pack(push, 1)</code> for a deterministic layout. No protobuf, no JSON, and no FDB tuple layer for values. A packed struct casts directly from FDB’s returned value pointer, so there is no parsing step. A warehouse row is 109 bytes packed, versus roughly 350 bytes in JSON. The tuple layer stays reserved for keys, where lexicographic ordering matters. Values do not need that ordering.</p>
@@ -459,7 +503,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0074-binary-value-encoding-for-fdb/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0073: Async FDB callback chain on the libh2o event loop</title>
@@ -472,6 +516,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0073: Async FDB callback chain on the libh2o event loop</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o FDB transaction handling</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>FDB’s C API is callback-based by design. A worker that blocks on <code>fdb_future_block_until_ready</code> cannot process the next request from its SPSC ring. Each TPC-C transaction needed a way to chain FDB futures without blocking the worker.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Implement TPC-C transactions as async callback chains over FDB futures. Each transaction step submits an FDB future and registers a callback for when it resolves, and the callback runs the next step. On any FDB error, the callback calls <code>fdb_transaction_on_error</code> and restarts the chain from the first read. FDB’s C API is callback-based by design, and a worker that blocks on <code>fdb_future_block_until_ready</code> cannot process the next request from its SPSC ring. Each transaction allocates one heap context struct that flows through the whole chain, and the final callback frees it. The chain needs no reference counting: it is linear, and only one future stays outstanding at a time.</p>
@@ -494,7 +542,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0073-async-fdb-callback-chain/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</title>
@@ -507,6 +555,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o worker dispatch</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>zone-server-h2o needs to dispatch HTTP requests from the H2O network thread to worker threads. A generalized actor framework adds scheduler overhead and lock contention on the fast path. The design targets top-10 TechEmpower R23 data update throughput, and that target needs a dispatch path with neither cost.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>zone-server-h2o dispatches HTTP requests from the H2O network thread to a pool of worker threads. It uses lock-free single-producer, single-consumer ring buffers, not a generalized actor framework. Each worker owns one ring and one libpq pipeline connection to FoundationDB, and runs pop, execute, return in a tight loop. The return path wakes the H2O event loop through <code>h2o_multithread_send</code>, with no shared state. This design targets top-10 TechEmpower R23 data update throughput, where h2o already ranks second at 1,226,814 requests per second. The SPSC design adds no scheduler overhead and no lock contention on the fast path.</p>
@@ -532,7 +584,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0072-actor-lite-worker-pool/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0071: YAGNI times structure to the need, in code and in the record</title>
@@ -545,6 +597,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0071: YAGNI times structure to the need, in code and in the record</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> decision records and build scripts</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Building structure ahead of the feature that needs it spends an option and delays a return. Cheap code generation does not remove either cost. Some decision records and build scripts in the project carried structure ahead of a demonstrated need.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>YAGNI is a timing rule, not a thrift rule. Building structure ahead of the feature that needs it spends an option and delays a return, and cheap code generation does not remove either cost. The project builds structure only when a real near-term need arrives. A decision record keeps only its load-bearing sections: context, problem, design, downsides, the road not taken, and confirmation. When a record no longer describes the live plan, the record is marked superseded and moved to <code>_archive</code>.</p>
@@ -567,7 +623,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0071-yagni-times-structure-to-need/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0070: Export loop-slice server telemetry to the observability collector</title>
@@ -580,6 +636,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0070: Export loop-slice server telemetry to the observability collector</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> loop-slice server OpenTelemetry export</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The loop-slice server already emits spans, counters, gauges, and logs through its <code>OpenTelemetry</code> engine module. Export stays idle with no endpoint set. A deployed server with no configured endpoint stays unobservable.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The loop-slice deploy exports OpenTelemetry over HTTP to the observability collector at <code>http://host.containers.internal:4318</code>, with <code>OTEL_SERVICE_NAME=loop-server</code>. The server already emits spans, counters, gauges, and logs through its <code>OpenTelemetry</code> engine module, but export stays idle with no endpoint set, so a deployed server with no configured endpoint stays unobservable. <code>host.containers.internal</code> resolves to the host, not the loop-slice container’s own loopback, because the server runs as a separate rootless container outside the observability pod’s network namespace. HTTP on 4318 matches the export protocol the rest of the fabric already uses. Export stays opt-in in the engine and the image; only the deploy’s environment sets the endpoint, because only there is the collector a co-located, declared dependency. Applying these values to the deploy’s environment file and quadlet is follow-up work; this record fixes the address and the protocol.</p>
@@ -602,7 +662,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0070-loop-slice-telemetry-to-the-observability-collector/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0069: Defer the loot-slice hardening scope until its need arrives</title>
@@ -615,6 +675,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0069: Defer the loot-slice hardening scope until its need arrives</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> loot-action vertical slice deferred hardening scope</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The loot-action vertical slice’s decided scope goes beyond its stated goal, a slice complete enough to exercise every integration seam. The running <code>godot-loop-slice</code> already meets that integration goal. The rest of the decided scope risks conflating the shipped deliverable with pending work, and building structure ahead of a demonstrated need.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The loot-action vertical slice’s decided scope goes beyond its stated goal — a slice complete enough to exercise every integration seam. The running <code>godot-loop-slice</code> already carries the loop end to end and the playable-loop smoke passes, so the integration goal is met. The rest of the decided scope — a separate presence reducer, a separate progression reducer, the budgeter core, the CockroachDB adapter, the measured 90 Hz performance gate, and a real OpenXR build — carries forward as deferred-until-needed. Each deferred item pairs with the concrete trigger that revives it; the team builds an item only when its trigger fires, not before. This avoids conflating the shipped deliverable with pending work, and avoids building structure ahead of a demonstrated need.</p>
@@ -638,7 +702,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0069-defer-loot-slice-hardening-until-needed/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0068: sccache with GitHub Actions cache for Godot container builds</title>
@@ -651,6 +715,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0068: sccache with GitHub Actions cache for Godot container builds</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> fabric-godot-images CI build cache</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The <code>fabric-godot-images</code> CI build lost its <code>docker/build-push-action</code> layer cache when the build moved to plain <code>podman build</code>. Every push then recompiled the Godot engine from scratch, spending 30 to 60 minutes each run. An earlier Tigris S3 sccache bucket also needed an external account, five repo secrets, and ongoing cost.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The <code>fabric-godot-images</code> CI build gets a compiler-output cache back by wiring sccache to the native GitHub Actions cache backend, <code>SCCACHE_GHA_ENABLED=true</code>. The previous <code>docker/build-push-action</code> layer cache was lost when the build moved to plain <code>podman build</code> to match the rootless-podman-plus-quadlet standard, so every push recompiled the Godot engine from scratch, spending 30 to 60 minutes each run. <code>ACTIONS_CACHE_URL</code> and <code>ACTIONS_RUNTIME_TOKEN</code> mount into the container as podman build secrets, not build args, so they never bake into an image layer. Every GHA runner sets these two values automatically, so no repo secret is needed. This replaces the earlier Tigris S3 sccache bucket, which needed an external account, five repo secrets, and ongoing cost.</p>
@@ -673,7 +741,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0068-sccache-github-actions-cache-for-godot-builds/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0067: Release tags progress chronologically through dev, beta, rc, and release</title>
@@ -686,6 +754,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0067: Release tags progress chronologically through dev, beta, rc, and release</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> fabric-godot-packaging release tag convention</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Plain lexicographic sort, and <code>--sort=version:refname</code>, both give the wrong cross-stage order for release tags. The <code>beta</code> string sorts before <code>dev</code> alphabetically, even though <code>beta</code> comes later in the pipeline. A bare <code>v0.1.0</code> also sorts before every suffixed pre-release form, as a string prefix.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Release tags for <code>fabric-godot-packaging</code> use semver pre-release identifiers: <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;-&lt;stage&gt;.&lt;N&gt;</code> for a pre-release, and the bare <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code> for a final release. The stage runs <code>dev</code>, <code>beta</code>, <code>rc</code>, then release; the counter stays unpadded, because ordering does not depend on it. Tags are always created in forward chronological order, so <code>git tag --sort=creatordate</code> recovers the correct progression. Neither plain lexicographic sort nor <code>--sort=version:refname</code> gives the right cross-stage order: <code>beta</code> sorts before <code>dev</code> alphabetically even though it comes later in the pipeline, and bare <code>v0.1.0</code> sorts before every suffixed pre-release form as a string prefix. The <code>version</code> workflow input maps directly to <code>LOOP_PKG_VERSION</code>; any version containing a <code>-</code> builds as a pre-release, and a bare version builds as a full release.</p>
@@ -708,7 +780,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0067-release-tag-progression-dev-beta-rc/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0066: Game-loop-first delivery sequence</title>
@@ -721,6 +793,10 @@
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0066: Game-loop-first delivery sequence</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> delivery sequencing across the loot-action concerns</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Four other concerns, uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o, all need a verified game loop as their integration target. None of them tests end to end without one. Advancing another concern in parallel risks landing work on a loop that is still changing.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The team stabilizes the game loop first, ahead of uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o. A team poll picked game-loop as the next concern, with 2 of 4 votes. Each of the other four concerns needs a verified game loop as its integration target, and none of them tests end to end without one. The OpenXR Windows build is the external feedback artifact: it runs the full hub-to-field-to-loot round trip and is the SteamVR-compatible path for PCVR reviewers. The game loop counts as complete once <code>smoke.sh</code> passes, the OpenXR Windows build exports without error, and one external reviewer runs the full loop against a live server. Advancing another concern in parallel risks landing work on a loop that is still changing, so the other four concerns wait. If the game-loop verification slips, all four wait with it; no parallel path absorbs the delay.</p>
@@ -743,7 +819,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0066-game-loop-cluster-sequence/README.html</guid>
-  <pubDate>Fri, 07 Aug 2026 03:55:55 GMT</pubDate>
+  <pubDate>Fri, 07 Aug 2026 04:05:56 GMT</pubDate>
 </item>
 </channel>
 </rss>

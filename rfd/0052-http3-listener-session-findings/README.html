@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0052: One transport listener per authority pending http3 multi-session fixes</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> WebTransport/HTTP3 module, multi-session routing</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The four-player contention smoke test drives one <code>WebTransportPeer.create_server</code> listener with four concurrent client sessions. Replies reach only one session, regardless of <code>set_target_peer</code> or <code>get_packet_peer</code>. A session teardown during traffic also aborts the process with a double free, and a second <code>create_server</code> call in the same process fails.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The four-player contention smoke drives one <code>WebTransportPeer.create_server</code> listener in the merged assembly with four concurrent client sessions. Incoming datagrams from every session multiplex into the server’s packet queue correctly, but replies reach only one session regardless of <code>set_target_peer</code> or <code>get_packet_peer</code>, and a session teardown during traffic aborts the process with a double free. A second <code>create_server</code> in the same process fails with “server already listening”, so the backend holds one listener per process. Until the module carries per-session peer routing and clean teardown, the loop runs one listener per authority process, attributes requesters in the message body rather than by transport peer id, and verifies the authority’s resolutions at the harness against the Lean golden vectors. The four-player smoke verifies authoritative resolution (64 rounds matching the golden vectors from four concurrent clients) while grant delivery waits on the reply-routing fix. The loot and combat wire parities stay unaffected, because a single session per listener works end to end.</p>

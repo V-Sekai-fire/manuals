@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0020: Pin the engine to a frozen Godot 4.7 commit</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> engine fork base commit</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The engine fork’s base commit tracked a moving upstream. A base that tracks a moving upstream lets patches shift underneath the assembly. A green build could break the next day from upstream churn alone, with no change to the fork’s own feature branches.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The engine fork carries many feature branches that the <code>merge</code> recipe assembles onto a base. A base that tracks a moving upstream lets patches shift underneath the assembly, so a green build can break the next day from upstream churn alone. The fork’s <code>master</code> pins to one frozen upstream commit instead, currently tip <code>8a337510</code> (Godot <code>4.7.0-beta</code>, per <code>version.py</code>). Every feature branch in the <code>gitassembly</code> recipe stands alone on that base. The pin moves only by a deliberate update to <code>master</code>, never by following upstream.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o database backend</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>TPC-C is 88 percent writes. CockroachDB’s Raft consensus path gives higher write latency than a log-structured MVCC store for a write-heavy load. The project’s CockroachDB fork also carries no upstream activity.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use the raw FoundationDB C API (<code>libfdb_c</code>) as the database for h2o-bench-tpcc, not CockroachDB. TPC-C is 88 percent writes, and FDB’s log-structured MVCC gives lower write latency than CockroachDB’s Raft consensus path for a write-heavy load. FDB 7.3.79 stays under active Apple development, while the project’s CockroachDB fork has no upstream activity. <code>libfdb_c</code> is a native C shared library with a callback-based API that integrates directly with h2o’s event loop. It needs no JVM, no JNI, no gRPC bridge, and no SQL parsing or planning overhead. FDB transactions are native ACID objects, not a SQL <code>BEGIN</code>/<code>COMMIT</code> wrapper.</p>

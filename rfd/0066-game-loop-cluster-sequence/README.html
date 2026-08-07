@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0066: Game-loop-first delivery sequence</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> delivery sequencing across the loot-action concerns</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Four other concerns, uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o, all need a verified game loop as their integration target. None of them tests end to end without one. Advancing another concern in parallel risks landing work on a loop that is still changing.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The team stabilizes the game loop first, ahead of uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o. A team poll picked game-loop as the next concern, with 2 of 4 votes. Each of the other four concerns needs a verified game loop as its integration target, and none of them tests end to end without one. The OpenXR Windows build is the external feedback artifact: it runs the full hub-to-field-to-loot round trip and is the SteamVR-compatible path for PCVR reviewers. The game loop counts as complete once <code>smoke.sh</code> passes, the OpenXR Windows build exports without error, and one external reviewer runs the full loop against a live server. Advancing another concern in parallel risks landing work on a loop that is still changing, so the other four concerns wait. If the game-loop verification slips, all four wait with it; no parallel path absorbs the delay.</p>

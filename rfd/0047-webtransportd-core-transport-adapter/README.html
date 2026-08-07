@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0047: webtransportd as the out-of-process core transport adapter</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> transport adapter for the event-driven hexagonal cores</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The cores expose a flat C ABI and need a transport adapter to carry their port traffic to clients. The in-engine <code>feat/module-http3</code> transport fits the in-process authoritative tick core. It does not fit the event-driven cores, which need a piped child process instead.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The cores expose a flat C ABI and need a transport adapter to carry their port traffic to clients. The fabric already runs WebTransport over QUIC for game traffic and ships an in-engine implementation. A standalone bridge, <code>webtransportd</code>, pipes a connection’s bytes to a child program over stdin and stdout. The project uses <code>webtransportd</code> as the out-of-process transport adapter for the event-driven cores, and keeps the in-engine <code>feat/module-http3</code> for the in-process authoritative tick core, because the tick core needs shared state and low latency in the <code>zone-server</code>, while the event-driven cores fit a piped child cleanly. A driving port reads frames from stdin and a driven port writes frames to stdout, framed as <code>[flag | varint len | payload]</code>; the flag bit selects a reliable stream or an unreliable datagram and maps to port reliability — combat input stays reliable, pose updates stay lossy. One authoritative core per instance funnels the four connections, so a per-connection child relays to that single core rather than holding state itself. The cores stay transport-agnostic behind their ports, so a fixture adapter replays frames for CI with no daemon and no network, reproducing the same exchange a <code>webtransportd</code> CLI smoke test round-trips.</p>

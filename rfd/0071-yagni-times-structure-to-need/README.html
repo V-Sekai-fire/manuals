@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0071: YAGNI times structure to the need, in code and in the record</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> decision records and build scripts</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Building structure ahead of the feature that needs it spends an option and delays a return. Cheap code generation does not remove either cost. Some decision records and build scripts in the project carried structure ahead of a demonstrated need.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>YAGNI is a timing rule, not a thrift rule. Building structure ahead of the feature that needs it spends an option and delays a return, and cheap code generation does not remove either cost. The project builds structure only when a real near-term need arrives. A decision record keeps only its load-bearing sections: context, problem, design, downsides, the road not taken, and confirmation. When a record no longer describes the live plan, the record is marked superseded and moved to <code>_archive</code>.</p>

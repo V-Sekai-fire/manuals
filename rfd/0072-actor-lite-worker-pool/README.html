@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o worker dispatch</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>zone-server-h2o needs to dispatch HTTP requests from the H2O network thread to worker threads. A generalized actor framework adds scheduler overhead and lock contention on the fast path. The design targets top-10 TechEmpower R23 data update throughput, and that target needs a dispatch path with neither cost.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>zone-server-h2o dispatches HTTP requests from the H2O network thread to a pool of worker threads. It uses lock-free single-producer, single-consumer ring buffers, not a generalized actor framework. Each worker owns one ring and one libpq pipeline connection to FoundationDB, and runs pop, execute, return in a tight loop. The return path wakes the H2O event loop through <code>h2o_multithread_send</code>, with no shared state. This design targets top-10 TechEmpower R23 data update throughput, where h2o already ranks second at 1,226,814 requests per second. The SPSC design adds no scheduler overhead and no lock contention on the fast path.</p>

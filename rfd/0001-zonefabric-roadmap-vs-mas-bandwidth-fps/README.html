@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0001: Zonefabric roadmap: PERT order, current status, and fps/eBPF/sandbox notes</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The project had no fixed order for the remaining zonefabric work. Two encoding choices, the CastSpell sandbox boundary format and its package manifest format, had no settled answer. The <code>mas-bandwidth/fps</code> reference design lacks delta compression, client prediction, multicast, and a kernel-bypass ingest layer, and no RFD stated whether this gap was acceptable. No RFD picked a license-safe library for future kernel-bypass or eBPF work.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Build the remaining <code>zone-server-h2o</code> zonefabric work in the PERT critical-path order <code>decisions/20260806-pert-critical-path-zonefabric.md</code> already set: task A, B, C, F, then I, then M. <code>DETAILS.md</code> carries the full per-task status table and the numbered follow-up list.</p>

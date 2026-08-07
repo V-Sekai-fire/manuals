@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0026: Commit messages use sentence case without Conventional Commits prefixes</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> git commit message style</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Repositories here run no tooling that reads a Conventional Commits type prefix. A <code>feat:</code>, <code>fix:</code>, or <code>chore:</code> prefix buys nothing without that tooling, and it pushes the actual meaning after a colon. Picking the right type prefix for each commit also needs per-commit judgement.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>A commit subject opens with a capital letter and reads as a plain sentence, such as “Add the macOS and Windows release workflows”. It carries no <code>feat:</code>, <code>fix:</code>, <code>chore:</code>, or <code>type(scope):</code> prefix, and no trailing period. The body, where present, states what the change makes true of the system and why. The repos here run no tooling that consumes a Conventional Commits type, so a machine-readable prefix buys nothing and pushes the meaning after a colon; sentence-case prose keeps the meaning at the front and needs no per-commit judgement about which type applies.</p>

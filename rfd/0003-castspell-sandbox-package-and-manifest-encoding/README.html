@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0003: CastSpell sandbox package format and manifest encoding</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o CastSpell</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>CastSpell’s effect step needed a package format and a manifest encoding, and no RFD fixed either one. Without a fixed format, each effect step package could use a different, incompatible layout. The design also needed a runtime FFI format between the host and a loaded package, instead of adding a third, unrelated binary format.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>CastSpell’s effect step ships as a single <code>.elf</code> file: an embedded, static manifest inside the ELF, not a side-car file. The manifest encodes as CBOR-LD, decoding to plain JSON-LD. The runtime FFI between the host and a loaded package reuses the zone tick’s own bitpacked struct format, gated by an explicit ABI version field, not a third binary format. <code>DETAILS.md</code> has the full reasoning, the library picks (<code>jsonld-cpp</code> plus <code>QCBOR</code> for an offline authoring tool; <code>QCBOR</code> alone inside the host, in pure C under Fil-C), and the rejected alternatives.</p>

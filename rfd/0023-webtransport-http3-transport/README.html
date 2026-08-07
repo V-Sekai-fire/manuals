@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0023: WebTransport over HTTP/3 transport</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> engine network transport (modules/http3)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The stack needs one client/server transport that carries reliable control messages and high-rate unreliable state, over one connection, on both native and web clients. The standard <code>MultiplayerPeer</code> transports, ENet, WebSocket, and WebRTC, give none of this combination. None of them give one connection with both datagram and stream semantics across native and browser clients.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The stack needs one client/server transport that carries reliable control messages and high-rate unreliable state over a single connection, on both native and web clients. The engine provides this through <code>modules/http3</code> (<code>feat/module-http3</code>): WebTransport over HTTP/3 and QUIC, with a native picoquic backend and a web/wasm backend, exposed as the <code>HTTP3Client</code>, <code>QUICClient</code>, <code>QUICServer</code>, and <code>WebTransportPeer</code> classes. One QUIC connection carries reliable streams and unreliable datagrams together, so control messages and high-rate state share a connection instead of two. This replaces standard <code>MultiplayerPeer</code> transports (ENet, WebSocket, WebRTC), none of which give one connection with both datagram and stream semantics across native and browser clients.</p>

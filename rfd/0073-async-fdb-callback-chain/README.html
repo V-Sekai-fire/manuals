@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0073: Async FDB callback chain on the libh2o event loop</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o FDB transaction handling</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>FDB’s C API is callback-based by design. A worker that blocks on <code>fdb_future_block_until_ready</code> cannot process the next request from its SPSC ring. Each TPC-C transaction needed a way to chain FDB futures without blocking the worker.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Implement TPC-C transactions as async callback chains over FDB futures. Each transaction step submits an FDB future and registers a callback for when it resolves, and the callback runs the next step. On any FDB error, the callback calls <code>fdb_transaction_on_error</code> and restarts the chain from the first read. FDB’s C API is callback-based by design, and a worker that blocks on <code>fdb_future_block_until_ready</code> cannot process the next request from its SPSC ring. Each transaction allocates one heap context struct that flows through the whole chain, and the final callback frees it. The chain needs no reference counting: it is linear, and only one future stays outstanding at a time.</p>

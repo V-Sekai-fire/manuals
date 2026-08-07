@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0076: Macaroon + eBPF/XDP security fabric</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o network security</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The packet path needs to check every packet at the NIC, inside a sub-10-microsecond packet budget. XDP itself cannot validate a chained-HMAC Macaroon, because the BPF verifier rejects the instruction count and variable-length parsing HMAC needs. A full Macaroon validation also costs 50 to 100 microseconds, far above that budget.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Use a two-tier security architecture. Macaroon-based authentication runs in user space. eBPF/XDP session-key enforcement runs in kernel space. User space validates a cryptographic Macaroon once, at connection time. It then pushes a 64-bit session key into an eBPF whitelist map keyed by player IP. An XDP program checks every following packet at the NIC.</p>

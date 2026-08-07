@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0016: Checking the sccache build cache</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> build</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The project had no reliable way to confirm that sccache used the shared remote bucket and was healthy. A misconfigured cache degrades silently. The build still succeeds even when the shared cache is not in use. Inferring health from build time or a debug log needs secrets or log parsing.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>To confirm sccache is using the shared remote bucket and is healthy, run <code>sccache --show-stats</code> and read three lines. <code>Cache location</code> must read <code>s3, name: chibifire-sccache</code> with the project’s key prefix; <code>Local disk</code> means the <code>SCCACHE_*</code> environment is not set in that shell. <code>Cache errors</code> must be <code>0</code>; a non-zero count means a credentials, endpoint, or connectivity problem. <code>Cache hits</code> versus <code>Cache misses</code> shows the payoff, rising across builds. This one command was chosen over inferring health from build time or reading a debug log, because a misconfigured cache degrades silently — the build still succeeds even when the shared cache is not in use — and one command needs no secrets and no log parsing.</p>

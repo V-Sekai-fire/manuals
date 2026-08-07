@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0048: Android template builds with Temurin JDK 21 and config.gradle-pinned SDK</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> Android export template build toolchain</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The project needs an Android export template of the merged double-precision assembly for OpenXR builds. The build box carries no Android SDK. Fedora 44 packages only JDK 25 and 26, and Gradle rejects Java 25 with an “Unsupported class file major version 69” error.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The Android export template of the merged double-precision assembly is needed for OpenXR builds. The box carries no Android SDK, and Fedora 44 packages only JDK 25 and 26; Gradle rejects Java 25 with “Unsupported class file major version 69”. The project pins the Android toolchain to what the fork’s <code>platform/android/java/app/config.gradle</code> declares — NDK <code>29.0.14206865</code>, build-tools <code>36.1.0</code>, platform <code>android-36</code> — installed through <code>sdkmanager</code> from the command-line tools, and runs Gradle on a Temurin JDK 21 tarball fetched from the Adoptium API, because the distribution ships no Gradle-compatible JDK and the tarball pins the version per checkout. The verified sequence: <code>scons platform=android target=template_release arch=arm64 precision=double</code> produces <code>libgodot_android.so</code> (about four minutes on the workstation), then <code>JAVA_HOME=&lt;temurin-21&gt; ./gradlew generateGodotTemplates</code> produces <code>bin/android_release.apk</code>. The Android OpenXR export template exists before the gate, retiring the toolchain risk. <code>config.gradle</code> is the single source of truth for SDK versions; reading it first avoids guessing. The JDK is per-user (<code>~/jdks</code>), so system Java stays at the distribution default.</p>

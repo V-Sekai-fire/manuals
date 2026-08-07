@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -319,6 +320,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o CastSpell</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>CastSpell needed a sandboxed runtime for each zone. The existing <code>godot-sandbox</code> project exposes only a narrow, syscall-proxied API. Reimplementing that narrow API inside <code>libriscv</code> risked missing needed engine functionality. No RFD proved that a real <code>libgodot</code> instance could run inside a <code>libriscv</code> sandbox, or measured its performance against the project’s 10Hz/200-entity/many-zones budget.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Embed a real, headless <code>libgodot</code> instance per zone inside each CastSpell <code>libriscv</code> sandbox <code>Machine</code>, instead of reimplementing <code>godot-sandbox</code>’s narrow, syscall-proxied API. Build from the pinned <code>fabric-godot-core</code> tag, headless, <code>arch=rv64</code>, <code>threads=no</code>, <code>modules/sandbox</code> disabled. A real spike already booted this configuration inside <code>libriscv</code>’s actual sandbox and produced real script output over five <code>iteration()</code> calls, needing a musl guest libc and seven upstream-worthy <code>libriscv</code> fixes. Performance measurement against the 10Hz/200-entity/many-zones budget stays the open gate before real implementation work starts. <code>DETAILS.md</code> has the full build configuration, the maintainer feedback, and the ranked fallback options.</p>

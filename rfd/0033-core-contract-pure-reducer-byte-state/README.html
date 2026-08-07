@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0033: Cores as pure reducers over byte-serialized state</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> hexagonal core contract (state, replay, snapshots)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Every hexagonal core needs to be replayable, snapshot-able, fixture-testable, and transport-agnostic. A stateful object that hides mutation behind its own methods defeats all four needs. The project had no shared contract that gave a core all four properties at once.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Every hexagonal core (<code>rfd/0028-hexagonal-core-ports-adapters</code>) needs to be replayable, snapshot-able, fixture-testable, and transport-agnostic. A stateful object that hides mutation behind methods defeats all four. The project models each core as a pure reducer, <code>step : State -&gt; Event -&gt; State x Effects</code>, and serializes <code>State</code>, <code>Event</code>, and <code>Effects</code> to bytes deterministically, so the core reads bytes and writes bytes. The flat C ABI exposes <code>step</code> plus <code>snapshot</code> and <code>restore</code> over the byte state. Combined with the integer-seeded determinism rule, this makes replay byte-exact and a snapshot a plain value copy. Snapshots and rollback become copies of the state bytes, a fixture pins exact output bytes so a divergence fails a test, and every adapter shares the same <code>step</code>, so <code>webtransportd</code> and the engine carry the same bytes.</p>

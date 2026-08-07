@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0068: sccache with GitHub Actions cache for Godot container builds</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> fabric-godot-images CI build cache</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The <code>fabric-godot-images</code> CI build lost its <code>docker/build-push-action</code> layer cache when the build moved to plain <code>podman build</code>. Every push then recompiled the Godot engine from scratch, spending 30 to 60 minutes each run. An earlier Tigris S3 sccache bucket also needed an external account, five repo secrets, and ongoing cost.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The <code>fabric-godot-images</code> CI build gets a compiler-output cache back by wiring sccache to the native GitHub Actions cache backend, <code>SCCACHE_GHA_ENABLED=true</code>. The previous <code>docker/build-push-action</code> layer cache was lost when the build moved to plain <code>podman build</code> to match the rootless-podman-plus-quadlet standard, so every push recompiled the Godot engine from scratch, spending 30 to 60 minutes each run. <code>ACTIONS_CACHE_URL</code> and <code>ACTIONS_RUNTIME_TOKEN</code> mount into the container as podman build secrets, not build args, so they never bake into an image layer. Every GHA runner sets these two values automatically, so no repo secret is needed. This replaces the earlier Tigris S3 sccache bucket, which needed an external account, five repo secrets, and ongoing cost.</p>

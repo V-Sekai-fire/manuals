@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0021: Require pull requests and a merge queue on main</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> repo branch protection and CI gating</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>main</code> had no branch protection. Pushes landed directly on the branch. Concurrent pull requests, each validated against an older tip of the branch, could conflict with each other once both landed.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p><code>main</code> had no branch protection: pushes landed directly, and concurrent pull requests validated against an older tip could conflict once both landed. The repository now applies a ruleset on the default branch that blocks direct pushes and branch deletion, requires a pull request (with zero mandatory approvals), and requires a merge queue that serializes entries against the branch tip before they land. Two later amendments close gaps found in practice: the repository enables automatic deletion of a merged pull request’s source branch, since the merge queue itself cannot delete it; and the ruleset must carry a <code>required_status_checks</code> rule naming the real CI jobs, since the merge-queue rule alone does not require any check to pass.</p>

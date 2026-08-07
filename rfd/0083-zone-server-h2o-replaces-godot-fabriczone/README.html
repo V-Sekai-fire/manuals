@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone server implementation</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The Godot <code>FabricZone</code> engine ran the zone server side. <code>FabricZone</code>/<code>FabricZoneJournal</code> stored its journal in local SQLite, so state did not share across zone-server processes. The project also needed memory safety against untrusted client input, which the existing engine did not give.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>Build <code>zone-server-h2o</code>, a native <code>libh2o</code> and FoundationDB zone server. Build it with Fil-C for memory safety against untrusted client input. It fully replaces the Godot <code>FabricZone</code> engine on the server side. The client stays Godot, unchanged. Scope carries over from <code>FabricZone</code>/<code>FabricZoneJournal</code>, not a blank-slate design: entity slots, zone-to-zone migration, ghost/AOI state, and a durable journal. The team reimplements these against FDB instead of local SQLite, so they share state across zone-server processes.</p>

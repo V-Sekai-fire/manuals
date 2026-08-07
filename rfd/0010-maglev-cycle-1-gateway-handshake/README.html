@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0010: Godot client transport handshake against the authoritative server</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The project had no proof that a real Godot client could complete a transport handshake against the authoritative server. A non-Godot ping, such as curl or a Python script, tests only the wire. It does not test Godot’s own multiplayer peer, thread model, and datagram path. Engine-specific bugs could then surface later, deep in a gameplay scene, where they are harder to isolate.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>A minimal headless Godot client proves the client side of the network stack. It opens a transport connection to the authoritative server, waits for the server’s first message, logs it, and exits cleanly. Running headless isolates client networking from display and input. A non-Godot ping (curl, Python, an Elixir harness) cannot substitute: it tests the wire, not Godot’s own multiplayer peer, thread model, and datagram path, so engine-specific bugs would surface later, deep in a gameplay scene, where they are harder to isolate.</p>

@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0059: Status reports lead with the bottom line</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> prose voice for status reports (BLUF convention)</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A status report in this project had no fixed order for its content before this rule. A report that opens with a progress buffer saves the outcome for the end. A reader who reads only the first line then does not yet know where the work stands.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>A status report in this project states the outcome first: the slip, the failure, or the result, in the opening sentence, with no warm-up and no apology. The explanation follows, and it gives the factual reason. The report closes with the next step. This order applies to a good outcome as well as a bad one; only the order stays fixed. The report does not open with a progress buffer that saves the outcome for the end. A reader who reads only the first line already knows where the work stands; the rest of the report serves a reader who wants the why and the next step. This rule stays mechanical, so a reviewer can check it without debate: does the first sentence state the outcome, or does it delay it?</p>

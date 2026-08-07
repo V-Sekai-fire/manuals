@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0069: Defer the loot-slice hardening scope until its need arrives</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> loot-action vertical slice deferred hardening scope</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The loot-action vertical slice’s decided scope goes beyond its stated goal, a slice complete enough to exercise every integration seam. The running <code>godot-loop-slice</code> already meets that integration goal. The rest of the decided scope risks conflating the shipped deliverable with pending work, and building structure ahead of a demonstrated need.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The loot-action vertical slice’s decided scope goes beyond its stated goal — a slice complete enough to exercise every integration seam. The running <code>godot-loop-slice</code> already carries the loop end to end and the playable-loop smoke passes, so the integration goal is met. The rest of the decided scope — a separate presence reducer, a separate progression reducer, the budgeter core, the CockroachDB adapter, the measured 90 Hz performance gate, and a real OpenXR build — carries forward as deferred-until-needed. Each deferred item pairs with the concrete trigger that revives it; the team builds an item only when its trigger fires, not before. This avoids conflating the shipped deliverable with pending work, and avoids building structure ahead of a demonstrated need.</p>

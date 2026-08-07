@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0002-taskweft-value-narrowing-primitives-and-refs/README.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -318,6 +319,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zf_kv.c / mud_kv.c FDB value encoding</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>This project plans new FDB value types for <code>zf_kv.c</code> and <code>mud_kv.c</code>. No RFD defined a shared encoding scheme for these new types. Without a shared design, each new value type could use its own, incompatible representation for references. <code>taskweft/nif</code> already solves this same problem for its own interpreter and ABI boundaries.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p><code>taskweft/nif</code> narrows every value crossing an interpreter or ABI boundary to one tagged union, <code>TwValue</code>, with seven kinds: <code>NIL</code>, <code>BOOL</code>, <code>INT</code>, <code>FLOAT</code>, <code>STRING</code>, <code>ARRAY</code>, <code>DICT</code>. A reference is not an eighth kind; it is a plain <code>STRING</code> shaped as an RFC 6901 JSON Pointer, resolved against a flat <code>var -&gt; Dict</code> state tree at the point of use. This RFD proposes the same primitives-plus-refs-as-strings principle for this project’s own new FDB value types, without migrating the existing, already-deployed <code>zf_zone_val_t</code>, <code>zf_entity_val_t</code>, or <code>mud_session_val_t</code> structs.</p>

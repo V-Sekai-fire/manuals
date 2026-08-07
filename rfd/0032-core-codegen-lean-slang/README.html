@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
@@ -320,6 +321,10 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0032: Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> GPU compute kernel codegen for the hexagonal cores</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The hexagonal cores carry compute kernels, such as hit raycasts, the budgeter solve, and geometry costing. These kernels need one verified source. A hand-ported shader, written from a separate specification, can drift from that source with no way to detect the drift.</p>
+</section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The cores carry compute kernels, such as hit raycasts, the budgeter solve, and geometry costing. These kernels need one verified source. A hand-ported shader from a separate spec can drift from that source. The project authors each kernel in Lean and lowers it to Slang through <code>lean-slang</code>. It then runs <code>slangc -target spirv</code> to produce SPIR-V, and dispatches the compiled kernel behind the flat C ABI port. SPIR-V runs the kernel on the GPU and gets the convergence integration the CPU Slang target lacks. The <code>idtx-flow</code> repository already depends on <code>LeanSlang</code> and byte-pins the emitted Slang against the committed source with <code>native_decide</code>. The project commits the lowered Slang and the compiled SPIR-V, and byte-pins both, so a drifting regeneration fails the pin. The kernels use integer operations only, so the SPIR-V output stays deterministic across conformant devices.</p>
