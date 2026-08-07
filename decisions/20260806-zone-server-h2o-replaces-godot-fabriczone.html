@@ -297,6 +297,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context">Context</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260806-zone-server-h2o-replaces-godot-fabriczone.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -331,6 +332,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.md">rfd/0083</a>.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>The production zone server (<code>zone-server</code>, deployed as <code>multiplayer-fabric-zone</code> on Fly.io) is a boot scaffold today — OpenTelemetry init only, no WebTransport listener, no game logic (<code>project/main.gd</code>’s own <code>TODO(cycle-5)</code> comment). The real entity/simulation engine, <code>FabricZone</code>/<code>FabricZoneJournal</code>/<code>FabricMMOGZone</code>, exists as a working Godot C++ module in <code>V-Sekai-fire/multiplayer-fabric-build</code> (<code>godot/modules/multiplayer_fabric/</code>) but has never been wired into a deployed zone server. Separately, <code>weftspun/h2o-bench-tpcc</code> designed (RFD 0002, <code>discussion</code> state, never implemented) a <code>libh2o</code> + FoundationDB “zonefabric” scenario modeling the same hub/instanced-zone shape — entity authority via a Hilbert-curve partition, ghost/AOI interest management — independently of this org’s actual zone-server work.</p>
@@ -354,6 +358,12 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html">RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</a></p></li>
+</ul>
 </section>
 
 </main> <!-- /main -->

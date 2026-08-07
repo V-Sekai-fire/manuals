@@ -299,6 +299,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#api-surface-fdb-c-api-7.3" id="toc-api-surface-fdb-c-api-7.3" class="nav-link" data-scroll-target="#api-surface-fdb-c-api-7.3">API surface (FDB C API 7.3)</a></li>
   <li><a href="#what-we-lose" id="toc-what-we-lose" class="nav-link" data-scroll-target="#what-we-lose">What we lose</a></li>
   <li><a href="#when-to-revisit" id="toc-when-to-revisit" class="nav-link" data-scroll-target="#when-to-revisit">When to revisit</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260806-fdb-over-cockroachdb-for-zone-state.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -333,6 +334,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › FoundationDB selection over CockroachDB for zone-server-h2o state</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.md">rfd/0075</a>.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0006-fdb-selection.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
@@ -374,6 +378,12 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 <p>If TFB-comparable numbers become the goal, add CockroachDB as a second adapter behind the same h2o handler interface. The FDB adapter stays primary.</p>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html">RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</a></p></li>
+</ul>
 </section>
 
 </main> <!-- /main -->

@@ -23,6 +23,9 @@
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Actor-lite worker pool architecture for zone-server-h2o</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
 <blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0072-actor-lite-worker-pool/README.md">rfd/0072</a>.</p>
+</blockquote>
+<blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0005-actor-lite-architecture.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
 <p><strong>Target:</strong> top 10 TechEmpower R23 data update test</p>
@@ -207,6 +210,12 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0072-actor-lite-worker-pool/README.html">RFD 0072: Actor-lite worker pool architecture for zone-server-h2o</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-actor-lite-worker-pool.html</guid>
@@ -223,6 +232,9 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Async FDB callback chain on the libh2o event loop</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0073-async-fdb-callback-chain/README.md">rfd/0073</a>.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0011-async-fdb-callback-chain.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
@@ -268,6 +280,12 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0073-async-fdb-callback-chain/README.html">RFD 0073: Async FDB callback chain on the libh2o event loop</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-async-fdb-callback-chain.html</guid>
@@ -284,6 +302,9 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Binary value encoding for FDB values</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0074-binary-value-encoding-for-fdb/README.md">rfd/0074</a>.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0010-binary-value-encoding.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
@@ -318,6 +339,12 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0074-binary-value-encoding-for-fdb/README.html">RFD 0074: Binary value encoding for FDB values</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-binary-value-encoding-for-fdb.html</guid>
@@ -334,6 +361,9 @@ FoundationDB (libfdb_c, pure C, no JVM)</code></pre>
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › FoundationDB selection over CockroachDB for zone-server-h2o state</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.md">rfd/0075</a>.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0006-fdb-selection.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
@@ -376,6 +406,12 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0075-fdb-over-cockroachdb-for-zone-state/README.html">RFD 0075: FoundationDB selection over CockroachDB for zone-server-h2o state</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-fdb-over-cockroachdb-for-zone-state.html</guid>
@@ -392,6 +428,9 @@ fdb_future_get_value(future, &amp;out, &amp;len)  // extract result</code></pre>
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Macaroon + eBPF/XDP security fabric</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0076-macaroon-xdp-security/README.md">rfd/0076</a>.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0018-macaroon-xdp-security.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
@@ -768,6 +807,12 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0076-macaroon-xdp-security/README.html">RFD 0076: Macaroon + eBPF/XDP security fabric</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-macaroon-xdp-security.html</guid>
@@ -784,6 +829,9 @@ discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › PERT critical path for zonefabric implementation</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0077-pert-critical-path-zonefabric/README.md">rfd/0077</a>.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Ported from <a href="https://github.com/weftspun/h2o-bench-tpcc"><code>weftspun/h2o-bench-tpcc</code></a>’s <code>rfd/0020-pert-critical-path.md</code> as part of the <a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o">zone-server-h2o</a> consolidation — see that repo’s README for current status. Content below is the original RFD, unmodified except for this header and stripping the old State line.</p>
 </blockquote>
@@ -1320,6 +1368,12 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0077-pert-critical-path-zonefabric/README.html">RFD 0077: PERT critical path for zonefabric implementation</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-pert-critical-path-zonefabric.html</guid>
@@ -1336,6 +1390,9 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.md">rfd/0083</a>.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>The production zone server (<code>zone-server</code>, deployed as <code>multiplayer-fabric-zone</code> on Fly.io) is a boot scaffold today — OpenTelemetry init only, no WebTransport listener, no game logic (<code>project/main.gd</code>’s own <code>TODO(cycle-5)</code> comment). The real entity/simulation engine, <code>FabricZone</code>/<code>FabricZoneJournal</code>/<code>FabricMMOGZone</code>, exists as a working Godot C++ module in <code>V-Sekai-fire/multiplayer-fabric-build</code> (<code>godot/modules/multiplayer_fabric/</code>) but has never been wired into a deployed zone server. Separately, <code>weftspun/h2o-bench-tpcc</code> designed (RFD 0002, <code>discussion</code> state, never implemented) a <code>libh2o</code> + FoundationDB “zonefabric” scenario modeling the same hub/instanced-zone shape — entity authority via a Hilbert-curve partition, ghost/AOI interest management — independently of this org’s actual zone-server work.</p>
@@ -1360,6 +1417,12 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0083-zone-server-h2o-replaces-godot-fabriczone/README.html">RFD 0083: Replace FabricZone (Godot) with zone-server-h2o (libh2o + FDB + Fil-C)</a></p></li>
+</ul>
+</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260806-zone-server-h2o-replaces-godot-fabriczone.html</guid>
@@ -1376,6 +1439,9 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.md">rfd/0079</a>.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p><code>godot-riscv-spike</code> (RFD 0001 item 6) proved a real, full Godot engine instance boots and ticks inside <code>libriscv</code>’s own sandbox (<code>rvlinux</code>). This holds for the real sandbox, not just <code>qemu-riscv64</code>. Five real <code>libriscv</code> fixes made this work. Host-level <code>strace -f</code> confirmed the result. <code>syscalls.jsonld</code>’s own audit already named the target use case. The <code>socket</code> syscall’s own note reads: “Relevant to CastSpell effects that talk to zone-server-h2o.”</p>
@@ -1415,6 +1481,12 @@ Week 5: L (XDP security, parallel) → M (ablation) → O (scaling)</code></pre>
 </ul>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html">RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</a></p></li>
+</ul>
 </section>
 
  ]]></description>

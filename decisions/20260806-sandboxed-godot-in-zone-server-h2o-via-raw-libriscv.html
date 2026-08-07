@@ -299,6 +299,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#related-prior-art" id="toc-related-prior-art" class="nav-link" data-scroll-target="#related-prior-art">Related prior art</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260806-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -333,6 +334,9 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</em></p>
 <p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
+<blockquote class="blockquote">
+<p>Moved to <a href="../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.md">rfd/0079</a>.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p><code>godot-riscv-spike</code> (RFD 0001 item 6) proved a real, full Godot engine instance boots and ticks inside <code>libriscv</code>’s own sandbox (<code>rvlinux</code>). This holds for the real sandbox, not just <code>qemu-riscv64</code>. Five real <code>libriscv</code> fixes made this work. Host-level <code>strace -f</code> confirmed the result. <code>syscalls.jsonld</code>’s own audit already named the target use case. The <code>socket</code> syscall’s own note reads: “Relevant to CastSpell effects that talk to zone-server-h2o.”</p>
@@ -372,6 +376,12 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/README.html">RFD 0079: Sandboxed Godot game logic in zone-server-h2o, via raw libriscv</a></p></li>
+</ul>
 </section>
 
 </main> <!-- /main -->

@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-29">
 
-<title>YAGNI times structure to the need, in code and in the record – V-Sekai Fire — Manuals</title>
+<title>details – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -27,30 +26,65 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -251,7 +285,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -262,19 +296,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../changelog.html"> 
+    <a class="nav-link" href="../../changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../decisions.html"> 
+    <a class="nav-link" href="../../decisions.html"> 
 <span class="menu-text">Decisions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../rfd.html"> 
+    <a class="nav-link" href="../../rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../references.html"> 
+    <a class="nav-link" href="../../references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -294,102 +328,172 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#yagni-times-structure-to-the-need-in-code-and-in-the-record" id="toc-yagni-times-structure-to-the-need-in-code-and-in-the-record" class="nav-link active" data-scroll-target="#yagni-times-structure-to-the-need-in-code-and-in-the-record">YAGNI times structure to the need, in code and in the record</a>
+  <li><a href="#rationale" id="toc-rationale" class="nav-link active" data-scroll-target="#rationale">Rationale</a></li>
+  <li><a href="#slotmap-design" id="toc-slotmap-design" class="nav-link" data-scroll-target="#slotmap-design">Slotmap design</a>
   <ul class="collapse">
-  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
-  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
-  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
-  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
-  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
-  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#operations" id="toc-operations" class="nav-link" data-scroll-target="#operations">Operations</a></li>
   </ul></li>
+  <li><a href="#why-not-just-a-flat-array" id="toc-why-not-just-a-flat-array" class="nav-link" data-scroll-target="#why-not-just-a-flat-array">Why not just a flat array?</a></li>
+  <li><a href="#why-not-entt-flecs-an-ecs-framework" id="toc-why-not-entt-flecs-an-ecs-framework" class="nav-link" data-scroll-target="#why-not-entt-flecs-an-ecs-framework">Why not entt / flecs / an ECS framework?</a></li>
+  <li><a href="#generational-handles-and-fdb-sync" id="toc-generational-handles-and-fdb-sync" class="nav-link" data-scroll-target="#generational-handles-and-fdb-sync">Generational handles and FDB sync</a></li>
+  <li><a href="#memory-layout-and-cache-behavior" id="toc-memory-layout-and-cache-behavior" class="nav-link" data-scroll-target="#memory-layout-and-cache-behavior">Memory layout and cache behavior</a></li>
+  <li><a href="#capacity-and-growth" id="toc-capacity-and-growth" class="nav-link" data-scroll-target="#capacity-and-growth">Capacity and growth</a></li>
+  <li><a href="#relationship-to-other-rfds" id="toc-relationship-to-other-rfds" class="nav-link" data-scroll-target="#relationship-to-other-rfds">Relationship to other RFDs</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260629-yagni-times-structure-to-need.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0080-slotmap-entity-storage/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">YAGNI times structure to the need, in code and in the record</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">June 29, 2026</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › YAGNI times structure to the need, in code and in the record</em></p>
-<p><strong>Status:</strong> accepted</p>
-<blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0071-yagni-times-structure-to-need/README.md">rfd/0071</a>.</p>
-</blockquote>
-<section id="yagni-times-structure-to-the-need-in-code-and-in-the-record" class="level1">
-<h1>YAGNI times structure to the need, in code and in the record</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Kent Beck’s <a href="https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about">The Cost YAGNI Was Never About</a> reframes YAGNI as a question of timing rather than thrift. Building structure ahead of the feature that needs it sends two bills: optionality, because committing on a guess spends the option to build the right thing once the need is known; and net present value, because the cost lands early while the return lands late. Both bills survive cheap code generation, since neither one is the price of typing.</p>
-<p>Two artifacts in this stack carried speculative structure of that kind. The <code>build_msix</code> script had cross-platform branches for hosts that never run it. Several decision records carried CRIS score tables and other ceremony around the decision they recorded.</p>
+<section id="rationale" class="level2">
+<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
+<p>Zonefabric’s ZoneTick iterates all 200 entities in a zone every tick. The iteration pattern is:</p>
+<ol type="1">
+<li>Range scan FDB <code>zf/entity/{z_id}/</code> → 200 KV pairs (cold path)</li>
+<li>Deserialize into in-memory entity array (warm path)</li>
+<li>Iterate: update position += velocity × dt (hot path)</li>
+<li>Batch write back to FDB (cold path)</li>
+</ol>
+<p>Steps 1 and 4 are FDB operations (~1ms latency). Step 3 is pure compute (~7µs for 200 entities). Step 2 is the deserialization bridge — and its data structure choice determines whether step 3 is cache-friendly.</p>
+<p>A hash map (open-addressing) scatters entities across memory based on hash of entity ID. Iterating 200 entities from a hash map of capacity 1024 touches ~8 cache lines randomly — 8 potential L1 misses.</p>
+<p>A slotmap stores entities in a dense array indexed by a slot index. Iteration is a sequential scan of the dense array — 200 entities × 40 bytes = 8KB, which fits in 128 cache lines, accessed sequentially with hardware prefetch. Zero L1 misses after warmup.</p>
 </section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>Cheap generation makes speculative structure easy to produce, and it reads as diligence. Code and decision records can accrete structure ahead of need, which carries both bills and crowds the load-bearing parts.</p>
+<section id="slotmap-design" class="level2">
+<h2 class="anchored" data-anchor-id="slotmap-design">Slotmap design</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> index<span class="op">;</span>   <span class="co">// slot index into entries[]</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> version<span class="op">;</span> <span class="co">// generation counter for ABA safety</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> zf_slot_t<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    zf_entity_t entity<span class="op">;</span>    <span class="co">// 40 bytes: the actual data</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> version<span class="op">;</span>      <span class="co">// generation: incremented on free</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> next_free<span class="op">;</span>    <span class="co">// free list link (UINT32_MAX = end)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> zf_slot_entry_t<span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    zf_slot_entry_t <span class="op">*</span>entries<span class="op">;</span>  <span class="co">// dense array, capacity = power of 2</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> <span class="op">*</span>slots<span class="op">;</span>           <span class="co">// slot index → entry index (or free)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> free_head<span class="op">;</span>        <span class="co">// head of free list in entries[]</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> count<span class="op">;</span>            <span class="co">// live entity count</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> capacity<span class="op">;</span>         <span class="co">// total slots</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> zf_slotmap_t<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="operations" class="level3">
+<h3 class="anchored" data-anchor-id="operations">Operations</h3>
+<p><strong>Insert</strong> (entity enters zone):</p>
+<pre><code>entry_idx = free_head
+free_head = entries[entry_idx].next_free
+entries[entry_idx].entity = entity
+entries[entry_idx].version++
+slot_idx = allocate_slot()
+slots[slot_idx] = entry_idx
+return {slot_idx, entries[entry_idx].version}</code></pre>
+<p><strong>Remove</strong> (entity leaves zone):</p>
+<pre><code>entry_idx = slots[slot.version]
+if entries[entry_idx].version != slot.version: return STALE
+entries[entry_idx].next_free = free_head
+free_head = entry_idx
+entries[entry_idx].version++  // invalidate all existing handles
+free_slot(slot.index)
+count--</code></pre>
+<p><strong>Lookup</strong> (random access by handle):</p>
+<pre><code>entry_idx = slots[handle.index]
+if entries[entry_idx].version != handle.version: return NULL
+return &amp;entries[entry_idx].entity</code></pre>
+<p><strong>Iterate</strong> (tick all entities):</p>
+<pre><code>for i in 0..count:
+    entity = &amp;entries[dense_order[i]].entity
+    entity-&gt;x += entity-&gt;vx * dt
+    entity-&gt;y += entity-&gt;vy * dt</code></pre>
+<p>Iteration uses a dense order array so live entities are contiguous, even after removals (removal swaps the last entry into the freed slot).</p>
 </section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Adopt YAGNI as a question of timing.</p>
+</section>
+<section id="why-not-just-a-flat-array" class="level2">
+<h2 class="anchored" data-anchor-id="why-not-just-a-flat-array">Why not just a flat array?</h2>
+<p>A flat array works if entities never leave zones. But zonefabric has entity migration — entities cross zone boundaries. When entity #47 of 200 leaves, a flat array either:</p>
 <ul>
-<li>Build structure when the feature that needs it arrives. The rule is about timing, so a real near-term need is met by building now.</li>
-<li>Keep a decision record to the load-bearing sections set by the MADR proposal template: context, problem, design, downsides, the road not taken, and how the decision is confirmed.</li>
-<li>When a record stops describing the live plan, mark it superseded and move it to <code>_archive</code>, following <code>_archive/README.md</code>.</li>
+<li>Leaves a gap (iteration must skip dead entries → branch per entity)</li>
+<li>Compacts (swap-remove → O(1) but changes entity ordering)</li>
 </ul>
+<p>A slotmap gives O(1) insert/remove with stable handles (generational indices prevent ABA problems where a recycled slot is mistaken for a live entity). The dense iteration order is maintained by swap-remove on the slot array.</p>
 </section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<section id="why-not-entt-flecs-an-ecs-framework" class="level2">
+<h2 class="anchored" data-anchor-id="why-not-entt-flecs-an-ecs-framework">Why not entt / flecs / an ECS framework?</h2>
+<p>From <a href="https://github.com/abeimler/ecs_benchmark">abeimler/ecs_benchmark</a>, EnTT iterates 10K entities with 7 systems in 350µs. A slotmap with 200 entities and 1 system (position+velocity) takes ~7µs. The overhead of a full ECS framework (archetype storage, component registration, system scheduling, query matching) is not justified for a single component type and a single system.</p>
+<p>The slotmap is ~100 lines of C. EnTT is ~15K lines of C++. We need the iteration speed, not the abstraction.</p>
+</section>
+<section id="generational-handles-and-fdb-sync" class="level2">
+<h2 class="anchored" data-anchor-id="generational-handles-and-fdb-sync">Generational handles and FDB sync</h2>
+<p>When an entity migrates from zone A to zone B:</p>
+<ol type="1">
+<li>Zone A: <code>slotmap_remove(sm_a, handle)</code> — version bumped, slot freed</li>
+<li>FDB: <code>fdb_transaction_clear(zf/entity/{a_id}/{e_id})</code> — delete key</li>
+<li>FDB: <code>fdb_transaction_set(zf/entity/{b_id}/{e_id}, packed_entity)</code> — insert key</li>
+<li>Zone B: <code>handle_b = slotmap_insert(sm_b, entity)</code> — new slot, new version</li>
+</ol>
+<p>The generational handle prevents zone A from using a stale handle to access an entity that has already migrated to zone B. The version mismatch on lookup returns NULL, signaling the caller to re-read from FDB.</p>
+</section>
+<section id="memory-layout-and-cache-behavior" class="level2">
+<h2 class="anchored" data-anchor-id="memory-layout-and-cache-behavior">Memory layout and cache behavior</h2>
+<p>For 200 entities at 40 bytes each:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 36%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Structure</th>
+<th>Memory</th>
+<th>Iteration cache misses</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hash map (cap 1024)</td>
+<td>40KB + 4KB indices</td>
+<td>~8 (random access)</td>
+</tr>
+<tr class="even">
+<td>Linked list</td>
+<td>200 × (40 + 8 ptr) = 9.6KB</td>
+<td>~200 (pointer chasing)</td>
+</tr>
+<tr class="odd">
+<td>Slotmap (dense)</td>
+<td>200 × 40 = 8KB</td>
+<td>~1 (sequential, prefetched)</td>
+</tr>
+<tr class="even">
+<td>Flat array</td>
+<td>200 × 40 = 8KB</td>
+<td>~1 (same as slotmap)</td>
+</tr>
+</tbody>
+</table>
+<p>The slotmap matches flat array iteration speed while supporting O(1) insert/remove with stable handles.</p>
+</section>
+<section id="capacity-and-growth" class="level2">
+<h2 class="anchored" data-anchor-id="capacity-and-growth">Capacity and growth</h2>
+<p>Initial capacity: 256 (AUTHORITY_CAPACITY from RFD 0002). Grows by doubling when count reaches capacity. Growth is amortized O(1) — the realloc + copy is rare (log₂(200/256) = 0 growth events at steady state).</p>
+<p>Memory per zone: 256 × (40 + 8) = 12KB. For 10,000 zones: 120MB. Negligible vs FDB’s storage overhead.</p>
+</section>
+<section id="relationship-to-other-rfds" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
 <ul>
-<li>A timing judgment can defer something whose need turns out to be near. The rule is about timing, so the response is to build once the need is real.</li>
-<li>Trimming and archiving move breadth of context out of the live listing. The archive keeps that history in the repository.</li>
+<li><strong>RFD 0002</strong> (zonefabric): defines ENTITIES_PER_ZONE=200 and AUTHORITY_CAPACITY=256. Slotmap capacity = AUTHORITY_CAPACITY.</li>
+<li><strong>RFD 0010</strong> (binary encoding): FDB values are packed structs. The slotmap stores the same struct in memory — <code>memcpy</code> from FDB value to slotmap entry, no conversion.</li>
+<li><strong>RFD 0011</strong> (async callbacks): FDB range scan callback populates the slotmap. Each KV pair in the range result is one <code>slotmap_insert</code>.</li>
+<li><strong>RFD 0016</strong> (zstd): if the FDB value is compressed, decompress before <code>memcpy</code> into the slotmap entry. The slotmap always stores uncompressed data.</li>
+<li><strong>RFD 0005</strong> (actor-lite): each worker thread owns its zone’s slotmap. No cross-thread access — the slotmap is thread-local. No locks, no atomics on the hot path.</li>
 </ul>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<ul>
-<li>Read YAGNI as effort-saving, so that cheap code retires it. The essay rejects this reading: the bills are optionality and net present value, and cheap generation leaves both intact.</li>
-<li>Justify building now by the price of the later retrofit. That price is a forecast about the same unknown future the timing rule watches, so the estimate carries the optionality bill again and returns to the question it means to settle. A real near-term need still calls for building now; a projected far-off cost stays a guess.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The principle was applied in three changes: the ceremony trim across the heavy decision records, this pass archiving the superseded presence demo, and the <code>build_msix</code> script trimmed to the two platforms it serves. Each change left the working behaviour unchanged.</p>
 
 
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260629-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a></p></li>
-<li><p><a href="20260629-defer-loot-slice-hardening-until-needed.html">Defer the loot-slice hardening scope until its need arrives</a></p></li>
-<li><p><a href="20260629-loop-slice-telemetry-to-the-observability-collector.html">Export loop-slice server telemetry to the observability collector</a></p></li>
-<li><p><a href="../rfd/0071-yagni-times-structure-to-need/README.html">RFD 0071: YAGNI times structure to the need, in code and in the record</a></p></li>
-</ul>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -814,7 +918,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260629-yagni-times-structure-to-need.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0080-slotmap-entity-storage/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

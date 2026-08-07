@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-29">
 
-<title>YAGNI times structure to the need, in code and in the record – V-Sekai Fire — Manuals</title>
+<title>details – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -27,30 +26,65 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -251,7 +285,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -262,19 +296,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../changelog.html"> 
+    <a class="nav-link" href="../../changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../decisions.html"> 
+    <a class="nav-link" href="../../decisions.html"> 
 <span class="menu-text">Decisions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../rfd.html"> 
+    <a class="nav-link" href="../../rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../references.html"> 
+    <a class="nav-link" href="../../references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -294,102 +328,272 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#yagni-times-structure-to-the-need-in-code-and-in-the-record" id="toc-yagni-times-structure-to-the-need-in-code-and-in-the-record" class="nav-link active" data-scroll-target="#yagni-times-structure-to-the-need-in-code-and-in-the-record">YAGNI times structure to the need, in code and in the record</a>
+  <li><a href="#rationale" id="toc-rationale" class="nav-link active" data-scroll-target="#rationale">Rationale</a></li>
+  <li><a href="#architecture" id="toc-architecture" class="nav-link" data-scroll-target="#architecture">Architecture</a></li>
+  <li><a href="#three-components" id="toc-three-components" class="nav-link" data-scroll-target="#three-components">Three components</a>
   <ul class="collapse">
-  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
-  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
-  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
-  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
-  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
-  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#matchmaker-control-plane-infrequent" id="toc-matchmaker-control-plane-infrequent" class="nav-link" data-scroll-target="#matchmaker-control-plane-infrequent">1. Matchmaker (control plane, infrequent)</a></li>
+  <li><a href="#user-space-orchestrator-control-plane-once-per-session" id="toc-user-space-orchestrator-control-plane-once-per-session" class="nav-link" data-scroll-target="#user-space-orchestrator-control-plane-once-per-session">2. User-space orchestrator (control plane, once per session)</a></li>
+  <li><a href="#xdpebpf-data-plane-every-packet" id="toc-xdpebpf-data-plane-every-packet" class="nav-link" data-scroll-target="#xdpebpf-data-plane-every-packet">3. XDP/eBPF (data plane, every packet)</a></li>
   </ul></li>
+  <li><a href="#why-this-works-for-25m-ccu" id="toc-why-this-works-for-25m-ccu" class="nav-link" data-scroll-target="#why-this-works-for-25m-ccu">Why this works for 25M CCU</a>
+  <ul class="collapse">
+  <li><a href="#packet-rate-analysis" id="toc-packet-rate-analysis" class="nav-link" data-scroll-target="#packet-rate-analysis">Packet rate analysis</a></li>
+  <li><a href="#ddos-resistance" id="toc-ddos-resistance" class="nav-link" data-scroll-target="#ddos-resistance">DDoS resistance</a></li>
+  <li><a href="#session-key-entropy" id="toc-session-key-entropy" class="nav-link" data-scroll-target="#session-key-entropy">Session key entropy</a></li>
+  <li><a href="#whitelist_map-memory" id="toc-whitelist_map-memory" class="nav-link" data-scroll-target="#whitelist_map-memory">WHITELIST_MAP memory</a></li>
+  </ul></li>
+  <li><a href="#macaroon-caveat-design" id="toc-macaroon-caveat-design" class="nav-link" data-scroll-target="#macaroon-caveat-design">Macaroon caveat design</a></li>
+  <li><a href="#session-lifecycle" id="toc-session-lifecycle" class="nav-link" data-scroll-target="#session-lifecycle">Session lifecycle</a></li>
+  <li><a href="#relationship-to-other-rfds" id="toc-relationship-to-other-rfds" class="nav-link" data-scroll-target="#relationship-to-other-rfds">Relationship to other RFDs</a></li>
+  <li><a href="#what-this-rfd-does-not-cover" id="toc-what-this-rfd-does-not-cover" class="nav-link" data-scroll-target="#what-this-rfd-does-not-cover">What this RFD does NOT cover</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260629-yagni-times-structure-to-need.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0076-macaroon-xdp-security/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">YAGNI times structure to the need, in code and in the record</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">June 29, 2026</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › YAGNI times structure to the need, in code and in the record</em></p>
-<p><strong>Status:</strong> accepted</p>
-<blockquote class="blockquote">
-<p>Moved to <a href="../rfd/0071-yagni-times-structure-to-need/README.md">rfd/0071</a>.</p>
-</blockquote>
-<section id="yagni-times-structure-to-the-need-in-code-and-in-the-record" class="level1">
-<h1>YAGNI times structure to the need, in code and in the record</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Kent Beck’s <a href="https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about">The Cost YAGNI Was Never About</a> reframes YAGNI as a question of timing rather than thrift. Building structure ahead of the feature that needs it sends two bills: optionality, because committing on a guess spends the option to build the right thing once the need is known; and net present value, because the cost lands early while the return lands late. Both bills survive cheap code generation, since neither one is the price of typing.</p>
-<p>Two artifacts in this stack carried speculative structure of that kind. The <code>build_msix</code> script had cross-platform branches for hosts that never run it. Several decision records carried CRIS score tables and other ceremony around the decision they recorded.</p>
+<section id="rationale" class="level2">
+<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
+<p>Directly validating a chained-HMAC Macaroon inside an XDP packet filter is impossible and undesirable:</p>
+<ol type="1">
+<li><p>The eBPF verifier rejects it. The BPF verifier imposes strict limits on instruction count, loops, and stack size. HMAC-SHA256 with caveat chaining requires hundreds of instructions and variable-length parsing, so the verifier would reject the program.</p></li>
+<li><p>Parsing complex tokens at the network interface destroys the sub-10µs latency target from RFD 0002. A single Macaroon validation costs ~50-100µs (HMAC + caveat walk); at 60Hz × 200 entities per zone, that’s 15,360 validations/sec per zone, or 1.5 seconds of CPU per second on crypto alone.</p></li>
+<li><p>It is the wrong layer. Macaroons are authorization tokens (who can do what). XDP is a packet filter (which packets are allowed). Mixing authorization logic into packet filtering violates separation of concerns.</p></li>
+</ol>
 </section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>Cheap generation makes speculative structure easy to produce, and it reads as diligence. Code and decision records can accrete structure ahead of need, which carries both bills and crowds the load-bearing parts.</p>
+<section id="architecture" class="level2">
+<h2 class="anchored" data-anchor-id="architecture">Architecture</h2>
+<pre><code>                    CONTROL PLANE (once per connection)
+                    ─────────────────────────────────────
+
+  Player ──connect──► Matchmaker
+                        │ authenticate (OAuth, password, etc.)
+                        │ issue Macaroon with caveats:
+                        │   "zone_id = 45"
+                        │   "server_ip = 192.168.1.50"
+                        │   "expires &lt; 5min"
+                        │ generate 64-bit session_key
+                        │
+                        ▼
+  Player ──hello(Macaroon, session_key)──► User-space orchestrator
+                                            (weft-warp-loop zone server)
+                        │
+                        │ validate Macaroon HMAC signature
+                        │ verify caveats (zone_id, server_ip, expiry)
+                        │ if valid:
+                        │   bpf_map_update_elem(WHITELIST_MAP,
+                        │     key=player_ip,
+                        │     value={session_key, zone_id, core_id})
+                        │
+                        ▼
+                     WHITELIST_MAP (eBPF)
+                    ┌─────────────────────────────┐
+                    │ player_ip → session_key      │
+                    │             zone_id          │
+                    │             core_id          │
+                    │             expiry_timestamp │
+                    └─────────────────────────────┘
+
+                    DATA PLANE (every packet, 60Hz)
+                    ──────────────────────────────
+
+  Player ──UDP(session_key, payload)──► NIC
+                                        │
+                                        ▼
+                                     XDP program
+                                        │ lookup src_ip in WHITELIST_MAP
+                                        │
+                                        ├── valid: route to core_id
+                                        │         (zero crypto, ~10ns)
+                                        │
+                                        └── invalid: DROP
+                                                   (DDoS, spoof, expired)</code></pre>
 </section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Adopt YAGNI as a question of timing.</p>
+<section id="three-components" class="level2">
+<h2 class="anchored" data-anchor-id="three-components">Three components</h2>
+<section id="matchmaker-control-plane-infrequent" class="level3">
+<h3 class="anchored" data-anchor-id="matchmaker-control-plane-infrequent">1. Matchmaker (control plane, infrequent)</h3>
+<p>The Matchmaker is a central service (or distributed with consensus) that:</p>
 <ul>
-<li>Build structure when the feature that needs it arrives. The rule is about timing, so a real near-term need is met by building now.</li>
-<li>Keep a decision record to the load-bearing sections set by the MADR proposal template: context, problem, design, downsides, the road not taken, and how the decision is confirmed.</li>
-<li>When a record stops describing the live plan, mark it superseded and move it to <code>_archive</code>, following <code>_archive/README.md</code>.</li>
+<li>Authenticates the player (OAuth, password, device attestation)</li>
+<li>Determines target zone via load balancing + spatial locality</li>
+<li>Issues a Macaroon attenuated with caveats:
+<ul>
+<li><code>zone_id = N</code> — player is assigned to zone N</li>
+<li><code>server_ip = A.B.C.D</code> — player must connect to this server</li>
+<li><code>expires &lt; T</code> — token valid until timestamp T</li>
+<li><code>rate_limit = R</code> — max packets/sec from this player</li>
+</ul></li>
+<li>Generates a cryptographically random 64-bit session key</li>
+<li>Returns Macaroon + session_key + server address to player</li>
+</ul>
+<p>The Matchmaker runs in user space with full access to crypto libraries. It is not in the hot path — it runs once per connection (every ~5 minutes for session renewal).</p>
+</section>
+<section id="user-space-orchestrator-control-plane-once-per-session" class="level3">
+<h3 class="anchored" data-anchor-id="user-space-orchestrator-control-plane-once-per-session">2. User-space orchestrator (control plane, once per session)</h3>
+<p>The zone server (weft-warp-loop) receives the player’s initial Hello packet containing the Macaroon. In user space:</p>
+<ul>
+<li>Validate the Macaroon’s HMAC signature against the root key</li>
+<li>Walk the caveat chain: verify zone_id matches a local zone, server_ip matches this server, expiry is in the future</li>
+<li>If valid: call <code>bpf_map_update_elem()</code> to insert the player’s IP + session_key + zone_id + core_id into the eBPF WHITELIST_MAP</li>
+<li>If invalid: reject the connection</li>
+</ul>
+<p>This is the bridge between cryptographic security (user space) and kernel-bypass enforcement (eBPF). It runs once per session, not per packet.</p>
+</section>
+<section id="xdpebpf-data-plane-every-packet" class="level3">
+<h3 class="anchored" data-anchor-id="xdpebpf-data-plane-every-packet">3. XDP/eBPF (data plane, every packet)</h3>
+<p>The XDP program intercepts every UDP packet at the NIC, before the Linux kernel does any allocation or processing:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// XDP program (runs at line rate, ~10ns per packet)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SEC<span class="op">(</span><span class="st">"xdp"</span><span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> zone_router<span class="op">(</span><span class="kw">struct</span> xdp_md <span class="op">*</span>ctx<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Parse packet headers (IP + UDP + custom session header)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> src_ip <span class="op">=</span> parse_src_ip<span class="op">(</span>ctx<span class="op">);</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> session_key <span class="op">=</span> parse_session_key<span class="op">(</span>ctx<span class="op">);</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Lookup in whitelist map (BPF hash map, O(1))</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> session_info <span class="op">*</span>info<span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    info <span class="op">=</span> bpf_map_lookup_elem<span class="op">(&amp;</span>whitelist_map<span class="op">,</span> <span class="op">&amp;</span>src_ip<span class="op">);</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>info<span class="op">)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> XDP_DROP<span class="op">;</span>  <span class="co">// unauthenticated — drop instantly</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Validate session key</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>info<span class="op">-&gt;</span>session_key <span class="op">!=</span> session_key<span class="op">)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> XDP_DROP<span class="op">;</span>  <span class="co">// wrong key — spoofed or stale</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Check expiry</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>bpf_ktime_get_ns<span class="op">()</span> <span class="op">&gt;</span> info<span class="op">-&gt;</span>expiry_ns<span class="op">)</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> XDP_DROP<span class="op">;</span>  <span class="co">// session expired</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Route to the CPU core handling this zone</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// (via CPU steering or redirect to the right ring buffer)</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> route_to_core<span class="op">(</span>info<span class="op">-&gt;</span>core_id<span class="op">,</span> ctx<span class="op">);</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>No cryptographic operations in the XDP path.</strong> Only a hash map lookup and integer comparison. This executes in ~10-50 nanoseconds per packet.</p>
+</section>
+</section>
+<section id="why-this-works-for-25m-ccu" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-works-for-25m-ccu">Why this works for 25M CCU</h2>
+<section id="packet-rate-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="packet-rate-analysis">Packet rate analysis</h3>
+<p>At 25M CCU, 60Hz tick rate, 200 entities/zone:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Total players</td>
+<td>25,000,000</td>
+</tr>
+<tr class="even">
+<td>Packets/player/sec</td>
+<td>60</td>
+</tr>
+<tr class="odd">
+<td>Total packets/sec</td>
+<td>1,500,000,000 (1.5 Gpps)</td>
+</tr>
+<tr class="even">
+<td>Zones (200 entities each)</td>
+<td>125,000</td>
+</tr>
+<tr class="odd">
+<td>Packets/zone/sec</td>
+<td>12,000 (200 entities × 60Hz)</td>
+</tr>
+<tr class="even">
+<td>XDP cost/packet</td>
+<td>~50ns</td>
+</tr>
+<tr class="odd">
+<td>XDP CPU/zone/sec</td>
+<td>0.6ms (12,000 × 50ns)</td>
+</tr>
+<tr class="even">
+<td>XDP CPU/core (16 zones/core)</td>
+<td>9.6ms/sec (1% of one core)</td>
+</tr>
+</tbody>
+</table>
+<p>The XDP filter consumes &lt;1% of a single core’s CPU. The remaining 99% is available for ZoneTick computation and FDB batch writes.</p>
+</section>
+<section id="ddos-resistance" class="level3">
+<h3 class="anchored" data-anchor-id="ddos-resistance">DDoS resistance</h3>
+<p>A DDoS attack sends millions of spoofed packets. Without XDP, each packet traverses the full kernel network stack (allocation, socket lookup, conntrack, userspace wakeup) — ~5µs per packet, saturating all cores.</p>
+<p>With XDP, spoofed packets are dropped at the NIC in ~50ns. A 100 Gbps NIC can process 150M packets/sec in XDP. At 50ns/drop, that’s 7.5ms of CPU/sec — one core handles the entire DDoS while the other 31 cores run the game simulation uninterrupted.</p>
+</section>
+<section id="session-key-entropy" class="level3">
+<h3 class="anchored" data-anchor-id="session-key-entropy">Session key entropy</h3>
+<p>64-bit session key: 2⁶⁴ = 1.8 × 10¹⁹ possible keys. At 1.5 Gpps brute-force rate, expected time to forge one key: ~385 years. With session expiry at 5 minutes, the attacker has 300 seconds × 1.5 Gpps = 4.5 × 10¹¹ attempts, giving a forgery probability of 2.5 × 10⁻⁸ — negligible.</p>
+</section>
+<section id="whitelist_map-memory" class="level3">
+<h3 class="anchored" data-anchor-id="whitelist_map-memory">WHITELIST_MAP memory</h3>
+<p>Each entry: 4 bytes (IP) + 8 bytes (session_key) + 4 bytes (zone_id)</p>
+<ul>
+<li>4 bytes (core_id) + 8 bytes (expiry) = 28 bytes. For 25M entries: 700MB. BPF maps support up to 2GB on modern kernels. Alternatively, use a per-CPU map (per-core whitelist) to reduce each map to ~44MB.</li>
 </ul>
 </section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+</section>
+<section id="macaroon-caveat-design" class="level2">
+<h2 class="anchored" data-anchor-id="macaroon-caveat-design">Macaroon caveat design</h2>
+<pre><code>location = "zf://zone-server.example.com"
+identifier = "player-12345-session"
+caveats = [
+    "zone_id = 45",
+    "server_ip = 192.168.1.50",
+    "expires &lt; 1718984700",
+    "rate_limit = 120",        // max 120 packets/sec (2x 60Hz)
+    "entity_id = 12345",       // player's entity slot in zone
+]
+discharge = HMAC-SHA256(root_key, location || identifier || caveats)</code></pre>
+<p>The user-space orchestrator verifies:</p>
+<ol type="1">
+<li>HMAC signature matches (token not forged)</li>
+<li><code>zone_id</code> is a zone hosted on this server</li>
+<li><code>server_ip</code> matches this server’s IP</li>
+<li><code>expires</code> is in the future</li>
+<li><code>entity_id</code> is a valid slot in the zone’s slotmap (<code>rfd/0080-slotmap-entity-storage</code>)</li>
+</ol>
+<p>The <code>entity_id</code> caveat ties the Macaroon to a specific slotmap entry. If the player’s entity is destroyed (slot freed, generation bumped), the session is invalidated — the orchestrator removes the entry from WHITELIST_MAP on the next tick.</p>
+</section>
+<section id="session-lifecycle" class="level2">
+<h2 class="anchored" data-anchor-id="session-lifecycle">Session lifecycle</h2>
+<pre><code>1. Player authenticates → Matchmaker issues Macaroon (5min TTL)
+2. Player sends Hello + Macaroon → orchestrator validates → WHITELIST_MAP update
+3. Player sends UDP packets at 60Hz → XDP validates + routes (every packet)
+4. At 4min30sec: orchestrator sends renewal prompt to player
+5. Player re-authenticates → new Macaroon → WHITELIST_MAP update (refresh)
+6. If player disconnects: orchestrator removes from WHITELIST_MAP on next tick
+7. If Macaroon expires without renewal: XDP drops packets (expiry check in XDP)</code></pre>
+</section>
+<section id="relationship-to-other-rfds" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-to-other-rfds">Relationship to other RFDs</h2>
 <ul>
-<li>A timing judgment can defer something whose need turns out to be near. The rule is about timing, so the response is to build once the need is real.</li>
-<li>Trimming and archiving move breadth of context out of the live listing. The archive keeps that history in the repository.</li>
+<li><p><code>rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps</code> (zonefabric): XDP routes packets to the core handling each zone. The zone’s slotmap (<code>rfd/0080-slotmap-entity-storage</code>) stores the entity state. XDP does not touch the slotmap; it only routes packets.</p></li>
+<li><p><code>rfd/0080-slotmap-entity-storage</code>: The <code>entity_id</code> caveat in the Macaroon maps to a slotmap handle. When the entity is destroyed, the slotmap generation bump invalidates the session.</p></li>
+<li><p><code>rfd/0072-actor-lite-worker-pool</code>: The user-space orchestrator runs on the H2O event loop. The worker thread that handles the Hello packet makes the <code>bpf_map_update_elem()</code> call.</p></li>
+<li><p><code>rfd/0084-zstd-compression-for-zone-state</code>: This is orthogonal. zstd compresses FDB values, and XDP handles packet routing. They operate on different layers.</p></li>
+<li><p>mas-bandwidth/fps: Glenn Fiedler’s architecture mentions XDP for packet processing and relays but does not detail authentication. This RFD fills that gap: Macaroons provide the authentication, XDP provides the enforcement.</p></li>
 </ul>
 </section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<section id="what-this-rfd-does-not-cover" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-rfd-does-not-cover">What this RFD does NOT cover</h2>
 <ul>
-<li>Read YAGNI as effort-saving, so that cheap code retires it. The essay rejects this reading: the bills are optionality and net present value, and cheap generation leaves both intact.</li>
-<li>Justify building now by the price of the later retrofit. That price is a forecast about the same unknown future the timing rule watches, so the estimate carries the optionality bill again and returns to the question it means to settle. A real near-term need still calls for building now; a projected far-off cost stays a guess.</li>
+<li><p>Macaroon implementation: use libmacaroons (C library) or py-macaroons. The Matchmaker implementation is out of scope; this RFD defines the interface (issue, validate, attenuate) and the eBPF handoff.</p></li>
+<li><p>eBPF program compilation: the XDP program is compiled with clang/llvm to BPF bytecode and loaded with libbpf. This is a build- time concern, documented in the CI pipeline RFD.</p></li>
+<li><p>TLS/mTLS: the control-plane connection (Hello + Macaroon) uses TLS. The data-plane (UDP game packets) does not; XDP enforces authenticity via the session key, and game state is not sensitive (positions, velocities). Encryption of game packets is a future concern if anti-cheat requires it.</p></li>
+<li><p>Player-to-player security: this RFD secures the server from unauthenticated clients. It does not prevent an authenticated player from sending malicious game actions (aimbots, speed hacks). Server-side validation of game actions is a game-logic concern, not a network-security concern.</p></li>
 </ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The principle was applied in three changes: the ceremony trim across the heavy decision records, this pass archiving the superseded presence demo, and the <code>build_msix</code> script trimmed to the two platforms it serves. Each change left the working behaviour unchanged.</p>
 
 
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260629-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a></p></li>
-<li><p><a href="20260629-defer-loot-slice-hardening-until-needed.html">Defer the loot-slice hardening scope until its need arrives</a></p></li>
-<li><p><a href="20260629-loop-slice-telemetry-to-the-observability-collector.html">Export loop-slice server telemetry to the observability collector</a></p></li>
-<li><p><a href="../rfd/0071-yagni-times-structure-to-need/README.html">RFD 0071: YAGNI times structure to the need, in code and in the record</a></p></li>
-</ul>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -814,7 +1018,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260629-yagni-times-structure-to-need.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0076-macaroon-xdp-security/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
