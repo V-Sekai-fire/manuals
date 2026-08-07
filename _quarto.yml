@@ -98,6 +98,7 @@ project:
     - "rfd/0086-defer-nogod-gossip-zone-authority/README.md"
     - "rfd/0087-avatar-ik-sinew-mocap-align-over-mink/README.md"
     - "rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/README.md"
+    - "rfd/0089-flyio-over-podman-quadlets/README.md"
     - "rfd/0090-uro-burrito-release/README.md"
 
 resources:
