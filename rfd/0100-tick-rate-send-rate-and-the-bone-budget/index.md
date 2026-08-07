@@ -16,7 +16,9 @@ constraint, so spend the budget on bandwidth and not on machines.
 ## Topology
 
     1 Fly machine, shared-cpu-1x, 256 MB, region iad
-      |- 1 GB volume, ssd storage engine, snapshots on
+      |- 1 GB volume, ssd storage engine (live data)
+      |- volume snapshots (local rollback)
+      |- fdbbackup -> S3 object store (disaster recovery)
       |- fdbserver, single process
       |- zone-server-h2o, one zone, ZONE_TICK_HZ 64
       |- UDP 7443 bound to fly-global-services -> WebTransport clients
@@ -45,7 +47,7 @@ machine until a second zone is genuinely needed.
 Asia Pacific doubles the egress price, and Africa and India multiply it
 by six.
 
-## Durability: ssd engine and a volume, not redundancy
+## Durability: three layers, each doing one job
 
 A Fly volume is 0.15 USD per GB per month, and snapshots are 0.08 USD
 per GB with the first 10 GB free.
@@ -71,8 +73,28 @@ transaction log to disk for durability, so the storage engine changes
 the read path and not the commit path. The memory engine also holds
 every key in RAM, which competes with the zone server for 212188 kB.
 
-Free snapshots below 10 GB cover disaster recovery, so streaming
-backups to an object store add nothing at this data size.
+The three layers do different jobs, and none replaces another:
+
+| Layer                     | Job                             | Cost                      |
+| ------------------------- | ------------------------------- | ------------------------- |
+| ssd engine on the volume  | live data                       | 0.15 USD per GB           |
+| Fly volume snapshots      | fast local rollback             | free below 10 GB          |
+| FoundationDB backup to S3 | disaster recovery, off platform | egress at 0.02 USD per GB |
+
+A snapshot is local to Fly and periodic. It restores a bad deploy in
+minutes, and it does not survive the loss of the region or the account.
+
+`fdbbackup` streams mutations continuously to a blob store, so the
+recovery point is seconds rather than hours, and the copy sits outside
+Fly. It restores into a different cluster.
+
+The project already runs an object store for casync, per `rfd/0095`, so
+this adds a destination rather than a dependency. Mutation volume is
+small, because live entity state is 20 KB per zone and the guest
+key-value quota is 8 MB per zone.
+
+RAM redundancy is not on this list. It answers availability, not
+durability, and at this budget it costs 14 concurrent users.
 
 ## What binds, and what does not
 
