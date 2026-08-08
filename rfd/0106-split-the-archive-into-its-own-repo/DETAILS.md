@@ -1,11 +1,11 @@
 ## What moved
 
-| Path                                                      | Records |
-| --------------------------------------------------------- | ------- |
-| `_archive/decisions/`                                     | 26      |
-| `_archive/decisions/attachments/`                          | 1 image |
-| `rfd/0011-observability-stack-victoriatraces/`             | 1       |
-| `rfd/0061-quadlets-on-fedora-44-instead-of-harvester/`     | 1       |
+| Path                                                   | Records |
+| ------------------------------------------------------ | ------- |
+| `_archive/decisions/`                                  | 26      |
+| `_archive/decisions/attachments/`                      | 1 image |
+| `rfd/0011-observability-stack-victoriatraces/`         | 1       |
+| `rfd/0061-quadlets-on-fedora-44-instead-of-harvester/` | 1       |
 
 `_archive/README.md` moves with the directory. Its text now states that
 the leading underscore does no work in a repository that builds no
@@ -18,15 +18,15 @@ A deleted file leaves no stub. A live Markdown link to that file leaves
 a 404 on the published site. So a move repairs every inbound link, and
 that is not a stub.
 
-| File                                | Repair                                                              |
-| ----------------------------------- | ------------------------------------------------------------------- |
-| `changelog/2026/20260606-deck-log.md` | Four relative links into `_archive/decisions/` now point at the archive repository. |
-| `rfd/0071-yagni-times-structure-to-need/index.md` | Two pointers to `_archive` now name the archive repository. |
-| `rfd/0089-flyio-over-podman-quadlets/index.md` | The `rfd/0061` reference now links to the archive.        |
-| `rfd/0060-org-scoped-github-app-token-for-gh-access/index.md` | The `rfd/0061` reference now links to the archive. |
-| `rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md` | The `rfd/0011` reference now links to the archive. |
-| `rfd/0062-repository-and-capability-inventory/DETAILS.md` | The two-org split decision path now links to the archive. |
-| `_quarto.yml`                       | Drops the `decisions/attachments` resource, which no longer exists.  |
+| File                                                                    | Repair                                                                              |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `changelog/2026/20260606-deck-log.md`                                   | Four relative links into `_archive/decisions/` now point at the archive repository. |
+| `rfd/0071-yagni-times-structure-to-need/index.md`                       | Two pointers to `_archive` now name the archive repository.                         |
+| `rfd/0089-flyio-over-podman-quadlets/index.md`                          | The `rfd/0061` reference now links to the archive.                                  |
+| `rfd/0060-org-scoped-github-app-token-for-gh-access/index.md`           | The `rfd/0061` reference now links to the archive.                                  |
+| `rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md` | The `rfd/0011` reference now links to the archive.                                  |
+| `rfd/0062-repository-and-capability-inventory/DETAILS.md`               | The two-org split decision path now links to the archive.                           |
+| `_quarto.yml`                                                           | Drops the `decisions/attachments` resource, which no longer exists.                 |
 
 Inline prose in `rfd/0089`'s `DETAILS.md` still names `rfd/0061` in
 code spans, without links. Those read as citations of a numbered
@@ -56,11 +56,11 @@ record that consolidates the two supersedes this one.
 
 ## Counts after the split
 
-| Set                                  | Count |
-| ------------------------------------ | ----- |
+| Set                                   | Count |
+| ------------------------------------- | ----- |
 | Repos in `v-sekai-multiplayer-fabric` | 73    |
-| Active                               | 49    |
-| Archived                             | 24    |
+| Active                                | 49    |
+| Archived                              | 24    |
 
 ## What stays
 
