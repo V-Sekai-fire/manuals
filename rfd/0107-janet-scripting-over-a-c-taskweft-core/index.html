@@ -300,6 +300,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#why-rust-is-out" id="toc-why-rust-is-out" class="nav-link" data-scroll-target="#why-rust-is-out">Why Rust is out</a></li>
   <li><a href="#what-this-replaces" id="toc-what-this-replaces" class="nav-link" data-scroll-target="#what-this-replaces">What this replaces</a></li>
   <li><a href="#open-questions-this-record-does-not-settle" id="toc-open-questions-this-record-does-not-settle" class="nav-link" data-scroll-target="#open-questions-this-record-does-not-settle">Open questions this record does not settle</a></li>
+  <li><a href="#superseded-2026-08-07" id="toc-superseded-2026-08-07" class="nav-link" data-scroll-target="#superseded-2026-08-07">Superseded, 2026-08-07</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0107-janet-scripting-over-a-c-taskweft-core/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -327,7 +328,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
+<p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>rfd/0083</code> built the zone server as native libh2o with FoundationDB. The tier held. Its cost was questioned, and <code>zone-server-h2o</code> was archived on 2026-08-08 on the argument that a fourth runtime was more than the project could carry.</p>
@@ -478,6 +479,10 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Where Elixir goes.</strong> The four parts name no Elixir. <code>zone-backend</code> is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. <code>rfd/0090</code> is its production release shape, and <code>rfd/0103</code> puts it on <code>ecto_foundationdb</code>. Nothing here retires it, and nothing here places it.</p>
 <p><strong>Whether Janet replaces the libriscv guests.</strong> <code>rfd/0094</code> keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per <code>rfd/0092</code>. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.</p>
 <p><strong>Where the game transport lives.</strong> <code>rfd/0008</code> and <code>rfd/0023</code> put game traffic on WebTransport over HTTP/3, and <code>rfd/0088</code> chose picoquic and picotls over h2o’s own QUIC. If h2o terminates HTTP as ingress, the record that says which part terminates a WebTransport session does not exist.</p>
+</section>
+<section id="superseded-2026-08-07" class="level2">
+<h2 class="anchored" data-anchor-id="superseded-2026-08-07">Superseded, 2026-08-07</h2>
+<p><code>rfd/0109</code> supersedes this record. The tier count drops to two, the store stays FoundationDB, and 276.48 USD per month is the cost floor. h2o, Janet, and the C <code>libtaskweft</code> core are dropped. The planner stays an Elixir NIF, which <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already is.</p>
 
 
 </section>

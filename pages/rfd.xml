@@ -10,7 +10,214 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 04:58:42 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 06:39:27 GMT</lastBuildDate>
+<item>
+  <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection, deployment cost baseline</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0107</code> describes four runtimes: h2o, Janet, a C core, and Godot. <code>rfd/0108</code> adds local C ABI guests to that host. One person cannot carry four runtimes, and neither record is built.</p>
+<p>The tier count moved three times in one day, and the store moved five times, with no record of either. <code>rfd/0104</code> states why little of it mattered. The database is not the constraint, and bandwidth is, by roughly 100 times.</p>
+<p>No record names the cost of the target. Without a cost floor, every architecture argument runs on an unstated budget, and each session re-derives a different answer.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>The cost floor is 276.48 USD per month.</strong> That is 1000 concurrent players at 4 hours per day, from <code>rfd/0104</code>. It is table stakes, not a ceiling. The design assumes it.</p>
+<p><strong>Two tiers.</strong></p>
+<ul>
+<li>Zone client: Godot. Rendering, XR, IK, and local physics.</li>
+<li>Server: Elixir and Phoenix. Identity, room directory, and the presence relay.</li>
+</ul>
+<p>The server relays presence rather than simulating it. Phoenix supplies identity, sessions, and migrations, which a Godot server would need written in GDScript.</p>
+<p><strong>The store is FoundationDB</strong>, through <code>ecto_foundationdb</code>. <code>rfd/0075</code> stands, and it is Apache 2.0, C++, write-optimized, and linearly scalable by process. <code>rfd/0103</code>’s limits are accepted, so no joins, no <code>or</code>, and no aggregates in the database.</p>
+<p>That trade holds because the relational need is analytical, and the analytical half does not use this store. Event logs and measurements stay zstd Parquet in essential tuple normal form, read by DuckDB. OLTP access is point lookups by player and room identity.</p>
+<p><strong>taskweft stays an Elixir NIF.</strong> <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already has that shape. Janet and the C <code>libtaskweft</code> are dropped.</p>
+<p>This supersedes <code>rfd/0107</code> and <code>rfd/0108</code>.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The arithmetic, the stores considered, and the open questions: <code>DETAILS.md</code></li>
+<li><code>rfd/0104-hypothesis-1000-concurrent</code>, <code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0103-uro-on-ecto-foundationdb</code>: the adapter and its limits.</li>
+<li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: the authority model a relay does not provide.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-cost-floor-derived" class="level2">
+<h2 class="anchored" data-anchor-id="the-cost-floor-derived">The cost floor, derived</h2>
+<p>Every figure comes from <code>rfd/0100</code> and <code>rfd/0104</code>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Quantity</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bandwidth per client, <code>rfd/0100</code></td>
+<td>256 kbps</td>
+</tr>
+<tr class="even">
+<td>Volume per client-hour</td>
+<td>0.1152 GB</td>
+</tr>
+<tr class="odd">
+<td>Sustained upstream at 1000 concurrent</td>
+<td>256 Mbps</td>
+</tr>
+<tr class="even">
+<td>Monthly egress, 1000 at 4 h/day</td>
+<td>13824 GB</td>
+</tr>
+<tr class="odd">
+<td>Monthly egress, as binary units</td>
+<td>13.5 TiB</td>
+</tr>
+<tr class="even">
+<td>Cost at 0.02 USD per GB</td>
+<td>276.48 USD</td>
+</tr>
+<tr class="odd">
+<td>Cost at 1000 concurrent, 24/7</td>
+<td>1658.88 USD</td>
+</tr>
+</tbody>
+</table>
+<p>The earlier 15 USD budget of <code>rfd/0102</code> bought 642 GB. Spread across 1000 users that is 0.19 hours per day each, so it never reached the target.</p>
+<p>The 256 Mbps figure is the one to shop bandwidth on. Metered cloud egress at 13.5 TiB per month is the expensive way to buy it. Unmetered capacity is worth pricing against the 276.48 USD.</p>
+</section>
+<section id="the-database-is-not-what-the-money-buys" class="level2">
+<h2 class="anchored" data-anchor-id="the-database-is-not-what-the-money-buys">The database is not what the money buys</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Case</th>
+<th>Ops/s needed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1000 players at 10 req/min</td>
+<td>166.7</td>
+</tr>
+<tr class="even">
+<td>1000 players at 60 req/min</td>
+<td>1000.0</td>
+</tr>
+</tbody>
+</table>
+<p>Measured ceilings, from <code>throughput.parquet</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. One node serves the target.</p>
+<p>Presence never reaches the store. A pose is transient, and the next tick supersedes it. Persistent writes are login, avatar change, and room join.</p>
+</section>
+<section id="stores-considered" class="level2">
+<h2 class="anchored" data-anchor-id="stores-considered">Stores considered</h2>
+<p>The search ran under four rules: FOSS, non-viral license, relational form, and linear scaling. Rust was banned and then unbanned during the search, which returned TiDB to the list.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Store</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FoundationDB</td>
+<td>Chosen. Apache 2.0, C++, linear, write-optimized</td>
+</tr>
+<tr class="even">
+<td>TiDB</td>
+<td>Viable, not chosen. Apache 2.0, MySQL wire, so <code>myxql</code> connects</td>
+</tr>
+<tr class="odd">
+<td>YDB</td>
+<td>Viable, not chosen. Apache 2.0, C++, and no Ecto adapter exists</td>
+</tr>
+<tr class="even">
+<td>Apache Ignite</td>
+<td>Viable, not chosen. Apache 2.0, Java, and no Ecto adapter exists</td>
+</tr>
+<tr class="odd">
+<td>YugabyteDB</td>
+<td>Vetoed</td>
+</tr>
+<tr class="even">
+<td>Stock PostgreSQL</td>
+<td>Blocklisted for operational reasons, which are vacuum and heap bloat</td>
+</tr>
+<tr class="odd">
+<td>SQLite</td>
+<td>Rejected. Weaker constraint enforcement than the requirement</td>
+</tr>
+<tr class="even">
+<td>CockroachDB</td>
+<td>Source-available since 2019, so it fails the FOSS rule</td>
+</tr>
+<tr class="odd">
+<td>Citus</td>
+<td>AGPL, so it fails the non-viral rule</td>
+</tr>
+<tr class="even">
+<td>MariaDB, MySQL</td>
+<td>GPL, so they fail the non-viral rule</td>
+</tr>
+<tr class="odd">
+<td>ScyllaDB, MongoDB</td>
+<td>AGPL or SSPL, so they fail the non-viral rule</td>
+</tr>
+<tr class="even">
+<td>DuckDB, for OLTP</td>
+<td>0.919 ms point read, the slowest of four measured in <code>rfd/0103</code></td>
+</tr>
+<tr class="odd">
+<td>Rivet 2.0</td>
+<td>Apache 2.0, and its SDK is TypeScript. No Elixir or Godot client</td>
+</tr>
+</tbody>
+</table>
+<p>TiDB is the option that keeps relational form with no adapter work. It costs more processes, because a cluster wants PD, TiDB servers, and three TiKV nodes. It also carries MySQL’s weaker constraint set, with no EXCLUDE constraints and no DOMAIN types.</p>
+</section>
+<section id="the-trade-this-record-accepts" class="level2">
+<h2 class="anchored" data-anchor-id="the-trade-this-record-accepts">The trade this record accepts</h2>
+<p><code>rfd/0103</code> states the FoundationDB limits directly. A query is valid only when one Get or one GetRange satisfies it. No joins. No <code>or</code>. No aggregates in the database, so filtering and grouping run in Elixir. One Between clause per query, on an indexed field.</p>
+<p>Those limits bite reporting, and reporting does not use this store. <code>data/measurements/</code> already holds the analytical record as zstd Parquet, and <code>lean-duckdb</code> already reads it. DuckDB supplies the joins and the aggregates.</p>
+<p>Point-read latency from <code>rfd/0103</code>: 0.405 ms for a new transaction per read, and 0.157 ms inside one transaction. PostgreSQL 16 measured 0.084 ms, so FoundationDB is 4.8 and 1.9 times that, in the same order rather than a different one.</p>
+</section>
+<section id="open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
+<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. Accepting the 276.48 USD floor makes server-hosting affordable at 1000 concurrent. It does not make it the better choice.</p>
+<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number, and a crowd of 1000 is where it pays most.</p>
+<p><strong>Server authority.</strong> A relay is not server-authoritative, so a client can assert a false pose. <code>rfd/0046</code> does not hold for presence. That is tolerable for social VR and wrong for the loot-action combat loop.</p>
+<p><strong>WebTransport interoperation.</strong> Whether the Godot client of <code>rfd/0023</code> speaks to a Phoenix endpoint is untested here. WebSocket is the fallback, at a cost in latency.</p>
+<p><strong>How many FoundationDB processes, and where.</strong> One machine hosting every process is one failure domain. Real availability needs separate machines, and this record does not fund them.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</link>
@@ -21,7 +228,7 @@
 
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0108: Local C ABI zone guests, with fan-out inside the tick</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone guest boundary, pubsub fan-out, h2o routing</p>
+<p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone guest boundary, pubsub fan-out, h2o routing</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>rfd/0107</code> makes h2o the ingress and the reverse proxy, and it leaves the guest boundary open. <code>rfd/0094</code> has guests arrive as CDN-delivered riscv64 ELFs under libriscv. That model carries a runtime, a sandbox, and a delivery path, and simulation code inside the zone needs none of the three.</p>
@@ -140,13 +347,17 @@
 <p>Where Elixir and <code>zone-backend</code> sit is unchanged by this record.</p>
 <p>Which part terminates a WebTransport session stays open, and it now matters more. This record binds a subscriber to the loop that owns its connection. <code>rfd/0097</code> states that the zone server holds subscriber connections through picoquic and WebTransport, and <code>rfd/0088</code> chose picoquic over h2o’s own QUIC. So the owning loop is h2o’s thread for HTTP and picoquic’s loop for WebTransport. Whether those unify decides how many cross-loop wakeups a tick needs.</p>
 <p>How a UGC guest runs is the new question. Local mode does not sandbox, so the UGC loop needs its own record.</p>
+</section>
+<section id="superseded-2026-08-07" class="level2">
+<h2 class="anchored" data-anchor-id="superseded-2026-08-07">Superseded, 2026-08-07</h2>
+<p><code>rfd/0109</code> supersedes this record. The tier count drops to two, the store stays FoundationDB, and 276.48 USD per month is the cost floor. The in-tick ring and the C ABI guest boundary both belonged to the native host. The measurements it cites from <code>rfd/0097</code> stay valid, and its back-pressure rule still applies to any relay.</p>
 
 
 </section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -158,7 +369,7 @@
 
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
+<p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>rfd/0083</code> built the zone server as native libh2o with FoundationDB. The tier held. Its cost was questioned, and <code>zone-server-h2o</code> was archived on 2026-08-08 on the argument that a fourth runtime was more than the project could carry.</p>
@@ -309,13 +520,17 @@
 <p><strong>Where Elixir goes.</strong> The four parts name no Elixir. <code>zone-backend</code> is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. <code>rfd/0090</code> is its production release shape, and <code>rfd/0103</code> puts it on <code>ecto_foundationdb</code>. Nothing here retires it, and nothing here places it.</p>
 <p><strong>Whether Janet replaces the libriscv guests.</strong> <code>rfd/0094</code> keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per <code>rfd/0092</code>. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.</p>
 <p><strong>Where the game transport lives.</strong> <code>rfd/0008</code> and <code>rfd/0023</code> put game traffic on WebTransport over HTTP/3, and <code>rfd/0088</code> chose picoquic and picotls over h2o’s own QUIC. If h2o terminates HTTP as ingress, the record that says which part terminates a WebTransport session does not exist.</p>
+</section>
+<section id="superseded-2026-08-07" class="level2">
+<h2 class="anchored" data-anchor-id="superseded-2026-08-07">Superseded, 2026-08-07</h2>
+<p><code>rfd/0109</code> supersedes this record. The tier count drops to two, the store stays FoundationDB, and 276.48 USD per month is the cost floor. h2o, Janet, and the C <code>libtaskweft</code> core are dropped. The planner stays an Elixir NIF, which <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already is.</p>
 
 
 </section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -481,7 +696,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -681,7 +896,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -824,7 +1039,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -975,7 +1190,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -1169,7 +1384,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -1336,7 +1551,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -1559,7 +1774,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -1714,7 +1929,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -1873,7 +2088,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -2043,7 +2258,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -2235,7 +2450,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -2457,7 +2672,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -2544,7 +2759,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -2678,7 +2893,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -2924,7 +3139,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -2990,7 +3205,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -3146,85 +3361,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0089-flyio-over-podman-quadlets/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> deployment target for fabric runtime services</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code> chose self-hosted podman quadlets on Fedora 44, provisioned by the <code>infra</code> repo’s OpenTofu, and put Fly.io “off the table.” Since then, real production work on <code>zone-backend</code> (<code>multiplayer-fabric-uro</code>, <code>multiplayer-fabric-crdb</code>) has run entirely against Fly.io: a genuine crash-loop bug in <code>multiplayer-fabric-crdb</code> was found and fixed against a real Fly deploy, and a real Burrito-wrapped <code>mix release</code> for <code>uro</code> was built and verified against Fly’s secrets model (<code>config/runtime.exs</code>). The quadlet repos (<code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>) exist but were last pushed 2026-06-13, before any of this real Fly.io deployment work happened.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use Fly.io as the real deployment target. This supersedes <code>rfd/0061</code>’s choice of self-hosted podman quadlets on Fedora 44.</p>
-<p>The <code>infra</code> repo (OpenTofu provisioning for the Fedora 44 quadlet hosts) and all seven quadlet repos above are archived — tombstoned, not deleted, so their history stays reachable, but they are no longer the deployment path for anything. <code>multiplayer-fabric-crdb</code> and <code>multiplayer-fabric-uro</code> on Fly.io are the real, currently-running services this applies to first.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester"><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code></a>: the decision this supersedes. It now lives in <code>multiplayer-fabric-archive</code>, per <code>rfd/0106</code>.</li>
-<li><code>v-sekai-multiplayer-fabric/zone-backend</code>, <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code>: the prior Fly-app-loss record this RFD’s Fly.io work continues from.</li>
-<li><code>v-sekai-multiplayer-fabric/infra</code>, <code>v-sekai-multiplayer-fabric/zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>: archived by this decision.</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0090-uro-burrito-release</code>: the real production release shape this decision’s Fly.io deploy of <code>uro</code> uses.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p><code>rfd/0061</code> chose podman quadlets under systemd on self-hosted Fedora 44 hosts over both Fly.io and the earlier Harvester HCI plan, provisioned by the <code>infra</code> repo’s OpenTofu. Seven quadlet repos were created for this: <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code>, each with an <code>install.sh</code> and a real <code>.container</code> unit. All seven last received a push on 2026-06-13.</p>
-<p>Independently of that decision, real production work on <code>zone-backend</code> continued against Fly.io. <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code> records a Fly app loss and a scoped redeploy of <code>multiplayer-fabric-uro</code> and <code>multiplayer-fabric-crdb</code> only. That redeploy sat broken for weeks: <code>multiplayer-fabric-crdb</code> crash-looped on every boot (<code>/docker-entrypoint.sh: No such file or directory</code> — the image’s real entrypoint is <code>/cockroach/cockroach.sh</code>, confirmed via <code>skopeo inspect --config docker://ghcr.io/v-sekai/cockroach:latest</code>; whatever Dockerfile previously set that override was never committed anywhere), and <code>multiplayer-fabric-uro</code> had 14 secrets staged but never deployed.</p>
-<p>This mismatch — a published RFD choosing quadlets, while the actual service that exists and needs fixing runs on Fly — needed a real decision, not a silent continuation of whichever path happened to have momentum.</p>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
-<ol type="1">
-<li><strong>Fix <code>zone-backend</code>’s Fly deploy, treat quadlets as the long-term target.</strong> Keeps <code>rfd/0061</code> in force; the Fly.io fixes become a stopgap, and someone later ports <code>uro</code>/<code>crdb</code> to <code>zone-backend-quadlet</code>/<code>cockroach-crdb-quadlet</code>.</li>
-<li><strong>Adopt Fly.io as the real target, tombstone the quadlet repos and <code>infra</code>.</strong> Matches what has actually been built, verified, and deployed: a real <code>multiplayer-fabric-crdb</code> fix, confirmed live via Fly’s own health checks and boot logs, and a real Burrito-wrapped release for <code>uro</code>, verified locally (a genuine static ELF binary that boots <code>Uro.Endpoint</code>, <code>Uro.Repo</code>, and <code>Uro.Repo.Migration</code> correctly).</li>
-<li>Running both, service by service, avoids picking a single target but doubles the real ops surface <code>rfd/0061</code>’s own problem statement (Harvester’s “full virtualization tier” wraps the same workloads twice) already argued against, for a different reason.</li>
-</ol>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
-<p>Chosen: <strong>option 2.</strong> Fly.io is the real deployment target. <code>rfd/0061</code> is superseded. <code>infra</code> and all seven quadlet repos are archived (GitHub’s archive, not deletion — history stays reachable, nothing currently depends on them being writable).</p>
-<p>The concrete evidence this decision is grounded in, not asserted:</p>
-<ul>
-<li><code>multiplayer-fabric-crdb</code>: three real, distinct bugs found and fixed by iterating against actual Fly boot logs, not guessed — the lost entrypoint, a missing <code>chmod +x</code> on its replacement, and a CockroachDB cert-lifetime rounding collision (the node cert requested the exact same lifetime as its CA; CockroachDB 22.1 rejects a cert lifetime <code>&gt;=</code> its CA’s). Health check passing, <code>uro</code> database and <code>gateway_writer</code>/<code>gateway_admin</code> roles bootstrapped, confirmed live.</li>
-<li><code>multiplayer-fabric-uro</code>: a real Burrito-wrapped <code>mix release</code> replaces the dev-shaped root <code>Dockerfile</code> (<code>iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code>, which seeded dummy test data on every boot). Verified locally: the release build genuinely produces a static, ~20MB ELF binary, and both its <code>start</code> and <code>eval</code> commands boot <code>Uro.Application</code> for real (<code>Uro.Repo</code>, <code>Uro.Repo.Migration</code>, and <code>Uro.Endpoint</code> with Bandit all start, confirmed via real Postgrex connection attempts and a real HTTP listener log line).</li>
-<li><code>zone-backend-quadlet</code>’s <code>README.md</code> documents the same <code>DATABASE_URL</code>/<code>MIGRATION_URL</code>/mTLS-cert shape as <code>zone-backend</code>’s <code>AGENTS.md</code> already does for Fly — the two paths were never going to diverge in what they configure, only in where. Nothing about the quadlet path had a working, deployed instance to point to; the Fly path now does.</li>
-</ul>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: one real, currently-working deployment target for <code>zone-backend</code>’s two services, matching engineering effort already spent and verified rather than requiring a second port to a path with no live deployment. <code>rfd/0089</code>’s tombstoning also removes a real source of drift: two competing, both-real deploy configs for the same service (<code>AGENTS.md</code>’s Fly secrets vs.&nbsp;<code>zone-backend-quadlet</code>’s <code>/etc/zone-backend/env</code>) is worse than committing to one.</p>
-<p>Bad: this reverses a published, deliberate decision (<code>rfd/0061</code>) made after weighing Harvester HCI, Fly.io, and quadlets directly against each other. That record’s own stated reasons for excluding Fly.io are not re-litigated here in detail; this RFD documents that the org’s real, current choice is Fly.io, not a re-derivation of why quadlets were rejected the first time. A future RFD revisiting deployment target again should read both <code>rfd/0061</code> and this record.</p>
-<p><code>zone-server-h2o</code> and <code>zone-client-godot</code> are not yet covered by a real Fly.io production deployment; see <code>rfd/0091</code> and <code>rfd/0092</code>.</p>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p><code>infra</code>, <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code> are archived, confirmed via <code>gh repo view --json isArchived</code> on each. <code>multiplayer-fabric-crdb</code>’s health check is passing on Fly, confirmed via <code>fly machine status</code>. <code>multiplayer-fabric-uro</code>’s real release build is verified locally; its actual Fly deploy is tracked as a follow-up (<code>zone-backend</code> PRs #51, #52), not yet merged and deployed as of this record.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 06:39:27 GMT</pubDate>
 </item>
 </channel>
 </rss>
