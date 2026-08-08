@@ -1,7 +1,7 @@
 ---
 title: "RFD 0107: Janet scripting over a C taskweft core, behind h2o"
 rfd: "0107"
-state: discussion
+state: abandoned
 scope: zone server tier, taskweft implementation language
 ---
 
@@ -62,3 +62,11 @@ host repository again.
 ## Detail
 
 {{< include DETAILS.md >}}
+
+## Superseded, 2026-08-07
+
+`rfd/0109` supersedes this record. The tier count drops to two, the
+store stays FoundationDB, and 276.48 USD per month is the cost floor.
+h2o, Janet, and the C `libtaskweft` core are dropped. The planner
+stays an Elixir NIF, which `V-Sekai-fire/multiplayer-fabric-taskweft`
+already is.
