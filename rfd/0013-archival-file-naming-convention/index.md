@@ -33,8 +33,11 @@ themselves.
 
 Example: `20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png`.
 
-Each committed asset also gets a BibTeX entry in `references.bib`
-recording its capture date and archived path.
+Each committed asset also gets an entry under `references:` in
+`CITATION.cff`, recording its capture date and archived path. The
+project held these entries in `references.bib` until it converted the
+bibliography to CFF, which `pages/references.qmd` renders through
+`cffconvert`.
 
 ## References
 
