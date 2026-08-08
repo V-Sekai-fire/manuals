@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>details – V-Sekai Fire — Manuals</title>
+<title>RFD 0106: Split the archive into its own repository – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,84 +289,194 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#details" id="toc-details" class="nav-link active" data-scroll-target="#details">Details</a>
-  <ul class="collapse">
-  <li><a href="#deployment-note" id="toc-deployment-note" class="nav-link" data-scroll-target="#deployment-note">Deployment note</a></li>
-  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
-  <li><a href="#port-map-after-this-change" id="toc-port-map-after-this-change" class="nav-link" data-scroll-target="#port-map-after-this-change">Port map after this change</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  </ul></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#what-moved" id="toc-what-moved" class="nav-link" data-scroll-target="#what-moved">What moved</a></li>
+  <li><a href="#link-repair-which-a-move-forces" id="toc-link-repair-which-a-move-forces" class="nav-link" data-scroll-target="#link-repair-which-a-move-forces">Link repair, which a move forces</a></li>
+  <li><a href="#a-broken-link-the-move-exposed" id="toc-a-broken-link-the-move-exposed" class="nav-link" data-scroll-target="#a-broken-link-the-move-exposed">A broken link the move exposed</a></li>
+  <li><a href="#two-archive-destinations-now-exist" id="toc-two-archive-destinations-now-exist" class="nav-link" data-scroll-target="#two-archive-destinations-now-exist">Two archive destinations now exist</a></li>
+  <li><a href="#counts-after-the-split" id="toc-counts-after-the-split" class="nav-link" data-scroll-target="#counts-after-the-split">Counts after the split</a></li>
+  <li><a href="#what-stays" id="toc-what-stays" class="nav-link" data-scroll-target="#what-stays">What stays</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0011-observability-stack-victoriatraces/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0106-split-the-archive-into-its-own-repo/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">RFD 0106: Split the archive into its own repository</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<section id="details" class="level1">
-<h1>Details</h1>
-<section id="deployment-note" class="level2">
-<h2 class="anchored" data-anchor-id="deployment-note">Deployment note</h2>
-<p>The stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly volume and <code>fly proxy</code> references below are from the original deployment.</p>
+</header>
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0106: Split the archive into its own repository</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> manuals repository layout, archived records</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The manuals repository holds live design records and dead ones in the same tree. <code>_archive/decisions/</code> holds 26 MADR records that are rejected or superseded. A leading underscore keeps Quarto from rendering them, so the site hides them, and the repository still carries them.</p>
+<p>Two RFDs are superseded and still render as current. <code>rfd/0089</code> supersedes <code>rfd/0061</code> on the deployment target. <code>rfd/0011</code> is superseded on the observability stack. A reader who opens either one reads a dead design with no marking on the page.</p>
+<p>Hiding a record from the site is not the same as retiring it. The repository needs one place for retired records.</p>
 </section>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7x less RAM and 2.6x less CPU vs Tempo.</p>
-<p>Using VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions already in use.</p>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Create <code>multiplayer-fabric-archive</code>, a public repository in this organization. It is the standing home for retired records. It holds plain Markdown, with no Quarto site, no build, and no checks, because archived content does not change.</p>
+<p>Move <code>_archive/</code>, its attachments, <code>rfd/0011</code>, and <code>rfd/0061</code> there. Delete them here. Keep no pointer stub, per <code>rfd/0000-conventions</code>.</p>
+<p>The archive repository carries the manuals history up to the split, so each moved file keeps every commit that touched it at its original path.</p>
+<p><code>rfd/0011</code> and <code>rfd/0061</code> keep their numbers. This repository does not reuse a number after a move.</p>
 </section>
-<section id="port-map-after-this-change" class="level2">
-<h2 class="anchored" data-anchor-id="port-map-after-this-change">Port map after this change</h2>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The link repairs a move forces, and the record of what moved: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/multiplayer-fabric-archive</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0000-conventions</code>: the no-pointer-stub rule this follows.</li>
+<li><code>rfd/0071-yagni-times-structure-to-need</code>: the rule that sends a superseded record to the archive.</li>
+<li><code>rfd/0062-repository-and-capability-inventory</code>: lists the new repository.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-moved" class="level2">
+<h2 class="anchored" data-anchor-id="what-moved">What moved</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 21%">
-<col style="width: 33%">
-<col style="width: 45%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Service</th>
-<th>Port</th>
-<th>Purpose</th>
+<th>Path</th>
+<th>Records</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>VictoriaMetrics</td>
-<td>8428</td>
-<td>Metrics storage and PromQL</td>
+<td><code>_archive/decisions/</code></td>
+<td>26</td>
 </tr>
 <tr class="even">
-<td>VictoriaLogs</td>
-<td>9428</td>
-<td>Log storage and query</td>
+<td><code>_archive/decisions/attachments/</code></td>
+<td>1 image</td>
 </tr>
 <tr class="odd">
-<td>VictoriaTraces</td>
-<td>10428</td>
-<td>Trace storage and query</td>
+<td><code>rfd/0011-observability-stack-victoriatraces/</code></td>
+<td>1</td>
 </tr>
 <tr class="even">
-<td>OTEL Collector</td>
-<td>4317 (gRPC), 4318 (HTTP)</td>
-<td>OTLP ingest, routes to the above</td>
+<td><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester/</code></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><code>_archive/README.md</code> moves with the directory. Its text now states that the leading underscore does no work in a repository that builds no site, and that the path stays as it was so older links keep their shape.</p>
+</section>
+<section id="link-repair-which-a-move-forces" class="level2">
+<h2 class="anchored" data-anchor-id="link-repair-which-a-move-forces">Link repair, which a move forces</h2>
+<p>A deleted file leaves no stub. A live Markdown link to that file leaves a 404 on the published site. So a move repairs every inbound link, and that is not a stub.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Repair</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>changelog/2026/20260606-deck-log.md</code></td>
+<td>Four relative links into <code>_archive/decisions/</code> now point at the archive repository.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0071-yagni-times-structure-to-need/index.md</code></td>
+<td>Two pointers to <code>_archive</code> now name the archive repository.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0089-flyio-over-podman-quadlets/index.md</code></td>
+<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0060-org-scoped-github-app-token-for-gh-access/index.md</code></td>
+<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md</code></td>
+<td>The <code>rfd/0011</code> reference now links to the archive.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0062-repository-and-capability-inventory/DETAILS.md</code></td>
+<td>The two-org split decision path now links to the archive.</td>
+</tr>
+<tr class="odd">
+<td><code>_quarto.yml</code></td>
+<td>Drops the <code>decisions/attachments</code> resource, which no longer exists.</td>
+</tr>
+</tbody>
+</table>
+<p>Inline prose in <code>rfd/0089</code>’s <code>DETAILS.md</code> still names <code>rfd/0061</code> in code spans, without links. Those read as citations of a numbered record, so they stay.</p>
+</section>
+<section id="a-broken-link-the-move-exposed" class="level2">
+<h2 class="anchored" data-anchor-id="a-broken-link-the-move-exposed">A broken link the move exposed</h2>
+<p>Two archived records cite the debug-orb image as <code>attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, relative to <code>_archive/decisions/</code>. The image sat in <code>decisions/attachments/</code>, two directories away, so the link never resolved. No rendered page exercised it, because Quarto skips <code>_archive</code>.</p>
+<p>The archive repository puts the image at <code>_archive/decisions/attachments/</code>, where the existing links resolve.</p>
+</section>
+<section id="two-archive-destinations-now-exist" class="level2">
+<h2 class="anchored" data-anchor-id="two-archive-destinations-now-exist">Two archive destinations now exist</h2>
+<p><code>V-Sekai-archive</code> is a separate organization that already holds three archived repositories: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>. <code>multiplayer-fabric-archive</code> is a repository for archived records inside this organization.</p>
+<p>A whole repository goes to the <code>V-Sekai-archive</code> organization. A record inside the manuals goes to <code>multiplayer-fabric-archive</code>. A future record that consolidates the two supersedes this one.</p>
+</section>
+<section id="counts-after-the-split" class="level2">
+<h2 class="anchored" data-anchor-id="counts-after-the-split">Counts after the split</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Repos in <code>v-sekai-multiplayer-fabric</code></td>
+<td>73</td>
+</tr>
+<tr class="even">
+<td>Active</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<td>Archived</td>
+<td>24</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>All four services are now Apache 2.0; the three storage backends are from VictoriaMetrics.</li>
-<li>VictoriaTraces query UI is at <code>http://...:10428/select/vmui</code>.</li>
-<li><code>fly proxy 10428:10428</code> replaces the former <code>fly proxy 16686:16686</code> for trace inspection.</li>
-<li>No explicit trace TTL is configured; add <code>-retentionPeriod</code> if disk pressure becomes a concern.</li>
-</ul>
+<section id="what-stays" class="level2">
+<h2 class="anchored" data-anchor-id="what-stays">What stays</h2>
+<p><code>decisions/</code> keeps <code>madr-proposal-template.md</code>, the live template. The directory holds no records, because <code>rfd/0000-conventions</code> migrates each MADR into an RFD and deletes the MADR file.</p>
+<p><code>AGENTS.md</code> still directs a new image to <code>decisions/attachments/</code>, and that directory returns when the next asset arrives.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -791,7 +901,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0011-observability-stack-victoriatraces/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0106-split-the-archive-into-its-own-repo/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

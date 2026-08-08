@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0011: Replace Jaeger with VictoriaTraces for trace storage – V-Sekai Fire — Manuals</title>
+<title>RFD 0105: Archive the self-host-era support repos and the empty stubs – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -292,16 +292,15 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a>
-  <ul class="collapse">
-  <li><a href="#deployment-note" id="toc-deployment-note" class="nav-link" data-scroll-target="#deployment-note">Deployment note</a></li>
-  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
-  <li><a href="#port-map-after-this-change" id="toc-port-map-after-this-change" class="nav-link" data-scroll-target="#port-map-after-this-change">Port map after this change</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  </ul></li>
+  <li><a href="#what-each-repo-carried" id="toc-what-each-repo-carried" class="nav-link" data-scroll-target="#what-each-repo-carried">What each repo carried</a></li>
+  <li><a href="#the-fabric-platform-central-risk" id="toc-the-fabric-platform-central-risk" class="nav-link" data-scroll-target="#the-fabric-platform-central-risk">The <code>fabric-platform-central</code> risk</a></li>
+  <li><a href="#counts-after-the-sweep" id="toc-counts-after-the-sweep" class="nav-link" data-scroll-target="#counts-after-the-sweep">Counts after the sweep</a></li>
+  <li><a href="#open-inconsistency-not-resolved-here" id="toc-open-inconsistency-not-resolved-here" class="nav-link" data-scroll-target="#open-inconsistency-not-resolved-here">Open inconsistency, not resolved here</a></li>
+  <li><a href="#stale-names-found-in-the-inventory" id="toc-stale-names-found-in-the-inventory" class="nav-link" data-scroll-target="#stale-names-found-in-the-inventory">Stale names found in the inventory</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0011-observability-stack-victoriatraces/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0105-archive-self-host-era-support-repos/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -309,7 +308,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">RFD 0011: Replace Jaeger with VictoriaTraces for trace storage</h1>
+<h1 class="title">RFD 0105: Archive the self-host-era support repos and the empty stubs</h1>
 </div>
 
 
@@ -326,90 +325,191 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0011: Replace Jaeger with VictoriaTraces for trace storage</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> observability</p>
+<p><em><a href="../../index.html">Manuals</a> › RFD 0105: Archive the self-host-era support repos and the empty stubs</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> org-wide repository lifecycle</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The single-machine observability stack ran Jaeger all-in-one for trace storage. Jaeger’s Badger backend carries a single-node limit. Jaeger also put traces under a separate vendor from the stack’s metrics and logs backends. Its ports and CLI flags did not match the conventions the rest of the stack already used.</p>
+<p><code>rfd/0089</code> moved the deployment target to Fly.io and archived the seven quadlet repos and <code>infra</code>. It did not reach the repos that supported those quadlets from one step away. A verification queue that targets quadlets, a casync CDN, a scoop bucket, and a Burrito packaging repo all stayed active with no live consumer.</p>
+<p>Two repos also carry no content at all. <code>vulkan-video-godot</code> holds 0 KB. <code>steamdeck</code> holds 1 KB. Both appear in the inventory as if they hold work.</p>
+<p>An active repo with no consumer costs a reader time. The reader cannot tell a parked repo from a live one.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The single-machine observability stack replaces Jaeger all-in-one with VictoriaTraces, an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7 times less RAM and 2.6 times less CPU than Tempo. This choice puts all three storage backends — metrics, logs, and traces — under one vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions the stack already uses. Jaeger is removed entirely; no separate query UI process remains.</p>
-<p>VictoriaTraces listens on port 10428 for its UI, its query API, and OTLP HTTP ingest. The OTEL Collector exports traces to it through <code>otlphttp/traces</code>. Data persists at <code>/var/lib/victoriatraces</code>.</p>
-<p>Note: the stack has since moved off Fly.io onto the Harvester cluster; the Fly-specific details below predate that move.</p>
+<p>Archive six repos. Each one is tombstoned, not deleted, so the history stays reachable.</p>
+<ul>
+<li><code>fabric-container-verify</code>: the <code>rfd/0056</code> quadlet verification queue. Every quadlet it targets is archived by <code>rfd/0089</code>.</li>
+<li><code>fabric-casync-central</code>: 0 KB. No content was ever pushed.</li>
+<li><code>fabric-scoop-central</code>: the scoop bucket for the Windows demo of <code>godot-loop-slice</code>, which is archived.</li>
+<li><code>fabric-platform-central</code>: the <code>rfd/0065</code> Burrito and casync packaging path.</li>
+<li><code>vulkan-video-godot</code>: 0 KB.</li>
+<li><code>steamdeck</code>: 1 KB.</li>
+</ul>
+<p><code>fabric-godot-assembly</code> is archived and then restored on the same day. It stays active. The <code>gitassembly</code> recipe of <code>rfd/0019</code> still composes the engine.</p>
+<p>The dormant Lean cores stay active. <code>rfd/0057</code> makes them the canonical proven reference, and a reference repo needs no recent push.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>Port map, deployment path, and consequences: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260506-observability-stack-victoriatraces.md</code></li>
-<li>Supersedes: <code>decisions/20260506-observability-stack-victoriametrics-jaeger.md</code></li>
+<li>Per-repo record, the open inconsistency, and the counts: <code>DETAILS.md</code></li>
+<li><code>rfd/0062-repository-and-capability-inventory</code>: the inventory this decision updates.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0089-flyio-over-podman-quadlets</code>: archives the quadlets that these repos support.</li>
+<li><code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>: the decision that <code>fabric-platform-central</code> carries.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
 <h2 class="anchored" data-anchor-id="detail">Detail</h2>
 </section>
-<section id="details" class="level1">
-<h1>Details</h1>
-<section id="deployment-note" class="level2">
-<h2 class="anchored" data-anchor-id="deployment-note">Deployment note</h2>
-<p>The stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly volume and <code>fly proxy</code> references below are from the original deployment.</p>
-</section>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7x less RAM and 2.6x less CPU vs Tempo.</p>
-<p>Using VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions already in use.</p>
-</section>
-<section id="port-map-after-this-change" class="level2">
-<h2 class="anchored" data-anchor-id="port-map-after-this-change">Port map after this change</h2>
+<section id="what-each-repo-carried" class="level2">
+<h2 class="anchored" data-anchor-id="what-each-repo-carried">What each repo carried</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 21%">
-<col style="width: 33%">
-<col style="width: 45%">
+<col style="width: 22%">
+<col style="width: 3%">
+<col style="width: 9%">
+<col style="width: 64%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Service</th>
-<th>Port</th>
-<th>Purpose</th>
+<th>Repo</th>
+<th>Size</th>
+<th>Last push</th>
+<th>Basis for the archive</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>VictoriaMetrics</td>
-<td>8428</td>
-<td>Metrics storage and PromQL</td>
+<td><code>fabric-container-verify</code></td>
+<td>0 KB</td>
+<td>2026-06-20</td>
+<td><code>rfd/0056</code> quadlet queue. <code>rfd/0089</code> archives every quadlet it targets.</td>
 </tr>
 <tr class="even">
-<td>VictoriaLogs</td>
-<td>9428</td>
-<td>Log storage and query</td>
+<td><code>fabric-casync-central</code></td>
+<td>0 KB</td>
+<td>2026-06-24</td>
+<td>Empty. No content was ever pushed.</td>
 </tr>
 <tr class="odd">
-<td>VictoriaTraces</td>
-<td>10428</td>
-<td>Trace storage and query</td>
+<td><code>fabric-scoop-central</code></td>
+<td>8 KB</td>
+<td>2026-06-30</td>
+<td>Scoop bucket for the Windows demo of the archived <code>godot-loop-slice</code>.</td>
 </tr>
 <tr class="even">
-<td>OTEL Collector</td>
-<td>4317 (gRPC), 4318 (HTTP)</td>
-<td>OTLP ingest, routes to the above</td>
+<td><code>fabric-platform-central</code></td>
+<td>—</td>
+<td>2026-06-25</td>
+<td><code>rfd/0065</code> Burrito and casync packaging.</td>
+</tr>
+<tr class="odd">
+<td><code>vulkan-video-godot</code></td>
+<td>0 KB</td>
+<td>2026-05-28</td>
+<td>Empty placeholder.</td>
+</tr>
+<tr class="even">
+<td><code>steamdeck</code></td>
+<td>1 KB</td>
+<td>2026-06-14</td>
+<td>Empty placeholder.</td>
+</tr>
+</tbody>
+</table>
+<p><code>fabric-container-verify</code> reports 0 KB for its packed size. Its GDScript content is present in history.</p>
+</section>
+<section id="the-fabric-platform-central-risk" class="level2">
+<h2 class="anchored" data-anchor-id="the-fabric-platform-central-risk">The <code>fabric-platform-central</code> risk</h2>
+<p><code>rfd/0090</code> describes a live Burrito release of <code>uro</code> on Fly.io. <code>rfd/0065</code> puts the Burrito and casync packaging in <code>fabric-platform-central</code>. An archive makes the repo read-only. If the current <code>zone-backend</code> deploy still reads from this repo, its pushes and its Actions stop.</p>
+<p>The archive is reversible with one API call. This record states the risk so a later failure has a written cause.</p>
+</section>
+<section id="counts-after-the-sweep" class="level2">
+<h2 class="anchored" data-anchor-id="counts-after-the-sweep">Counts after the sweep</h2>
+<p>These counts predate the archive split of <code>rfd/0106</code>, which adds one repository.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Total repos</td>
+<td>72</td>
+</tr>
+<tr class="even">
+<td>Archived</td>
+<td>24</td>
+</tr>
+<tr class="odd">
+<td>Active</td>
+<td>48</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>All four services are now Apache 2.0; the three storage backends are from VictoriaMetrics.</li>
-<li>VictoriaTraces query UI is at <code>http://...:10428/select/vmui</code>.</li>
-<li><code>fly proxy 10428:10428</code> replaces the former <code>fly proxy 16686:16686</code> for trace inspection.</li>
-<li>No explicit trace TTL is configured; add <code>-retentionPeriod</code> if disk pressure becomes a concern.</li>
-</ul>
-
-
+<section id="open-inconsistency-not-resolved-here" class="level2">
+<h2 class="anchored" data-anchor-id="open-inconsistency-not-resolved-here">Open inconsistency, not resolved here</h2>
+<p><code>zone-server-h2o</code> is archived. <code>rfd/0094</code> names it the host of the minimum UGC game loop, and <code>rfd/0095</code> carries it in scope. Its last push is 2026-08-07. An archived repo accepts no push.</p>
+<p>This record does not resolve the state of <code>zone-server-h2o</code>. Either the archive is an error, or a decision that supersedes <code>rfd/0094</code> is missing from <code>rfd/</code>. One of the two needs a record.</p>
 </section>
+<section id="stale-names-found-in-the-inventory" class="level2">
+<h2 class="anchored" data-anchor-id="stale-names-found-in-the-inventory">Stale names found in the inventory</h2>
+<p>Every repository name in <code>rfd/0062</code>’s inventory still resolves, because GitHub keeps a redirect after a rename. A redirect hides the rename from a reader. <code>rfd/0064</code> sets kebab-case repository names, and these renames follow it.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name in the old inventory</th>
+<th>Current name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>godot</code></td>
+<td><code>fabric-godot-core</code></td>
+</tr>
+<tr class="even">
+<td><code>merge</code></td>
+<td><code>fabric-godot-assembly</code></td>
+</tr>
+<tr class="odd">
+<td><code>observability</code></td>
+<td><code>fabric-game-observability</code></td>
+</tr>
+<tr class="even">
+<td><code>zone-server-image</code></td>
+<td><code>zone-server-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>zone-baker-image</code></td>
+<td><code>zone-baker-quadlet</code></td>
+</tr>
+<tr class="even">
+<td><code>zone-backend-image</code></td>
+<td><code>zone-backend-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>gha-runner-image</code></td>
+<td><code>gha-runner-quadlet</code></td>
+</tr>
+<tr class="even">
+<td><code>sccache-cache-image</code></td>
+<td><code>sccache-cache-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>manuals</code></td>
+<td><code>multiplayer-fabric-manuals</code></td>
+</tr>
+</tbody>
+</table>
+<p>Three repos moved to a third organization, <code>V-Sekai-archive</code>, and are archived there: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -834,7 +934,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0011-observability-stack-victoriatraces/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0105-archive-self-host-era-support-repos/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

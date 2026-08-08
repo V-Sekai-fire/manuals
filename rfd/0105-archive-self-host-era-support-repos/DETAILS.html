@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target – V-Sekai Fire — Manuals</title>
+<title>details – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,103 +289,165 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
-  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
-  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
-  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
-  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#what-each-repo-carried" id="toc-what-each-repo-carried" class="nav-link active" data-scroll-target="#what-each-repo-carried">What each repo carried</a></li>
+  <li><a href="#the-fabric-platform-central-risk" id="toc-the-fabric-platform-central-risk" class="nav-link" data-scroll-target="#the-fabric-platform-central-risk">The <code>fabric-platform-central</code> risk</a></li>
+  <li><a href="#counts-after-the-sweep" id="toc-counts-after-the-sweep" class="nav-link" data-scroll-target="#counts-after-the-sweep">Counts after the sweep</a></li>
+  <li><a href="#open-inconsistency-not-resolved-here" id="toc-open-inconsistency-not-resolved-here" class="nav-link" data-scroll-target="#open-inconsistency-not-resolved-here">Open inconsistency, not resolved here</a></li>
+  <li><a href="#stale-names-found-in-the-inventory" id="toc-stale-names-found-in-the-inventory" class="nav-link" data-scroll-target="#stale-names-found-in-the-inventory">Stale names found in the inventory</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0089-flyio-over-podman-quadlets/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0105-archive-self-host-era-support-repos/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> deployment target for fabric runtime services</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code> chose self-hosted podman quadlets on Fedora 44, provisioned by the <code>infra</code> repo’s OpenTofu, and put Fly.io “off the table.” Since then, real production work on <code>zone-backend</code> (<code>multiplayer-fabric-uro</code>, <code>multiplayer-fabric-crdb</code>) has run entirely against Fly.io: a genuine crash-loop bug in <code>multiplayer-fabric-crdb</code> was found and fixed against a real Fly deploy, and a real Burrito-wrapped <code>mix release</code> for <code>uro</code> was built and verified against Fly’s secrets model (<code>config/runtime.exs</code>). The quadlet repos (<code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>) exist but were last pushed 2026-06-13, before any of this real Fly.io deployment work happened.</p>
+<section id="what-each-repo-carried" class="level2">
+<h2 class="anchored" data-anchor-id="what-each-repo-carried">What each repo carried</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 3%">
+<col style="width: 9%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Size</th>
+<th>Last push</th>
+<th>Basis for the archive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fabric-container-verify</code></td>
+<td>0 KB</td>
+<td>2026-06-20</td>
+<td><code>rfd/0056</code> quadlet queue. <code>rfd/0089</code> archives every quadlet it targets.</td>
+</tr>
+<tr class="even">
+<td><code>fabric-casync-central</code></td>
+<td>0 KB</td>
+<td>2026-06-24</td>
+<td>Empty. No content was ever pushed.</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-scoop-central</code></td>
+<td>8 KB</td>
+<td>2026-06-30</td>
+<td>Scoop bucket for the Windows demo of the archived <code>godot-loop-slice</code>.</td>
+</tr>
+<tr class="even">
+<td><code>fabric-platform-central</code></td>
+<td>—</td>
+<td>2026-06-25</td>
+<td><code>rfd/0065</code> Burrito and casync packaging.</td>
+</tr>
+<tr class="odd">
+<td><code>vulkan-video-godot</code></td>
+<td>0 KB</td>
+<td>2026-05-28</td>
+<td>Empty placeholder.</td>
+</tr>
+<tr class="even">
+<td><code>steamdeck</code></td>
+<td>1 KB</td>
+<td>2026-06-14</td>
+<td>Empty placeholder.</td>
+</tr>
+</tbody>
+</table>
+<p><code>fabric-container-verify</code> reports 0 KB for its packed size. Its GDScript content is present in history.</p>
 </section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use Fly.io as the real deployment target. This supersedes <code>rfd/0061</code>’s choice of self-hosted podman quadlets on Fedora 44.</p>
-<p>The <code>infra</code> repo (OpenTofu provisioning for the Fedora 44 quadlet hosts) and all seven quadlet repos above are archived — tombstoned, not deleted, so their history stays reachable, but they are no longer the deployment path for anything. <code>multiplayer-fabric-crdb</code> and <code>multiplayer-fabric-uro</code> on Fly.io are the real, currently-running services this applies to first.</p>
+<section id="the-fabric-platform-central-risk" class="level2">
+<h2 class="anchored" data-anchor-id="the-fabric-platform-central-risk">The <code>fabric-platform-central</code> risk</h2>
+<p><code>rfd/0090</code> describes a live Burrito release of <code>uro</code> on Fly.io. <code>rfd/0065</code> puts the Burrito and casync packaging in <code>fabric-platform-central</code>. An archive makes the repo read-only. If the current <code>zone-backend</code> deploy still reads from this repo, its pushes and its Actions stop.</p>
+<p>The archive is reversible with one API call. This record states the risk so a later failure has a written cause.</p>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester"><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code></a>: the decision this supersedes. It now lives in <code>multiplayer-fabric-archive</code>, per <code>rfd/0106</code>.</li>
-<li><code>v-sekai-multiplayer-fabric/zone-backend</code>, <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code>: the prior Fly-app-loss record this RFD’s Fly.io work continues from.</li>
-<li><code>v-sekai-multiplayer-fabric/infra</code>, <code>v-sekai-multiplayer-fabric/zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>: archived by this decision.</li>
-</ul>
+<section id="counts-after-the-sweep" class="level2">
+<h2 class="anchored" data-anchor-id="counts-after-the-sweep">Counts after the sweep</h2>
+<p>These counts predate the archive split of <code>rfd/0106</code>, which adds one repository.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Total repos</td>
+<td>72</td>
+</tr>
+<tr class="even">
+<td>Archived</td>
+<td>24</td>
+</tr>
+<tr class="odd">
+<td>Active</td>
+<td>48</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0090-uro-burrito-release</code>: the real production release shape this decision’s Fly.io deploy of <code>uro</code> uses.</li>
-</ul>
+<section id="open-inconsistency-not-resolved-here" class="level2">
+<h2 class="anchored" data-anchor-id="open-inconsistency-not-resolved-here">Open inconsistency, not resolved here</h2>
+<p><code>zone-server-h2o</code> is archived. <code>rfd/0094</code> names it the host of the minimum UGC game loop, and <code>rfd/0095</code> carries it in scope. Its last push is 2026-08-07. An archived repo accepts no push.</p>
+<p>This record does not resolve the state of <code>zone-server-h2o</code>. Either the archive is an error, or a decision that supersedes <code>rfd/0094</code> is missing from <code>rfd/</code>. One of the two needs a record.</p>
 </section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p><code>rfd/0061</code> chose podman quadlets under systemd on self-hosted Fedora 44 hosts over both Fly.io and the earlier Harvester HCI plan, provisioned by the <code>infra</code> repo’s OpenTofu. Seven quadlet repos were created for this: <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code>, each with an <code>install.sh</code> and a real <code>.container</code> unit. All seven last received a push on 2026-06-13.</p>
-<p>Independently of that decision, real production work on <code>zone-backend</code> continued against Fly.io. <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code> records a Fly app loss and a scoped redeploy of <code>multiplayer-fabric-uro</code> and <code>multiplayer-fabric-crdb</code> only. That redeploy sat broken for weeks: <code>multiplayer-fabric-crdb</code> crash-looped on every boot (<code>/docker-entrypoint.sh: No such file or directory</code> — the image’s real entrypoint is <code>/cockroach/cockroach.sh</code>, confirmed via <code>skopeo inspect --config docker://ghcr.io/v-sekai/cockroach:latest</code>; whatever Dockerfile previously set that override was never committed anywhere), and <code>multiplayer-fabric-uro</code> had 14 secrets staged but never deployed.</p>
-<p>This mismatch — a published RFD choosing quadlets, while the actual service that exists and needs fixing runs on Fly — needed a real decision, not a silent continuation of whichever path happened to have momentum.</p>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
-<ol type="1">
-<li><strong>Fix <code>zone-backend</code>’s Fly deploy, treat quadlets as the long-term target.</strong> Keeps <code>rfd/0061</code> in force; the Fly.io fixes become a stopgap, and someone later ports <code>uro</code>/<code>crdb</code> to <code>zone-backend-quadlet</code>/<code>cockroach-crdb-quadlet</code>.</li>
-<li><strong>Adopt Fly.io as the real target, tombstone the quadlet repos and <code>infra</code>.</strong> Matches what has actually been built, verified, and deployed: a real <code>multiplayer-fabric-crdb</code> fix, confirmed live via Fly’s own health checks and boot logs, and a real Burrito-wrapped release for <code>uro</code>, verified locally (a genuine static ELF binary that boots <code>Uro.Endpoint</code>, <code>Uro.Repo</code>, and <code>Uro.Repo.Migration</code> correctly).</li>
-<li>Running both, service by service, avoids picking a single target but doubles the real ops surface <code>rfd/0061</code>’s own problem statement (Harvester’s “full virtualization tier” wraps the same workloads twice) already argued against, for a different reason.</li>
-</ol>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
-<p>Chosen: <strong>option 2.</strong> Fly.io is the real deployment target. <code>rfd/0061</code> is superseded. <code>infra</code> and all seven quadlet repos are archived (GitHub’s archive, not deletion — history stays reachable, nothing currently depends on them being writable).</p>
-<p>The concrete evidence this decision is grounded in, not asserted:</p>
-<ul>
-<li><code>multiplayer-fabric-crdb</code>: three real, distinct bugs found and fixed by iterating against actual Fly boot logs, not guessed — the lost entrypoint, a missing <code>chmod +x</code> on its replacement, and a CockroachDB cert-lifetime rounding collision (the node cert requested the exact same lifetime as its CA; CockroachDB 22.1 rejects a cert lifetime <code>&gt;=</code> its CA’s). Health check passing, <code>uro</code> database and <code>gateway_writer</code>/<code>gateway_admin</code> roles bootstrapped, confirmed live.</li>
-<li><code>multiplayer-fabric-uro</code>: a real Burrito-wrapped <code>mix release</code> replaces the dev-shaped root <code>Dockerfile</code> (<code>iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code>, which seeded dummy test data on every boot). Verified locally: the release build genuinely produces a static, ~20MB ELF binary, and both its <code>start</code> and <code>eval</code> commands boot <code>Uro.Application</code> for real (<code>Uro.Repo</code>, <code>Uro.Repo.Migration</code>, and <code>Uro.Endpoint</code> with Bandit all start, confirmed via real Postgrex connection attempts and a real HTTP listener log line).</li>
-<li><code>zone-backend-quadlet</code>’s <code>README.md</code> documents the same <code>DATABASE_URL</code>/<code>MIGRATION_URL</code>/mTLS-cert shape as <code>zone-backend</code>’s <code>AGENTS.md</code> already does for Fly — the two paths were never going to diverge in what they configure, only in where. Nothing about the quadlet path had a working, deployed instance to point to; the Fly path now does.</li>
-</ul>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: one real, currently-working deployment target for <code>zone-backend</code>’s two services, matching engineering effort already spent and verified rather than requiring a second port to a path with no live deployment. <code>rfd/0089</code>’s tombstoning also removes a real source of drift: two competing, both-real deploy configs for the same service (<code>AGENTS.md</code>’s Fly secrets vs.&nbsp;<code>zone-backend-quadlet</code>’s <code>/etc/zone-backend/env</code>) is worse than committing to one.</p>
-<p>Bad: this reverses a published, deliberate decision (<code>rfd/0061</code>) made after weighing Harvester HCI, Fly.io, and quadlets directly against each other. That record’s own stated reasons for excluding Fly.io are not re-litigated here in detail; this RFD documents that the org’s real, current choice is Fly.io, not a re-derivation of why quadlets were rejected the first time. A future RFD revisiting deployment target again should read both <code>rfd/0061</code> and this record.</p>
-<p><code>zone-server-h2o</code> and <code>zone-client-godot</code> are not yet covered by a real Fly.io production deployment; see <code>rfd/0091</code> and <code>rfd/0092</code>.</p>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p><code>infra</code>, <code>zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, and <code>sccache-cache-quadlet</code> are archived, confirmed via <code>gh repo view --json isArchived</code> on each. <code>multiplayer-fabric-crdb</code>’s health check is passing on Fly, confirmed via <code>fly machine status</code>. <code>multiplayer-fabric-uro</code>’s real release build is verified locally; its actual Fly deploy is tracked as a follow-up (<code>zone-backend</code> PRs #51, #52), not yet merged and deployed as of this record.</p>
+<section id="stale-names-found-in-the-inventory" class="level2">
+<h2 class="anchored" data-anchor-id="stale-names-found-in-the-inventory">Stale names found in the inventory</h2>
+<p>Every repository name in <code>rfd/0062</code>’s inventory still resolves, because GitHub keeps a redirect after a rename. A redirect hides the rename from a reader. <code>rfd/0064</code> sets kebab-case repository names, and these renames follow it.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name in the old inventory</th>
+<th>Current name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>godot</code></td>
+<td><code>fabric-godot-core</code></td>
+</tr>
+<tr class="even">
+<td><code>merge</code></td>
+<td><code>fabric-godot-assembly</code></td>
+</tr>
+<tr class="odd">
+<td><code>observability</code></td>
+<td><code>fabric-game-observability</code></td>
+</tr>
+<tr class="even">
+<td><code>zone-server-image</code></td>
+<td><code>zone-server-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>zone-baker-image</code></td>
+<td><code>zone-baker-quadlet</code></td>
+</tr>
+<tr class="even">
+<td><code>zone-backend-image</code></td>
+<td><code>zone-backend-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>gha-runner-image</code></td>
+<td><code>gha-runner-quadlet</code></td>
+</tr>
+<tr class="even">
+<td><code>sccache-cache-image</code></td>
+<td><code>sccache-cache-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>manuals</code></td>
+<td><code>multiplayer-fabric-manuals</code></td>
+</tr>
+</tbody>
+</table>
+<p>Three repos moved to a third organization, <code>V-Sekai-archive</code>, and are archived there: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>.</p>
 
 
 </section>
@@ -812,7 +874,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0089-flyio-over-podman-quadlets/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0105-archive-self-host-era-support-repos/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

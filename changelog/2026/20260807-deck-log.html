@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>details – V-Sekai Fire — Manuals</title>
+<title>deck-log – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,15 +289,15 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
-  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
-  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
-  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
-  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
+  <li><a href="#v-sekai-multiplayer-fabric-deck-log-2026-08-07-friday" id="toc-v-sekai-multiplayer-fabric-deck-log-2026-08-07-friday" class="nav-link active" data-scroll-target="#v-sekai-multiplayer-fabric-deck-log-2026-08-07-friday">V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)</a>
+  <ul class="collapse">
+  <li><a href="#added" id="toc-added" class="nav-link" data-scroll-target="#added">Added</a></li>
+  <li><a href="#changed" id="toc-changed" class="nav-link" data-scroll-target="#changed">Changed</a></li>
+  <li><a href="#removed" id="toc-removed" class="nav-link" data-scroll-target="#removed">Removed</a></li>
+  <li><a href="#split-the-archive-out" id="toc-split-the-archive-out" class="nav-link" data-scroll-target="#split-the-archive-out">Split the archive out</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog/2026/20260807-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -306,53 +306,43 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p>The superseded Harvester decision ships each service as a qcow2 VM image on a Harvester HCI cluster, with podman quadlets running inside each VM. The quadlets already drive the workloads; the Harvester layer wraps a full virtualization tier — hypervisor, VM lifecycle, qcow2 pipeline — around the container runtime the services depend on. Fedora 44 runs podman quadlets under systemd directly on the host. This records that Harvester HCI is not the deployment target.</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<section id="v-sekai-multiplayer-fabric-deck-log-2026-08-07-friday" class="level1">
+<h1>V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)</h1>
+<p>Date: 2026-08-07</p>
+<p>Archived six repositories that the Fly.io move of <code>rfd/0089</code> left without a consumer, and resynchronized the organization inventory in <code>rfd/0062</code> to the real organization. The inventory had drifted far enough to name ten repositories by names they no longer carry, to list five repositories that left the organization, and to omit about thirty that exist.</p>
+<p>The sweep also surfaced one inconsistency that no record explains: <code>zone-server-h2o</code> is archived on GitHub while <code>rfd/0094</code> names it the host of the minimum user-generated-content game loop.</p>
+<section id="added" class="level2">
+<h2 class="anchored" data-anchor-id="added">Added</h2>
 <ul>
-<li>Quadlets drive the workloads, so the host runs them directly and the VM tier carries no load the containers need.</li>
-<li>Stock tooling — Fedora 44, systemd, podman — carries the runtime in place of a bespoke HCI stack.</li>
-<li>An OCI container image is the deploy artifact, so the build skips the qcow2 VM step.</li>
-<li>No hypervisor or cluster control plane sits under the services.</li>
-<li>Self-hosting keeps ownership of the hosts, their cost, and their control.</li>
+<li><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/">RFD 0105</a>, which archives the self-host-era support repositories and the empty stubs: <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-container-verify">fabric-container-verify</a>, the <code>rfd/0056</code> quadlet verification queue, whose every target <code>rfd/0089</code> already archived; <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-casync-central">fabric-casync-central</a>, which never carried content; <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-scoop-central">fabric-scoop-central</a>, the scoop bucket for the Windows demo of the parked <code>godot-loop-slice</code>; <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-platform-central">fabric-platform-central</a>, the <code>rfd/0065</code> Burrito and casync packaging path; and the two empty placeholders <a href="https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot">vulkan-video-godot</a> and <a href="https://github.com/v-sekai-multiplayer-fabric/steamdeck">steamdeck</a>. Each one is tombstoned rather than deleted, so its history stays reachable.</li>
+<li>A record of the <code>fabric-platform-central</code> risk in that RFD’s <code>DETAILS.md</code>. <code>rfd/0090</code> describes a live Burrito release of <code>uro</code> on Fly.io, and <code>rfd/0065</code> puts that packaging in the archived repository. One API call reverses the archive if the deploy still reads from it.</li>
+<li>A <code>Moved to V-Sekai-archive</code> section in the <code>rfd/0062</code> inventory, for the three repositories that left this organization: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>.</li>
+<li>Counts in the inventory: 72 repositories, 48 active and 24 archived.</li>
 </ul>
 </section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
+<section id="changed" class="level2">
+<h2 class="anchored" data-anchor-id="changed">Changed</h2>
 <ul>
-<li>Keep Harvester HCI, with qcow2 VMs running quadlets inside.</li>
-<li>Run podman quadlets directly on Fedora 44 hosts under systemd.</li>
-<li>Return to a managed PaaS.</li>
+<li>The <code>rfd/0062</code> inventory now uses current repository names, per <code>rfd/0064</code>. GitHub keeps a redirect after a rename, so every old name still resolved and hid the drift. <code>godot</code> is <code>fabric-godot-core</code>, <code>merge</code> is <code>fabric-godot-assembly</code>, <code>observability</code> is <code>fabric-game-observability</code>, <code>manuals</code> is <code>multiplayer-fabric-manuals</code>, and the five <code>*-image</code> repositories are the <code>*-quadlet</code> repositories. <code>rfd/0105</code>’s <code>DETAILS.md</code> carries the full mapping.</li>
+<li>The inventory’s repository sections follow the current stack: an engine and client area, a zone host and guests area for <code>rfd/0094</code>’s composition, a backend and data area for the FoundationDB work of <code>rfd/0103</code>, one hexagon-cores area holding both the canonical hexagons and the standalone Lean workspaces, and a content flow and authoring area.</li>
+<li>The archived table now carries a Basis column naming the decision that retired each repository, and lists all 24 rather than 3.</li>
 </ul>
 </section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
-<p>Chosen option: “run podman quadlets directly on Fedora 44 hosts under systemd”, because systemd supplies service lifecycle, ordering, and boot activation for the quadlets with no virtualization tier underneath. Each service deploys as an OCI container image launched by a quadlet <code>.container</code> unit, with <code>.network</code> and <code>.volume</code> units alongside, copied into <code>~/.config/containers/systemd</code> to match the quadlet deployment convention. Deployment is OpenTofu in <a href="https://github.com/v-sekai-multiplayer-fabric/infra">infra</a>, provisioning Fedora 44 hosts and delivering the quadlet units in place of baking and booting qcow2 images on Harvester.</p>
-<p>This supersedes Self-host on Harvester HCI instead of Fly.io. Fly.io stays off the table from that decision, and Harvester HCI joins it.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<section id="removed" class="level2">
+<h2 class="anchored" data-anchor-id="removed">Removed</h2>
 <ul>
-<li>Good: one fewer tier to build, ship, and operate — no hypervisor, no qcow2 pipeline, no VM lifecycle.</li>
-<li>Good: rootless podman under systemd is a well-documented path on Fedora, and the same OCI image runs in local dev, CI, and production.</li>
-<li>Good: a deploy rebuilds and pulls an OCI image rather than baking a VM image.</li>
-<li>Bad: services on one host share a kernel, so isolation between them is weaker than separate VMs give.</li>
-<li>Bad: host capacity planning and noisy-neighbor limits sit with the operator.</li>
-<li>Bad: the qcow2 <code>*-image</code> repos and any docs that target VMs need retiring or repointing at OCI images.</li>
+<li>The inventory’s service-images section. Every repository it listed is archived by <code>rfd/0089</code>, which supersedes <code>rfd/0061</code>’s quadlet deployment target.</li>
 </ul>
 </section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The infra repo provisions Fedora 44 hosts via OpenTofu and brings each service up through a podman quadlet unit under systemd, creating no Harvester HCI resources and no qcow2 images. <code>systemctl --user status</code> reports the generated service units active, and they survive a host reboot.</p>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More information</h2>
-<p>Service images move from the qcow2 <code>*-image</code> VM repos to OCI container images; the engine stays pinned to a frozen Godot 4.7 commit (<code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>). The verification smokes already run as a systemd podman quadlet queue (<code>rfd/0056-systemd-quadlet-verification-queue</code>), so the runtime and its smokes share one quadlet convention.</p>
+<section id="split-the-archive-out" class="level2">
+<h2 class="anchored" data-anchor-id="split-the-archive-out">Split the archive out</h2>
+<p>Created <a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive">multiplayer-fabric-archive</a> and moved every retired record there, per <a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/">RFD 0106</a>: the 26 rejected and superseded MADR records under <code>_archive/decisions/</code>, the image they cite, and the two superseded RFDs, <code>rfd/0011</code> on the observability stack and <code>rfd/0061</code> on the deployment target. The new repository carries the manuals history up to the split, so each moved file keeps every commit that touched it at its original path. It holds plain Markdown, with no site and no checks.</p>
+<p>Both superseded RFDs used to render as current. A reader who opened either one read a dead design with no marking on the page.</p>
+<p>Repairing the inbound links was the work a move forces, because a deleted file with no stub leaves a 404 on the site. Four relative links in the 2026-06-06 deck log, two pointers in <code>rfd/0071</code>, and one reference each in <code>rfd/0089</code>, <code>rfd/0060</code>, <code>rfd/0070</code>, and the <code>rfd/0062</code> inventory now point at the archive repository. <code>_quarto.yml</code> drops the <code>decisions/attachments</code> resource.</p>
+<p>The move also exposed a link that never resolved. Two archived records cite the debug-orb image relative to <code>_archive/decisions/</code>, and the image sat two directories away in <code>decisions/attachments/</code>. Quarto skips <code>_archive</code>, so no rendered page ever exercised it. The archive repository puts the image where the existing links expect it.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -777,7 +767,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog/2026/20260807-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

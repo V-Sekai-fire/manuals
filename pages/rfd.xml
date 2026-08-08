@@ -10,7 +10,373 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 07 Aug 2026 21:53:14 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>RFD 0106: Split the archive into its own repository</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0106-split-the-archive-into-its-own-repo/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0106: Split the archive into its own repository</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> manuals repository layout, archived records</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The manuals repository holds live design records and dead ones in the same tree. <code>_archive/decisions/</code> holds 26 MADR records that are rejected or superseded. A leading underscore keeps Quarto from rendering them, so the site hides them, and the repository still carries them.</p>
+<p>Two RFDs are superseded and still render as current. <code>rfd/0089</code> supersedes <code>rfd/0061</code> on the deployment target. <code>rfd/0011</code> is superseded on the observability stack. A reader who opens either one reads a dead design with no marking on the page.</p>
+<p>Hiding a record from the site is not the same as retiring it. The repository needs one place for retired records.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Create <code>multiplayer-fabric-archive</code>, a public repository in this organization. It is the standing home for retired records. It holds plain Markdown, with no Quarto site, no build, and no checks, because archived content does not change.</p>
+<p>Move <code>_archive/</code>, its attachments, <code>rfd/0011</code>, and <code>rfd/0061</code> there. Delete them here. Keep no pointer stub, per <code>rfd/0000-conventions</code>.</p>
+<p>The archive repository carries the manuals history up to the split, so each moved file keeps every commit that touched it at its original path.</p>
+<p><code>rfd/0011</code> and <code>rfd/0061</code> keep their numbers. This repository does not reuse a number after a move.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The link repairs a move forces, and the record of what moved: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/multiplayer-fabric-archive</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0000-conventions</code>: the no-pointer-stub rule this follows.</li>
+<li><code>rfd/0071-yagni-times-structure-to-need</code>: the rule that sends a superseded record to the archive.</li>
+<li><code>rfd/0062-repository-and-capability-inventory</code>: lists the new repository.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-moved" class="level2">
+<h2 class="anchored" data-anchor-id="what-moved">What moved</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Path</th>
+<th>Records</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_archive/decisions/</code></td>
+<td>26</td>
+</tr>
+<tr class="even">
+<td><code>_archive/decisions/attachments/</code></td>
+<td>1 image</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0011-observability-stack-victoriatraces/</code></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester/</code></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><code>_archive/README.md</code> moves with the directory. Its text now states that the leading underscore does no work in a repository that builds no site, and that the path stays as it was so older links keep their shape.</p>
+</section>
+<section id="link-repair-which-a-move-forces" class="level2">
+<h2 class="anchored" data-anchor-id="link-repair-which-a-move-forces">Link repair, which a move forces</h2>
+<p>A deleted file leaves no stub. A live Markdown link to that file leaves a 404 on the published site. So a move repairs every inbound link, and that is not a stub.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Repair</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>changelog/2026/20260606-deck-log.md</code></td>
+<td>Four relative links into <code>_archive/decisions/</code> now point at the archive repository.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0071-yagni-times-structure-to-need/index.md</code></td>
+<td>Two pointers to <code>_archive</code> now name the archive repository.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0089-flyio-over-podman-quadlets/index.md</code></td>
+<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0060-org-scoped-github-app-token-for-gh-access/index.md</code></td>
+<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md</code></td>
+<td>The <code>rfd/0011</code> reference now links to the archive.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0062-repository-and-capability-inventory/DETAILS.md</code></td>
+<td>The two-org split decision path now links to the archive.</td>
+</tr>
+<tr class="odd">
+<td><code>_quarto.yml</code></td>
+<td>Drops the <code>decisions/attachments</code> resource, which no longer exists.</td>
+</tr>
+</tbody>
+</table>
+<p>Inline prose in <code>rfd/0089</code>’s <code>DETAILS.md</code> still names <code>rfd/0061</code> in code spans, without links. Those read as citations of a numbered record, so they stay.</p>
+</section>
+<section id="a-broken-link-the-move-exposed" class="level2">
+<h2 class="anchored" data-anchor-id="a-broken-link-the-move-exposed">A broken link the move exposed</h2>
+<p>Two archived records cite the debug-orb image as <code>attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, relative to <code>_archive/decisions/</code>. The image sat in <code>decisions/attachments/</code>, two directories away, so the link never resolved. No rendered page exercised it, because Quarto skips <code>_archive</code>.</p>
+<p>The archive repository puts the image at <code>_archive/decisions/attachments/</code>, where the existing links resolve.</p>
+</section>
+<section id="two-archive-destinations-now-exist" class="level2">
+<h2 class="anchored" data-anchor-id="two-archive-destinations-now-exist">Two archive destinations now exist</h2>
+<p><code>V-Sekai-archive</code> is a separate organization that already holds three archived repositories: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>. <code>multiplayer-fabric-archive</code> is a repository for archived records inside this organization.</p>
+<p>A whole repository goes to the <code>V-Sekai-archive</code> organization. A record inside the manuals goes to <code>multiplayer-fabric-archive</code>. A future record that consolidates the two supersedes this one.</p>
+</section>
+<section id="counts-after-the-split" class="level2">
+<h2 class="anchored" data-anchor-id="counts-after-the-split">Counts after the split</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Repos in <code>v-sekai-multiplayer-fabric</code></td>
+<td>73</td>
+</tr>
+<tr class="even">
+<td>Active</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<td>Archived</td>
+<td>24</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-stays" class="level2">
+<h2 class="anchored" data-anchor-id="what-stays">What stays</h2>
+<p><code>decisions/</code> keeps <code>madr-proposal-template.md</code>, the live template. The directory holds no records, because <code>rfd/0000-conventions</code> migrates each MADR into an RFD and deletes the MADR file.</p>
+<p><code>AGENTS.md</code> still directs a new image to <code>decisions/attachments/</code>, and that directory returns when the next asset arrives.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0105-archive-self-host-era-support-repos/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0105: Archive the self-host-era support repos and the empty stubs</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> org-wide repository lifecycle</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0089</code> moved the deployment target to Fly.io and archived the seven quadlet repos and <code>infra</code>. It did not reach the repos that supported those quadlets from one step away. A verification queue that targets quadlets, a casync CDN, a scoop bucket, and a Burrito packaging repo all stayed active with no live consumer.</p>
+<p>Two repos also carry no content at all. <code>vulkan-video-godot</code> holds 0 KB. <code>steamdeck</code> holds 1 KB. Both appear in the inventory as if they hold work.</p>
+<p>An active repo with no consumer costs a reader time. The reader cannot tell a parked repo from a live one.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Archive six repos. Each one is tombstoned, not deleted, so the history stays reachable.</p>
+<ul>
+<li><code>fabric-container-verify</code>: the <code>rfd/0056</code> quadlet verification queue. Every quadlet it targets is archived by <code>rfd/0089</code>.</li>
+<li><code>fabric-casync-central</code>: 0 KB. No content was ever pushed.</li>
+<li><code>fabric-scoop-central</code>: the scoop bucket for the Windows demo of <code>godot-loop-slice</code>, which is archived.</li>
+<li><code>fabric-platform-central</code>: the <code>rfd/0065</code> Burrito and casync packaging path.</li>
+<li><code>vulkan-video-godot</code>: 0 KB.</li>
+<li><code>steamdeck</code>: 1 KB.</li>
+</ul>
+<p><code>fabric-godot-assembly</code> is archived and then restored on the same day. It stays active. The <code>gitassembly</code> recipe of <code>rfd/0019</code> still composes the engine.</p>
+<p>The dormant Lean cores stay active. <code>rfd/0057</code> makes them the canonical proven reference, and a reference repo needs no recent push.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Per-repo record, the open inconsistency, and the counts: <code>DETAILS.md</code></li>
+<li><code>rfd/0062-repository-and-capability-inventory</code>: the inventory this decision updates.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0089-flyio-over-podman-quadlets</code>: archives the quadlets that these repos support.</li>
+<li><code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>: the decision that <code>fabric-platform-central</code> carries.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-each-repo-carried" class="level2">
+<h2 class="anchored" data-anchor-id="what-each-repo-carried">What each repo carried</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 3%">
+<col style="width: 9%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Size</th>
+<th>Last push</th>
+<th>Basis for the archive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fabric-container-verify</code></td>
+<td>0 KB</td>
+<td>2026-06-20</td>
+<td><code>rfd/0056</code> quadlet queue. <code>rfd/0089</code> archives every quadlet it targets.</td>
+</tr>
+<tr class="even">
+<td><code>fabric-casync-central</code></td>
+<td>0 KB</td>
+<td>2026-06-24</td>
+<td>Empty. No content was ever pushed.</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-scoop-central</code></td>
+<td>8 KB</td>
+<td>2026-06-30</td>
+<td>Scoop bucket for the Windows demo of the archived <code>godot-loop-slice</code>.</td>
+</tr>
+<tr class="even">
+<td><code>fabric-platform-central</code></td>
+<td>—</td>
+<td>2026-06-25</td>
+<td><code>rfd/0065</code> Burrito and casync packaging.</td>
+</tr>
+<tr class="odd">
+<td><code>vulkan-video-godot</code></td>
+<td>0 KB</td>
+<td>2026-05-28</td>
+<td>Empty placeholder.</td>
+</tr>
+<tr class="even">
+<td><code>steamdeck</code></td>
+<td>1 KB</td>
+<td>2026-06-14</td>
+<td>Empty placeholder.</td>
+</tr>
+</tbody>
+</table>
+<p><code>fabric-container-verify</code> reports 0 KB for its packed size. Its GDScript content is present in history.</p>
+</section>
+<section id="the-fabric-platform-central-risk" class="level2">
+<h2 class="anchored" data-anchor-id="the-fabric-platform-central-risk">The <code>fabric-platform-central</code> risk</h2>
+<p><code>rfd/0090</code> describes a live Burrito release of <code>uro</code> on Fly.io. <code>rfd/0065</code> puts the Burrito and casync packaging in <code>fabric-platform-central</code>. An archive makes the repo read-only. If the current <code>zone-backend</code> deploy still reads from this repo, its pushes and its Actions stop.</p>
+<p>The archive is reversible with one API call. This record states the risk so a later failure has a written cause.</p>
+</section>
+<section id="counts-after-the-sweep" class="level2">
+<h2 class="anchored" data-anchor-id="counts-after-the-sweep">Counts after the sweep</h2>
+<p>These counts predate the archive split of <code>rfd/0106</code>, which adds one repository.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Total repos</td>
+<td>72</td>
+</tr>
+<tr class="even">
+<td>Archived</td>
+<td>24</td>
+</tr>
+<tr class="odd">
+<td>Active</td>
+<td>48</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="open-inconsistency-not-resolved-here" class="level2">
+<h2 class="anchored" data-anchor-id="open-inconsistency-not-resolved-here">Open inconsistency, not resolved here</h2>
+<p><code>zone-server-h2o</code> is archived. <code>rfd/0094</code> names it the host of the minimum UGC game loop, and <code>rfd/0095</code> carries it in scope. Its last push is 2026-08-07. An archived repo accepts no push.</p>
+<p>This record does not resolve the state of <code>zone-server-h2o</code>. Either the archive is an error, or a decision that supersedes <code>rfd/0094</code> is missing from <code>rfd/</code>. One of the two needs a record.</p>
+</section>
+<section id="stale-names-found-in-the-inventory" class="level2">
+<h2 class="anchored" data-anchor-id="stale-names-found-in-the-inventory">Stale names found in the inventory</h2>
+<p>Every repository name in <code>rfd/0062</code>’s inventory still resolves, because GitHub keeps a redirect after a rename. A redirect hides the rename from a reader. <code>rfd/0064</code> sets kebab-case repository names, and these renames follow it.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name in the old inventory</th>
+<th>Current name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>godot</code></td>
+<td><code>fabric-godot-core</code></td>
+</tr>
+<tr class="even">
+<td><code>merge</code></td>
+<td><code>fabric-godot-assembly</code></td>
+</tr>
+<tr class="odd">
+<td><code>observability</code></td>
+<td><code>fabric-game-observability</code></td>
+</tr>
+<tr class="even">
+<td><code>zone-server-image</code></td>
+<td><code>zone-server-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>zone-baker-image</code></td>
+<td><code>zone-baker-quadlet</code></td>
+</tr>
+<tr class="even">
+<td><code>zone-backend-image</code></td>
+<td><code>zone-backend-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>gha-runner-image</code></td>
+<td><code>gha-runner-quadlet</code></td>
+</tr>
+<tr class="even">
+<td><code>sccache-cache-image</code></td>
+<td><code>sccache-cache-quadlet</code></td>
+</tr>
+<tr class="odd">
+<td><code>manuals</code></td>
+<td><code>multiplayer-fabric-manuals</code></td>
+</tr>
+</tbody>
+</table>
+<p>Three repos moved to a third organization, <code>V-Sekai-archive</code>, and are archived there: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0104-hypothesis-1000-concurrent/</link>
@@ -152,7 +518,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -303,7 +669,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -497,7 +863,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -664,7 +1030,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -887,7 +1253,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -1042,7 +1408,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -1201,7 +1567,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -1371,7 +1737,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -1563,7 +1929,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -1785,7 +2151,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -1872,7 +2238,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -2006,7 +2372,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -2252,7 +2618,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -2318,7 +2684,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -2474,7 +2840,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -2499,7 +2865,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code>: the decision this supersedes.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester"><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester</code></a>: the decision this supersedes. It now lives in <code>multiplayer-fabric-archive</code>, per <code>rfd/0106</code>.</li>
 <li><code>v-sekai-multiplayer-fabric/zone-backend</code>, <code>docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md</code>: the prior Fly-app-loss record this RFD’s Fly.io work continues from.</li>
 <li><code>v-sekai-multiplayer-fabric/infra</code>, <code>v-sekai-multiplayer-fabric/zone-backend-quadlet</code>, <code>cockroach-crdb-quadlet</code>, <code>zone-server-quadlet</code>, <code>zone-baker-quadlet</code>, <code>restic-backup-quadlet</code>, <code>gha-runner-quadlet</code>, <code>sccache-cache-quadlet</code>: archived by this decision.</li>
 </ul>
@@ -2552,7 +2918,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
@@ -2592,7 +2958,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
@@ -2633,403 +2999,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0086: Defer NoGod.lean’s gossip zone authority</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o, multi-process zone authority</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>lean-rebac-core</code>’s <code>NoGod.lean</code> is a proven, coordinator-free gossip protocol for zone authority: vector clocks, Hilbert-range ownership, and theorems that no two zones ever claim the same range. Should <code>zone-server-h2o</code> port it now, alongside the rest of <code>ReBAC.lean</code>?</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Not yet. <code>zone-server-h2o</code> today hardcodes one zone ID per process (<code>z_id = 0</code> in <code>src/transport/webtransport_server.c</code>). One process has no peer to gossip with and no second zone’s clock to order events against. Porting the full gossip/vector-clock system now would build structure for a need that does not exist yet.</p>
-<p>The narrow, reusable part — <code>ZoneRange</code> and <code>geometricAuthority</code>, about ten lines of pure C — ports cleanly whenever a second concurrent zone is real work. The gossip layer (<code>VClock</code>, <code>HLC</code>, <code>GossipMsg</code>) only earns its cost once there is a second process to coordinate with.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full context and the exact revisit trigger: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-<li><code>sinew-mocap/solve</code> org’s <code>lean-rebac-core</code>, <code>Rebac/core/NoGod.lean</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the consolidation decision this defers within.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0086-defer-nogod-gossip-zone-authority/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o game content, web client</p>
-<p>Players awaken as “Sparks” — digitized human consciousnesses legally owned by a defunct hyper-corporation. They are currently downloaded into “Frames,” which are cheap, mass-produced synthetic worker chassis. Abandoned on The Gyre, a massive, slowly failing ring-station orbiting a toxic gas giant, players must survive cycle by cycle. They take on grueling localized contracts, scavenge for parts to prevent their Frames from seizing up, and try to buy their digital freedom from the station’s automated debt-collection algorithms.</p>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The Gyre is content for a game and is not a new game architecture.</p>
-<p>We defined a loop with two areas: a Hub area and a Field area. Players start in the Hub area. They travel to a Field area to do one task. Then they return to the Hub area.</p>
-<p>In The Gyre, two Hub locations stand in for the Hub area: the Under-Market and the Commons. Each contract stands in for a Field task. A contract is one of these: a scavenge run, a hack run, an exploration run, or (sometimes) a short combat run.</p>
-<p>We also defined five core systems: Budgeter, Combat, Loot, Presence, and Progression. These five core systems stay as they are. The Gyre adds new content on top of them: rooms, non-player characters (NPCs), items, and a story frame called the Debt Clock.</p>
-<p>Players explore more than they fight. Combat happens less often than in a typical Dungeons &amp; Dragons session. A party has 2 to 4 players. If a party has fewer than 4 players, NPC companions can fill the empty spots.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Room graph, NPCs, contract catalog, item table, session pacing, party/tone detail, implementation status, and open questions: <code>DETAILS.md</code></li>
-<li>Implementation: <code>zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code>: defines the Hub/Field loop and the five core systems that The Gyre reuses.</li>
-<li><code>rfd/0028-hexagonal-core-ports-adapters</code>, <code>rfd/0043-hexagon-progression-core</code>: describe the shape a future web/OAuth save adapter would follow.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p><code>rfd/0045-loot-action-core-loop-mvp-vertical-slice</code> shipped a playable shell: a Hub where players gather, an instanced Field room for one loot-action loop, and five hexagonal cores (Combat, Loot, Presence, Progression, Budgeter) behind ports. That slice targets SteamVR, one melee combo, one loot drop, four players.</p>
-<p>The Gyre is a proposed setting: a sci-fi, gig-economy-survival MUD where players are “Sparks” occupying disposable “Frames” on a decaying station, working contracts to pay down a Debt Clock. The design lives in <code>zone-server-h2o</code> issue #4 and is reproduced here, remapped onto the existing shell’s terms.</p>
-</section>
-<section id="party-composition-and-tone" class="level2">
-<h2 class="anchored" data-anchor-id="party-composition-and-tone">Party composition and tone</h2>
-<p>Playtester feedback (screen name “cthulhoo,” mostly GURPS in the last 15 years, D&amp;D from 3e onward) shapes this revision. Their favorite campaigns “feel like anime”: exploration-led, with far fewer combat encounters per session than D&amp;D’s recommended pacing, run for 2-4 players plus NPC party members.</p>
-<p>Apply that directly:</p>
-<ul>
-<li>Party size stays 2-4. A contract board scales its harder contracts to whatever party size shows up, rather than assuming a fixed four.</li>
-<li>Rook, Splicer Jax, and other named NPCs are recruitable companions for a run, not just vendors. A party of 2 can take a contract sized for 4 by bringing one or two NPC companions instead of waiting for more players.</li>
-<li>Combat stays the minority activity. Of the nine contracts in the catalog below, one (Drone Decommission) is combat, and it is avoidable: a stealth or hacking path exists around the drones for a party that would rather not fight. The rest are scavenging, repair, hacking, delivery, and social/exploration work.</li>
-<li>Exploration carries the session. A room’s description, its NPCs, and what a player finds there (a Rumor, a piece of station history, a side conversation) matter as much as the contract’s reward. The Session pacing table below spends more of its 120 minutes moving through rooms and talking to NPCs than fighting.</li>
-</ul>
-</section>
-<section id="the-web-target-and-save-data" class="level2">
-<h2 class="anchored" data-anchor-id="the-web-target-and-save-data">The web target and save data</h2>
-<p>The Gyre’s target client is a website, not the SteamVR build <code>rfd/0045</code> targets. Save data (Debt Clock balance, Frame state, inventory) needs to persist per player across sessions, tied to a GitHub OAuth login.</p>
-<p>This is new client and persistence-adapter work, not a change to the core reducers. The Progression core (<code>rfd/0043</code>) already owns profile and inventory commits through a port; a web/OAuth build needs a new adapter behind that port, not a new core. The Combat, Loot, and Budgeter cores stay unaffected: a text-based web client still issues the same loot-request and combat-tick events the SteamVR client does, just through a different front end.</p>
-</section>
-<section id="mapping-the-gyre-onto-the-hubfield-shell" class="level2">
-<h2 class="anchored" data-anchor-id="mapping-the-gyre-onto-the-hubfield-shell">Mapping The Gyre onto the Hub/Field shell</h2>
-<ul>
-<li>The Hub maps to The Under-Market (Splicer’s Den, Exchange Plaza, Transit Rails) and The Commons (Cycle’s End Tavern, Chapel of the Backup, Broadcast Row). Players gather, trade, and patch up here between contracts, the same role the Hub deck plays in <code>rfd/0045</code>.</li>
-<li>A Field instance maps to one contract run. The Tangle, the Sub-Net, and the Underhull each host contract-type Field rooms: a scavenge check, a hacking check, a short combat encounter. Each contract is bounded and returns the player to the Hub, matching the Hub-to-Field-to-Hub round trip.</li>
-<li>Contract rewards (chits, Encrypted Bounties, salvage) resolve through the loot core’s existing first-touch contention.</li>
-<li>The Debt Clock, Frame Integrity, and inventory are profile state the progression core commits, the same path the MVP slice’s inventory delta already uses.</li>
-<li>Only the Drone Decommission contract type uses the combat core, reusing the existing timed-hit validation. Every other contract resolves through the Loot and Progression cores alone, keeping combat the minority path through the content, per “Party composition and tone” above.</li>
-</ul>
-</section>
-<section id="world-map-and-zones-room-graph" class="level2">
-<h2 class="anchored" data-anchor-id="world-map-and-zones-room-graph">World map and zones (room graph)</h2>
-<p>Six zones, three to four rooms each.</p>
-<section id="the-reclamation-wards-spawn-zone" class="level3">
-<h3 class="anchored" data-anchor-id="the-reclamation-wards-spawn-zone">The Reclamation Wards (spawn zone)</h3>
-<ul>
-<li>The Decanting Floor is a freezing, sterile room filled with hundreds of suspended Frames. Automated robotic arms attach players to their new bodies.</li>
-<li>The Decon Vents are a mandatory exit path where players are blasted with harsh chemical foam before being pushed out into the station’s general population.</li>
-<li>Intake Records is a small office of humming servers where a player can review their current Debt Clock balance and Frame warranty status.</li>
-</ul>
-</section>
-<section id="the-tangle-scavenging-and-gathering" class="level3">
-<h3 class="anchored" data-anchor-id="the-tangle-scavenging-and-gathering">The Tangle (scavenging and gathering)</h3>
-<ul>
-<li>Collapsed Aeroponics is a humid, rusted dome where modified fungal blooms have taken over the old air scrubbers. Players can harvest bio-matter here, but risk inhaling corrosive spores.</li>
-<li>The Filtration Sump is a dark, flooded sector where players can filter clean water out of the station’s waste runoff.</li>
-<li>Scrap Canyon is a collapsed maintenance corridor, floor to ceiling in decades of dumped hardware, the station’s best salvage and its least stable footing.</li>
-</ul>
-</section>
-<section id="the-under-market-safe-zone-and-hub" class="level3">
-<h3 class="anchored" data-anchor-id="the-under-market-safe-zone-and-hub">The Under-Market (safe zone and hub)</h3>
-<ul>
-<li>The Splicer’s Den is a makeshift clinic lit by harsh LED strips. Players spend chits here to patch their Integrity or install unregulated augments.</li>
-<li>Exchange Plaza is a crowded, noisy hub where players pick up bounties, trade salvaged tech, and check the current cycle’s market prices.</li>
-<li>The Transit Rails are the station’s rattling internal shuttle line. Riding it skips travel time between distant zones, for a small chit fare.</li>
-</ul>
-</section>
-<section id="the-sub-net-the-dungeon" class="level3">
-<h3 class="anchored" data-anchor-id="the-sub-net-the-dungeon">The Sub-Net (the “dungeon”)</h3>
-<ul>
-<li>Uplink Node Alpha is a physical junction box sparking with loose wires. A player with the right augment can plug their Frame directly in.</li>
-<li>The Data Sea is a surreal, text-based interpretation of the station’s intranet. Movement here is instant, but a failed hacking check causes direct neural feedback, damaging the player’s Spark.</li>
-<li>The Firewall Reef is a maze of self-patching defensive subroutines rendered as jagged coral, the station’s most valuable data and its most aggressive automated defenses.</li>
-</ul>
-</section>
-<section id="the-underhull-hazard-zone" class="level3">
-<h3 class="anchored" data-anchor-id="the-underhull-hazard-zone">The Underhull (hazard zone)</h3>
-<ul>
-<li>The Radiation Seam is a cracked section of outer hull venting the gas giant’s ambient radiation directly into the corridor. Fast Integrity drain, fast salvage.</li>
-<li>The Drone Graveyard holds dozens of decommissioned security drones, some not fully decommissioned. A slow, tense room, not a rush.</li>
-<li>Airlock Seven is the only working route to the station’s exterior. A short EVA contract type launches from here.</li>
-</ul>
-</section>
-<section id="the-commons-social-zone" class="level3">
-<h3 class="anchored" data-anchor-id="the-commons-social-zone">The Commons (social zone)</h3>
-<ul>
-<li>Other Sparks unwind at Cycle’s End Tavern between contracts, a source of rumor-board side content and NPC banter.</li>
-<li>The Chapel of the Backup is a quiet room where Sparks who fear a bad resleeve pay to store a redundant memory snapshot.</li>
-<li>Broadcast Row is a row of dead advertising screens one enterprising Spark reactivated to run a pirate radio station.</li>
-</ul>
-</section>
-</section>
-<section id="npcs" class="level2">
-<h2 class="anchored" data-anchor-id="npcs">NPCs</h2>
-<ul>
-<li>Splicer Jax runs The Splicer’s Den, gruff, transactional, quietly generous to Sparks who are clearly new.</li>
-<li>Overseer Q-11 is the automated debt-collection voice heard at the start and end of every cycle, never hostile, never warm, always exact about numbers.</li>
-<li>Rook is a Tangle scavenger who trades salvage tips for a cut of whatever the player finds on their first trip.</li>
-<li>The Pirate DJ runs Broadcast Row and drops rumors about which zones have good salvage or heavy drone activity this cycle.</li>
-</ul>
-</section>
-<section id="contract-catalog" class="level2">
-<h2 class="anchored" data-anchor-id="contract-catalog">Contract catalog</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 19%">
-<col style="width: 41%">
-<col style="width: 6%">
-<col style="width: 18%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Contract</th>
-<th>Zone</th>
-<th>Type</th>
-<th>Est. time</th>
-<th>Reward</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Scrub the Scrubbers</td>
-<td>Collapsed Aeroponics</td>
-<td>Scavenge check</td>
-<td>8-10 min</td>
-<td>Chits + bio-matter</td>
-</tr>
-<tr class="even">
-<td>Sump Pump Repair</td>
-<td>The Filtration Sump</td>
-<td>Repair task</td>
-<td>10-12 min</td>
-<td>Chits + Debt Clock dent</td>
-</tr>
-<tr class="odd">
-<td>Ghost Line</td>
-<td>Uplink Node Alpha → Data Sea</td>
-<td>Hacking check</td>
-<td>10-15 min</td>
-<td>Chits + Encrypted Bounty</td>
-</tr>
-<tr class="even">
-<td>Reef Breach</td>
-<td>The Firewall Reef</td>
-<td>Hard hacking check</td>
-<td>15-20 min</td>
-<td>Large Debt Clock dent</td>
-</tr>
-<tr class="odd">
-<td>Seam Walk</td>
-<td>The Radiation Seam</td>
-<td>Timed salvage/exploration</td>
-<td>8-10 min</td>
-<td>Chits, high Integrity risk</td>
-</tr>
-<tr class="even">
-<td>Drone Decommission</td>
-<td>The Drone Graveyard</td>
-<td>Short combat, or a stealth/hacking bypass around the drones</td>
-<td>10-12 min</td>
-<td>Chits + salvage parts</td>
-</tr>
-<tr class="odd">
-<td>Rail Courier</td>
-<td>Exchange Plaza → any zone</td>
-<td>Delivery</td>
-<td>5-8 min</td>
-<td>Small chits, low risk</td>
-</tr>
-<tr class="even">
-<td>Signal Boost</td>
-<td>Broadcast Row</td>
-<td>Social/fetch</td>
-<td>8-10 min</td>
-<td>Rumor unlock, small chits</td>
-</tr>
-<tr class="odd">
-<td>The Long Corridor</td>
-<td>Scrap Canyon → The Underhull</td>
-<td>Pure exploration, no check required</td>
-<td>10-15 min</td>
-<td>Station lore, a Rumor lead</td>
-</tr>
-</tbody>
-</table>
-<p>Seven of these nine contracts resolve without a fight. Drone Decommission is the one combat-typed contract, and its stealth or hacking bypass keeps even that one avoidable for a party that would rather not.</p>
-</section>
-<section id="entity-and-item-concepts" class="level2">
-<h2 class="anchored" data-anchor-id="entity-and-item-concepts">Entity and item concepts</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 7%">
-<col style="width: 32%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Item/entity</th>
-<th>Type</th>
-<th>Description</th>
-<th>Mechanic</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Memory Drive</td>
-<td>Core equipment</td>
-<td>A heavy, metallic cylinder housing the player’s consciousness.</td>
-<td>Drops on death. Can be looted, sold, or returned by other players.</td>
-</tr>
-<tr class="even">
-<td>Synapse Coolant</td>
-<td>Consumable</td>
-<td>A pressurized can of foul-smelling gray gel.</td>
-<td>Restores a moderate amount of Frame Integrity.</td>
-</tr>
-<tr class="odd">
-<td>Encrypted Bounties</td>
-<td>Currency / loot</td>
-<td>Datapads filled with stolen corporate secrets.</td>
-<td>Sold at the Exchange Plaza to pay down the player’s debt.</td>
-</tr>
-<tr class="even">
-<td>Pneumatic Riveter</td>
-<td>Weapon / tool</td>
-<td>A heavy, modified construction tool.</td>
-<td>Used to pry open sealed crates, or as a slow melee weapon.</td>
-</tr>
-<tr class="odd">
-<td>Backup Snapshot</td>
-<td>Service</td>
-<td>A stored memory copy, purchased at the Chapel of the Backup.</td>
-<td>On Catastrophic Seizure, restores the Spark to its last snapshot state instead of a blank slate.</td>
-</tr>
-<tr class="even">
-<td>Radiation Tab</td>
-<td>Consumable</td>
-<td>A chalky pill that slows Integrity drain in the Underhull.</td>
-<td>One-time use, single Radiation Seam trip.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="example-room-description" class="level2">
-<h2 class="anchored" data-anchor-id="example-room-description">Example room description</h2>
-<blockquote class="blockquote">
-<p><strong>[The Splicer’s Den]</strong></p>
-<p>The air is thick with the acrid stench of burning flux and cheap synthetic skin. Bundles of fiber-optic cables hang from the ceiling, leading to a massive, heavily modified medical chair in the center of the room. A flickering display board flashes today’s rates for Integrity patching and limb alignment. A half-dismantled Hauler Frame sits in the corner, its servos clicking in a repetitive, broken loop.</p>
-<p><em>Exits: [North] to Exchange Plaza, [East] to The Transit Rails.</em></p>
-<p><em>Interactables: [Splicer Jax], [Medical Vendor], [Scavenge Pile]</em></p>
-</blockquote>
-</section>
-<section id="session-pacing-120-minutes" class="level2">
-<h2 class="anchored" data-anchor-id="session-pacing-120-minutes">Session pacing (120 minutes)</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 21%">
-<col style="width: 4%">
-<col style="width: 73%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Phase</th>
-<th>Minutes</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Login and orientation</td>
-<td>0-10</td>
-<td>Decanting Floor, Decon Vents, Intake Records, first look at the Debt Clock; recruit an NPC companion if under 4 players</td>
-</tr>
-<tr class="even">
-<td>Loop 1-2 (exploration and scavenge)</td>
-<td>10-40</td>
-<td>Scrub the Scrubbers, The Long Corridor, no combat, teach the loop and the setting</td>
-</tr>
-<tr class="odd">
-<td>Market and downtime</td>
-<td>40-55</td>
-<td>Exchange Plaza trades, Splicer’s Den patch-up, Cycle’s End Tavern rumor pickup, NPC banter</td>
-</tr>
-<tr class="even">
-<td>Loop 3-4 (repair and hacking)</td>
-<td>55-95</td>
-<td>Sump Pump Repair, Ghost Line, real Integrity risk, still no required combat</td>
-</tr>
-<tr class="odd">
-<td>Closing set piece</td>
-<td>95-115</td>
-<td>Reef Breach (a hacking contract, not combat) or Drone Decommission via its stealth bypass</td>
-</tr>
-<tr class="even">
-<td>Wrap-up</td>
-<td>115-120</td>
-<td>Turn-in, Debt Clock check, Backup Snapshot purchase before logout</td>
-</tr>
-</tbody>
-</table>
-<p>A session that skips Drone Decommission entirely, or takes its bypass, sees zero required combat encounters across the full 120 minutes. A session that takes it head-on sees exactly one.</p>
-</section>
-<section id="smallest-loop-implementation-status" class="level2">
-<h2 class="anchored" data-anchor-id="smallest-loop-implementation-status">Smallest-loop implementation status</h2>
-<p><code>zone-server-h2o</code> PR #5 lands the smallest real slice of this loop: two rooms only (Decanting Floor, Splicer’s Den), pure exploration, no items or NPCs. Not the full room graph or contract catalog above; those stay design, not yet built.</p>
-<p>The MUD engine (<code>mud/guest/mud_guest.cpp</code>) previously served one hardcoded setting, Middleham. The PR adds a <code>domain</code> boot field (<code>"middleham"</code> default, <code>"the_gyre"</code> new) rather than a new engine: <code>MiddlehamStateMachine</code> keeps its Middleham behavior unchanged for the default domain, and a <code>gyre_room_templates()</code> table plus a <code>DOMAIN_THE_GYRE</code> branch in the constructor, <code>clone_rooms()</code>, and <code>objective_complete()</code> cover the new one. <code>mud/web/index.html</code>/<code>mud.js</code> get a mode selector, one <code>localStorage</code> session id per mode.</p>
-<p>Verified: a native (non-riscv64) link of <code>mud_guest.cpp</code> driving <code>mud_boot()</code>/<code>mud_step()</code> through the whole Gyre loop, real narration text, <code>objective_complete()</code> true after both rooms are visited (<code>mud/guest/test/gyre_smoke_test.cpp</code>). The client change (mode selector, per-domain session id, <code>domain</code> field on the wire) was driven with real Playwright, both Chromium and Camoufox, against a throwaway local stub, before the real spec (<code>mud/web/test/gyre.spec.ts</code>) was written.</p>
-<p>Not verified: a <code>riscv64-musl</code> + <code>libriscv</code> build/run of the guest code (no cross toolchain available when this was written). No real FDB/H2O build or deploy. <code>gyre.spec.ts</code> needs a real <code>MUD_BASE_URL</code> deployment to go green, matching <code>mud.spec.ts</code>’s own red-first convention; it has not run against one.</p>
-</section>
-<section id="open-questions" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
-<ul>
-<li>How does GitHub OAuth login map to a player profile the Progression core already models? Whether a GitHub identity becomes the profile’s primary key, or an added claim on an existing account scheme, is undecided.</li>
-<li>What does a web client need from the transport layer that the SteamVR client does not, and does it reuse the same WebTransport path <code>zone-server</code> already speaks, or a separate HTTP/WebSocket adapter for browser clients without WebTransport support?</li>
-<li>How do the “dice roll” mechanics for resolving risky actions (hacking, scavenging, and similar) work, mechanically, against the Combat core’s existing timed-hit validation model?</li>
-<li>Whether the Debt Clock and Effort Pips need their own core, or fit inside the existing Progression and Budgeter cores, is undecided. Default to reusing Progression until a concrete need forces a new core.</li>
-<li>How an NPC companion occupies a party slot in the Presence core is undecided: a server-driven pseudo-player with its own pose/state, or a lighter-weight attachment to the recruiting player’s own state. The choice affects whether a 2-player party with two NPC companions costs the same server resources as a 4-human party.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell/</guid>
-  <pubDate>Fri, 07 Aug 2026 21:53:14 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

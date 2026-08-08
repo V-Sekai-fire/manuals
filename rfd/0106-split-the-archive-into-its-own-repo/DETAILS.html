@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI – V-Sekai Fire — Manuals</title>
+<title>details – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,116 +289,138 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
-  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
-  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link" data-scroll-target="#context-and-problem-statement">Context and problem statement</a></li>
-  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
-  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered options</a></li>
-  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
-  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
+  <li><a href="#what-moved" id="toc-what-moved" class="nav-link active" data-scroll-target="#what-moved">What moved</a></li>
+  <li><a href="#link-repair-which-a-move-forces" id="toc-link-repair-which-a-move-forces" class="nav-link" data-scroll-target="#link-repair-which-a-move-forces">Link repair, which a move forces</a></li>
+  <li><a href="#a-broken-link-the-move-exposed" id="toc-a-broken-link-the-move-exposed" class="nav-link" data-scroll-target="#a-broken-link-the-move-exposed">A broken link the move exposed</a></li>
+  <li><a href="#two-archive-destinations-now-exist" id="toc-two-archive-destinations-now-exist" class="nav-link" data-scroll-target="#two-archive-destinations-now-exist">Two archive destinations now exist</a></li>
+  <li><a href="#counts-after-the-split" id="toc-counts-after-the-split" class="nav-link" data-scroll-target="#counts-after-the-split">Counts after the split</a></li>
+  <li><a href="#what-stays" id="toc-what-stays" class="nav-link" data-scroll-target="#what-stays">What stays</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0106-split-the-archive-into-its-own-repo/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0061: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> deployment target for fabric runtime services</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The earlier Harvester HCI plan wraps a full virtualization tier around the same podman quadlets that already drive the workloads. This tier adds a hypervisor, a VM lifecycle, and a qcow2 image pipeline. Fedora 44 can run those same quadlets under systemd without that tier.</p>
+<section id="what-moved" class="level2">
+<h2 class="anchored" data-anchor-id="what-moved">What moved</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Path</th>
+<th>Records</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_archive/decisions/</code></td>
+<td>26</td>
+</tr>
+<tr class="even">
+<td><code>_archive/decisions/attachments/</code></td>
+<td>1 image</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0011-observability-stack-victoriatraces/</code></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester/</code></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><code>_archive/README.md</code> moves with the directory. Its text now states that the leading underscore does no work in a repository that builds no site, and that the path stays as it was so older links keep their shape.</p>
 </section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Services run as systemd podman quadlets directly on Fedora 44 hosts, not inside VMs on a Harvester HCI cluster. The superseded Harvester plan wraps a full virtualization tier — hypervisor, VM lifecycle, qcow2 pipeline — around the same podman quadlets that already drive the workloads. Fedora 44 runs those quadlets under systemd without that tier. Each service deploys as an OCI container image launched by a quadlet <code>.container</code> unit, with <code>.network</code> and <code>.volume</code> units alongside, copied into <code>~/.config/containers/systemd</code>. OpenTofu in the <code>infra</code> repo provisions the Fedora 44 hosts and delivers the quadlet units, in place of baking and booting qcow2 images. This decision supersedes the earlier Harvester HCI record; Fly.io stays off the table from that record, and Harvester HCI joins it.</p>
+<section id="link-repair-which-a-move-forces" class="level2">
+<h2 class="anchored" data-anchor-id="link-repair-which-a-move-forces">Link repair, which a move forces</h2>
+<p>A deleted file leaves no stub. A live Markdown link to that file leaves a 404 on the published site. So a move repairs every inbound link, and that is not a stub.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Repair</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>changelog/2026/20260606-deck-log.md</code></td>
+<td>Four relative links into <code>_archive/decisions/</code> now point at the archive repository.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0071-yagni-times-structure-to-need/index.md</code></td>
+<td>Two pointers to <code>_archive</code> now name the archive repository.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0089-flyio-over-podman-quadlets/index.md</code></td>
+<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0060-org-scoped-github-app-token-for-gh-access/index.md</code></td>
+<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md</code></td>
+<td>The <code>rfd/0011</code> reference now links to the archive.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0062-repository-and-capability-inventory/DETAILS.md</code></td>
+<td>The two-org split decision path now links to the archive.</td>
+</tr>
+<tr class="odd">
+<td><code>_quarto.yml</code></td>
+<td>Drops the <code>decisions/attachments</code> resource, which no longer exists.</td>
+</tr>
+</tbody>
+</table>
+<p>Inline prose in <code>rfd/0089</code>’s <code>DETAILS.md</code> still names <code>rfd/0061</code> in code spans, without links. Those read as citations of a numbered record, so they stay.</p>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full drivers, considered options, consequences, and confirmation: <code>DETAILS.md</code></li>
-<li>Original record: <code>decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.md</code></li>
-<li>Infra repo: <a href="https://github.com/v-sekai-multiplayer-fabric/infra">infra</a></li>
-</ul>
+<section id="a-broken-link-the-move-exposed" class="level2">
+<h2 class="anchored" data-anchor-id="a-broken-link-the-move-exposed">A broken link the move exposed</h2>
+<p>Two archived records cite the debug-orb image as <code>attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, relative to <code>_archive/decisions/</code>. The image sat in <code>decisions/attachments/</code>, two directories away, so the link never resolved. No rendered page exercised it, because Quarto skips <code>_archive</code>.</p>
+<p>The archive repository puts the image at <code>_archive/decisions/attachments/</code>, where the existing links resolve.</p>
 </section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0056-systemd-quadlet-verification-queue</code>: the verification smokes that already run as a quadlet queue on the same convention.</li>
-</ul>
+<section id="two-archive-destinations-now-exist" class="level2">
+<h2 class="anchored" data-anchor-id="two-archive-destinations-now-exist">Two archive destinations now exist</h2>
+<p><code>V-Sekai-archive</code> is a separate organization that already holds three archived repositories: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>. <code>multiplayer-fabric-archive</code> is a repository for archived records inside this organization.</p>
+<p>A whole repository goes to the <code>V-Sekai-archive</code> organization. A record inside the manuals goes to <code>multiplayer-fabric-archive</code>. A future record that consolidates the two supersedes this one.</p>
 </section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+<section id="counts-after-the-split" class="level2">
+<h2 class="anchored" data-anchor-id="counts-after-the-split">Counts after the split</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Repos in <code>v-sekai-multiplayer-fabric</code></td>
+<td>73</td>
+</tr>
+<tr class="even">
+<td>Active</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<td>Archived</td>
+<td>24</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p>The superseded Harvester decision ships each service as a qcow2 VM image on a Harvester HCI cluster, with podman quadlets running inside each VM. The quadlets already drive the workloads; the Harvester layer wraps a full virtualization tier — hypervisor, VM lifecycle, qcow2 pipeline — around the container runtime the services depend on. Fedora 44 runs podman quadlets under systemd directly on the host. This records that Harvester HCI is not the deployment target.</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
-<ul>
-<li>Quadlets drive the workloads, so the host runs them directly and the VM tier carries no load the containers need.</li>
-<li>Stock tooling — Fedora 44, systemd, podman — carries the runtime in place of a bespoke HCI stack.</li>
-<li>An OCI container image is the deploy artifact, so the build skips the qcow2 VM step.</li>
-<li>No hypervisor or cluster control plane sits under the services.</li>
-<li>Self-hosting keeps ownership of the hosts, their cost, and their control.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
-<ul>
-<li>Keep Harvester HCI, with qcow2 VMs running quadlets inside.</li>
-<li>Run podman quadlets directly on Fedora 44 hosts under systemd.</li>
-<li>Return to a managed PaaS.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
-<p>Chosen option: “run podman quadlets directly on Fedora 44 hosts under systemd”, because systemd supplies service lifecycle, ordering, and boot activation for the quadlets with no virtualization tier underneath. Each service deploys as an OCI container image launched by a quadlet <code>.container</code> unit, with <code>.network</code> and <code>.volume</code> units alongside, copied into <code>~/.config/containers/systemd</code> to match the quadlet deployment convention. Deployment is OpenTofu in <a href="https://github.com/v-sekai-multiplayer-fabric/infra">infra</a>, provisioning Fedora 44 hosts and delivering the quadlet units in place of baking and booting qcow2 images on Harvester.</p>
-<p>This supersedes Self-host on Harvester HCI instead of Fly.io. Fly.io stays off the table from that decision, and Harvester HCI joins it.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>Good: one fewer tier to build, ship, and operate — no hypervisor, no qcow2 pipeline, no VM lifecycle.</li>
-<li>Good: rootless podman under systemd is a well-documented path on Fedora, and the same OCI image runs in local dev, CI, and production.</li>
-<li>Good: a deploy rebuilds and pulls an OCI image rather than baking a VM image.</li>
-<li>Bad: services on one host share a kernel, so isolation between them is weaker than separate VMs give.</li>
-<li>Bad: host capacity planning and noisy-neighbor limits sit with the operator.</li>
-<li>Bad: the qcow2 <code>*-image</code> repos and any docs that target VMs need retiring or repointing at OCI images.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The infra repo provisions Fedora 44 hosts via OpenTofu and brings each service up through a podman quadlet unit under systemd, creating no Harvester HCI resources and no qcow2 images. <code>systemctl --user status</code> reports the generated service units active, and they survive a host reboot.</p>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More information</h2>
-<p>Service images move from the qcow2 <code>*-image</code> VM repos to OCI container images; the engine stays pinned to a frozen Godot 4.7 commit (<code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>). The verification smokes already run as a systemd podman quadlet queue (<code>rfd/0056-systemd-quadlet-verification-queue</code>), so the runtime and its smokes share one quadlet convention.</p>
+<section id="what-stays" class="level2">
+<h2 class="anchored" data-anchor-id="what-stays">What stays</h2>
+<p><code>decisions/</code> keeps <code>madr-proposal-template.md</code>, the live template. The directory holds no records, because <code>rfd/0000-conventions</code> migrates each MADR into an RFD and deletes the MADR file.</p>
+<p><code>AGENTS.md</code> still directs a new image to <code>decisions/attachments/</code>, and that directory returns when the next asset arrives.</p>
 
 
 </section>
@@ -825,7 +847,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/rfd/0106-split-the-archive-into-its-own-repo/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

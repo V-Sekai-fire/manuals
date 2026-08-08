@@ -1,7 +1,24 @@
 [
   {
+    "listing": "/pages/changelog.html",
+    "items": [
+      "/changelog/2026/20260807-deck-log.html",
+      "/changelog/2026/20260630-deck-log.html",
+      "/changelog/2026/20260629-deck-log.html",
+      "/changelog/2026/20260622-deck-log.html",
+      "/changelog/2026/20260612-deck-log.html",
+      "/changelog/2026/20260606-deck-log.html",
+      "/changelog/2026/20260507-deck-log.html",
+      "/changelog/2026/20260506-deck-log.html",
+      "/changelog/2026/20260425-deck-log.html",
+      "/changelog/2026/20260421-deck-log.html"
+    ]
+  },
+  {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0106-split-the-archive-into-its-own-repo/index.html",
+      "/rfd/0105-archive-self-host-era-support-repos/index.html",
       "/rfd/0104-hypothesis-1000-concurrent/index.html",
       "/rfd/0103-uro-on-ecto-foundationdb/index.html",
       "/rfd/0102-the-whole-deployment-on-15-usd/index.html",
@@ -45,7 +62,6 @@
       "/rfd/0064-kebab-case-repos-snake-case-local-checkouts/index.html",
       "/rfd/0063-repo-markdown-single-source-of-truth-for-project-state/index.html",
       "/rfd/0062-repository-and-capability-inventory/index.html",
-      "/rfd/0061-quadlets-on-fedora-44-instead-of-harvester/index.html",
       "/rfd/0060-org-scoped-github-app-token-for-gh-access/index.html",
       "/rfd/0059-bad-news-reports-lead-with-the-bottom-line/index.html",
       "/rfd/0058-webtransport-persistent-framed-stream/index.html",
@@ -95,7 +111,6 @@
       "/rfd/0014-art-game-loop-steel-thread/index.html",
       "/rfd/0013-archival-file-naming-convention/index.html",
       "/rfd/0012-amend-pr-before-it-enters-the-queue/index.html",
-      "/rfd/0011-observability-stack-victoriatraces/index.html",
       "/rfd/0010-maglev-cycle-1-gateway-handshake/index.html",
       "/rfd/0009-ghcr-package-ownership-same-repo/index.html",
       "/rfd/0008-webtransport-over-quic-for-game-traffic/index.html",
@@ -107,20 +122,6 @@
       "/rfd/0002-taskweft-value-narrowing-primitives-and-refs/index.html",
       "/rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.html",
       "/rfd/0000-conventions/index.html"
-    ]
-  },
-  {
-    "listing": "/pages/changelog.html",
-    "items": [
-      "/changelog/2026/20260630-deck-log.html",
-      "/changelog/2026/20260629-deck-log.html",
-      "/changelog/2026/20260622-deck-log.html",
-      "/changelog/2026/20260612-deck-log.html",
-      "/changelog/2026/20260606-deck-log.html",
-      "/changelog/2026/20260507-deck-log.html",
-      "/changelog/2026/20260506-deck-log.html",
-      "/changelog/2026/20260425-deck-log.html",
-      "/changelog/2026/20260421-deck-log.html"
     ]
   }
 ]
