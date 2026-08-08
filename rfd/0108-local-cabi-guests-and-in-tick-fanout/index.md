@@ -1,7 +1,7 @@
 ---
 title: "RFD 0108: Local C ABI zone guests, with fan-out inside the tick"
 rfd: "0108"
-state: discussion
+state: abandoned
 scope: zone guest boundary, pubsub fan-out, h2o routing
 ---
 
@@ -62,3 +62,11 @@ Watches are not used.
 ## Detail
 
 {{< include DETAILS.md >}}
+
+## Superseded, 2026-08-07
+
+`rfd/0109` supersedes this record. The tier count drops to two, the
+store stays FoundationDB, and 276.48 USD per month is the cost floor.
+The in-tick ring and the C ABI guest boundary both belonged to the
+native host. The measurements it cites from `rfd/0097` stay valid, and
+its back-pressure rule still applies to any relay.
