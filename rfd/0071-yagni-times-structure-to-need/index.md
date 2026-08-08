@@ -21,7 +21,7 @@ structure only when a real near-term need arrives. A decision record
 keeps only its load-bearing sections: context, problem, design,
 downsides, the road not taken, and confirmation. When a record no
 longer describes the live plan, the record is marked superseded and
-moved to `_archive`.
+moved to the archive repository, [multiplayer-fabric-archive](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive).
 
 The project applied this rule three times. It trimmed ceremony from
 heavy decision records. It archived a superseded demo. It cut the
@@ -33,7 +33,9 @@ left working behavior unchanged.
 - Original record: `decisions/20260629-yagni-times-structure-to-need.md`
 - Kent Beck, "The Cost YAGNI Was Never About":
   https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about
-- `_archive/README.md`: the archiving convention this rule points to
+- [`_archive/README.md`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/blob/main/_archive/README.md) in
+  `multiplayer-fabric-archive`: the archiving convention this rule
+  points to
 
 ## Related
 

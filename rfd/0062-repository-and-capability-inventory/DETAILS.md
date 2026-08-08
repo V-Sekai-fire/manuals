@@ -35,8 +35,8 @@ these.
 
 | Set                                   | Count |
 | ------------------------------------- | ----- |
-| Repos in `v-sekai-multiplayer-fabric` | 72    |
-| Active                                | 48    |
+| Repos in `v-sekai-multiplayer-fabric` | 73    |
+| Active                                | 49    |
 | Archived                              | 24    |
 
 ### Capabilities and where they live
@@ -144,9 +144,10 @@ them rather than importing them. A reference repo needs no recent push.
 
 #### Docs
 
-| Repo                                                                                                   | Purpose           |
-| ------------------------------------------------------------------------------------------------------ | ----------------- |
-| [multiplayer-fabric-manuals](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals) | This Quarto site. |
+| Repo                                                                                                   | Purpose                                                                                              |
+| ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| [multiplayer-fabric-manuals](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals) | This Quarto site.                                                                                    |
+| [multiplayer-fabric-archive](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive) | Retired records: rejected and superseded MADRs, and superseded RFDs. Plain Markdown, per `rfd/0106`. |
 
 #### Archived
 
@@ -194,7 +195,8 @@ earlier records still resolve through the redirect.
 ### Still on `V-Sekai-fire` (not yet migrated)
 
 These repos remain the source of truth under the older org; see the
-two-org split decision (`decisions/20260606-org-split-v-sekai-multiplayer-fabric.md`).
+[two-org split decision](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/blob/main/_archive/decisions/20260606-org-split-v-sekai-multiplayer-fabric.md),
+now in `multiplayer-fabric-archive`.
 Links in the decisions and changelog that point at them are correct
 and still resolve.
 
