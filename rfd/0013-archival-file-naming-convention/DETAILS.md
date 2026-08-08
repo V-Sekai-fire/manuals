@@ -44,8 +44,8 @@ follow so they stay unique, sortable, and self-describing?
 ## Confirmation
 
 Assets under `decisions/attachments/` match
-`YYYYMMDD_project_description_NNNN.ext` and have a matching
-`references.bib` entry. The first example is
+`YYYYMMDD_project_description_NNNN.ext` and have a matching entry under
+`references:` in `CITATION.cff`. The first example is
 `20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png`, cited from the
 presence-demo decision.
 

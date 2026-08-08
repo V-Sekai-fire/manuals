@@ -32,7 +32,7 @@ pass.
   confirmation steps, and both amendments: `DETAILS.md`
 - Original record:
   `decisions/20260606-require-pr-and-merge-queue-on-main.md`
-- `gh api repos/v-sekai-multiplayer-fabric/manuals/rulesets` (ruleset
+- `gh api repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets` (ruleset
   id `17352485`)
 
 ## Related
