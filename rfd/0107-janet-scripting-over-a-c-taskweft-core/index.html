@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0106: Split the archive into its own repository – V-Sekai Fire — Manuals</title>
+<title>RFD 0107: Janet scripting over a C taskweft core, behind h2o – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -294,14 +294,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
-  <li><a href="#what-moved" id="toc-what-moved" class="nav-link" data-scroll-target="#what-moved">What moved</a></li>
-  <li><a href="#link-repair-which-a-move-forces" id="toc-link-repair-which-a-move-forces" class="nav-link" data-scroll-target="#link-repair-which-a-move-forces">Link repair, which a move forces</a></li>
-  <li><a href="#a-broken-link-the-move-exposed" id="toc-a-broken-link-the-move-exposed" class="nav-link" data-scroll-target="#a-broken-link-the-move-exposed">A broken link the move exposed</a></li>
-  <li><a href="#two-archive-destinations-now-exist" id="toc-two-archive-destinations-now-exist" class="nav-link" data-scroll-target="#two-archive-destinations-now-exist">Two archive destinations now exist</a></li>
-  <li><a href="#counts-after-the-split" id="toc-counts-after-the-split" class="nav-link" data-scroll-target="#counts-after-the-split">Counts after the split</a></li>
-  <li><a href="#what-stays" id="toc-what-stays" class="nav-link" data-scroll-target="#what-stays">What stays</a></li>
+  <li><a href="#role-split" id="toc-role-split" class="nav-link" data-scroll-target="#role-split">Role split</a></li>
+  <li><a href="#the-database-keeps-its-record-set" id="toc-the-database-keeps-its-record-set" class="nav-link" data-scroll-target="#the-database-keeps-its-record-set">The database keeps its record set</a></li>
+  <li><a href="#claims-and-what-is-not-measured" id="toc-claims-and-what-is-not-measured" class="nav-link" data-scroll-target="#claims-and-what-is-not-measured">Claims, and what is not measured</a></li>
+  <li><a href="#why-rust-is-out" id="toc-why-rust-is-out" class="nav-link" data-scroll-target="#why-rust-is-out">Why Rust is out</a></li>
+  <li><a href="#what-this-replaces" id="toc-what-this-replaces" class="nav-link" data-scroll-target="#what-this-replaces">What this replaces</a></li>
+  <li><a href="#open-questions-this-record-does-not-settle" id="toc-open-questions-this-record-does-not-settle" class="nav-link" data-scroll-target="#open-questions-this-record-does-not-settle">Open questions this record does not settle</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0106-split-the-archive-into-its-own-repo/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0107-janet-scripting-over-a-c-taskweft-core/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -309,7 +309,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">RFD 0106: Split the archive into its own repository</h1>
+<h1 class="title">RFD 0107: Janet scripting over a C taskweft core, behind h2o</h1>
 </div>
 
 
@@ -326,155 +326,158 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0106: Split the archive into its own repository</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> manuals repository layout, archived records</p>
+<p><em><a href="../../index.html">Manuals</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The manuals repository holds live design records and dead ones in the same tree. <code>_archive/decisions/</code> holds 26 MADR records that are rejected or superseded. A leading underscore keeps Quarto from rendering them, so the site hides them, and the repository still carries them.</p>
-<p>Two RFDs are superseded and still render as current. <code>rfd/0089</code> supersedes <code>rfd/0061</code> on the deployment target. <code>rfd/0011</code> is superseded on the observability stack. A reader who opens either one reads a dead design with no marking on the page.</p>
-<p>Hiding a record from the site is not the same as retiring it. The repository needs one place for retired records.</p>
+<p><code>rfd/0083</code> built the zone server as native libh2o with FoundationDB. The tier held. Its cost was questioned, and <code>zone-server-h2o</code> was archived on 2026-08-08 on the argument that a fourth runtime was more than the project could carry.</p>
+<p>The archive removed the host and left no answer to what serves a zone. Candidate answers came and went inside one session: an Elixir epoll server, then h2o with a taskweft NIF, then a CockroachDB variant of this record. None reached the site.</p>
+<p>A tier needs one record. Without it, each session re-derives the stack from memory, and the inventory in <code>rfd/0062</code> describes a host that is gone.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Create <code>multiplayer-fabric-archive</code>, a public repository in this organization. It is the standing home for retired records. It holds plain Markdown, with no Quarto site, no build, and no checks, because archived content does not change.</p>
-<p>Move <code>_archive/</code>, its attachments, <code>rfd/0011</code>, and <code>rfd/0061</code> there. Delete them here. Keep no pointer stub, per <code>rfd/0000-conventions</code>.</p>
-<p>The archive repository carries the manuals history up to the split, so each moved file keeps every commit that touched it at its original path.</p>
-<p><code>rfd/0011</code> and <code>rfd/0061</code> keep their numbers. This repository does not reuse a number after a move.</p>
+<p>Four parts, each with one job:</p>
+<ul>
+<li>h2o is the frontend HTTP ingress and the reverse proxy. It terminates the connection. It does not hold game logic.</li>
+<li>Janet is the dynamic layer: routing glue, configuration parsing, and scripting.</li>
+<li><code>libtaskweft</code> is a C library carrying the heavy work: HTN state-space search, graph traversal, and game state. It exposes C bindings, and Janet loads it as a native module, <code>.so</code> or <code>.dylib</code>.</li>
+<li>Godot is the client and the visualization frontend, over GDExtension and the C++ API.</li>
+</ul>
+<p>FoundationDB stays the database, reached through the <code>libfdb_c</code> C API. <code>rfd/0075</code> stands, and CockroachDB is not the store. <code>rfd/0073</code>’s async callback chain is the integration pattern, because <code>libfdb_c</code> is callback-based and needs an event loop to drive it.</p>
+<p>Rust is out. The core is C. <code>zone-server-h2o</code> is unarchived and is the host repository again.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>The link repairs a move forces, and the record of what moved: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/multiplayer-fabric-archive</code></li>
+<li>The claims this rests on, what is not measured, and the open questions: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-flow-adapters">fabric-flow-adapters</a></li>
 </ul>
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0000-conventions</code>: the no-pointer-stub rule this follows.</li>
-<li><code>rfd/0071-yagni-times-structure-to-need</code>: the rule that sends a superseded record to the archive.</li>
-<li><code>rfd/0062-repository-and-capability-inventory</code>: lists the new repository.</li>
+<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the host this amends rather than replaces.</li>
+<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code>: the database choice this keeps.</li>
+<li><code>rfd/0093-compile-taskweft-to-linear-automata</code>: the taskweft evaluation model the C core implements.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
 <h2 class="anchored" data-anchor-id="detail">Detail</h2>
 </section>
-<section id="what-moved" class="level2">
-<h2 class="anchored" data-anchor-id="what-moved">What moved</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Path</th>
-<th>Records</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>_archive/decisions/</code></td>
-<td>26</td>
-</tr>
-<tr class="even">
-<td><code>_archive/decisions/attachments/</code></td>
-<td>1 image</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0011-observability-stack-victoriatraces/</code></td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester/</code></td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-<p><code>_archive/README.md</code> moves with the directory. Its text now states that the leading underscore does no work in a repository that builds no site, and that the path stays as it was so older links keep their shape.</p>
-</section>
-<section id="link-repair-which-a-move-forces" class="level2">
-<h2 class="anchored" data-anchor-id="link-repair-which-a-move-forces">Link repair, which a move forces</h2>
-<p>A deleted file leaves no stub. A live Markdown link to that file leaves a 404 on the published site. So a move repairs every inbound link, and that is not a stub.</p>
+<section id="role-split" class="level2">
+<h2 class="anchored" data-anchor-id="role-split">Role split</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 46%">
-<col style="width: 53%">
+<col style="width: 17%">
+<col style="width: 72%">
+<col style="width: 10%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>File</th>
-<th>Repair</th>
+<th>Part</th>
+<th>Job</th>
+<th>Language</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>changelog/2026/20260606-deck-log.md</code></td>
-<td>Four relative links into <code>_archive/decisions/</code> now point at the archive repository.</td>
+<td>h2o</td>
+<td>HTTP ingress and reverse proxy. Connection termination.</td>
+<td>C</td>
 </tr>
 <tr class="even">
-<td><code>rfd/0071-yagni-times-structure-to-need/index.md</code></td>
-<td>Two pointers to <code>_archive</code> now name the archive repository.</td>
+<td>Janet</td>
+<td>Routing glue, configuration parsing, dynamic scripting.</td>
+<td>Janet</td>
 </tr>
 <tr class="odd">
-<td><code>rfd/0089-flyio-over-podman-quadlets/index.md</code></td>
-<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+<td><code>libtaskweft</code></td>
+<td>HTN state-space search, graph traversal, game state.</td>
+<td>C</td>
 </tr>
 <tr class="even">
-<td><code>rfd/0060-org-scoped-github-app-token-for-gh-access/index.md</code></td>
-<td>The <code>rfd/0061</code> reference now links to the archive.</td>
+<td>Godot</td>
+<td>Client and visualization frontend, GDExtension and C++.</td>
+<td>C++</td>
 </tr>
 <tr class="odd">
-<td><code>rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md</code></td>
-<td>The <code>rfd/0011</code> reference now links to the archive.</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0062-repository-and-capability-inventory/DETAILS.md</code></td>
-<td>The two-org split decision path now links to the archive.</td>
-</tr>
-<tr class="odd">
-<td><code>_quarto.yml</code></td>
-<td>Drops the <code>decisions/attachments</code> resource, which no longer exists.</td>
+<td>FoundationDB</td>
+<td>State, reached through <code>libfdb_c</code>.</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
-<p>Inline prose in <code>rfd/0089</code>’s <code>DETAILS.md</code> still names <code>rfd/0061</code> in code spans, without links. Those read as citations of a numbered record, so they stay.</p>
+<p>The boundary that matters is between Janet and <code>libtaskweft</code>. Janet holds what changes often and runs rarely. The C core holds what runs on every tick.</p>
 </section>
-<section id="a-broken-link-the-move-exposed" class="level2">
-<h2 class="anchored" data-anchor-id="a-broken-link-the-move-exposed">A broken link the move exposed</h2>
-<p>Two archived records cite the debug-orb image as <code>attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, relative to <code>_archive/decisions/</code>. The image sat in <code>decisions/attachments/</code>, two directories away, so the link never resolved. No rendered page exercised it, because Quarto skips <code>_archive</code>.</p>
-<p>The archive repository puts the image at <code>_archive/decisions/attachments/</code>, where the existing links resolve.</p>
-</section>
-<section id="two-archive-destinations-now-exist" class="level2">
-<h2 class="anchored" data-anchor-id="two-archive-destinations-now-exist">Two archive destinations now exist</h2>
-<p><code>V-Sekai-archive</code> is a separate organization that already holds three archived repositories: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>. <code>multiplayer-fabric-archive</code> is a repository for archived records inside this organization.</p>
-<p>A whole repository goes to the <code>V-Sekai-archive</code> organization. A record inside the manuals goes to <code>multiplayer-fabric-archive</code>. A future record that consolidates the two supersedes this one.</p>
-</section>
-<section id="counts-after-the-split" class="level2">
-<h2 class="anchored" data-anchor-id="counts-after-the-split">Counts after the split</h2>
+<section id="the-database-keeps-its-record-set" class="level2">
+<h2 class="anchored" data-anchor-id="the-database-keeps-its-record-set">The database keeps its record set</h2>
+<p>FoundationDB stays, so the records that describe it stay in force:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Set</th>
-<th>Count</th>
+<th>Record</th>
+<th>What it holds</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Repos in <code>v-sekai-multiplayer-fabric</code></td>
-<td>73</td>
+<td><code>rfd/0075</code></td>
+<td>FoundationDB over CockroachDB, for a write-heavy load</td>
 </tr>
 <tr class="even">
-<td>Active</td>
-<td>49</td>
+<td><code>rfd/0073</code></td>
+<td>The async callback chain <code>libfdb_c</code> requires</td>
 </tr>
 <tr class="odd">
-<td>Archived</td>
-<td>24</td>
+<td><code>rfd/0074</code></td>
+<td>Binary value encoding for FDB values</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0084</code></td>
+<td>zstd compression for batched zone-state values</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0097</code></td>
+<td>Pubsub in userspace, with FDB as the durable log</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0103</code></td>
+<td>Uro on <code>ecto_foundationdb</code></td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0002</code></td>
+<td>taskweft value narrowing in the FDB value encoding</td>
 </tr>
 </tbody>
 </table>
+<p><code>ecto_foundationdb</code> and <code>ecto-bench-tpcc</code> therefore keep a live consumer, and <code>rfd/0006</code>’s CockroachDB with mTLS does not describe this tier’s store.</p>
 </section>
-<section id="what-stays" class="level2">
-<h2 class="anchored" data-anchor-id="what-stays">What stays</h2>
-<p><code>decisions/</code> keeps <code>madr-proposal-template.md</code>, the live template. The directory holds no records, because <code>rfd/0000-conventions</code> migrates each MADR into an RFD and deletes the MADR file.</p>
-<p><code>AGENTS.md</code> still directs a new image to <code>decisions/attachments/</code>, and that directory returns when the next asset arrives.</p>
+<section id="claims-and-what-is-not-measured" class="level2">
+<h2 class="anchored" data-anchor-id="claims-and-what-is-not-measured">Claims, and what is not measured</h2>
+<p>Three claims come with this tier:</p>
+<ul>
+<li>Startup is fast.</li>
+<li>Memory stays under 10 MB.</li>
+<li>Execution speed is near native.</li>
+</ul>
+<p>None of the three is measured in this project. <code>data/measurements/</code> holds throughput and latency parquet for a FoundationDB probe and the libh2o host, and nothing for Janet or for a C taskweft core.</p>
+<p>A record that states this tier’s ceiling needs a measurement of this tier. <code>rfd/0104</code> shows the failure mode to avoid, where a number extrapolated from a 32-worker probe reads as a measurement of 1000 concurrent users.</p>
+</section>
+<section id="why-rust-is-out" class="level2">
+<h2 class="anchored" data-anchor-id="why-rust-is-out">Why Rust is out</h2>
+<p>Rust is blocklisted for this project. The core is C, and the C bindings Janet loads are the native-module boundary. This removes the option of a Rust core with C bindings, which is otherwise the common shape for this pattern.</p>
+</section>
+<section id="what-this-replaces" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-replaces">What this replaces</h2>
+<p><code>libtaskweft</code> in C replaces the Elixir NIF form of taskweft. <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> is the re-entrant temporal HTN planner and ReBAC engine today, and it is an Elixir NIF. A C library with Janet bindings is a different artifact, and whether it is a rewrite in that repository or a new repository is open.</p>
+<p><code>rfd/0093</code> compiles taskweft relation expressions to linear automata. That evaluation model is what the C core implements, and the record survives the language change.</p>
+</section>
+<section id="open-questions-this-record-does-not-settle" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions-this-record-does-not-settle">Open questions this record does not settle</h2>
+<p><strong>Which part talks to FoundationDB.</strong> <code>rfd/0073</code> drove <code>libfdb_c</code> callbacks from the libh2o event loop, when h2o was the whole server. If h2o is ingress and reverse proxy only, the loop that drives the callbacks may belong to <code>libtaskweft</code> instead. Janet has no <code>libfdb_c</code> binding in this project today.</p>
+<p><strong>Where Elixir goes.</strong> The four parts name no Elixir. <code>zone-backend</code> is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. <code>rfd/0090</code> is its production release shape, and <code>rfd/0103</code> puts it on <code>ecto_foundationdb</code>. Nothing here retires it, and nothing here places it.</p>
+<p><strong>Whether Janet replaces the libriscv guests.</strong> <code>rfd/0094</code> keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per <code>rfd/0092</code>. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.</p>
+<p><strong>Where the game transport lives.</strong> <code>rfd/0008</code> and <code>rfd/0023</code> put game traffic on WebTransport over HTTP/3, and <code>rfd/0088</code> chose picoquic and picotls over h2o’s own QUIC. If h2o terminates HTTP as ingress, the record that says which part terminates a WebTransport session does not exist.</p>
 
 
 </section>
@@ -901,7 +904,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0106-split-the-archive-into-its-own-repo/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0107-janet-scripting-over-a-c-taskweft-core/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

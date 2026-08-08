@@ -6,14 +6,183 @@
       version="2.0">
 <channel>
 <title>V-Sekai Fire — Manuals</title>
-<link>https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.html</link>
-<atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
+<link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.html</link>
+<atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 04:30:04 GMT</lastBuildDate>
+<item>
+  <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0083</code> built the zone server as native libh2o with FoundationDB. The tier held. Its cost was questioned, and <code>zone-server-h2o</code> was archived on 2026-08-08 on the argument that a fourth runtime was more than the project could carry.</p>
+<p>The archive removed the host and left no answer to what serves a zone. Candidate answers came and went inside one session: an Elixir epoll server, then h2o with a taskweft NIF, then a CockroachDB variant of this record. None reached the site.</p>
+<p>A tier needs one record. Without it, each session re-derives the stack from memory, and the inventory in <code>rfd/0062</code> describes a host that is gone.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Four parts, each with one job:</p>
+<ul>
+<li>h2o is the frontend HTTP ingress and the reverse proxy. It terminates the connection. It does not hold game logic.</li>
+<li>Janet is the dynamic layer: routing glue, configuration parsing, and scripting.</li>
+<li><code>libtaskweft</code> is a C library carrying the heavy work: HTN state-space search, graph traversal, and game state. It exposes C bindings, and Janet loads it as a native module, <code>.so</code> or <code>.dylib</code>.</li>
+<li>Godot is the client and the visualization frontend, over GDExtension and the C++ API.</li>
+</ul>
+<p>FoundationDB stays the database, reached through the <code>libfdb_c</code> C API. <code>rfd/0075</code> stands, and CockroachDB is not the store. <code>rfd/0073</code>’s async callback chain is the integration pattern, because <code>libfdb_c</code> is callback-based and needs an event loop to drive it.</p>
+<p>Rust is out. The core is C. <code>zone-server-h2o</code> is unarchived and is the host repository again.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The claims this rests on, what is not measured, and the open questions: <code>DETAILS.md</code></li>
+<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-flow-adapters">fabric-flow-adapters</a></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the host this amends rather than replaces.</li>
+<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code>: the database choice this keeps.</li>
+<li><code>rfd/0093-compile-taskweft-to-linear-automata</code>: the taskweft evaluation model the C core implements.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="role-split" class="level2">
+<h2 class="anchored" data-anchor-id="role-split">Role split</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 72%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>Job</th>
+<th>Language</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>h2o</td>
+<td>HTTP ingress and reverse proxy. Connection termination.</td>
+<td>C</td>
+</tr>
+<tr class="even">
+<td>Janet</td>
+<td>Routing glue, configuration parsing, dynamic scripting.</td>
+<td>Janet</td>
+</tr>
+<tr class="odd">
+<td><code>libtaskweft</code></td>
+<td>HTN state-space search, graph traversal, game state.</td>
+<td>C</td>
+</tr>
+<tr class="even">
+<td>Godot</td>
+<td>Client and visualization frontend, GDExtension and C++.</td>
+<td>C++</td>
+</tr>
+<tr class="odd">
+<td>FoundationDB</td>
+<td>State, reached through <code>libfdb_c</code>.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The boundary that matters is between Janet and <code>libtaskweft</code>. Janet holds what changes often and runs rarely. The C core holds what runs on every tick.</p>
+</section>
+<section id="the-database-keeps-its-record-set" class="level2">
+<h2 class="anchored" data-anchor-id="the-database-keeps-its-record-set">The database keeps its record set</h2>
+<p>FoundationDB stays, so the records that describe it stay in force:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Record</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rfd/0075</code></td>
+<td>FoundationDB over CockroachDB, for a write-heavy load</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0073</code></td>
+<td>The async callback chain <code>libfdb_c</code> requires</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0074</code></td>
+<td>Binary value encoding for FDB values</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0084</code></td>
+<td>zstd compression for batched zone-state values</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0097</code></td>
+<td>Pubsub in userspace, with FDB as the durable log</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0103</code></td>
+<td>Uro on <code>ecto_foundationdb</code></td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0002</code></td>
+<td>taskweft value narrowing in the FDB value encoding</td>
+</tr>
+</tbody>
+</table>
+<p><code>ecto_foundationdb</code> and <code>ecto-bench-tpcc</code> therefore keep a live consumer, and <code>rfd/0006</code>’s CockroachDB with mTLS does not describe this tier’s store.</p>
+</section>
+<section id="claims-and-what-is-not-measured" class="level2">
+<h2 class="anchored" data-anchor-id="claims-and-what-is-not-measured">Claims, and what is not measured</h2>
+<p>Three claims come with this tier:</p>
+<ul>
+<li>Startup is fast.</li>
+<li>Memory stays under 10 MB.</li>
+<li>Execution speed is near native.</li>
+</ul>
+<p>None of the three is measured in this project. <code>data/measurements/</code> holds throughput and latency parquet for a FoundationDB probe and the libh2o host, and nothing for Janet or for a C taskweft core.</p>
+<p>A record that states this tier’s ceiling needs a measurement of this tier. <code>rfd/0104</code> shows the failure mode to avoid, where a number extrapolated from a 32-worker probe reads as a measurement of 1000 concurrent users.</p>
+</section>
+<section id="why-rust-is-out" class="level2">
+<h2 class="anchored" data-anchor-id="why-rust-is-out">Why Rust is out</h2>
+<p>Rust is blocklisted for this project. The core is C, and the C bindings Janet loads are the native-module boundary. This removes the option of a Rust core with C bindings, which is otherwise the common shape for this pattern.</p>
+</section>
+<section id="what-this-replaces" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-replaces">What this replaces</h2>
+<p><code>libtaskweft</code> in C replaces the Elixir NIF form of taskweft. <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> is the re-entrant temporal HTN planner and ReBAC engine today, and it is an Elixir NIF. A C library with Janet bindings is a different artifact, and whether it is a rewrite in that repository or a new repository is open.</p>
+<p><code>rfd/0093</code> compiles taskweft relation expressions to linear automata. That evaluation model is what the C core implements, and the record survives the language change.</p>
+</section>
+<section id="open-questions-this-record-does-not-settle" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions-this-record-does-not-settle">Open questions this record does not settle</h2>
+<p><strong>Which part talks to FoundationDB.</strong> <code>rfd/0073</code> drove <code>libfdb_c</code> callbacks from the libh2o event loop, when h2o was the whole server. If h2o is ingress and reverse proxy only, the loop that drives the callbacks may belong to <code>libtaskweft</code> instead. Janet has no <code>libfdb_c</code> binding in this project today.</p>
+<p><strong>Where Elixir goes.</strong> The four parts name no Elixir. <code>zone-backend</code> is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. <code>rfd/0090</code> is its production release shape, and <code>rfd/0103</code> puts it on <code>ecto_foundationdb</code>. Nothing here retires it, and nothing here places it.</p>
+<p><strong>Whether Janet replaces the libriscv guests.</strong> <code>rfd/0094</code> keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per <code>rfd/0092</code>. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.</p>
+<p><strong>Where the game transport lives.</strong> <code>rfd/0008</code> and <code>rfd/0023</code> put game traffic on WebTransport over HTTP/3, and <code>rfd/0088</code> chose picoquic and picotls over h2o’s own QUIC. If h2o terminates HTTP as ingress, the record that says which part terminates a WebTransport session does not exist.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0106-split-the-archive-into-its-own-repo/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</link>
   <description><![CDATA[ 
 
 
@@ -174,12 +343,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0105-archive-self-host-era-support-repos/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</link>
   <description><![CDATA[ 
 
 
@@ -374,12 +543,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0104-hypothesis-1000-concurrent/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</link>
   <description><![CDATA[ 
 
 
@@ -517,12 +686,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0103-uro-on-ecto-foundationdb/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</link>
   <description><![CDATA[ 
 
 
@@ -668,12 +837,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0102-the-whole-deployment-on-15-usd/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</link>
   <description><![CDATA[ 
 
 
@@ -862,12 +1031,12 @@ Tigris object storage                             0 USD
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0101-zstd-delta-on-the-wire/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</link>
   <description><![CDATA[ 
 
 
@@ -1029,12 +1198,12 @@ Tigris object storage                             0 USD
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</link>
   <description><![CDATA[ 
 
 
@@ -1252,12 +1421,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</link>
   <description><![CDATA[ 
 
 
@@ -1407,12 +1576,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</link>
   <description><![CDATA[ 
 
 
@@ -1566,12 +1735,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</link>
   <description><![CDATA[ 
 
 
@@ -1736,12 +1905,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</link>
   <description><![CDATA[ 
 
 
@@ -1928,12 +2097,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</link>
   <description><![CDATA[ 
 
 
@@ -2150,12 +2319,12 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</link>
   <description><![CDATA[ 
 
 
@@ -2237,12 +2406,12 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</link>
   <description><![CDATA[ 
 
 
@@ -2371,12 +2540,12 @@ edges.</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0092-rebac-gates-libriscv-guest-access/</link>
   <description><![CDATA[ 
 
 
@@ -2617,12 +2786,12 @@ encoding snapshot timestamps in cache keys.</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</link>
   <description><![CDATA[ 
 
 
@@ -2683,12 +2852,12 @@ encoding snapshot timestamps in cache keys.</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0090-uro-burrito-release/</link>
   <description><![CDATA[ 
 
 
@@ -2839,12 +3008,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0090-uro-burrito-release/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0089-flyio-over-podman-quadlets/</link>
   <description><![CDATA[ 
 
 
@@ -2917,12 +3086,12 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</link>
   <description><![CDATA[ 
 
 
@@ -2957,49 +3126,8 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0087: Avatar IK uses sinew-mocap/solve’s Align.lean, not mink</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o, avatar posing and entity physics</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>sinew-mocap/solve</code> was flagged as less trusted than <code>kevinzakka/ mink</code>, a widely-used differential IK library. Should <code>zone-server-h2o</code> port <code>mink</code> for avatar IK? Separately, entity/prop contact physics used vendored MuJoCo — does that stay?</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>No port of <code>mink</code>. Reading <code>mink</code>’s own core shows it assembles a full quadratic program each solve, dispatched through a separate QP-solver library plus its own Lie group math — a large, multi-session port, not a small one.</p>
-<p><code>sinew-mocap/solve</code>’s own Lean source (<code>core/spec/Sinew/Align.lean</code>) is not a QP solver at all. It is Kabsch-style rotation fitting. This ports directly (<code>src/gen/sinew_align.{c,h}</code>), verified against <code>Align.lean</code>’s own known-rotation-recovery test, to floating-point precision. <code>mink</code>’s remaining features stay deferred.</p>
-<p>Vendored MuJoCo (entity/prop contact physics) is dropped. Godot’s own Jolt physics already covers that role.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full context, the mink QP breakdown, and revision history: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/sinew-mocap/solve</code></li>
-<li><code>v-sekai-multiplayer-fabric/mujoco-riscv64</code>: dropped MuJoCo’s home</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/rfd/0087-avatar-ik-sinew-mocap-align-over-mink/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:00:00 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
 </item>
 </channel>
 </rss>

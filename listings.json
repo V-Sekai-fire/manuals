@@ -17,6 +17,7 @@
   {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0107-janet-scripting-over-a-c-taskweft-core/index.html",
       "/rfd/0106-split-the-archive-into-its-own-repo/index.html",
       "/rfd/0105-archive-self-host-era-support-repos/index.html",
       "/rfd/0104-hypothesis-1000-concurrent/index.html",

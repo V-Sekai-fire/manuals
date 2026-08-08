@@ -6,14 +6,14 @@
       version="2.0">
 <channel>
 <title>V-Sekai Fire — Manuals</title>
-<link>https://v-sekai-multiplayer-fabric.github.io/manuals/pages/changelog.html</link>
-<atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/pages/changelog.xml" rel="self" type="application/rss+xml"/>
+<link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.html</link>
+<atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 03:59:56 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 04:29:58 GMT</lastBuildDate>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260807-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -54,18 +54,31 @@
 <p>Both superseded RFDs used to render as current. A reader who opened either one read a dead design with no marking on the page.</p>
 <p>Repairing the inbound links was the work a move forces, because a deleted file with no stub leaves a 404 on the site. Four relative links in the 2026-06-06 deck log, two pointers in <code>rfd/0071</code>, and one reference each in <code>rfd/0089</code>, <code>rfd/0060</code>, <code>rfd/0070</code>, and the <code>rfd/0062</code> inventory now point at the archive repository. <code>_quarto.yml</code> drops the <code>decisions/attachments</code> resource.</p>
 <p>The move also exposed a link that never resolved. Two archived records cite the debug-orb image relative to <code>_archive/decisions/</code>, and the image sat two directories away in <code>decisions/attachments/</code>. Quarto skips <code>_archive</code>, so no rendered page ever exercised it. The archive repository puts the image where the existing links expect it.</p>
+</section>
+<section id="fixed" class="level2">
+<h2 class="anchored" data-anchor-id="fixed">Fixed</h2>
+<ul>
+<li>The asset-citation guidance named <code>references.bib</code>, a file the repository no longer carries. The bibliography converted to CFF, and <code>pages/references.qmd</code> renders the 94 entries under <code>references:</code> in <code>CITATION.cff</code> through <code>cffconvert</code>. <code>AGENTS.md</code> and <code>rfd/0013</code> now name <code>CITATION.cff</code>. The changelog entries that describe <code>references.bib</code> stay as they are, because they record what was true on their own date.</li>
+<li>The site config pointed at the pre-rename repository. <code>site-url</code> read <code>.../github.io/manuals</code> and <code>repo-url</code> read <code>.../v-sekai-multiplayer-fabric/manuals</code>, while the site publishes at <code>.../multiplayer-fabric-manuals/</code>, so every edit-this-page link and the feed URL resolved to the wrong place. Both now name the current repository, as do the three <code>gh api .../rulesets</code> commands in <code>rfd/0021</code>.</li>
+</ul>
+</section>
+<section id="the-zone-tier-recorded" class="level2">
+<h2 class="anchored" data-anchor-id="the-zone-tier-recorded">The zone tier, recorded</h2>
+<p><code>zone-server-h2o</code> was archived and is unarchived again. It is the host repository, and <a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/">RFD 0107</a> records the tier around it: h2o as HTTP ingress and reverse proxy, Janet as the dynamic layer for routing glue and configuration, <code>libtaskweft</code> as a C library holding HTN search and game state, and Godot as the client over GDExtension. Janet loads the C core as a native module. Rust is out, so the core is C.</p>
+<p>FoundationDB stays the store, through <code>libfdb_c</code>. <code>rfd/0075</code> stands and <code>rfd/0006</code>’s CockroachDB does not describe this tier, so the FDB record set stays in force: <code>rfd/0002</code>, <code>rfd/0073</code>, <code>rfd/0074</code>, <code>rfd/0084</code>, <code>rfd/0097</code>, and <code>rfd/0103</code>. <code>ecto_foundationdb</code> and <code>ecto-bench-tpcc</code> keep a live consumer.</p>
+<p>The record states its own gaps rather than guessing past them. The startup, memory and speed claims for this tier are not measured, and <code>data/measurements/</code> holds nothing for Janet or a C taskweft core. Four questions stay open: which part drives the <code>libfdb_c</code> callbacks, where Elixir and <code>zone-backend</code> sit, whether Janet replaces the libriscv guest runtime, and which part terminates a WebTransport session.</p>
 
 
 </section>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260807-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260630-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -108,12 +121,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260630-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260629-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -150,12 +163,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260629-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260622-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -189,12 +202,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260622-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -265,12 +278,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -325,12 +338,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -389,12 +402,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -440,12 +453,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -528,12 +541,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 <item>
   <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</link>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</link>
   <description><![CDATA[ 
 
 
@@ -559,8 +572,8 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 03:59:56 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</guid>
+  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
 </item>
 </channel>
 </rss>
