@@ -10,7 +10,144 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 04:30:04 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 04:58:42 GMT</lastBuildDate>
+<item>
+  <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0108: Local C ABI zone guests, with fan-out inside the tick</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone guest boundary, pubsub fan-out, h2o routing</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0107</code> makes h2o the ingress and the reverse proxy, and it leaves the guest boundary open. <code>rfd/0094</code> has guests arrive as CDN-delivered riscv64 ELFs under libriscv. That model carries a runtime, a sandbox, and a delivery path, and simulation code inside the zone needs none of the three.</p>
+<p><code>rfd/0097</code> decided that real-time pubsub runs in userspace, and it measured why. It did not say how a guest subscribes, or which event loop owns a subscriber. A fan-out that copies once per subscriber, or that wakes a thread once per message, does not hold at h2o’s rate.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>A simulation guest is a local shared object, <code>.so</code> or <code>.dylib</code>, loaded over the plain C ABI. This is local mode. h2o routes to it, and the call carries no network hop, because the guest shares the zone process.</p>
+<p>The CDN keeps one job, which is bulk asset delivery. It no longer delivers guest programs for simulation.</p>
+<p>Fan-out runs inside the tick:</p>
+<ul>
+<li>One publish ring per zone. One writer, which is the tick. Many readers, each with its own cursor and sequence number.</li>
+<li>Serialize once into the 100-byte packet of <code>rfd/0053</code>, then fan out a pointer and a refcount. Never serialize per subscriber.</li>
+<li>Bind a subscriber to the event loop that owns its connection. Deliver across loops with one batched wakeup per tick, not one per message.</li>
+<li>A local guest registers a callback and receives the fan-out as a call, with no copy and no syscall.</li>
+<li>Gate a guest once at subscribe time, with the ReBAC actions of <code>rfd/0092</code>. Do not gate per message.</li>
+</ul>
+<p>FoundationDB stays off the fan-out path. The tick owns the <code>libfdb_c</code> callback chain of <code>rfd/0073</code>, and it appends the durable log off-tick. Watches are not used.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The measurements, the back-pressure rule, and the sandbox trade: <code>DETAILS.md</code></li>
+<li><code>rfd/0097-pubsub-belongs-in-userspace</code>, <code>fdbpub.c</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0107-janet-scripting-over-a-c-taskweft-core</code>: the tier this fills in.</li>
+<li><code>rfd/0049-fabric-channels-as-reliability-classes</code>: the vocabulary the back-pressure rule uses.</li>
+<li><code>rfd/0094-minimum-ugc-game-loop-guest-composition</code>: the UGC loop this record does not serve.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-measurements-this-rests-on" class="level2">
+<h2 class="anchored" data-anchor-id="the-measurements-this-rests-on">The measurements this rests on</h2>
+<p>Every number comes from <code>rfd/0097</code> and <code>rfd/0096</code>. One ZoneTick at 64 Hz is 15.6 ms.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 14%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Path</th>
+<th>Median</th>
+<th>Fraction of one tick</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FDB watch fire, publish to subscriber</td>
+<td>12214.3 us</td>
+<td>78 percent</td>
+</tr>
+<tr class="even">
+<td>FDB commit, one publish</td>
+<td>3552.9 us</td>
+<td>23 percent</td>
+</tr>
+<tr class="odd">
+<td>FDB versionstamp log append</td>
+<td>2509.5 us</td>
+<td>16 percent</td>
+</tr>
+<tr class="even">
+<td><code>AF_UNIX</code> round trip, from <code>rfd/0096</code></td>
+<td>8.9 us</td>
+<td>0.06 percent</td>
+</tr>
+</tbody>
+</table>
+<p>A local C ABI call removes the 8.9 us hop as well, because the guest shares the address space.</p>
+</section>
+<section id="why-watches-stay-unused" class="level2">
+<h2 class="anchored" data-anchor-id="why-watches-stay-unused">Why watches stay unused</h2>
+<p>Three facts from <code>rfd/0097</code> rule them out, and each one is enough:</p>
+<ul>
+<li>The watch path is about 1371 times slower than an <code>AF_UNIX</code> round trip.</li>
+<li>The probe held exactly 10000 concurrent watches, then failed with error 1032, <code>Too many watches currently set</code>. That cap belongs to the database, and a fabric of many zones shares it.</li>
+<li>A watch is edge-triggered. It reports that a key changed, not what the value became. A subscriber re-reads the key, and values that change between the fire and the re-read are lost.</li>
+</ul>
+<p>The third fact is the one that disqualifies a watch as an event stream, independent of speed.</p>
+</section>
+<section id="the-ring-and-why-one-writer" class="level2">
+<h2 class="anchored" data-anchor-id="the-ring-and-why-one-writer">The ring, and why one writer</h2>
+<p>The tick is the only writer, so the write side needs no lock. A reader holds a cursor, and it advances at its own rate.</p>
+<p>Serializing once is the point. Fan-out to N subscribers costs one serialization and N pointer writes, rather than N serializations. The packet is 100 bytes and integral, per <code>rfd/0053</code>, so a subscriber reads the same bytes the wire carries.</p>
+</section>
+<section id="wakeup-batching" class="level2">
+<h2 class="anchored" data-anchor-id="wakeup-batching">Wakeup batching</h2>
+<p>A cross-loop delivery needs a wakeup, and a wakeup is a syscall. One wakeup per message does not hold at this rate.</p>
+<p>Signal a loop once per tick instead, after the ring advances. At 64 Hz that caps a loop near 64 wakeups per second, whatever the message count.</p>
+</section>
+<section id="back-pressure-which-needs-a-rule-per-channel" class="level2">
+<h2 class="anchored" data-anchor-id="back-pressure-which-needs-a-rule-per-channel">Back-pressure, which needs a rule per channel</h2>
+<p>A lagging reader must never stall the writer. A cursor that falls out of the ring gets dropped, and the subscriber receives a resync signal rather than a gap.</p>
+<p><code>rfd/0049</code> makes fabric channels reliability classes, and that gives the rule its vocabulary. A state channel may drop, because the next tick supersedes the last one. A control channel may not drop, so it needs its own path rather than the ring.</p>
+</section>
+<section id="the-sandbox-this-removes" class="level2">
+<h2 class="anchored" data-anchor-id="the-sandbox-this-removes">The sandbox this removes</h2>
+<p>A local <code>.so</code> shares the zone’s address space. A guest fault takes the zone down, and a guest reads any memory the zone holds.</p>
+<p><code>rfd/0083</code> chose Fil-C for memory safety against untrusted client input. <code>rfd/0095</code> built two guest classes for the same reason. Local mode has neither property.</p>
+<p>That is correct for first-party simulation code, which the project writes and builds. It is wrong for user-generated code. <code>rfd/0094</code>’s UGC loop therefore needs a mechanism this record does not supply.</p>
+</section>
+<section id="what-this-resolves-in-rfd-0107" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-resolves-in-rfd-0107">What this resolves in RFD 0107</h2>
+<p>Two of the four open questions close.</p>
+<p>The tick drives the <code>libfdb_c</code> callbacks, and h2o’s ingress loop does not. The callback chain of <code>rfd/0073</code> moves with the tick, and the durable append runs off-tick.</p>
+<p>The guest boundary sits in-process, over the C ABI, for simulation guests.</p>
+<p>Two questions stay open, and one arrives.</p>
+<p>Where Elixir and <code>zone-backend</code> sit is unchanged by this record.</p>
+<p>Which part terminates a WebTransport session stays open, and it now matters more. This record binds a subscriber to the loop that owns its connection. <code>rfd/0097</code> states that the zone server holds subscriber connections through picoquic and WebTransport, and <code>rfd/0088</code> chose picoquic over h2o’s own QUIC. So the owning loop is h2o’s thread for HTTP and picoquic’s loop for WebTransport. Whether those unify decides how many cross-loop wakeups a tick needs.</p>
+<p>How a UGC guest runs is the new question. Local mode does not sandbox, so the UGC loop needs its own record.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</link>
@@ -178,7 +315,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -344,7 +481,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -544,7 +681,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -687,7 +824,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -838,7 +975,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -1032,7 +1169,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -1199,7 +1336,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -1422,7 +1559,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -1577,7 +1714,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -1736,7 +1873,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -1906,7 +2043,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -2098,7 +2235,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -2320,7 +2457,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -2407,7 +2544,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -2541,7 +2678,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -2787,7 +2924,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -2853,7 +2990,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
@@ -3009,7 +3146,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0089: Fly.io, not self-hosted podman quadlets, is the deployment target</title>
@@ -3087,47 +3224,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0089-flyio-over-podman-quadlets/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0088: zone-server-h2o’s transport is picoquic + picotls, not h2o’s own QUIC</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o transport</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>zone-server-h2o</code> needs WebTransport and datagrams to talk to the Godot client. <code>h2o</code> (the base this repo ports from) has no WebTransport or datagram support at all — a search of its source tree confirms this. What QUIC stack should carry that traffic?</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use <code>picoquic</code> + <code>picotls</code>, the same QUIC stack the Godot client’s <code>WebTransportPeer</code> (<code>godot/modules/http3/</code>) already builds on, not <code>h2o</code>’s own stack. <code>picoquic</code> has working WebTransport, datagrams, and MASQUE support that <code>h2o</code> lacks entirely. Client and server share one proven QUIC stack instead of two different, independently verified ones.</p>
-<p><code>thirdparty/picoquic</code> and <code>thirdparty/picotls</code> are git subtrees, checked in at the exact commits that fork vendors. <code>src/transport/webtransport_server.c</code> bridges this QUIC transport into <code>h2o</code>’s own event loop. <code>src/transport/wt_session.c</code> handles H3/WebTransport session negotiation on top of it.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><code>cmake/picoquic.cmake</code> (mirrors the Godot module’s own <code>SCsub</code>)</li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0023-webtransport-http3-transport</code>: the client-side <code>modules/http3</code> decision this shares a QUIC stack with.</li>
-<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0088-picoquic-picotls-transport-for-zone-server-h2o/</guid>
-  <pubDate>Sat, 08 Aug 2026 04:30:04 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:42 GMT</pubDate>
 </item>
 </channel>
 </rss>

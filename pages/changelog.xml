@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 04:29:58 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 04:58:38 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</link>
@@ -67,6 +67,14 @@
 <p><code>zone-server-h2o</code> was archived and is unarchived again. It is the host repository, and <a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/">RFD 0107</a> records the tier around it: h2o as HTTP ingress and reverse proxy, Janet as the dynamic layer for routing glue and configuration, <code>libtaskweft</code> as a C library holding HTN search and game state, and Godot as the client over GDExtension. Janet loads the C core as a native module. Rust is out, so the core is C.</p>
 <p>FoundationDB stays the store, through <code>libfdb_c</code>. <code>rfd/0075</code> stands and <code>rfd/0006</code>’s CockroachDB does not describe this tier, so the FDB record set stays in force: <code>rfd/0002</code>, <code>rfd/0073</code>, <code>rfd/0074</code>, <code>rfd/0084</code>, <code>rfd/0097</code>, and <code>rfd/0103</code>. <code>ecto_foundationdb</code> and <code>ecto-bench-tpcc</code> keep a live consumer.</p>
 <p>The record states its own gaps rather than guessing past them. The startup, memory and speed claims for this tier are not measured, and <code>data/measurements/</code> holds nothing for Janet or a C taskweft core. Four questions stay open: which part drives the <code>libfdb_c</code> callbacks, where Elixir and <code>zone-backend</code> sit, whether Janet replaces the libriscv guest runtime, and which part terminates a WebTransport session.</p>
+</section>
+<section id="the-guest-boundary-recorded" class="level2">
+<h2 class="anchored" data-anchor-id="the-guest-boundary-recorded">The guest boundary, recorded</h2>
+<p><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/">RFD 0108</a> makes a simulation guest a local shared object loaded over the plain C ABI, and h2o routes to it with no network hop. The CDN keeps one job, which is bulk asset delivery, and it no longer delivers guest programs for simulation.</p>
+<p>Fan-out runs inside the tick. One publish ring per zone, one writer, and many readers holding cursors. The 100-byte packet of <code>rfd/0053</code> is serialized once and fanned out as a pointer and a refcount, so N subscribers cost one serialization rather than N. A cross-loop delivery takes one batched wakeup per tick, which caps a loop near 64 wakeups per second at 64 Hz.</p>
+<p>FoundationDB stays off that path. <code>rfd/0097</code> measured a watch fire at 12214.3 us, which is 78 percent of a 15.6 ms tick, against 8.9 us for an <code>AF_UNIX</code> round trip. The watch probe also failed at exactly 10000 watches with error 1032, and a watch is edge-triggered, so it loses values between the fire and the re-read. The tick owns the <code>libfdb_c</code> callback chain of <code>rfd/0073</code> and appends the durable log off-tick.</p>
+<p>The record states the cost of local mode rather than hiding it. A local <code>.so</code> shares the zone’s address space, so a guest fault takes the zone down. <code>rfd/0083</code> chose Fil-C for memory safety and <code>rfd/0095</code> built two guest classes for the same reason, and local mode has neither property. That suits first-party simulation code and does not suit user-generated code, so <code>rfd/0094</code>’s UGC loop needs its own record.</p>
+<p>RFD 0108 closes two of RFD 0107’s four open questions, which are the database path owner and the guest boundary. Two stay open and one arrives: where Elixir and <code>zone-backend</code> sit, which part terminates a WebTransport session, and how a UGC guest runs.</p>
 
 
 </section>
@@ -74,7 +82,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -122,7 +130,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -164,7 +172,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -203,7 +211,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -279,7 +287,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -339,7 +347,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -403,7 +411,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -454,7 +462,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -542,7 +550,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -573,7 +581,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 04:29:58 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 04:58:38 GMT</pubDate>
 </item>
 </channel>
 </rss>
