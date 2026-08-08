@@ -1,12 +1,12 @@
 ## Role split
 
-| Part          | Job                                                        | Language |
-| ------------- | ---------------------------------------------------------- | -------- |
-| h2o           | HTTP ingress and reverse proxy. Connection termination.      | C        |
-| Janet         | Routing glue, configuration parsing, dynamic scripting.      | Janet    |
-| `libtaskweft` | HTN state-space search, graph traversal, game state.         | C        |
-| Godot         | Client and visualization frontend, GDExtension and C++.       | C++      |
-| FoundationDB  | State, reached through `libfdb_c`.                           | —        |
+| Part          | Job                                                     | Language |
+| ------------- | ------------------------------------------------------- | -------- |
+| h2o           | HTTP ingress and reverse proxy. Connection termination. | C        |
+| Janet         | Routing glue, configuration parsing, dynamic scripting. | Janet    |
+| `libtaskweft` | HTN state-space search, graph traversal, game state.    | C        |
+| Godot         | Client and visualization frontend, GDExtension and C++. | C++      |
+| FoundationDB  | State, reached through `libfdb_c`.                      | —        |
 
 The boundary that matters is between Janet and `libtaskweft`. Janet
 holds what changes often and runs rarely. The C core holds what runs on
@@ -16,15 +16,15 @@ every tick.
 
 FoundationDB stays, so the records that describe it stay in force:
 
-| Record     | What it holds                                        |
-| ---------- | ---------------------------------------------------- |
+| Record     | What it holds                                         |
+| ---------- | ----------------------------------------------------- |
 | `rfd/0075` | FoundationDB over CockroachDB, for a write-heavy load |
-| `rfd/0073` | The async callback chain `libfdb_c` requires           |
-| `rfd/0074` | Binary value encoding for FDB values                   |
-| `rfd/0084` | zstd compression for batched zone-state values         |
-| `rfd/0097` | Pubsub in userspace, with FDB as the durable log       |
-| `rfd/0103` | Uro on `ecto_foundationdb`                             |
-| `rfd/0002` | taskweft value narrowing in the FDB value encoding     |
+| `rfd/0073` | The async callback chain `libfdb_c` requires          |
+| `rfd/0074` | Binary value encoding for FDB values                  |
+| `rfd/0084` | zstd compression for batched zone-state values        |
+| `rfd/0097` | Pubsub in userspace, with FDB as the durable log      |
+| `rfd/0103` | Uro on `ecto_foundationdb`                            |
+| `rfd/0002` | taskweft value narrowing in the FDB value encoding    |
 
 `ecto_foundationdb` and `ecto-bench-tpcc` therefore keep a live
 consumer, and `rfd/0006`'s CockroachDB with mTLS does not describe this
