@@ -12,7 +12,7 @@ page links here instead of restating it, and decided facts
 decisions.
 
 The narrower vertical-slice repository map
-(`rfd/0057-vertical-slice-repository-map`) indexes only the
+([`rfd/0057-vertical-slice-repository-map`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0057-vertical-slice-repository-map)) indexes only the
 loot-action slice; this inventory is the full
 [`v-sekai-multiplayer-fabric`](https://github.com/v-sekai-multiplayer-fabric)
 org plus the repos still on
@@ -38,13 +38,15 @@ these.
 | Repos in `v-sekai-multiplayer-fabric` | 73    |
 | Active                                | 49    |
 | Archived                              | 24    |
+| Live RFDs                             | 64    |
+| Retired RFDs, in the archive repo     | 45    |
 
 ### Capabilities and where they live
 
 | Capability                                                                            | Tier             | Engine branch                                                                        | Supporting repos                                                                                                                                                                   | Status                                                                                |
 | ------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Native video playback                                                                 | Baseline         | `feat/native-media` (MediaFoundation, GStreamer)                                     | [native-media-test](https://github.com/v-sekai-multiplayer-fabric/native-media-test); `vulkan-video-godot` is archived by `rfd/0105`                                               | Working; builds on Windows and Linux.                                                 |
-| Networking transport (WebTransport / HTTP/3, `rfd/0023-webtransport-http3-transport`) | Baseline         | `feat/module-http3` (picoquic + web/wasm backends)                                   | [lean-http3-queue](https://github.com/v-sekai-multiplayer-fabric/lean-http3-queue); the server side moves to `zone-server-h2o` per `rfd/0083`                                      | Working; `WebTransportPeer`/`QUICClient`/`QUICServer`, demos, Lean termination proof. |
+| Networking transport (WebTransport / HTTP/3, `rfd/0023-webtransport-http3-transport`) | Baseline         | `feat/module-http3` (picoquic + web/wasm backends)                                   | [lean-http3-queue](https://github.com/v-sekai-multiplayer-fabric/lean-http3-queue); the server side is Elixir on epoll per `rfd/0107`                                              | Working; `WebTransportPeer`/`QUICClient`/`QUICServer`, demos, Lean termination proof. |
 | Scene baking via OpenUSD                                                              | Baseline         | —                                                                                    | [zone-baker](https://github.com/v-sekai-multiplayer-fabric/zone-baker), [idtx-flow](https://github.com/v-sekai-multiplayer-fabric/idtx-flow); `openusd-fabric` is archived         | Working; USD schema, Blender export hooks, scene validation, headless export.         |
 | Spatial audio (HRTF + audio probes, `rfd/0022-spatial-audio-patched-resonance-audio`) | Baseline         | `feat/spatial-audio-server`, `feat/module-resonance-audio` (patched Resonance Audio) | [sponza-godot-audio](https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio)                                                                                             | Working; demo and benchmark scene.                                                    |
 | Speech                                                                                | Baseline         | `feat/module-speech`                                                                 | —                                                                                                                                                                                  | Working.                                                                              |
@@ -68,9 +70,10 @@ these.
 
 #### Zone host and its guests
 
-`rfd/0094` makes the zone host the host of the minimum UGC game loop.
-Guests arrive as CDN-delivered riscv64 ELFs. `rfd/0095` splits them
-into two guest classes and gives each the runtime that suits it.
+`rfd/0107` makes the zone server Elixir on an epoll loop, in the style
+h2o uses. `rfd/0094` keeps the minimum UGC game loop as the intent.
+`rfd/0108` retires the libriscv guest runtime that carried it, so no
+record states yet how an Elixir host loads a guest.
 
 | Repo                                                                                       | Purpose                                                                             |
 | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
@@ -79,23 +82,23 @@ into two guest classes and gives each the runtime that suits it.
 | [zone-guest-godot](https://github.com/v-sekai-multiplayer-fabric/zone-guest-godot)         | Godot rv64 under `rvlinux`. The stress test of the same capability table.           |
 | [mujoco-riscv64](https://github.com/v-sekai-multiplayer-fabric/mujoco-riscv64)             | riscv64 Linux build of MuJoCo with libriscv host bindings.                          |
 
-`zone-server-h2o`, the host itself, is archived on GitHub while
-`rfd/0094` and `rfd/0095` carry it in scope. `rfd/0105` records that
-inconsistency as open.
+`zone-server-h2o` is archived because a native tier beyond Elixir,
+CockroachDB, and Godot is not affordable. `rfd/0107` records that and
+supersedes `rfd/0083`.
 
 #### Backend, data, and observability
 
-| Repo                                                                                                 | Purpose                                                                            |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [zone-backend](https://github.com/v-sekai-multiplayer-fabric/zone-backend)                           | URO: Phoenix and Elixir backend for identity, the zone directory, and the planner. |
-| [ecto_foundationdb](https://github.com/v-sekai-multiplayer-fabric/ecto_foundationdb)                 | FoundationDB adapter for Ecto (fork). The store Uro uses, per `rfd/0103`.          |
-| [ecto-bench-tpcc](https://github.com/v-sekai-multiplayer-fabric/ecto-bench-tpcc)                     | TPC-C-style benchmark harness for any Ecto adapter.                                |
-| [lean-duckdb](https://github.com/v-sekai-multiplayer-fabric/lean-duckdb)                             | Lean 4 and DuckDB FFI for Parquet and CSV dataset I/O.                             |
-| [fabric-game-observability](https://github.com/v-sekai-multiplayer-fabric/fabric-game-observability) | VictoriaMetrics, VictoriaLogs, Tempo, and the OTEL Collector on Fly.io.            |
+| Repo                                                                                                 | Purpose                                                                                                               |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [zone-backend](https://github.com/v-sekai-multiplayer-fabric/zone-backend)                           | URO: Phoenix and Elixir backend for identity, the zone directory, and the planner.                                    |
+| [ecto_foundationdb](https://github.com/v-sekai-multiplayer-fabric/ecto_foundationdb)                 | FoundationDB adapter for Ecto (fork). `rfd/0107` returns the state to CockroachDB, so this repo has no live consumer. |
+| [ecto-bench-tpcc](https://github.com/v-sekai-multiplayer-fabric/ecto-bench-tpcc)                     | TPC-C-style benchmark harness for any Ecto adapter.                                                                   |
+| [lean-duckdb](https://github.com/v-sekai-multiplayer-fabric/lean-duckdb)                             | Lean 4 and DuckDB FFI for Parquet and CSV dataset I/O.                                                                |
+| [fabric-game-observability](https://github.com/v-sekai-multiplayer-fabric/fabric-game-observability) | VictoriaMetrics, VictoriaLogs, Tempo, and the OTEL Collector on Fly.io.                                               |
 
 #### Hexagon cores
 
-`rfd/0028` sets the core, ports, and adapters shape. `rfd/0057` makes
+`rfd/0028` sets the core, ports, and adapters shape. `rfd/0045` makes
 these the canonical proven reference, so the playable slice transcribes
 them rather than importing them. A reference repo needs no recent push.
 
@@ -108,7 +111,7 @@ them rather than importing them. A reference repo needs no recent push.
 | [lean-combat-core](https://github.com/v-sekai-multiplayer-fabric/lean-combat-core)           | Standalone Lean 4 workspace for the combat core.                                        |
 | [lean-progression-core](https://github.com/v-sekai-multiplayer-fabric/lean-progression-core) | Standalone Lean 4 workspace for the progression core.                                   |
 | [lean-shared-core](https://github.com/v-sekai-multiplayer-fabric/lean-shared-core)           | Shared primitive types every core builds on.                                            |
-| [lean-rebac-core](https://github.com/v-sekai-multiplayer-fabric/lean-rebac-core)             | ReBAC authorization core. Generates the host's `rebac.{c,h}`, per `rfd/0092`.           |
+| [lean-rebac-core](https://github.com/v-sekai-multiplayer-fabric/lean-rebac-core)             | ReBAC authorization core. Its C generation served the retired host, per `rfd/0108`.     |
 | [lean-entity-packet](https://github.com/v-sekai-multiplayer-fabric/lean-entity-packet)       | Source of truth for the 100-byte entity packet, per `rfd/0053`.                         |
 | [lean-fabric-protocol](https://github.com/v-sekai-multiplayer-fabric/lean-fabric-protocol)   | Saturation, waypoint bounds, and the abyssal SLA.                                       |
 | [lean-connection-fsm](https://github.com/v-sekai-multiplayer-fabric/lean-connection-fsm)     | Connection FSM soundness and the 5 s limit of `rfd/0050`.                               |
@@ -154,32 +157,32 @@ them rather than importing them. A reference repo needs no recent push.
 Every repo below is tombstoned, not deleted. The history stays
 reachable. The Basis column names the decision that retired it.
 
-| Repo                                                                                                 | Basis                                                           |
-| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)                             | Godot zone server, replaced per `rfd/0083`.                     |
-| [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)                     | Archive state is an open inconsistency; see `rfd/0105`.         |
-| [zone-client](https://github.com/v-sekai-multiplayer-fabric/zone-client)                             | Superseded by `zone-client-godot`.                              |
-| [godot-loop-slice](https://github.com/v-sekai-multiplayer-fabric/godot-loop-slice)                   | The loot-action slice, parked per `rfd/0069`.                   |
-| [fabric-godot-packaging](https://github.com/v-sekai-multiplayer-fabric/fabric-godot-packaging)       | Native packaging for the parked slice.                          |
-| [infra](https://github.com/v-sekai-multiplayer-fabric/infra)                                         | OpenTofu for the quadlet hosts, archived per `rfd/0089`.        |
-| [zone-backend-quadlet](https://github.com/v-sekai-multiplayer-fabric/zone-backend-quadlet)           | `rfd/0089`.                                                     |
-| [zone-server-quadlet](https://github.com/v-sekai-multiplayer-fabric/zone-server-quadlet)             | `rfd/0089`.                                                     |
-| [zone-baker-quadlet](https://github.com/v-sekai-multiplayer-fabric/zone-baker-quadlet)               | `rfd/0089`.                                                     |
-| [cockroach-crdb-quadlet](https://github.com/v-sekai-multiplayer-fabric/cockroach-crdb-quadlet)       | `rfd/0089`, and CockroachDB is dropped per `rfd/0075`.          |
-| [restic-backup-quadlet](https://github.com/v-sekai-multiplayer-fabric/restic-backup-quadlet)         | `rfd/0089`.                                                     |
-| [gha-runner-quadlet](https://github.com/v-sekai-multiplayer-fabric/gha-runner-quadlet)               | `rfd/0089`.                                                     |
-| [sccache-cache-quadlet](https://github.com/v-sekai-multiplayer-fabric/sccache-cache-quadlet)         | `rfd/0089`.                                                     |
-| [linux-base-image](https://github.com/v-sekai-multiplayer-fabric/linux-base-image)                   | Base qcow2 for the retired self-hosted VM images.               |
-| [fabric-container-verify](https://github.com/v-sekai-multiplayer-fabric/fabric-container-verify)     | `rfd/0105`.                                                     |
-| [fabric-casync-central](https://github.com/v-sekai-multiplayer-fabric/fabric-casync-central)         | `rfd/0105`.                                                     |
-| [fabric-scoop-central](https://github.com/v-sekai-multiplayer-fabric/fabric-scoop-central)           | `rfd/0105`.                                                     |
-| [fabric-platform-central](https://github.com/v-sekai-multiplayer-fabric/fabric-platform-central)     | `rfd/0105`.                                                     |
-| [vulkan-video-godot](https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot)               | `rfd/0105`. Empty.                                              |
-| [steamdeck](https://github.com/v-sekai-multiplayer-fabric/steamdeck)                                 | `rfd/0105`. Empty.                                              |
-| [openusd-fabric](https://github.com/v-sekai-multiplayer-fabric/openusd-fabric)                       | OpenUSD pipeline across Blender, Godot, Hydra, Unity.           |
-| [sandbox-gdextension-godot](https://github.com/v-sekai-multiplayer-fabric/sandbox-gdextension-godot) | Earlier GDExtension sandbox approach.                           |
-| [tropes-action](https://github.com/v-sekai-multiplayer-fabric/tropes-action)                         | The tropes check now runs in-repo as `scripts/check_tropes.sh`. |
-| [friends-art-game-loop](https://github.com/v-sekai-multiplayer-fabric/friends-art-game-loop)         | Local-first art-game loop experiment.                           |
+| Repo                                                                                                 | Basis                                                                |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [zone-server](https://github.com/v-sekai-multiplayer-fabric/zone-server)                             | Godot zone server. `rfd/0107` now serves a zone from Elixir.         |
+| [zone-server-h2o](https://github.com/v-sekai-multiplayer-fabric/zone-server-h2o)                     | Archive state is an open inconsistency; see `rfd/0105`.              |
+| [zone-client](https://github.com/v-sekai-multiplayer-fabric/zone-client)                             | Superseded by `zone-client-godot`.                                   |
+| [godot-loop-slice](https://github.com/v-sekai-multiplayer-fabric/godot-loop-slice)                   | The loot-action slice. `rfd/0045` keeps the loop it defines.         |
+| [fabric-godot-packaging](https://github.com/v-sekai-multiplayer-fabric/fabric-godot-packaging)       | Native packaging for the parked slice.                               |
+| [infra](https://github.com/v-sekai-multiplayer-fabric/infra)                                         | OpenTofu for the quadlet hosts, archived per `rfd/0089`.             |
+| [zone-backend-quadlet](https://github.com/v-sekai-multiplayer-fabric/zone-backend-quadlet)           | `rfd/0089`.                                                          |
+| [zone-server-quadlet](https://github.com/v-sekai-multiplayer-fabric/zone-server-quadlet)             | `rfd/0089`.                                                          |
+| [zone-baker-quadlet](https://github.com/v-sekai-multiplayer-fabric/zone-baker-quadlet)               | `rfd/0089`.                                                          |
+| [cockroach-crdb-quadlet](https://github.com/v-sekai-multiplayer-fabric/cockroach-crdb-quadlet)       | `rfd/0089`. `rfd/0107` returns CockroachDB to force, per `rfd/0006`. |
+| [restic-backup-quadlet](https://github.com/v-sekai-multiplayer-fabric/restic-backup-quadlet)         | `rfd/0089`.                                                          |
+| [gha-runner-quadlet](https://github.com/v-sekai-multiplayer-fabric/gha-runner-quadlet)               | `rfd/0089`.                                                          |
+| [sccache-cache-quadlet](https://github.com/v-sekai-multiplayer-fabric/sccache-cache-quadlet)         | `rfd/0089`.                                                          |
+| [linux-base-image](https://github.com/v-sekai-multiplayer-fabric/linux-base-image)                   | Base qcow2 for the retired self-hosted VM images.                    |
+| [fabric-container-verify](https://github.com/v-sekai-multiplayer-fabric/fabric-container-verify)     | `rfd/0105`.                                                          |
+| [fabric-casync-central](https://github.com/v-sekai-multiplayer-fabric/fabric-casync-central)         | `rfd/0105`.                                                          |
+| [fabric-scoop-central](https://github.com/v-sekai-multiplayer-fabric/fabric-scoop-central)           | `rfd/0105`.                                                          |
+| [fabric-platform-central](https://github.com/v-sekai-multiplayer-fabric/fabric-platform-central)     | `rfd/0105`.                                                          |
+| [vulkan-video-godot](https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot)               | `rfd/0105`. Empty.                                                   |
+| [steamdeck](https://github.com/v-sekai-multiplayer-fabric/steamdeck)                                 | `rfd/0105`. Empty.                                                   |
+| [openusd-fabric](https://github.com/v-sekai-multiplayer-fabric/openusd-fabric)                       | OpenUSD pipeline across Blender, Godot, Hydra, Unity.                |
+| [sandbox-gdextension-godot](https://github.com/v-sekai-multiplayer-fabric/sandbox-gdextension-godot) | Earlier GDExtension sandbox approach.                                |
+| [tropes-action](https://github.com/v-sekai-multiplayer-fabric/tropes-action)                         | The tropes check now runs in-repo as `scripts/check_tropes.sh`.      |
+| [friends-art-game-loop](https://github.com/v-sekai-multiplayer-fabric/friends-art-game-loop)         | Local-first art-game loop experiment.                                |
 
 ### Moved to `V-Sekai-archive`
 

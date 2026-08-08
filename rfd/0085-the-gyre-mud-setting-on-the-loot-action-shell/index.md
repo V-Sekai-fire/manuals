@@ -2,7 +2,7 @@
 title: "RFD 0085: The Gyre — a MUD setting on the loot-action core-loop shell"
 rfd: "0085"
 state: discussion
-scope: zone-server-h2o game content, web client
+scope: zone server game content, web client
 ---
 
 Players awaken as "Sparks" — digitized human consciousnesses legally owned by a defunct hyper-corporation. They are currently downloaded into "Frames," which are cheap, mass-produced synthetic worker chassis. Abandoned on The Gyre, a massive, slowly failing ring-station orbiting a toxic gas giant, players must survive cycle by cycle. They take on grueling localized contracts, scavenge for parts to prevent their Frames from seizing up, and try to buy their digital freedom from the station's automated debt-collection algorithms.
@@ -49,3 +49,10 @@ spots.
 ## Detail
 
 {{< include DETAILS.md >}}
+
+## Amendment, 2026-08-07
+
+`rfd/0107` retires `zone-server-h2o` and makes the zone server Elixir on
+an epoll loop. This record's scope named the retired host. The setting,
+the content, and the client survive that change. The Gyre is a setting on the loot-action shell of `rfd/0045`, and it
+does not depend on what serves the zone.

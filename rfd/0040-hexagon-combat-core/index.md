@@ -28,7 +28,7 @@ constant-step clock), `behavior_source` (enemy intents). Driven ports:
 `state_sink` (authoritative entity state), `event_sink` (hits, deaths,
 door unlocks). `feat/module-http3` feeds `input_source`. The
 `zone-server` hosts the core and drives `tick_source` under server
-authority. Sandboxed behavior (`rfd/0037-generated-behavior-sandboxed-riscv`)
+authority. Sandboxed behavior ([`rfd/0037-generated-behavior-sandboxed-riscv`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0037-generated-behavior-sandboxed-riscv))
 implements `behavior_source`, and a fixture adapter replays recorded
 inputs for CI. The server-authoritative adapter binds `input_source`
 and `state_sink` with interpolation and no prediction for the
@@ -44,7 +44,7 @@ ranged and caster land after the gate.
 
 ## Related
 
-- `rfd/0037-generated-behavior-sandboxed-riscv`: the `behavior_source`
+- [`rfd/0037-generated-behavior-sandboxed-riscv`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0037-generated-behavior-sandboxed-riscv): the `behavior_source`
   adapter for generated enemy behavior.
 
 ## Detail

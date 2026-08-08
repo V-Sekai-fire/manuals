@@ -22,7 +22,7 @@ state), `event_sink` (hits, deaths, door unlocks). Adapters:
 `feat/module-http3` feeds `input_source`; the `zone-server` hosts the
 core and drives `tick_source` under server authority
 (`decisions/20260611-server-authoritative-simulation-deferred-rollback.md`);
-sandboxed behavior (`rfd/0037-generated-behavior-sandboxed-riscv`)
+sandboxed behavior ([`rfd/0037-generated-behavior-sandboxed-riscv`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0037-generated-behavior-sandboxed-riscv))
 implements `behavior_source`; a fixture adapter replays recorded
 inputs for CI.
 

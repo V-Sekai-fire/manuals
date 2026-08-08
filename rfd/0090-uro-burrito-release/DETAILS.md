@@ -103,7 +103,7 @@ never actually existed in this repo.
 Good: a real production boot path exists that does not depend on the
 now-archived `infra` repo, does not seed test data on every start, and
 matches this org's own established Burrito precedent
-(`rfd/0065-fabric-platform-central-elixir-burrito-casync`). The
+([`rfd/0065-fabric-platform-central-elixir-burrito-casync`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0065-fabric-platform-central-elixir-burrito-casync)). The
 runtime image needs nothing but the static binary and CA certs
 (outbound TLS to CockroachDB, S3-compatible storage, and OTLP all need
 real CA verification), which is a smaller, simpler runtime surface

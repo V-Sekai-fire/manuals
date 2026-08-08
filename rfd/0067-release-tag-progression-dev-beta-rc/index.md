@@ -38,7 +38,7 @@ pre-release, and a bare version builds as a full release.
 
 ## Related
 
-- `rfd/0065-fabric-platform-central-elixir-burrito-casync`: a release
+- [`rfd/0065-fabric-platform-central-elixir-burrito-casync`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0065-fabric-platform-central-elixir-burrito-casync): a release
   workflow that produces tags under this convention.
 
 ## Detail

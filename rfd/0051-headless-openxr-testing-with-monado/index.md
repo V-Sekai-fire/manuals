@@ -37,7 +37,7 @@ service log reports the null compositor and a simulated HMD.
 
 ## Related
 
-- `rfd/0056-systemd-quadlet-verification-queue`: the quadlet queue
+- [`rfd/0056-systemd-quadlet-verification-queue`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0056-systemd-quadlet-verification-queue): the quadlet queue
   that runs this Monado smoke.
 
 ## Detail

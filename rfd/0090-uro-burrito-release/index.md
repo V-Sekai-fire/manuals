@@ -62,7 +62,7 @@ this repo until now.
 
 - `rfd/0089-flyio-over-podman-quadlets`: the deployment target this
   release ships to.
-- `rfd/0065-fabric-platform-central-elixir-burrito-casync`: Burrito's
+- [`rfd/0065-fabric-platform-central-elixir-burrito-casync`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0065-fabric-platform-central-elixir-burrito-casync): Burrito's
   prior use elsewhere in this org.
 
 ## Detail

@@ -52,7 +52,7 @@ canonical proven reference, and a reference repo needs no recent push.
 
 - `rfd/0089-flyio-over-podman-quadlets`: archives the quadlets that
   these repos support.
-- `rfd/0065-fabric-platform-central-elixir-burrito-casync`: the
+- [`rfd/0065-fabric-platform-central-elixir-burrito-casync`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0065-fabric-platform-central-elixir-burrito-casync): the
   decision that `fabric-platform-central` carries.
 
 ## Detail

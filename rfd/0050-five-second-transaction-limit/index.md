@@ -43,5 +43,5 @@ matches it.
 
 ## Related
 
-- `rfd/0057-vertical-slice-repository-map`: lists `lean-connection-fsm`
+- [`rfd/0057-vertical-slice-repository-map`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0057-vertical-slice-repository-map): lists `lean-connection-fsm`
   among the wire and determinism specs.

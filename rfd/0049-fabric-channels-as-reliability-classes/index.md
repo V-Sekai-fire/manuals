@@ -43,7 +43,7 @@ field, so even names stay integral and deterministic.
 
 ## Related
 
-- `rfd/0003-castspell-sandbox-package-and-manifest-encoding`: cites
+- [`rfd/0003-castspell-sandbox-package-and-manifest-encoding`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0003-castspell-sandbox-package-and-manifest-encoding): cites
   this layout for its wire encoding.
 - `rfd/0053-integral-entity-transform-wire`: the wire fields this
   layout carries.

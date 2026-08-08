@@ -40,7 +40,7 @@ caused.
 
 ## Related
 
-- `rfd/0057-vertical-slice-repository-map`: the narrower map of just
+- [`rfd/0057-vertical-slice-repository-map`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0057-vertical-slice-repository-map): the narrower map of just
   the loot-action vertical slice.
 - `rfd/0018-feature-classification-poc-baseline-stretch`: the tier
   classification each capability follows.

@@ -39,5 +39,5 @@ left working behavior unchanged.
 
 ## Related
 
-`rfd/0069-defer-loot-slice-hardening-until-needed`: an applied case of
+[`rfd/0069-defer-loot-slice-hardening-until-needed`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0069-defer-loot-slice-hardening-until-needed): an applied case of
 the same timing rule.

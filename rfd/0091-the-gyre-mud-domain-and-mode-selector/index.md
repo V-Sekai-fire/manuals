@@ -2,7 +2,7 @@
 title: "RFD 0091: The Gyre as a second MUD domain"
 rfd: "0091"
 state: published
-scope: zone-server-h2o mud/guest, mud/web
+scope: zone server mud domains, web client
 ---
 
 ## Problem
@@ -49,3 +49,11 @@ session's domain only once, on that session's first request.
 ## Detail
 
 {{< include DETAILS.md >}}
+
+## Amendment, 2026-08-07
+
+`rfd/0107` retires `zone-server-h2o` and makes the zone server Elixir on
+an epoll loop. This record's scope named the retired host. The setting,
+the content, and the client survive that change. The two-domain split and the mode selector are content structure. The
+`mud/guest` and `mud/web` paths named here belong to the retired host,
+and the domain split moves with the setting.

@@ -2,7 +2,7 @@
 title: "RFD 0094: zone-server-h2o hosts the minimum UGC game loop"
 rfd: "0094"
 state: discussion
-scope: zone-server-h2o, zone-guest-middleham, zone-guest-gyre, zone-guest-godot
+scope: zone server, zone-guest-middleham, zone-guest-gyre, zone-guest-godot
 ---
 
 ## Problem
@@ -112,9 +112,20 @@ ELF exists on a CDN yet.
 
 ## Related
 
-- `rfd/0092-rebac-gates-libriscv-guest-access`: the gating model
+- [`rfd/0092-rebac-gates-libriscv-guest-access`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0092-rebac-gates-libriscv-guest-access): the gating model
   this RFD binds to a host repo and a loop definition.
-- `rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv`:
+- [`rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv):
   the sandboxing decision behind `zone-guest-godot`.
-- `rfd/0083-zone-server-h2o-replaces-godot-fabriczone`: the rule
+- [`rfd/0083-zone-server-h2o-replaces-godot-fabriczone`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0083-zone-server-h2o-replaces-godot-fabriczone): the rule
   that ReBAC types generate from `lean-rebac-core`.
+
+## Amendment, 2026-08-07
+
+`rfd/0107` retires `zone-server-h2o` and makes the zone server Elixir on
+an epoll loop. This record's scope named the retired host. The setting,
+the content, and the client survive that change. The loop stays as the intent: a principal with administrative
+capability loads guest programs, and principals with normal capability
+interact with what those guests run. The mechanism does not stay.
+`rfd/0108` retires the libriscv runtime of `rfd/0079`, the guest gating
+of `rfd/0092`, and the two guest classes of `rfd/0095`. A record that
+states how an Elixir host loads a guest does not exist yet.
