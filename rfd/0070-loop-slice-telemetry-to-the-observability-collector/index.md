@@ -39,8 +39,9 @@ the protocol.
 
 ## Related
 
-- `rfd/0011-observability-stack-victoriatraces`: the collector and
-  Victoria backends this export reaches.
+- [`rfd/0011-observability-stack-victoriatraces`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0011-observability-stack-victoriatraces):
+  the collector and Victoria backends this export reaches. It now
+  lives in `multiplayer-fabric-archive`, per `rfd/0106`.
 
 ## Detail
 

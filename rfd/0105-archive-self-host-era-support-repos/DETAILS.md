@@ -1,13 +1,13 @@
 ## What each repo carried
 
-| Repo                     | Size  | Last push  | Basis for the archive                                                    |
-| ------------------------ | ----- | ---------- | ------------------------------------------------------------------------ |
-| `fabric-container-verify` | 0 KB  | 2026-06-20 | `rfd/0056` quadlet queue. `rfd/0089` archives every quadlet it targets.   |
-| `fabric-casync-central`   | 0 KB  | 2026-06-24 | Empty. No content was ever pushed.                                       |
-| `fabric-scoop-central`    | 8 KB  | 2026-06-30 | Scoop bucket for the Windows demo of the archived `godot-loop-slice`.     |
-| `fabric-platform-central` | —     | 2026-06-25 | `rfd/0065` Burrito and casync packaging.                                  |
-| `vulkan-video-godot`      | 0 KB  | 2026-05-28 | Empty placeholder.                                                       |
-| `steamdeck`               | 1 KB  | 2026-06-14 | Empty placeholder.                                                       |
+| Repo                      | Size | Last push  | Basis for the archive                                                   |
+| ------------------------- | ---- | ---------- | ----------------------------------------------------------------------- |
+| `fabric-container-verify` | 0 KB | 2026-06-20 | `rfd/0056` quadlet queue. `rfd/0089` archives every quadlet it targets. |
+| `fabric-casync-central`   | 0 KB | 2026-06-24 | Empty. No content was ever pushed.                                      |
+| `fabric-scoop-central`    | 8 KB | 2026-06-30 | Scoop bucket for the Windows demo of the archived `godot-loop-slice`.   |
+| `fabric-platform-central` | —    | 2026-06-25 | `rfd/0065` Burrito and casync packaging.                                |
+| `vulkan-video-godot`      | 0 KB | 2026-05-28 | Empty placeholder.                                                      |
+| `steamdeck`               | 1 KB | 2026-06-14 | Empty placeholder.                                                      |
 
 `fabric-container-verify` reports 0 KB for its packed size. Its
 GDScript content is present in history.
@@ -25,11 +25,14 @@ risk so a later failure has a written cause.
 
 ## Counts after the sweep
 
-| Set          | Count |
-| ------------ | ----- |
-| Total repos  | 72    |
-| Archived     | 24    |
-| Active       | 48    |
+These counts predate the archive split of `rfd/0106`, which adds one
+repository.
+
+| Set         | Count |
+| ----------- | ----- |
+| Total repos | 72    |
+| Archived    | 24    |
+| Active      | 48    |
 
 ## Open inconsistency, not resolved here
 
@@ -48,16 +51,16 @@ GitHub keeps a redirect after a rename. A redirect hides the rename
 from a reader. `rfd/0064` sets kebab-case repository names, and these
 renames follow it.
 
-| Name in the old inventory | Current name              |
-| ------------------------- | ------------------------- |
-| `godot`                   | `fabric-godot-core`       |
-| `merge`                   | `fabric-godot-assembly`   |
-| `observability`           | `fabric-game-observability` |
-| `zone-server-image`       | `zone-server-quadlet`     |
-| `zone-baker-image`        | `zone-baker-quadlet`      |
-| `zone-backend-image`      | `zone-backend-quadlet`    |
-| `gha-runner-image`        | `gha-runner-quadlet`      |
-| `sccache-cache-image`     | `sccache-cache-quadlet`   |
+| Name in the old inventory | Current name                 |
+| ------------------------- | ---------------------------- |
+| `godot`                   | `fabric-godot-core`          |
+| `merge`                   | `fabric-godot-assembly`      |
+| `observability`           | `fabric-game-observability`  |
+| `zone-server-image`       | `zone-server-quadlet`        |
+| `zone-baker-image`        | `zone-baker-quadlet`         |
+| `zone-backend-image`      | `zone-backend-quadlet`       |
+| `gha-runner-image`        | `gha-runner-quadlet`         |
+| `sccache-cache-image`     | `sccache-cache-quadlet`      |
 | `manuals`                 | `multiplayer-fabric-manuals` |
 
 Three repos moved to a third organization, `V-Sekai-archive`, and are
