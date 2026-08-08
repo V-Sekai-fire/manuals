@@ -55,12 +55,56 @@ search, which returned TiDB to the list.
 | MariaDB, MySQL    | GPL, so they fail the non-viral rule                                 |
 | ScyllaDB, MongoDB | AGPL or SSPL, so they fail the non-viral rule                        |
 | DuckDB, for OLTP  | 0.919 ms point read, the slowest of four measured in `rfd/0103`      |
-| Rivet 2.0         | Apache 2.0, and its SDK is TypeScript. No Elixir or Godot client     |
+| Rivet 2.0         | Apache 2.0. Actor logic is TypeScript. See the section below         |
 
 TiDB is the option that keeps relational form with no adapter work. It
 costs more processes, because a cluster wants PD, TiDB servers, and
 three TiKV nodes. It also carries MySQL's weaker constraint set, with
 no EXCLUDE constraints and no DOMAIN types.
+
+## Rivet 2.0, examined
+
+An earlier draft of this record excluded Rivet because its SDK is
+TypeScript and it has no Elixir or Godot client. That reason is not
+accurate, and this section replaces it.
+
+Rivet reaches an actor without an SDK. Raw HTTP goes to
+`https://api.rivet.dev/gateway/{actorId}/request/{...path}`, and a raw
+WebSocket goes to
+`wss://api.rivet.dev/gateway/{actorId}@{token}/websocket/{...path}`.
+So a Godot client can connect. The repository's own `Vanilla HTTP API`
+documentation page is a `TODO` stub, so that path is real and
+undocumented.
+
+What Rivet is, verified from the repository: Apache 2.0, 60.7 percent
+Rust, and pushed on 2026-08-07. The engine has four parts. Pegboard
+orchestrates actors, Gasoline runs durable execution, Guard routes
+traffic, and Epoxy is a multi-region key-value store over EPaxos. Self
+hosting is one binary or `docker run -p 6420:6420 rivetdev/engine`.
+Storage is SQLite for local development, FoundationDB for self-hosted
+deployments, or Postgres.
+
+The fit is genuine on one point. An actor per room with the
+`onWebSocket` handler is a presence relay, and
+`options: { canHibernateWebSocket: true }` makes an empty room cost
+nothing.
+
+The reason to decline is the comparison Rivet draws. Its published
+figures measure against Kubernetes: about 20 ms cold start against 6 s
+for a pod, and 0.6 KB per actor against 50 MB. This project's
+alternative is a BEAM process, not a pod. Phoenix already supplies a
+process per connection, a process per topic, PubSub fan-out, and
+supervision. A BEAM process spawns in microseconds and sits in the same
+size order as 0.6 KB.
+
+Adopting Rivet moves room logic into TypeScript and adds a Rust engine.
+That is two runtimes replacing one, against this record's two-tier
+decision.
+
+Three Rivet features have no Elixir equivalent to hand: Guard's
+multi-region routing, Epoxy's multi-region consensus, and Gasoline's
+durable execution. A global player base is the case that would justify
+revisiting this.
 
 ## The trade this record accepts
 
