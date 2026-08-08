@@ -54,13 +54,13 @@ The ruleset targets the default branch with these rules:
 ## Confirmation
 
 The ruleset is active (id `17352485`). `gh api
-repos/v-sekai-multiplayer-fabric/manuals/rulesets` lists it, and a
+repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets` lists it, and a
 direct push to `main` is rejected. Future PRs land via the queue.
 
 ## More information
 
 Created with `gh api -X POST
-repos/v-sekai-multiplayer-fabric/manuals/rulesets`. To change the
+repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets`. To change the
 policy, edit the ruleset rather than protecting the branch through the
 classic branch-protection API, so the two mechanisms do not overlap.
 
