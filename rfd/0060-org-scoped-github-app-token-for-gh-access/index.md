@@ -39,8 +39,9 @@ private key is itself high-value and stays guarded in 1Password.
 
 ## Related
 
-- `rfd/0061-quadlets-on-fedora-44-instead-of-harvester`: the same
-  org's repos carry the quadlet sources this token drives.
+- [`rfd/0061-quadlets-on-fedora-44-instead-of-harvester`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester):
+  the same org's repos carry the quadlet sources this token drives. It
+  now lives in `multiplayer-fabric-archive`, per `rfd/0106`.
 
 ## Detail
 

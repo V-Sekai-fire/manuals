@@ -35,8 +35,9 @@ services this applies to first.
 
 ## References
 
-- `rfd/0061-quadlets-on-fedora-44-instead-of-harvester`: the decision
-  this supersedes.
+- [`rfd/0061-quadlets-on-fedora-44-instead-of-harvester`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0061-quadlets-on-fedora-44-instead-of-harvester):
+  the decision this supersedes. It now lives in
+  `multiplayer-fabric-archive`, per `rfd/0106`.
 - `v-sekai-multiplayer-fabric/zone-backend`, `docs/decisions/0011-fly-redeploy-scope-uro-and-crdb-only.md`:
   the prior Fly-app-loss record this RFD's Fly.io work continues from.
 - `v-sekai-multiplayer-fabric/infra`, `v-sekai-multiplayer-fabric/zone-backend-quadlet`,

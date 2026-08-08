@@ -20,8 +20,6 @@ project:
     - "**/*.ipynb"
     - "**/*.md"
 
-resources:
-  - decisions/attachments
 
 website:
   site-url: https://v-sekai-multiplayer-fabric.github.io/manuals
