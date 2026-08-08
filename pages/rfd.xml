@@ -10,7 +10,321 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 06:43:56 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 07:03:00 GMT</lastBuildDate>
+<item>
+  <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0110: One pinned Godot build, hosted as a Rivet actor</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server implementation, orchestration, guest delivery</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0109</code> makes the server tier an Elixir presence relay. A relay is not server-authoritative, and it runs every room in one BEAM node, so one fault reaches every room.</p>
+<p>The h2o and libriscv work in <code>zone-server-h2o</code> already exists. <code>rfd/0083</code> built the host, and <code>rfd/0094</code> keeps <code>thirdparty/libriscv</code> and <code>thirdparty/QCBOR</code> vendored so they do not rot. What that host lacked was orchestration. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> exist only because one process had to hold many zones.</p>
+<p>No record asks whether something else can supply the orchestration.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>A zone is a child process under Rivet’s <code>container-runner</code>, one process per room. The child is headless Godot, which the runner documentation names directly.</p>
+<p>The engine is pinned to one tag, <code>v2026.06.27.1907-multiplayer-fabric</code>, which resolves to commit <code>2cecde75</code> and reports Godot 4.7.0 beta. That tag’s <code>modules/</code> already carries <code>sandbox</code> for libriscv guests, <code>http3</code> for WebTransport, <code>multiplayer_fabric</code> and <code>multiplayer_fabric_asset</code> for the zone, <code>xr_grid</code> for presence, and <code>openxr</code> with <code>webxr</code> for XR.</p>
+<p>So one engine build is the client, the zone server, and the guest host. No C host is needed to load an <code>.elf</code>, because <code>sandbox</code> does it, and <code>rfd/0037</code> already makes generated behavior sandboxed RISC-V.</p>
+<p>The tag carries no release artifacts, because the repository publishes no GitHub releases. <code>godot-images</code> builds it and publishes the container image, which is what <code>container-runner</code> needs. <code>rfd/0009</code> puts that build in the consuming repository.</p>
+<p>Rivet supplies what the old host hand-rolled. It cold-starts the container, injects <code>PORT</code>, spawns the binary as a child, and proxies gateway traffic to <code>127.0.0.1:&lt;child port&gt;</code>. The engine owns placement, routing, and lifecycle. Rivet is Apache 2.0 and self-hosted.</p>
+<p>The child contract is small. Listen on <code>PORT</code>. Open it within the readiness timeout, 30 seconds by default. Handle <code>SIGTERM</code> and exit within the grace period, 25 seconds by default. Raw HTTP arrives under a <code>/request/*</code> prefix that the runner strips. WebSocket clients use the <code>rivet</code> subprotocol.</p>
+<p>One process per room removes the multi-zone problem. The binary hosts one room, so it needs no zone routing and no cross-zone authority. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> become unnecessary, and <code>rfd/0080</code> narrows to one room’s entities.</p>
+<p>The CBOR actor input names the child command, its args, and its env, and it names the scene or guest the room loads. That is <code>rfd/0094</code>’s guest delivery, moved to the actor boundary.</p>
+<p>A C child, h2o with libriscv, stays possible and is not built. Its only advantage is memory per process, and that advantage is unmeasured. Build it when a measurement forces it.</p>
+<p>FoundationDB backs both the Rivet engine and the zone state, so <code>rfd/0109</code>’s store selection and cost floor both stand. This record amends only <code>rfd/0109</code>’s server tier.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The contract, what it deletes, and the transport question: <code>DETAILS.md</code></li>
+<li><code>https://rivet.dev/docs/deploy/container-runner/</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the decision this reverses, because the zone returns to Godot.</li>
+<li><code>rfd/0037-generated-behavior-sandboxed-riscv</code>: the libriscv path inside the engine.</li>
+<li><code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>: the pinning practice this applies to one named tag.</li>
+<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: the store, the cost floor, and the relay this replaces.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-child-contract" class="level2">
+<h2 class="anchored" data-anchor-id="the-child-contract">The child contract</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 78%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Port</td>
+<td>The <code>PORT</code> environment variable</td>
+</tr>
+<tr class="even">
+<td>Readiness</td>
+<td>The port must open within 30 seconds, by default</td>
+</tr>
+<tr class="odd">
+<td>Shutdown</td>
+<td><code>SIGTERM</code>, then 25 seconds grace, then <code>SIGKILL</code>, by default</td>
+</tr>
+<tr class="even">
+<td>Raw HTTP</td>
+<td>Arrives under <code>/request/*</code>, which the runner strips</td>
+</tr>
+<tr class="odd">
+<td>WebSocket</td>
+<td>Clients use the <code>rivet</code> subprotocol</td>
+</tr>
+<tr class="even">
+<td>Per-actor config</td>
+<td>CBOR <code>input</code>, with <code>command</code>, <code>args</code>, and <code>env</code></td>
+</tr>
+</tbody>
+</table>
+<p>The engine calls <code>POST /api/rivet/start</code> on <code>RIVET_PORT</code>. That is the runner’s interface, not the child’s. The child sees a plain port.</p>
+<p>The <code>rivet</code> subprotocol is the one non-obvious requirement. h2o’s WebSocket upgrade path must accept it.</p>
+</section>
+<section id="what-one-process-per-room-deletes" class="level2">
+<h2 class="anchored" data-anchor-id="what-one-process-per-room-deletes">What one process per room deletes</h2>
+<p>The old host held many zones in one process. Rivet holds one room per process, so the machinery for the first case has no subject.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 85%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Record</th>
+<th>Status under this decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rfd/0072</code></td>
+<td>Unnecessary. Worker dispatch across zones in one process</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0082</code></td>
+<td>Unnecessary. Keyspace design for many zones in one server</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0086</code></td>
+<td>Unnecessary. The engine owns placement, so gossip has no job</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0080</code></td>
+<td>Narrows. Slotmap storage for one room’s entities</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0094</code></td>
+<td>Applies. The CBOR input names the guest, as this record uses</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0092</code></td>
+<td>Applies. ReBAC still gates which principal loads which guest</td>
+</tr>
+</tbody>
+</table>
+<p>Fault isolation improves as a side effect. A guest fault kills one room’s process, not every room. <code>rfd/0095</code> wanted that from Bubblewrap, and process-per-actor supplies it.</p>
+</section>
+<section id="the-actor-input-from-container-runnersrcinput.rs" class="level2">
+<h2 class="anchored" data-anchor-id="the-actor-input-from-container-runnersrcinput.rs">The actor input, from <code>container-runner/src/input.rs</code></h2>
+<p>Four optional fields, CBOR-encoded per the RivetKit convention:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 30%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>command</code></td>
+<td><code>Option&lt;Vec&lt;String&gt;&gt;</code></td>
+<td>Replaces the CLI command template entirely</td>
+</tr>
+<tr class="even">
+<td><code>args</code></td>
+<td><code>Vec&lt;String&gt;</code></td>
+<td>Appended after the command template</td>
+</tr>
+<tr class="odd">
+<td><code>env</code></td>
+<td><code>HashMap&lt;String,String&gt;</code></td>
+<td>Extra environment variables for the child</td>
+</tr>
+<tr class="even">
+<td><code>port</code></td>
+<td><code>Option&lt;u16&gt;</code></td>
+<td>The child’s local port, also exported as <code>PORT</code></td>
+</tr>
+</tbody>
+</table>
+<p>Anything omitted falls back to the CLI template, which is <code>rivet-container-runner -- &lt;command...&gt;</code>. An omitted <code>port</code> falls back to the runner’s <code>--child-port</code>.</p>
+<p>Two properties matter for a zone. The decoded input is also the actor’s persisted state, so a woken actor restores the same launch spec. Unknown fields are ignored rather than rejected, so adding a field does not break actors that wake on an older binary.</p>
+<p>So a room’s scene, its guest, and its tuning all travel in the actor input. No zone-side registry is needed.</p>
+</section>
+<section id="packaging" class="level2">
+<h2 class="anchored" data-anchor-id="packaging">Packaging</h2>
+<p><code>container-runner/Dockerfile.release</code> builds a standalone linux/amd64 <code>rivet-container-runner</code> binary, described in its own comments as the artifact users curl into their Dockerfile. Extract it with a build targeting <code>artifact</code>, and the output is one x86_64 ELF.</p>
+<p>The zone image is therefore the engine build plus that binary as the entrypoint, with the engine command after <code>--</code>. <code>godot-images</code> already publishes engine images to GHCR, so this adds an entrypoint rather than a pipeline.</p>
+</section>
+<section id="the-pinned-engine-verified" class="level2">
+<h2 class="anchored" data-anchor-id="the-pinned-engine-verified">The pinned engine, verified</h2>
+<p>The tag <code>v2026.06.27.1907-multiplayer-fabric</code> is annotated, and it resolves to commit <code>2cecde75</code>. Its <code>version.py</code> reports major 4, minor 7, patch 0, status beta.</p>
+<p><code>fabric-godot-core</code> publishes no GitHub releases, so the tag page offers source archives only. A build step is required, and <code>godot-images</code> already publishes engine images to GHCR. <code>rfd/0009</code> puts that build in the consuming repository.</p>
+<p>Modules present at that tag, checked against the tree:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 61%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sandbox</code></td>
+<td>libriscv guest execution</td>
+</tr>
+<tr class="even">
+<td><code>http3</code></td>
+<td>WebTransport over QUIC</td>
+</tr>
+<tr class="odd">
+<td><code>multiplayer_fabric</code>, <code>multiplayer_fabric_asset</code></td>
+<td>The zone and its assets</td>
+</tr>
+<tr class="even">
+<td><code>xr_grid</code></td>
+<td>Presence, head and hand orbs</td>
+</tr>
+<tr class="odd">
+<td><code>openxr</code>, <code>webxr</code></td>
+<td>XR on desktop and on web</td>
+</tr>
+<tr class="even">
+<td><code>cassie</code>, <code>speech</code>, <code>tinyexr</code></td>
+<td>Authoring, voice, HDR textures</td>
+</tr>
+</tbody>
+</table>
+<p>One build therefore serves three roles: the client, the zone server, and the guest host. No h2o, no Janet, and no separate guest runtime.</p>
+<p>No <code>resonance</code> module appears at this tag. <code>rfd/0022</code> describes spatial audio through a patched Resonance Audio, and whether that arrives as core changes rather than a module is unverified. Check it before you rely on spatial audio.</p>
+</section>
+<section id="a-second-child-kind-kept-in-reserve" class="level2">
+<h2 class="anchored" data-anchor-id="a-second-child-kind-kept-in-reserve">A second child kind, kept in reserve</h2>
+<p><code>container-runner</code> hosts any process that listens on <code>PORT</code>, and the CBOR <code>command</code> field selects the binary. So a second child kind costs no architecture, only a build.</p>
+<p>The candidate is h2o with libriscv in C. Its one advantage is memory per process, because a headless Godot process is larger than a small C binary. With one process per room, that difference multiplies by the room count.</p>
+<p>Neither figure is measured here. Measure the resident size of the headless build, divide the machine’s memory by it, and compare the result to the expected room count. Build the C child only if that comparison fails.</p>
+<p><code>rfd/0095</code> found one runtime serving two unlike guest classes, and it split them with a domain ABI and Bubblewrap. Process-per-actor splits them without either mechanism.</p>
+</section>
+<section id="the-transport-settled-by-the-runners-source" class="level2">
+<h2 class="anchored" data-anchor-id="the-transport-settled-by-the-runners-source">The transport, settled by the runner’s source</h2>
+<p><code>container-runner</code> is TCP-only. Forcing HTTP/3 through it is not possible, and four facts in its source say so.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 83%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fact</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Forwards to <code>http://127.0.0.1:{child_port}</code> and the <code>ws://</code> form</td>
+<td><code>src/proxy.rs</code></td>
+</tr>
+<tr class="even">
+<td>Readiness is <code>TcpStream::connect((Ipv4Addr::LOCALHOST, child_port))</code></td>
+<td><code>src/child.rs</code></td>
+</tr>
+<tr class="odd">
+<td>“HTTP/WebSocket (arriving over Rivet’s tunnel) to the child’s local port”</td>
+<td><code>src/main.rs</code></td>
+</tr>
+<tr class="even">
+<td>No <code>udp</code>, <code>quic</code>, <code>http3</code>, or <code>h2</code> appears in the runner source</td>
+<td>all four files</td>
+</tr>
+</tbody>
+</table>
+<p>A UDP-only child never reports ready, because readiness is a TCP connect. <code>TCP_NODELAY</code> also does not appear in the runner source, so Nagle is unmitigated there.</p>
+<p>Rivet’s own gateway has no QUIC yet, and WebTransport is planned rather than shipped.</p>
+<section id="two-sockets-in-one-child" class="level3">
+<h3 class="anchored" data-anchor-id="two-sockets-in-one-child">Two sockets in one child</h3>
+<p>The zone process listens twice.</p>
+<ul>
+<li>A TCP port satisfies Rivet’s contract and carries the control plane. Rivet proxies it, readiness passes, and the actor lifecycle works.</li>
+<li>A UDP port carries game traffic outside Rivet’s tunnel, with the engine’s <code>http3</code> picoquic module on it. The host maps that port.</li>
+</ul>
+<p>One process, one actor, two sockets. Rivet never touches the pose stream, so <code>rfd/0008</code>, <code>rfd/0023</code>, <code>rfd/0049</code>, <code>rfd/0058</code>, and <code>rfd/0088</code> all stand.</p>
+</section>
+<section id="what-that-shape-costs" class="level3">
+<h3 class="anchored" data-anchor-id="what-that-shape-costs">What that shape costs</h3>
+<p>Rivet’s gateway does not route the UDP port, so a client needs the host address and port. Something must publish it, and that is a zone directory. <code>rfd/0109</code> left the Uro role optional, and this design requires it.</p>
+</section>
+<section id="if-the-pose-stream-runs-on-websocket-instead" class="level3">
+<h3 class="anchored" data-anchor-id="if-the-pose-stream-runs-on-websocket-instead">If the pose stream runs on WebSocket instead</h3>
+<p>That is workable and worse. Three mitigations are mandatory: set <code>TCP_NODELAY</code> on the child socket, send one latest-pose frame per tick, and keep the frame at the 100 bytes of <code>rfd/0053</code>.</p>
+<p>It stays wrong under loss. Head-of-line blocking costs about one round trip, which at a 50 ms RTT delays roughly three ticks and then delivers stale poses. WebSocket also gives no way to discard queued frames, so <code>rfd/0049</code>’s unreliable state channel has no transport.</p>
+</section>
+<section id="measure-before-building" class="level3">
+<h3 class="anchored" data-anchor-id="measure-before-building">Measure before building</h3>
+<p><code>container-runner/examples/e2e-test/load-test.mjs</code> opens WebSockets through the gateway, pings, and reports <code>p50</code>, <code>p95</code>, <code>p99</code>, and <code>max</code> in milliseconds. Run it against a Godot child and compare <code>p95</code> to the 15.6 ms tick.</p>
+<p><code>rfd/0096</code> states the rule this follows. Ranking transports from documentation produces wrong answers.</p>
+</section>
+</section>
+<section id="cost-and-risk" class="level2">
+<h2 class="anchored" data-anchor-id="cost-and-risk">Cost and risk</h2>
+<p>One OS process per room is heavier than one BEAM process per room. The room count decides whether that matters, and this record does not know it.</p>
+<p>Rivet adds a Rust engine to operate. That is a dependency to run, not a language to write in, because the zone is C.</p>
+<p><code>pegboard-gateway</code> and <code>pegboard-gateway2</code> both exist in the repository, so that layer changes actively. Pin a version.</p>
+</section>
+<section id="what-stays-open-from-rfd-0109" class="level2">
+<h2 class="anchored" data-anchor-id="what-stays-open-from-rfd-0109">What stays open from RFD 0109</h2>
+<p><strong>Where Elixir and Uro sit.</strong> Identity and the room directory still need a home. Rivet has namespaces and its own API, and neither replaces an identity service. <code>rfd/0090</code> is Uro’s live release shape.</p>
+<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> is still the only lever on the 256 kbps figure of <code>rfd/0100</code>.</p>
+<p><strong>Server authority.</strong> A zone process that runs the simulation can be authoritative, unlike the relay of <code>rfd/0109</code>. So <code>rfd/0046</code> returns as reachable rather than ruled out.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</link>
@@ -226,7 +540,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -367,7 +681,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -540,7 +854,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -706,7 +1020,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -906,7 +1220,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -1049,7 +1363,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -1200,7 +1514,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -1394,7 +1708,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -1561,7 +1875,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -1784,7 +2098,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -1939,7 +2253,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -2098,7 +2412,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -2268,7 +2582,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -2460,7 +2774,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -2682,7 +2996,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -2769,7 +3083,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -2903,7 +3217,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -3149,7 +3463,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0091: The Gyre as a second MUD domain</title>
@@ -3215,163 +3529,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0090-uro-burrito-release/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0090: uro deploys as a Burrito-wrapped mix release, not iex -S mix</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-backend (uro) production boot shape</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>zone-backend</code>’s root <code>Dockerfile</code> boots <code>uro</code> for local <code>docker-compose</code> use via <code>ENTRYPOINT iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code> — a dev-shaped boot that seeds dummy test data on every start. <code>build-image.yml</code>’s own header said its built image is “consumed by <code>v-sekai-multiplayer-fabric/infra</code> via the <code>gateway_image</code>/<code>uro_image</code> tofu variable”; <code>rfd/0089</code> archives <code>infra</code>, so that path no longer exists either. <code>zone-backend</code> needs its own real production build, not a dev image and not a dependency on an archived repo.</p>
-<p><code>config/config.exs</code> used a <code>COMPILE_PHASE</code> environment flag (<code>Uro.Config.Helpers.get_env/2</code>) so the Docker <em>build</em> step could run <code>mix compile</code> without real secrets present: <code>iex -S mix</code> re-evaluates <code>config.exs</code> on every invocation, so the container’s actual boot command re-ran <code>mix</code> a second time with <code>COMPILE_PHASE=false</code> and real secrets in the environment. A real OTP release (<code>mix release</code>) evaluates <code>config.exs</code>/<code>prod.exs</code> once, permanently, at build time — there is no second pass at boot — so this trick does not carry over to a real release at all.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Build <code>uro</code> as a real OTP release, wrapped by <a href="https://github.com/burrito-elixir/burrito">Burrito</a> into one self-contained, statically-linked executable (musl libc, bundled ERTS), cross-compiled via Zig. <code>mix.exs</code> gains a <code>releases:</code> block targeting <code>linux_musl</code> (matching Fly’s runner and this repo’s existing Alpine-based images).</p>
-<p>Every deploy-time secret or URL moves to <code>config/runtime.exs</code> (<code>if config_env() == :prod do ... end</code>), which a real release genuinely re-evaluates every time it starts. <code>config.exs</code>/<code>prod.exs</code> keep only what is safe to bake in at compile time. The <code>COMPILE_PHASE</code> flag and <code>Uro.Config.Helpers</code> are deleted — confirmed unused anywhere outside <code>config/*.exs</code> before removal.</p>
-<p><code>lib/uro/release.ex</code> adds <code>Uro.Release.migrate/0</code>: a compiled release has no <code>mix</code> tasks at runtime, so this runs <code>Ecto.Migrator</code> directly against <code>Uro.Repo.Migration</code> (<code>gateway_admin</code>, DDL-capable) — never <code>Uro.Repo</code> (<code>gateway_writer</code>, DML only), matching <code>AGENTS.md</code>’s documented role separation. <code>docker/uro/fly-start.sh</code> is the script <code>AGENTS.md</code> has described for a while (migrate as <code>gateway_admin</code>, then serve as <code>gateway_writer</code>) but which never actually existed in this repo until now.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><code>v-sekai-multiplayer-fabric/zone-backend</code> PR #52.</li>
-<li><code>config/runtime.exs</code>, <code>lib/uro/release.ex</code>, <code>docker/uro/Dockerfile</code>, <code>docker/uro/fly-start.sh</code>.</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0089-flyio-over-podman-quadlets</code>: the deployment target this release ships to.</li>
-<li><code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>: Burrito’s prior use elsewhere in this org.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p><code>zone-backend</code>’s root <code>Dockerfile</code> (used for local <code>docker-compose</code>) boots <code>uro</code> via <code>iex -S mix do ecto.create, ecto.migrate, run priv/repo/test_seeds.exs, phx.server</code>. This is dev-shaped on purpose — seeding <code>test_seeds.exs</code> on every boot is fine for local development — but <code>build-image.yml</code> reused the same root <code>Dockerfile</code> for its <code>ghcr.io</code> image, described as “consumed by <code>v-sekai-multiplayer-fabric/infra</code> via the <code>gateway_image</code>/<code>uro_image</code> tofu variable.” <code>rfd/0089</code> archives <code>infra</code>. Even without that, using a test-seeding dev image for a real production deploy is a real correctness problem, not a stopgap worth keeping.</p>
-<p><code>config.exs</code>’s <code>COMPILE_PHASE</code> flag existed to let <code>mix compile</code> (the Docker build step) succeed with no real secrets present, by returning a placeholder value instead of raising. This only works because <code>iex -S mix ...</code> (not a compiled release) re-evaluates <code>config.exs</code> fresh at container start, this time with <code>COMPILE_PHASE=false</code> and real Fly secrets in the environment. A real <code>mix release</code> does not have this second evaluation: <code>config.exs</code> and <code>prod.exs</code> are baked in once, at build time, forever. Deploying an actual OTP release needed a different mechanism for secrets entirely.</p>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered options</h2>
-<ol type="1">
-<li><strong>Keep the <code>iex -S mix</code> boot shape for production</strong>, and rely on a different image build for the archived <code>infra</code> consumer. Rejected with <code>infra</code>’s archival — nothing consumes that image path anymore, and the seeded test data on every boot was never appropriate for a real deploy regardless.</li>
-<li><strong>A real <code>mix release</code>, config moved to <code>config/runtime.exs</code>, Burrito wrapping it into a single static executable.</strong> Standard Phoenix production pattern (<code>runtime.exs</code>) plus this org’s own established Burrito precedent (<code>rfd/0065</code>).</li>
-<li><strong>A real <code>mix release</code> without Burrito</strong>, shipped as a normal <code>_build/prod/rel/uro</code> directory inside a slim Erlang-installed runtime image. Avoids the Zig/Burrito build dependency, but the runtime image then needs a matching Erlang/OTP install instead of just CA certs, and this org already has a working Burrito toolchain and precedent from <code>fabric-platform-central</code>.</li>
-</ol>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
-<p>Chosen: <strong>option 2.</strong> <code>mix.exs</code> gains a <code>releases:</code> block:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode elixir code-with-copy"><code class="sourceCode elixir"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">defp</span> releases <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">do</span></span>
-<span id="cb1-2">  <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">[</span></span>
-<span id="cb1-3">    <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">uro:</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">[</span></span>
-<span id="cb1-4">      <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">steps:</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">[</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">:assemble</span>, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&amp;</span><span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">Burrito</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>wrap<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">]</span>,</span>
-<span id="cb1-5">      <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">burrito:</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">[</span></span>
-<span id="cb1-6">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">targets:</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">[</span></span>
-<span id="cb1-7">          <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">linux_musl:</span> <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">[</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">os:</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">:linux</span>, <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">cpu:</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">:x86_64</span>, <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">libc:</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">:musl</span><span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">]</span></span>
-<span id="cb1-8">        <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">]</span></span>
-<span id="cb1-9">      <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">]</span></span>
-<span id="cb1-10">    <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">]</span></span>
-<span id="cb1-11">  <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">]</span></span>
-<span id="cb1-12"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">end</span></span></code></pre></div></div>
-<p><code>linux_musl</code> matches Fly’s own runner and this repo’s existing Alpine-based images, avoiding a glibc/musl mismatch between the build and run stages.</p>
-<p><code>config/runtime.exs</code> now holds everything that previously depended on <code>Helpers.get_env</code>/<code>COMPILE_PHASE</code>: <code>URL</code>, <code>ROOT_ORIGIN</code>, <code>FRONTEND_URL</code>, both <code>Repo</code>s’ connection config and CockroachDB mTLS SSL options, <code>Uro.Endpoint</code> (port, secret key base, HTTPS options), <code>cors_plug</code>’s origin, <code>joken</code>’s signer, <code>Turnstile</code>’s secret, <code>pow_assent</code>’s OAuth2 provider list, the mailer, <code>ex_aws</code>/S3 config, OpenTelemetry’s endpoint, and <code>aria_storage</code>’s bucket/DB path — all gated under <code>if config_env() == :prod do</code>, so <code>dev.exs</code>/<code>test.exs</code> (which already define their own complete, static <code>Uro.Repo</code> config) are unaffected. <code>config.exs</code>/<code>prod.exs</code> keep only what is genuinely safe to bake in at compile time: <code>ecto_repos</code>, <code>hammer</code>, logger format, <code>pow</code>’s static config, and similar.</p>
-<p><code>Uro.Config.Helpers</code> (the <code>COMPILE_PHASE</code> module) is deleted — confirmed via <code>grep -rln "Uro\.Config\.Helpers\|compile_phase" lib/</code> that nothing outside <code>config/*.exs</code> referenced it.</p>
-<p><code>lib/uro/release.ex</code> adds <code>Uro.Release.migrate/0</code>, run via the release’s own <code>eval</code> command (<code>bin/uro eval "Uro.Release.migrate()"</code>), since a compiled release has no <code>mix</code> tasks at runtime — <code>mix ecto.migrate</code> does not exist inside it. This runs <code>Ecto.Migrator.with_repo/2</code> against <code>Uro.Repo.Migration</code> only, matching <code>AGENTS.md</code>’s documented DDL/DML role split.</p>
-<p><code>docker/uro/Dockerfile</code> is a real two-stage build: a build stage (Elixir/Alpine, plus <code>zig</code>, <code>cmake</code>, <code>ninja-build</code>, and the <code>riscv-none-elf-gcc</code> toolchain <code>.github/workflows/casync-interop.yml</code> already installs, for <code>WeftWarpBurrito.SandboxNif</code>’s <code>c_src</code> build) running <code>mix release uro</code>, and a runtime stage that is just <code>alpine:3.20</code> plus <code>ca-certificates</code> — no Elixir/Erlang install at all, since Burrito’s output is fully static. <code>docker/uro/fly-start.sh</code> runs <code>Uro.Release.migrate/0</code>, then <code>exec</code>s <code>start</code> — the script <code>AGENTS.md</code> has described for a while but which never actually existed in this repo.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: a real production boot path exists that does not depend on the now-archived <code>infra</code> repo, does not seed test data on every start, and matches this org’s own established Burrito precedent (<code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>). The runtime image needs nothing but the static binary and CA certs (outbound TLS to CockroachDB, S3-compatible storage, and OTLP all need real CA verification), which is a smaller, simpler runtime surface than an Erlang-installed image.</p>
-<p>Bad: the build stage is heavier than before — Zig, CMake, Ninja, and a RISC-V cross-compiler, on top of what <code>mix compile</code> already needed per <code>zone-backend</code>’s own <code>docs/decisions/0017</code>. <code>config/runtime.exs</code> is a real, sizeable file (over 150 lines) that concentrates every deploy-time secret in one place; a mistake there is a real production config bug, not a compile error.</p>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>Verified locally before this record, not assumed: <code>MIX_ENV=prod mix release uro</code> (with the <code>riscv-none-elf-gcc</code> toolchain on <code>PATH</code>) produces <code>burrito_out/uro_linux_musl</code>, confirmed via <code>file</code> to be a real <code>ELF 64-bit LSB executable, x86-64 ... statically linked, stripped</code>, about 20MB. Running it with placeholder prod secrets (<code>URL</code>, <code>ROOT_ORIGIN</code>, <code>DATABASE_URL</code>, <code>PHOENIX_KEY_BASE</code>, etc. set) via both <code>start</code> and <code>eval</code> genuinely boots <code>Uro.Application</code>: real <code>Postgrex</code> connection attempts to the given (unreachable, in this local test) <code>DATABASE_URL</code>, and a real <code>[info] Running Uro.Endpoint with Bandit 1.6.11 at 0.0.0.0:&lt;port&gt; (http)</code> log line confirming the HTTP listener actually started. Not yet done: an actual Fly deploy of this image (<code>zone-backend</code> PR #52 is open, not yet merged as of this record).</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0090-uro-burrito-release/</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:56 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:03:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

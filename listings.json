@@ -17,6 +17,7 @@
   {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0110-h2o-libriscv-as-a-rivet-actor/index.html",
       "/rfd/0109-two-tiers-fdb-and-the-cost-floor/index.html",
       "/rfd/0108-local-cabi-guests-and-in-tick-fanout/index.html",
       "/rfd/0107-janet-scripting-over-a-c-taskweft-core/index.html",

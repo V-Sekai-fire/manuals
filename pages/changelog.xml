@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 08 Aug 2026 06:43:51 GMT</lastBuildDate>
+<lastBuildDate>Sat, 08 Aug 2026 07:02:54 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</link>
@@ -85,6 +85,15 @@
 <p><code>taskweft</code> stays an Elixir NIF, which <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already is, so Janet and the C <code>libtaskweft</code> are dropped.</p>
 <p><code>rfd/0107</code> and <code>rfd/0108</code> are marked abandoned and carry a pointer to this record. Their measurements stay valid, and the back-pressure rule of <code>rfd/0108</code> still applies to any relay.</p>
 <p>Five questions stay open on record: player-hosted zones against server-hosted, interest management as the only lever on the 256 kbps figure, server authority that a relay cannot give, whether the Godot WebTransport client speaks to a Phoenix endpoint, and how many FoundationDB processes run and where.</p>
+</section>
+<section id="the-zone-becomes-one-pinned-godot-build-hosted-as-a-rivet-actor" class="level2">
+<h2 class="anchored" data-anchor-id="the-zone-becomes-one-pinned-godot-build-hosted-as-a-rivet-actor">The zone becomes one pinned Godot build, hosted as a Rivet actor</h2>
+<p><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/">RFD 0110</a> makes a zone a child process under Rivet’s <code>container-runner</code>, one process per room. The child is the engine at tag <code>v2026.06.27.1907-multiplayer-fabric</code>, which resolves to commit <code>2cecde75</code> and reports Godot 4.7.0 beta. That tag’s <code>modules/</code> already carries <code>sandbox</code> for libriscv guests, <code>http3</code> for WebTransport, <code>multiplayer_fabric</code> and <code>multiplayer_fabric_asset</code> for the zone, <code>xr_grid</code> for presence, and <code>openxr</code> with <code>webxr</code> for XR. So one build is the client, the zone server, and the guest host.</p>
+<p>A C child of h2o plus libriscv stays possible and is not built. Its only advantage is memory per process, and that figure is unmeasured. No <code>resonance</code> module appears at the tag, so <code>rfd/0022</code>’s spatial audio needs checking before anyone relies on it.</p>
+<p>One process per room deletes work rather than adding it. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> become unnecessary, because each exists only to hold many zones in one process. <code>rfd/0080</code> narrows to one room’s entities. A guest fault kills one room rather than every room, which is what <code>rfd/0095</code> wanted from Bubblewrap.</p>
+<p>The actor input is four optional CBOR fields, read from <code>container-runner/src/input.rs</code>: <code>command</code>, <code>args</code>, <code>env</code>, and <code>port</code>. The decoded input is also the actor’s persisted state, so a woken actor restores the same launch spec, and unknown fields are ignored rather than rejected. A room’s scene and its tuning therefore travel in the actor input, and no zone-side registry is needed.</p>
+<p>The transport is settled by the runner’s source rather than by its documentation. <code>container-runner</code> is TCP-only. <code>src/proxy.rs</code> forwards to <code>http://127.0.0.1:{child_port}</code> and the <code>ws://</code> form, <code>src/child.rs</code> checks readiness with <code>TcpStream::connect((Ipv4Addr::LOCALHOST, child_port))</code>, and no <code>udp</code>, <code>quic</code>, <code>http3</code>, or <code>h2</code> appears in the runner source. <code>TCP_NODELAY</code> does not appear either, so Nagle is unmitigated there.</p>
+<p>The answer is two sockets in one child. A TCP port satisfies Rivet’s contract and carries the control plane. A UDP port carries game traffic outside Rivet’s tunnel, with the engine’s <code>http3</code> picoquic module on it. Rivet never touches the pose stream, so <code>rfd/0008</code>, <code>rfd/0023</code>, <code>rfd/0049</code>, <code>rfd/0058</code>, and <code>rfd/0088</code> all stand. The cost is that Rivet’s gateway does not route the UDP port, so a zone directory must publish the host and port, which makes the Uro role required rather than optional.</p>
 
 
 </section>
@@ -92,7 +101,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -140,7 +149,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -182,7 +191,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -221,7 +230,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -297,7 +306,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -357,7 +366,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -421,7 +430,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -472,7 +481,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -560,7 +569,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -591,7 +600,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sat, 08 Aug 2026 06:43:51 GMT</pubDate>
+  <pubDate>Sat, 08 Aug 2026 07:02:54 GMT</pubDate>
 </item>
 </channel>
 </rss>
