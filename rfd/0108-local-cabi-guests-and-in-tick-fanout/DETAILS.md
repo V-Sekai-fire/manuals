@@ -3,12 +3,12 @@
 Every number comes from `rfd/0097` and `rfd/0096`. One ZoneTick at
 64 Hz is 15.6 ms.
 
-| Path                                  | Median      | Fraction of one tick |
-| ------------------------------------- | ----------- | -------------------- |
-| FDB watch fire, publish to subscriber | 12214.3 us  | 78 percent           |
-| FDB commit, one publish               | 3552.9 us   | 23 percent           |
-| FDB versionstamp log append           | 2509.5 us   | 16 percent           |
-| `AF_UNIX` round trip, from `rfd/0096` | 8.9 us      | 0.06 percent         |
+| Path                                  | Median     | Fraction of one tick |
+| ------------------------------------- | ---------- | -------------------- |
+| FDB watch fire, publish to subscriber | 12214.3 us | 78 percent           |
+| FDB commit, one publish               | 3552.9 us  | 23 percent           |
+| FDB versionstamp log append           | 2509.5 us  | 16 percent           |
+| `AF_UNIX` round trip, from `rfd/0096` | 8.9 us     | 0.06 percent         |
 
 A local C ABI call removes the 8.9 us hop as well, because the guest
 shares the address space.
@@ -74,23 +74,26 @@ UGC loop therefore needs a mechanism this record does not supply.
 
 ## What this resolves in RFD 0107
 
-Two of the four open questions close:
+Two of the four open questions close.
 
-- **Which part drives the `libfdb_c` callbacks.** The tick owns them,
-  not h2o's ingress loop. The callback chain of `rfd/0073` moves with
-  the tick, and the durable append runs off-tick.
-- **Where the guest boundary sits.** In-process, over the C ABI, for
-  simulation guests.
+The tick drives the `libfdb_c` callbacks, and h2o's ingress loop does
+not. The callback chain of `rfd/0073` moves with the tick, and the
+durable append runs off-tick.
 
-Two stay open, and one arrives:
+The guest boundary sits in-process, over the C ABI, for simulation
+guests.
 
-- **Where Elixir and `zone-backend` sit.** Unchanged by this record.
-- **Which part terminates a WebTransport session.** This record binds a
-  subscriber to the loop that owns its connection. `rfd/0097` states
-  that the zone server holds subscriber connections through picoquic
-  and WebTransport, and `rfd/0088` chose picoquic over h2o's own QUIC.
-  So the owning loop is h2o's thread for HTTP and picoquic's loop for
-  WebTransport. Whether those unify is the open question, and the
-  answer decides how many cross-loop wakeups a tick needs.
-- **How a UGC guest runs.** Local mode does not sandbox, so the UGC
-  loop needs its own record.
+Two questions stay open, and one arrives.
+
+Where Elixir and `zone-backend` sit is unchanged by this record.
+
+Which part terminates a WebTransport session stays open, and it now
+matters more. This record binds a subscriber to the loop that owns its
+connection. `rfd/0097` states that the zone server holds subscriber
+connections through picoquic and WebTransport, and `rfd/0088` chose
+picoquic over h2o's own QUIC. So the owning loop is h2o's thread for
+HTTP and picoquic's loop for WebTransport. Whether those unify decides
+how many cross-loop wakeups a tick needs.
+
+How a UGC guest runs is the new question. Local mode does not sandbox,
+so the UGC loop needs its own record.
