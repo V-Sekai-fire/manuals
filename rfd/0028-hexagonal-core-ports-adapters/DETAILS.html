@@ -293,10 +293,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision drivers</a></li>
   <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision outcome</a>
   <ul class="collapse">
-  <li><a href="#core-dependency-free-domain-logic" id="toc-core-dependency-free-domain-logic" class="nav-link" data-scroll-target="#core-dependency-free-domain-logic">core/ — dependency-free domain logic</a></li>
-  <li><a href="#ports-interface-contracts-labelled-by-direction" id="toc-ports-interface-contracts-labelled-by-direction" class="nav-link" data-scroll-target="#ports-interface-contracts-labelled-by-direction">ports/ — interface contracts, labelled by direction</a></li>
-  <li><a href="#adapters-concrete-io-at-the-edges" id="toc-adapters-concrete-io-at-the-edges" class="nav-link" data-scroll-target="#adapters-concrete-io-at-the-edges">adapters/ — concrete I/O at the edges</a></li>
-  <li><a href="#cluster-composition-wiring-ports-across-the-seam" id="toc-cluster-composition-wiring-ports-across-the-seam" class="nav-link" data-scroll-target="#cluster-composition-wiring-ports-across-the-seam">Cluster composition — wiring ports across the seam</a></li>
+  <li><a href="#entities-the-objects-and-the-interactors-that-act-on-them" id="toc-entities-the-objects-and-the-interactors-that-act-on-them" class="nav-link" data-scroll-target="#entities-the-objects-and-the-interactors-that-act-on-them">entities/ — the objects, and the interactors that act on them</a></li>
+  <li><a href="#repositories-interfaces-to-the-entities" id="toc-repositories-interfaces-to-the-entities" class="nav-link" data-scroll-target="#repositories-interfaces-to-the-entities">repositories/ — interfaces to the entities</a></li>
+  <li><a href="#datasources-the-implementations-outside-the-interactor" id="toc-datasources-the-implementations-outside-the-interactor" class="nav-link" data-scroll-target="#datasources-the-implementations-outside-the-interactor">datasources/ — the implementations, outside the interactor</a></li>
+  <li><a href="#the-transport-layer-and-composition-across-the-seam" id="toc-the-transport-layer-and-composition-across-the-seam" class="nav-link" data-scroll-target="#the-transport-layer-and-composition-across-the-seam">The transport layer, and composition across the seam</a></li>
   </ul></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
   <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More information</a></li>
@@ -318,50 +318,47 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
 <ul>
 <li>Real-time and pipeline paths cross process and language boundaries with no shared object model.</li>
-<li>Hardware, OS, GPU, network, and engine concerns have to stay out of the domain logic, or that logic becomes untestable away from the live system.</li>
-<li>CI runs the domain logic against recorded fixtures, without the device or the runtime.</li>
+<li>Hardware, OS, GPU, network, and engine concerns have to stay out of the entities and the interactors, or they become untestable away from the live system.</li>
+<li>CI runs the interactors against recorded data, without the device or the runtime.</li>
 <li>One computed result often feeds several outputs from a single pass.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision outcome</h2>
-<p>Each component is a hexagon with a uniform <code>core/</code> + <code>ports/</code> + <code>adapters/</code> layout, and components compose into a cluster by wiring ports across the boundary.</p>
-<section id="core-dependency-free-domain-logic" class="level3">
-<h3 class="anchored" data-anchor-id="core-dependency-free-domain-logic">core/ — dependency-free domain logic</h3>
-<p><code>core/</code> holds the component’s domain logic and nothing else: it opens no socket, reads no device, and links no framework. It carries its own <code>core/spec/</code> of tests that run in isolation against fixtures. A transport never reaches into the core.</p>
+<p>Each component takes a uniform <code>entities/</code> + <code>repositories/</code> + <code>datasources/</code> layout, in the Netflix formulation of the pattern. Components compose into a service, as RFD 0111 defines a service.</p>
+<section id="entities-the-objects-and-the-interactors-that-act-on-them" class="level3">
+<h3 class="anchored" data-anchor-id="entities-the-objects-and-the-interactors-that-act-on-them">entities/ — the objects, and the interactors that act on them</h3>
+<p>An entity is an object the component works on, and it knows nothing about where it is stored. An interactor performs the actions on entities. Together they open no socket, read no device, and link no framework. They carry their own <code>entities/spec/</code> of tests that run in isolation against recorded data. A transport layer never reaches inside them.</p>
 </section>
-<section id="ports-interface-contracts-labelled-by-direction" class="level3">
-<h3 class="anchored" data-anchor-id="ports-interface-contracts-labelled-by-direction">ports/ — interface contracts, labelled by direction</h3>
-<p>A port is a narrow interface the core defines and an adapter implements. Each port is labelled by its side of the hexagon and by its data direction:</p>
-<ul>
-<li>driving (primary) ports carry input the outside world pushes into the core;</li>
-<li>driven (secondary) ports carry the core’s output back out to the outside world;</li>
-<li>by data flow, a <code>*_source</code> port reads data in and a <code>*_sink</code> port writes data out.</li>
-</ul>
-<p>A port stays at the lowest common denominator every binding language can implement: a C-ABI struct of function pointers where the cluster crosses languages, a language-native interface where it does not. One header then binds C, C++, and Python adapters alike.</p>
+<section id="repositories-interfaces-to-the-entities" class="level3">
+<h3 class="anchored" data-anchor-id="repositories-interfaces-to-the-entities">repositories/ — interfaces to the entities</h3>
+<p>A repository is an interface that gets, creates, and changes entities. The interactor declares it and a data source implements it.</p>
+<p>A repository stays at the lowest common denominator every binding language can implement: a C-ABI struct of function pointers where a service crosses languages, a language-native interface where it does not. One header then binds C, C++, and Python data sources alike.</p>
 </section>
-<section id="adapters-concrete-io-at-the-edges" class="level3">
-<h3 class="anchored" data-anchor-id="adapters-concrete-io-at-the-edges">adapters/ — concrete I/O at the edges</h3>
-<p>Adapters implement the ports against the real world: a serial device, a UDP socket, a recorded fixture for CI, a GPU compute host, a renderer, an engine runtime. One port admits many adapters, so a single core output fans out to several destinations from one pass, and a recorded-fixture adapter stands in for live hardware under CI.</p>
+<section id="datasources-the-implementations-outside-the-interactor" class="level3">
+<h3 class="anchored" data-anchor-id="datasources-the-implementations-outside-the-interactor">datasources/ — the implementations, outside the interactor</h3>
+<p>A data source implements a repository against the real world: a serial device, a UDP socket, a recorded fixture for CI, a GPU compute host, a renderer, an engine runtime. One repository admits many data sources, so one pass of an interactor reaches several destinations, and a recorded fixture stands in for live hardware under CI.</p>
 </section>
-<section id="cluster-composition-wiring-ports-across-the-seam" class="level3">
-<h3 class="anchored" data-anchor-id="cluster-composition-wiring-ports-across-the-seam">Cluster composition — wiring ports across the seam</h3>
-<p>Components compose by connecting one component’s sink to another’s source. An in-process dependency links the sibling directly; a cross-process dependency meets on a wire, a network protocol the two ends share. The wire is the integration contract, so a producer in one language and a consumer in another share no code, only the message format. Each component declares its sibling wiring alongside its ports.</p>
+<section id="the-transport-layer-and-composition-across-the-seam" class="level3">
+<h3 class="anchored" data-anchor-id="the-transport-layer-and-composition-across-the-seam">The transport layer, and composition across the seam</h3>
+<p>A transport layer is the input that triggers an interactor. All dependencies point inward, so the transport layer depends on the interactor and never the reverse.</p>
+<p>Components compose when a data source of one component is the transport layer of another. An in-process dependency links the sibling directly. A cross-process dependency meets on a wire, which is a protocol the two ends share. The wire is the integration contract, so a producer in one language and a consumer in another share no code, only the message format. Each component declares its sibling wiring beside its repositories.</p>
 </section>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>A dependency-free core lets CI replay recorded fixtures through the domain logic with no device and no runtime.</li>
+<li>Entities and interactors with no dependencies let CI replay recorded data through them with no device and no runtime.</li>
 <li>The wire seam decouples languages and processes, so any component is rewritable or replaceable as long as it keeps the message contract.</li>
-<li>A new output is a new sink adapter, with no change to the core that produced the data.</li>
-<li>The driving and driven labels keep the dependency direction explicit: adapters depend on the core through ports, and the core depends on nothing.</li>
+<li>A new output is a new data source, with no change to the interactor that produced the data.</li>
+<li>All dependencies point inward, so a data source depends on the interactor through a repository, and the interactor depends on nothing.</li>
 <li>The convention costs interface boilerplate, and across a process boundary it adds a serialize and parse step the in-process link avoids. That cost buys cross-language, cross-process composition.</li>
 </ul>
 </section>
 <section id="more-information" class="level2">
 <h2 class="anchored" data-anchor-id="more-information">More information</h2>
-<p>The <code>sinew-mocap</code> cluster applies the pattern end to end. Each repository (<code>driver</code>, <code>mount_drift</code>, <code>solve</code>, <code>viewer</code>, <code>vr_bridge</code>) carries the <code>core/</code> + <code>ports/</code> + <code>adapters/</code> triad; ports are header-only C struct vtables labelled driving or driven and named <code>*_source.h</code> / <code>*_sink.h</code> (FrameSource, TrackerSink, PoseSink, HmdSource); adapters bind the serial dongle, a recorded <code>.rawlog</code>, UDP, polyscope, SteamVR, OpenVR, and Vulkan; and the repositories compose over the <code>/sinew</code> OSC wire (UDP 39539), with each <code>ports/sibling-repos.txt</code> declaring the wiring. The synthetic-data branch in <code>sinew-vrdance/pose_distill</code> applies the same triad in Python: core geometry and label cleaning, ports for the teacher pose model, renderer, and dataset sink, and adapters for the model, the Godot renderer, and the COCO sink.</p>
+<p>The <code>sinew-mocap</code> components apply the pattern end to end. Each git repository (<code>driver</code>, <code>mount_drift</code>, <code>solve</code>, <code>viewer</code>, <code>vr_bridge</code>) carries the triad. The interfaces are header-only C struct vtables (FrameSource, TrackerSink, PoseSink, HmdSource). The data sources bind the serial dongle, a recorded <code>.rawlog</code>, UDP, polyscope, SteamVR, OpenVR, and Vulkan. The components compose over the <code>/sinew</code> OSC wire (UDP 39539), and each <code>sibling-repos.txt</code> declares the wiring. The synthetic-data branch in <code>sinew-vrdance/pose_distill</code> applies the same triad in Python: geometry and label cleaning inside, interfaces for the teacher pose model, the renderer, and the dataset, and data sources for the model, the Godot renderer, and the COCO output.</p>
+<p>Those files still carry the older names on disk, and the <code>*_source.h</code> / <code>*_sink.h</code> spelling with them. RFD 0111 holds the rename list.</p>
 
 
 </section>

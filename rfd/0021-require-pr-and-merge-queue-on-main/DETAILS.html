@@ -373,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Block branch deletion and non-fast-forward pushes.</li>
 <li>Require a pull request, with <code>0</code> required approvals (review is allowed, not mandated).</li>
-<li>Require status checks <code>prek</code> and <code>tropes</code>, with <code>strict_required_status_checks_policy</code> set to <code>true</code>, so a PR whose branch is behind <code>main</code> updates and re-runs its checks before it merges.</li>
+<li>Require status check <code>prek</code>, with <code>strict_required_status_checks_policy</code> set to <code>true</code>, so a PR whose branch is behind <code>main</code> updates and re-runs its checks before it merges.</li>
 </ul>
 <p>Alongside the ruleset, the repository sets <code>delete_branch_on_merge</code>, so a merged PR’s source branch is removed automatically.</p>
 <section id="why-not-a-merge-queue" class="level3">

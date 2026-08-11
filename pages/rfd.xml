@@ -10,7 +10,408 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 11 Aug 2026 17:39:40 GMT</lastBuildDate>
+<lastBuildDate>Tue, 11 Aug 2026 19:48:09 GMT</lastBuildDate>
+<item>
+  <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0111: Convert the deployment words to the hexagon vocabulary</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>This stack names one component twice. RFD 0028 names its structure. A second set of words names its deployment: plane, edge plane, and domain. A reader must hold both sets and map between them. The second set has no RFD. <code>lib/weft.ex</code> defines it, and more than ten READMEs copy the definition. The two sets also give one word two meanings, for domain, for edge, and for port. ASD-STE100 permits one meaning for one word.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Retire plane, edge plane, and domain. The Netflix formulation supplies the replacement for each one.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 22%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>retired</th>
+<th>replacement</th>
+<th>the meaning that carries over</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>plane</td>
+<td>interactor</td>
+<td>a process that holds entities and actions</td>
+</tr>
+<tr class="even">
+<td>edge plane</td>
+<td>transport layer</td>
+<td>the input that triggers an interactor</td>
+</tr>
+<tr class="odd">
+<td>domain</td>
+<td>service</td>
+<td>the set that shares a ring, and a machine</td>
+</tr>
+<tr class="even">
+<td>store plane</td>
+<td>data source</td>
+<td>the implementation behind a repository</td>
+</tr>
+</tbody>
+</table>
+<p>The rules do not change with the words. An interactor opens no listening socket. A transport layer holds no authority, runs no simulation, and keeps no durable state. A service is the set of interactors that share a ring, because a ring is shared memory and forces co-location.</p>
+<p>“Control plane” and “data plane” stay. They come from networking, they name a class of traffic, and neither names a process.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Netflix, “Ready for changes with Hexagonal Architecture”: <a href="https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749" class="uri">https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749</a></li>
+<li>Cockburn, the origin of the pattern: <a href="https://alistair.cockburn.us/hexagonal-architecture" class="uri">https://alistair.cockburn.us/hexagonal-architecture</a></li>
+<li>RFD 0028, amended by this RFD. <code>lib/weft.ex</code>, the <code>Weft</code> moduledoc.</li>
+<li>The term table, the collisions, and the rename list: <code>DETAILS.md</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>RFD 0028 made every component a hexagon with a <code>core/</code> + <code>ports/</code> + <code>adapters/</code> layout. It took the pattern from Cockburn and added four words that Cockburn does not use: core, domain logic, edges, and the <code>*_source</code> / <code>*_sink</code> pair.</p>
+<p>A second vocabulary grew later, in code rather than in an RFD. The <code>Weft</code> moduledoc in <code>fabric-weft-plane</code> defines plane, edge plane, and domain. Ten or more READMEs repeat those definitions. <code>fabric-zone-domain</code> and <code>fabric-behaviour-domain</code> carry the same sentence word for word.</p>
+<p><code>fabric-harness</code> states the risk in its own README: a decision written twice drifts, and the stale copy still reads as authoritative. <code>Weft.VocabularyTest</code> exists to catch that. It reads the files of one git repository only, and it finds only retired words, so a live word with two meanings is invisible to it.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision drivers</h2>
+<ul>
+<li>ASD-STE100 permits one meaning for one word. RFD 0000 applies STE to all prose here.</li>
+<li><code>Weft</code> states the same rule, and applied it once already. Khronos CATSG says “entity” for the controlling human or AI. weft says “controller”, because entity already names the simulated unit.</li>
+<li>Cockburn writes about the inside of one component. He gives no word for a process or a machine. Netflix writes about the same inside, in the microservice framing, and gives nouns this stack can use.</li>
+<li>Two names for one component cost more than the deployment words earn. A reader of <code>fabric-authority-plane</code> has to learn that a plane is a process, that the process holds a tick, and that the tick is what RFD 0028 calls the inside. One name removes two of those steps.</li>
+</ul>
+</section>
+<section id="the-netflix-terms" class="level2">
+<h2 class="anchored" data-anchor-id="the-netflix-terms">The Netflix terms</h2>
+<p>The article defines five terms. Each quotation below is from it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 87%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>term</th>
+<th>definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Entity</td>
+<td>“domain objects (e.g., a Movie or a Shooting Location) — they have no knowledge of where they’re stored”</td>
+</tr>
+<tr class="even">
+<td>Repository</td>
+<td>“interfaces to getting entities as well as creating and changing them”</td>
+</tr>
+<tr class="odd">
+<td>Interactor</td>
+<td>“classes that orchestrate and perform domain actions”</td>
+</tr>
+<tr class="even">
+<td>Data source</td>
+<td>“adapters to different storage implementations”</td>
+</tr>
+<tr class="odd">
+<td>Transport layer</td>
+<td>“can trigger an interactor to perform business logic. We treat it as an input for our system”</td>
+</tr>
+</tbody>
+</table>
+<p>The rule that holds them together is that all dependencies point inward.</p>
+</section>
+<section id="the-conversion" class="level2">
+<h2 class="anchored" data-anchor-id="the-conversion">The conversion</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 73%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>retired word</th>
+<th>replacement</th>
+<th>why the replacement fits</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>plane</td>
+<td>interactor</td>
+<td>a plane holds entities and the actions on them, and it holds no transport</td>
+</tr>
+<tr class="even">
+<td>edge plane</td>
+<td>transport layer</td>
+<td>an edge plane terminates a transport and triggers an interactor</td>
+</tr>
+<tr class="odd">
+<td>domain</td>
+<td>service</td>
+<td>the microservice is the unit that deploys, and the ring decides its members</td>
+</tr>
+<tr class="even">
+<td>store plane</td>
+<td>data source</td>
+<td>it implements repositories over FoundationDB and SQLite</td>
+</tr>
+</tbody>
+</table>
+<p>“Service” is the weakest of the four, because the Netflix article names microservices without defining one. It is the only deployment word the formulation has, and the ecosystem uses it the same way. This RFD takes it and states the local meaning: a service is the set of interactors that share a ring.</p>
+</section>
+<section id="one-name-for-one-concept" class="level2">
+<h2 class="anchored" data-anchor-id="one-name-for-one-concept">One name for one concept</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 71%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>word</th>
+<th>the one meaning</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>entity</td>
+<td>one simulated thing in a zone, with position and velocity</td>
+<td>weft</td>
+</tr>
+<tr class="even">
+<td>repository</td>
+<td>an interface that gets, creates, and changes entities</td>
+<td>Netflix</td>
+</tr>
+<tr class="odd">
+<td>interactor</td>
+<td>a process that performs actions on entities</td>
+<td>Netflix</td>
+</tr>
+<tr class="even">
+<td>data source</td>
+<td>an implementation of a repository</td>
+<td>Netflix</td>
+</tr>
+<tr class="odd">
+<td>transport layer</td>
+<td>the input that triggers an interactor</td>
+<td>Netflix</td>
+</tr>
+<tr class="even">
+<td>service</td>
+<td>the set of interactors that share a ring</td>
+<td>Netflix</td>
+</tr>
+<tr class="odd">
+<td>ring</td>
+<td>the iceoryx2 shared memory bus</td>
+<td>weft</td>
+</tr>
+<tr class="even">
+<td>port</td>
+<td>a TCP or UDP listening socket</td>
+<td>ordinary</td>
+</tr>
+<tr class="odd">
+<td>actor</td>
+<td>a runtime process with a single writer</td>
+<td>weft</td>
+</tr>
+<tr class="even">
+<td>controller</td>
+<td>the human or the AI that controls an avatar</td>
+<td>weft</td>
+</tr>
+</tbody>
+</table>
+<p>weft and Netflix agree on “entity”. Netflix says an entity does not know where it is stored. weft says an entity is the unit the data plane moves. Both keep the entity away from its storage, so one meaning covers both.</p>
+</section>
+<section id="where-the-terms-land-in-this-stack" class="level2">
+<h2 class="anchored" data-anchor-id="where-the-terms-land-in-this-stack">Where the terms land in this stack</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>the thing that exists today</th>
+<th>the word for it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>XRGridEntityPacket</code> from <code>lean-entity-packet</code></td>
+<td>entity</td>
+</tr>
+<tr class="even">
+<td><code>src/authority_tick.c</code> in <code>fabric-authority-plane</code></td>
+<td>interactor</td>
+</tr>
+<tr class="odd">
+<td>the reducer in <code>combat</code>, the roll in <code>loot</code></td>
+<td>interactor</td>
+</tr>
+<tr class="even">
+<td><code>fabric-gateway-edge</code>, <code>fabric-ingest-edge</code></td>
+<td>transport layer</td>
+</tr>
+<tr class="odd">
+<td><code>Weft.Actor.Store</code>, the store API</td>
+<td>repository</td>
+</tr>
+<tr class="even">
+<td>FoundationDB behind the SQLite VFS</td>
+<td>data source</td>
+</tr>
+<tr class="odd">
+<td><code>fanout_sink_t</code> in <code>fabric-fanout-edge</code></td>
+<td>repository</td>
+</tr>
+<tr class="even">
+<td>the WebTransport sink behind it</td>
+<td>data source</td>
+</tr>
+<tr class="odd">
+<td>a recorded fixture under CI</td>
+<td>data source</td>
+</tr>
+<tr class="even">
+<td>the members of <code>fabric-zone-domain</code></td>
+<td>one service</td>
+</tr>
+</tbody>
+</table>
+<p><code>fabric-fanout-edge</code> shows that the pattern is in the code already. Its README says that a WebTransport sink can replace the default sink, and that nothing above it changes. That is one repository with two data sources.</p>
+</section>
+<section id="the-collisions-this-resolves" class="level2">
+<h2 class="anchored" data-anchor-id="the-collisions-this-resolves">The collisions this resolves</h2>
+<p>The word “domain” had three meanings: the deployment packing, the “domain logic” of RFD 0028, and a field on the wire in RFD 0091. The first becomes “service”. The second becomes “entity” and “interactor”. The third needs its own decision, because a change on the wire is a protocol change.</p>
+<p>The word “edge” had two meanings. RFD 0028 said “concrete I/O at the edges”, and an edge plane was a process. RFD 0028 now says “outside the interactor”, and the process is a transport layer. No meaning is left to collide.</p>
+<p>The word “port” had two meanings. Netflix uses no word “port”, so the listening socket keeps it, and <code>fabric-zone-domain</code> needs no edit.</p>
+</section>
+<section id="the-collision-this-creates" class="level2">
+<h2 class="anchored" data-anchor-id="the-collision-this-creates">The collision this creates</h2>
+<p>Netflix says “repository” for an interface to entities. This project says “repository” for a git repository, in RFD 0000, RFD 0062, RFD 0063, and RFD 0064. That is a new word with two meanings, and this RFD makes it.</p>
+<p>The resolution is to write “git repository” in full every time, and to keep “repository” alone for the interface. Keeping Cockburn’s word “port” for the interface would avoid this, and it would revive the collision with the listening socket, which is in the code of every transport layer. A collision in prose costs less than a collision in code.</p>
+</section>
+<section id="what-plane-keeps" class="level2">
+<h2 class="anchored" data-anchor-id="what-plane-keeps">What “plane” keeps</h2>
+<p>“Control plane” and “data plane” stay whole. They come from networking, they name a class of traffic, and neither one names a process. <code>Weft.DataPlane</code> keeps its name. Bare “plane”, as a noun for a process, is retired.</p>
+</section>
+<section id="the-rename-list" class="level2">
+<h2 class="anchored" data-anchor-id="the-rename-list">The rename list</h2>
+<p>Fifteen git repositories carry a retired word in the name.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>now</th>
+<th>after</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fabric-authority-plane</code></td>
+<td><code>fabric-authority-interactor</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-crowd-plane</code></td>
+<td><code>fabric-crowd-interactor</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-taskweft-plane</code></td>
+<td><code>fabric-taskweft-interactor</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-motion-plane</code></td>
+<td><code>fabric-motion-interactor</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-janet-plane</code></td>
+<td><code>fabric-janet-interactor</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-tool-plane</code></td>
+<td><code>fabric-tool-interactor</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-weft-plane</code></td>
+<td><code>fabric-weft-interactor</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-store-plane</code></td>
+<td><code>fabric-store-datasource</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-gateway-edge</code></td>
+<td><code>fabric-gateway-transport</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-ingest-edge</code></td>
+<td><code>fabric-ingest-transport</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-fanout-edge</code></td>
+<td><code>fabric-fanout-transport</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-asset-edge</code></td>
+<td><code>fabric-asset-transport</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-zone-domain</code></td>
+<td><code>fabric-zone-service</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-behaviour-domain</code></td>
+<td><code>fabric-behaviour-service</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-store-domain</code></td>
+<td><code>fabric-store-service</code></td>
+</tr>
+</tbody>
+</table>
+<p>GitHub redirects a renamed git repository, so a <code>git subtree</code> remote and a Lake <code>require ... from git</code> continue to resolve. Each pin gets updated in the same pass.</p>
+<p>Three git repositories hold the RFD 0028 triad on disk: <code>loot</code>, <code>combat</code>, and <code>progression</code>. Each <code>core/</code> becomes <code>entities/</code>, each <code>ports/</code> becomes <code>repositories/</code>, and each <code>adapters/</code> becomes <code>datasources/</code>.</p>
+<p>Five git repositories carry “core” in the name: <code>lean-shared-core</code>, <code>lean-rebac-core</code>, <code>lean-combat-core</code>, <code>lean-loot-core</code>, and <code>lean-progression-core</code>. Each becomes <code>lean-*-entities</code>.</p>
+</section>
+<section id="a-gap-this-pass-found" class="level2">
+<h2 class="anchored" data-anchor-id="a-gap-this-pass-found">A gap this pass found</h2>
+<p>The <code>lean-*-core</code> READMEs state a “Hexagon layout” of <code>core/</code>, <code>ports/</code>, and <code>adapters/</code>. Those directories do not exist. Each of those git repositories holds one Lean namespace directory, such as <code>Shared</code> or <code>Rebac</code>. The documents describe a layout that no git repository has. The rename pass corrects the READMEs to the directories that are there.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>One component has one name. A reader learns one vocabulary.</li>
+<li>Each word has one meaning, and STE holds across the git repositories.</li>
+<li>The definitions leave the READMEs and live here, so the copies stop drifting.</li>
+<li><code>Weft.VocabularyTest</code> gains the retired words: plane, edge plane, domain, core, and domain logic. The test then holds this decision. The entries for “control plane” and “data plane” must not match, so the pattern needs a word boundary and a check for the preceding word.</li>
+<li>The rename touches fifteen git repository names, three directory triads, five more names, and every README that copies a definition. Every one is mechanical, and none changes a build.</li>
+<li>This RFD does not rename the <code>domain</code> field on the wire in RFD 0091. That is a protocol change and needs its own RFD.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</link>
@@ -323,7 +724,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -540,7 +941,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -681,7 +1082,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -854,7 +1255,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -1020,7 +1421,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -1220,7 +1621,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -1363,7 +1764,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -1514,7 +1915,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -1708,7 +2109,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -1875,7 +2276,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -2098,7 +2499,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -2253,7 +2654,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -2412,7 +2813,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -2582,7 +2983,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -2774,7 +3175,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -2996,7 +3397,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
@@ -3083,7 +3484,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
@@ -3217,7 +3618,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0092: ReBAC gates libriscv guest access, not five callbacks</title>
@@ -3463,73 +3864,7 @@ encoding snapshot timestamps in cache keys.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0092-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0091: The Gyre as a second MUD domain</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0091: The Gyre as a second MUD domain</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> zone-server-h2o mud/guest, mud/web</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>mud/guest/mud_guest.cpp</code> served one setting, Middleham. Middleham is a spy-thriller MUD, with gate, market, and temple rooms. It has trust and suspicion objectives. The starting room, the item list, and the objective logic were all fixed to that one world. <code>rfd/0085</code> proposes a second setting, The Gyre. <code>zone-server-h2o</code> needed a way to add it without a second server architecture.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><code>mud_boot()</code> reads a new <code>domain</code> CBOR field (<code>"middleham"</code> default, <code>"the_gyre"</code> new). <code>MiddlehamStateMachine</code> keeps its name and its existing behavior unchanged for the default domain. A <code>domain_</code> member and three guarded branches cover the new domain: the start-room pick, <code>clone_rooms()</code>, and <code>objective_complete()</code>. A new <code>gyre_room_templates()</code> backs them, with two rooms, <code>decanting_floor</code> and <code>splicers_den</code>, one exit each way, no items, and no non-player characters (NPCs). This is the smallest possible loop (look, go, look), not <code>rfd/0085</code>’s full room graph.</p>
-<p>The <code>domain</code> field threads through the same chain the <code>objective</code> field already used, ending at <code>POST /api/mud/command</code>. <code>mud/web/index.html</code> and <code>mud.js</code> get a mode selector (Middleham or The Gyre). Each mode keeps its own <code>localStorage</code> session ID, because the server reads a session’s domain only once, on that session’s first request.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Full verification log, wire-protocol detail, and open follow-up items: <code>DETAILS.md</code></li>
-<li>Source: <code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>docs/0003-the-gyre-mud-domain-and-mode-selector.md</code>. This RFD ports that file’s content here. Git history in that repo still keeps the original file.</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0085-the-gyre-mud-setting-on-the-loot-action-shell</code>: the design RFD this implements the smallest code-side loop for.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Done for the smallest loop (<code>zone-server-h2o</code> PR #5). Not verified end to end.</p>
-</section>
-<section id="wire-protocol" class="level2">
-<h2 class="anchored" data-anchor-id="wire-protocol">Wire protocol</h2>
-<p>The <code>domain</code> field flows through the same chain the <code>objective</code> field already used: <code>mud_cbor_encode_boot_config()</code>, then <code>mud_session_get_or_create()</code>, then <code>on_mud_command()</code>’s <code>POST /api/mud/command</code> handler. That handler now reads <code>domain</code> from the request body and picks a matching default objective (<code>explore_gyre</code> for The Gyre, <code>gain_watch_trust</code> for Middleham). The handler’s own prior comment already flagged an objective/domain picker as website-UI scope, not its own. This work fills that gap rather than inventing a new extension point.</p>
-</section>
-<section id="verification" class="level2">
-<h2 class="anchored" data-anchor-id="verification">Verification</h2>
-<p>Real, not assumed:</p>
-<ul>
-<li><code>mud/guest/test/gyre_smoke_test.cpp</code>: a native (non-riscv64) link of <code>mud_guest.cpp</code> that drives <code>mud_boot()</code> and <code>mud_step()</code> through the whole Gyre loop (look, go east, look). Built and run locally against QCBOR (<code>laurencelundblade/QCBOR</code>). It produces real narration text and real <code>post_room</code> transitions, and <code>objective_complete()</code> returns true after the player visits both rooms. A native Middleham boot, run the same way with the same seed <code>DIFFERENTIAL_TEST.md</code> uses, produced byte-identical “Middleham City Gate” narration to before this change. The default path did not regress.</li>
-<li>The client change (mode selector, per-domain session ID, <code>domain</code> field on the wire) went through real end-to-end tests. The team used Playwright, in both Chromium and Camoufox (a Firefox-family browser), against a throwaway local Node stub that matched the real API shape. The team did not commit that stub. The team threw it away once it confirmed the client logic was correct.</li>
-<li><code>mud/web/test/gyre.spec.ts</code> is the real, committed spec. It is Camoufox-driven, and it follows <code>mud.spec.ts</code>’s own house rule: <code>MUD_BASE_URL</code> must point at a real reachable instance, with no mock. It has not run against one yet. It stays red until a real deployment with the Gyre domain exists — the same state <code>mud.spec.ts</code> itself documented before its own first real deploy.</li>
-</ul>
-<p>The team did not verify a <code>riscv64-musl</code> and <code>libriscv</code> build and run of the changed guest code. The team’s own environment had no cross toolchain for that. The team did not attempt an FDB or H2O real build or deploy either.</p>
-</section>
-<section id="revisit-when" class="level2">
-<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
-<p>A real <code>-z</code> deploy exists with the Gyre domain reachable. At that point, run <code>gyre.spec.ts</code> for real. Also run a real riscv64 differential test, matching <code>DIFFERENTIAL_TEST.md</code>’s own Middleham precedent. Only then treat this as more than a reviewed, natively tested diff.</p>
-<p><code>rfd/0085</code>’s fuller room graph, contract catalog, and item set stay design only. Porting them past the two-room smallest loop is a separate, larger task. This RFD does not claim the team finished that larger task.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0091-the-gyre-mud-domain-and-mode-selector/</guid>
-  <pubDate>Tue, 11 Aug 2026 17:39:40 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 19:48:09 GMT</pubDate>
 </item>
 </channel>
 </rss>
