@@ -55,16 +55,21 @@ elixir scripts/create_changelog_entry.exs 20260512
 
 ## Checks
 
-Pull requests run `prek` (prettier on Markdown) and a static tropes check, and both
-must pass on a branch that is up to date with `main` before the PR merges. Run them
-locally before pushing:
+Pull requests run `prek` (prettier on Markdown), which must pass on a branch that is
+up to date with `main` before the PR merges. Run it locally before pushing:
 
 ```sh
-prek run --all-files          # prettier + tropes (scripts/check_tropes.sh)
+prek run --all-files          # prettier
 ```
 
-The tropes check enforces [tropes.fyi](https://tropes.fyi/) style: no negative
-parallelism (`not X, but/it's Y`) and no bold lead-in list items (`- **Term:** ...`).
+Prose still follows [tropes.fyi](https://tropes.fyi/) style — no negative parallelism
+(`not X, but/it's Y`), no bold lead-in list items (`- **Term:** ...`) — but it is no
+longer enforced by CI. `scripts/check_tropes.sh` remains in the repo and can be run by
+hand:
+
+```sh
+bash scripts/check_tropes.sh
+```
 
 ## Assets
 
@@ -92,8 +97,8 @@ naming-convention decision.
 - Feature decisions carry a `tier:` (`proof of concept` / `baseline` / `stretch`)
 - Changelog filenames: `YYYYMMDD-deck-log.md` inside `changelog/YYYY/`
 - Asset filenames: `YYYYMMDD_project_description_NNNN.ext` in `decisions/attachments/`, with a `CITATION.cff` entry
-- Prose follows tropes.fyi style; `prek run --all-files` must pass before pushing
+- Prose follows tropes.fyi style by hand; `prek run --all-files` must pass before pushing
 - No hardcoded absolute filesystem paths; use env vars or placeholders (e.g. `$GODOT_SRC`)
 - Do not commit `_site/` — it is build output
 - Commit style: sentence case, no `type(scope):` prefix
-- One concern per PR; PRs land through a pull request with `prek` and `tropes` green
+- One concern per PR; PRs land through a pull request with `prek` green
