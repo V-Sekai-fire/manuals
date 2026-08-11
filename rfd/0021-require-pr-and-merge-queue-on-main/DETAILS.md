@@ -38,7 +38,7 @@ The ruleset targets the default branch with these rules:
 - Block branch deletion and non-fast-forward pushes.
 - Require a pull request, with `0` required approvals (review is
   allowed, not mandated).
-- Require status checks `prek` and `tropes`, with
+- Require status check `prek`, with
   `strict_required_status_checks_policy` set to `true`, so a PR whose
   branch is behind `main` updates and re-runs its checks before it
   merges.

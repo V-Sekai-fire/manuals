@@ -151,8 +151,8 @@ dependency seams:
 - [`xr-grid`](https://github.com/v-sekai-multiplayer-fabric/xr-grid):
   the VR interaction tool.
 - [`multiplayer-fabric-manuals`](https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals):
-  these decisions, the changelog, and the reference docs, with the
-  `tropes` house-style check run as a pre-commit hook.
+  these decisions, the changelog, and the reference docs, with
+  prettier run as a pre-commit hook.
 
 ## Downsides
 
