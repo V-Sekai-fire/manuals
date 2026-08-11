@@ -13,88 +13,87 @@ across those boundaries.
 - Real-time and pipeline paths cross process and language boundaries
   with no shared object model.
 - Hardware, OS, GPU, network, and engine concerns have to stay out of
-  the domain logic, or that logic becomes untestable away from the
-  live system.
-- CI runs the domain logic against recorded fixtures, without the
-  device or the runtime.
+  the entities and the interactors, or they become untestable away
+  from the live system.
+- CI runs the interactors against recorded data, without the device or
+  the runtime.
 - One computed result often feeds several outputs from a single pass.
 
 ## Decision outcome
 
-Each component is a hexagon with a uniform `core/` + `ports/` +
-`adapters/` layout, and components compose into a cluster by wiring
-ports across the boundary.
+Each component takes a uniform `entities/` + `repositories/` +
+`datasources/` layout, in the Netflix formulation of the pattern.
+Components compose into a service, as RFD 0111 defines a service.
 
-### core/ — dependency-free domain logic
+### entities/ — the objects, and the interactors that act on them
 
-`core/` holds the component's domain logic and nothing else: it opens
-no socket, reads no device, and links no framework. It carries its own
-`core/spec/` of tests that run in isolation against fixtures. A
-transport never reaches into the core.
+An entity is an object the component works on, and it knows nothing
+about where it is stored. An interactor performs the actions on
+entities. Together they open no socket, read no device, and link no
+framework. They carry their own `entities/spec/` of tests that run in
+isolation against recorded data. A transport layer never reaches
+inside them.
 
-### ports/ — interface contracts, labelled by direction
+### repositories/ — interfaces to the entities
 
-A port is a narrow interface the core defines and an adapter
-implements. Each port is labelled by its side of the hexagon and by
-its data direction:
+A repository is an interface that gets, creates, and changes entities.
+The interactor declares it and a data source implements it.
 
-- driving (primary) ports carry input the outside world pushes into
-  the core;
-- driven (secondary) ports carry the core's output back out to the
-  outside world;
-- by data flow, a `*_source` port reads data in and a `*_sink` port
-  writes data out.
+A repository stays at the lowest common denominator every binding
+language can implement: a C-ABI struct of function pointers where a
+service crosses languages, a language-native interface where it does
+not. One header then binds C, C++, and Python data sources alike.
 
-A port stays at the lowest common denominator every binding language
-can implement: a C-ABI struct of function pointers where the cluster
-crosses languages, a language-native interface where it does not. One
-header then binds C, C++, and Python adapters alike.
+### datasources/ — the implementations, outside the interactor
 
-### adapters/ — concrete I/O at the edges
+A data source implements a repository against the real world: a serial
+device, a UDP socket, a recorded fixture for CI, a GPU compute host, a
+renderer, an engine runtime. One repository admits many data sources,
+so one pass of an interactor reaches several destinations, and a
+recorded fixture stands in for live hardware under CI.
 
-Adapters implement the ports against the real world: a serial device,
-a UDP socket, a recorded fixture for CI, a GPU compute host, a
-renderer, an engine runtime. One port admits many adapters, so a
-single core output fans out to several destinations from one pass, and
-a recorded-fixture adapter stands in for live hardware under CI.
+### The transport layer, and composition across the seam
 
-### Cluster composition — wiring ports across the seam
+A transport layer is the input that triggers an interactor. All
+dependencies point inward, so the transport layer depends on the
+interactor and never the reverse.
 
-Components compose by connecting one component's sink to another's
-source. An in-process dependency links the sibling directly; a
-cross-process dependency meets on a wire, a network protocol the two
-ends share. The wire is the integration contract, so a producer in one
-language and a consumer in another share no code, only the message
-format. Each component declares its sibling wiring alongside its
-ports.
+Components compose when a data source of one component is the
+transport layer of another. An in-process dependency links the sibling
+directly. A cross-process dependency meets on a wire, which is a
+protocol the two ends share. The wire is the integration contract, so
+a producer in one language and a consumer in another share no code,
+only the message format. Each component declares its sibling wiring
+beside its repositories.
 
 ## Consequences
 
-- A dependency-free core lets CI replay recorded fixtures through the
-  domain logic with no device and no runtime.
+- Entities and interactors with no dependencies let CI replay recorded
+  data through them with no device and no runtime.
 - The wire seam decouples languages and processes, so any component is
   rewritable or replaceable as long as it keeps the message contract.
-- A new output is a new sink adapter, with no change to the core that
-  produced the data.
-- The driving and driven labels keep the dependency direction
-  explicit: adapters depend on the core through ports, and the core
-  depends on nothing.
+- A new output is a new data source, with no change to the interactor
+  that produced the data.
+- All dependencies point inward, so a data source depends on the
+  interactor through a repository, and the interactor depends on
+  nothing.
 - The convention costs interface boilerplate, and across a process
   boundary it adds a serialize and parse step the in-process link
   avoids. That cost buys cross-language, cross-process composition.
 
 ## More information
 
-The `sinew-mocap` cluster applies the pattern end to end. Each
+The `sinew-mocap` components apply the pattern end to end. Each git
 repository (`driver`, `mount_drift`, `solve`, `viewer`, `vr_bridge`)
-carries the `core/` + `ports/` + `adapters/` triad; ports are
-header-only C struct vtables labelled driving or driven and named
-`*_source.h` / `*_sink.h` (FrameSource, TrackerSink, PoseSink,
-HmdSource); adapters bind the serial dongle, a recorded `.rawlog`,
-UDP, polyscope, SteamVR, OpenVR, and Vulkan; and the repositories
-compose over the `/sinew` OSC wire (UDP 39539), with each
-`ports/sibling-repos.txt` declaring the wiring. The synthetic-data
-branch in `sinew-vrdance/pose_distill` applies the same triad in
-Python: core geometry and label cleaning, ports for the teacher pose
-model, renderer, and dataset sink, and adapters for the model, the
-Godot renderer, and the COCO sink.
+carries the triad. The interfaces are header-only C struct vtables
+(FrameSource, TrackerSink, PoseSink, HmdSource). The data sources bind
+the serial dongle, a recorded `.rawlog`, UDP, polyscope, SteamVR,
+OpenVR, and Vulkan. The components compose over the `/sinew` OSC wire
+(UDP 39539), and each `sibling-repos.txt` declares the wiring. The
+synthetic-data branch in `sinew-vrdance/pose_distill` applies the same
+triad in Python: geometry and label cleaning inside, interfaces for the
+teacher pose model, the renderer, and the dataset, and data sources for
+the model, the Godot renderer, and the COCO output.
+
+Those files still carry the older names on disk, and the `*_source.h` /
+`*_sink.h` spelling with them. RFD 0111 holds the rename list.
