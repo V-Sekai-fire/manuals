@@ -1,21 +1,20 @@
 ## Context and problem statement
 
 The `manuals` repo had no branch protection on `main`. Changes landed
-by pushing directly or by manually merging pull requests one at a
-time, with no serialization between concurrent PRs. As the number of
-in-flight documentation PRs grows, two PRs can each pass against an
-older `main` and then conflict or break the Quarto build once both
-land. How should changes reach `main` so that every merge is
-reviewable and tested against the tip it will actually join?
+by pushing directly or by manually merging pull requests, with no
+guarantee that a PR's checks ran against the tip it was about to
+join. Two PRs can each pass against an older `main` and then conflict
+or break the Quarto build once both land. How should changes reach
+`main` so that every merge is reviewable and tested against the tip it
+will actually join?
 
 ## Decision drivers
 
 - Every change to `main` should arrive through a pull request, not a
   direct push.
-- Concurrent PRs should serialize so each is validated against the
-  latest `main`.
+- A PR should be validated against the latest `main` before it lands.
 - The team is small, so the process should add little ceremony (no
-  mandatory second reviewer).
+  mandatory second reviewer, no enqueue step).
 - The setting should be declarative and recorded, not click-ops
   folklore.
 
@@ -24,114 +23,105 @@ reviewable and tested against the tip it will actually join?
 - Leave `main` unprotected (status quo).
 - Branch protection requiring a pull request only.
 - A repository ruleset requiring a pull request plus a merge queue.
+- A repository ruleset requiring a pull request plus strict required
+  status checks.
 
 ## Decision outcome
 
-Chosen option: a repository ruleset requiring a pull request plus a
-merge queue, because it serializes merges and keeps `main` PR-only
-without forcing a second reviewer.
+Chosen option: a repository ruleset requiring a pull request plus
+strict required status checks, because it keeps `main` PR-only and
+tests each change against the current tip without forcing a second
+reviewer or an enqueue step.
 
 The ruleset targets the default branch with these rules:
 
 - Block branch deletion and non-fast-forward pushes.
 - Require a pull request, with `0` required approvals (review is
-  allowed, not mandated) and all three merge methods permitted on the
-  PR.
-- Require a merge queue using the merge commit method, `ALLGREEN`
-  grouping, up to 5 entries built and merged per batch, and a 1-minute
-  minimum wait.
+  allowed, not mandated).
+- Require status checks `prek` and `tropes`, with
+  `strict_required_status_checks_policy` set to `true`, so a PR whose
+  branch is behind `main` updates and re-runs its checks before it
+  merges.
+
+Alongside the ruleset, the repository sets `delete_branch_on_merge`, so
+a merged PR's source branch is removed automatically.
+
+### Why not a merge queue
+
+The earlier form of this decision required a `merge_queue` rule. The
+queue serializes entries and builds each against the branch tip, which
+is worth its cost on a repo with enough concurrent PRs that rebasing by
+hand becomes the bottleneck. This repo merges documentation changes a
+few at a time, and the queue charged for capacity it never used:
+
+- Every merge needs an explicit enqueue step, and the queue snapshots
+  the PR head at enqueue time, so a late fix races the merge and can be
+  orphaned.
+- `gh pr merge --delete-branch` fails while a queue is enabled
+  ("Cannot use `-d` or `--delete-branch` when merge queue enabled"), so
+  branch cleanup has to move to the repo-level
+  `delete_branch_on_merge` setting.
+- The `merge_queue` rule names no CI job on its own. A ruleset carrying
+  `pull_request` + `merge_queue` and no `required_status_checks` rule
+  merges a PR through the queue even when every check on it failed.
+  This bit two dependent repos (`taskweft/taskweft`, `taskweft/nif`).
+
+The strict `required_status_checks` policy keeps the property the queue
+was there for — a change is tested against the tip it joins — and the
+enqueue discipline goes away with it.
 
 ## Consequences
 
-- Good: `main` only changes through PRs, and the queue tests each
-  entry against the branch tip before it lands.
+- Good: `main` only changes through PRs, and a PR behind the tip
+  updates and re-runs its checks before it lands.
 - Good: the configuration is captured here and reproducible from the
   ruleset JSON.
-- Bad: solo edits now need a PR and an enqueue step.
+- Good: merging is a single `gh pr merge` with no enqueue step and no
+  dequeue-to-fix dance.
+- Bad: solo edits still need a PR.
 - Bad: with `0` required approvals, the rule enforces process but not
   review, so an unreviewed PR can still merge.
+- Bad: strict checks re-run on update, so a burst of concurrent PRs
+  costs one extra CI round per PR that falls behind, with no batching.
 
 ## Confirmation
 
 The ruleset is active (id `17352485`). `gh api
-repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets` lists it, and a
-direct push to `main` is rejected. Future PRs land via the queue.
-
-## More information
-
-Created with `gh api -X POST
-repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets`. To change the
-policy, edit the ruleset rather than protecting the branch through the
-classic branch-protection API, so the two mechanisms do not overlap.
-
-## Amendment (2026-07-12): auto-delete head branches after merge
-
-Force branch deletion after merge by enabling the repository's
-automatically delete head branches setting
-(`delete_branch_on_merge`). When a PR merges, its source branch is
-removed automatically, so merged feature branches do not pile up.
-
-Why this is a repo setting and not part of the ruleset:
-
-- The merge queue rejects deletion at merge time — `gh pr merge
---delete-branch` fails with "Cannot use `-d` or `--delete-branch`
-  when merge queue enabled", so the per-merge flag cannot do the
-  cleanup. The repo-level `delete_branch_on_merge` setting fires after
-  the queue lands the commit and is the correct mechanism.
-- It does not conflict with the ruleset's "block branch deletion"
-  rule. That rule protects the ruleset's target (the default branch)
-  from being deleted; this setting deletes the merged PR's source
-  branch. Different branches, different mechanisms.
-
-Apply it declaratively:
+repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets` lists it, a direct
+push to `main` is rejected, and the rule list carries no `merge_queue`
+entry:
 
 ```sh
-gh api -X PATCH repos/v-sekai-multiplayer-fabric/<repo> \
-  -F delete_branch_on_merge=true
+gh api repos/<org>/<repo>/rulesets/<id> --jq '.rules[].type'
 ```
 
-### Confirmation
+`gh api repos/<org>/<repo>/rulesets/<id> --jq '.rules[] | select(.type
+== "required_status_checks")'` returns the rule with the expected job
+names and `strict_required_status_checks_policy: true`, and a PR with a
+failing check cannot merge.
 
 `gh api repos/v-sekai-multiplayer-fabric/<repo> --jq
 .delete_branch_on_merge` returns `true`, and the source branch of a
 merged PR no longer exists.
 
-## Amendment (2026-07-14): the merge queue rule alone does not require CI
+## More information
 
-The `merge_queue` rule (`grouping_strategy: ALLGREEN`) only controls
-how the queue batches and lands entries. On its own it does not name
-any CI job as a precondition, so a repo with `pull_request` +
-`merge_queue` and no separate `required_status_checks` rule will merge
-a PR through the queue even if every check on it failed, or if no
-check ran at all. This was found on two dependent repos
-(`taskweft/taskweft`, `taskweft/nif`) that had the `pull_request` +
-`merge_queue` rules from this decision applied without a
-`required_status_checks` rule alongside them.
-
-Every ruleset built from this decision needs a
-`required_status_checks` rule listing the repo's actual CI job names,
-added next to the existing `pull_request` and `merge_queue` rules:
+The ruleset is edited with `gh api -X PUT
+repos/<org>/<repo>/rulesets/<id> --input ruleset.json`. The API
+replaces the whole rule array, so read the current rules first and send
+back every rule to keep, not only the one being changed:
 
 ```sh
 gh api repos/<org>/<repo>/rulesets/<id> --jq '.rules'
 ```
 
-lists the current rules; job names to require come from a real PR's
-checks:
+Job names to require come from a real PR's checks:
 
 ```sh
 gh pr checks <PR-number> --repo <org>/<repo>
 ```
 
-Then `PUT` the full rule array back with a `required_status_checks`
-entry added (the API replaces the whole rule list, so read it first
-and re-add every existing rule, not just the new one):
-
-```sh
-gh api -X PUT repos/<org>/<repo>/rulesets/<id> --input ruleset-with-checks.json
-```
-
-where the new rule takes the shape:
+and the status-check rule takes the shape:
 
 ```json
 {
@@ -143,12 +133,13 @@ where the new rule takes the shape:
 }
 ```
 
-This repo's own ruleset (id `17352485`) already carries a
-`required_status_checks` rule for `prek` and `tropes` and was not
-affected; the gap was specific to the two repos named above.
+Change the policy by editing the ruleset rather than protecting the
+branch through the classic branch-protection API, so the two mechanisms
+do not overlap.
 
-### Confirmation
+Apply the branch-cleanup setting declaratively:
 
-`gh api repos/<org>/<repo>/rulesets/<id> --jq '.rules[] | select(.type
-== "required_status_checks")'` returns the rule with the expected job
-names, and a PR with a failing check cannot be merged by the queue.
+```sh
+gh api -X PATCH repos/v-sekai-multiplayer-fabric/<repo> \
+  -F delete_branch_on_merge=true
+```

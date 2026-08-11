@@ -1,9 +1,16 @@
 ---
 title: "RFD 0012: Amend a PR before it enters the merge queue, not after"
 rfd: "0012"
-state: published
+state: abandoned
 scope: CI
 ---
+
+## Status
+
+`main` no longer runs a merge queue. `rfd/0021` requires a pull request
+plus strict status checks, so there is no enqueue step and no head
+commit snapshot for a late push to race. This RFD stays as the record
+of why the queue needed the rule.
 
 ## Problem
 
