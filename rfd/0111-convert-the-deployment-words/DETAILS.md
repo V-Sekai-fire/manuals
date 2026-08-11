@@ -36,22 +36,22 @@ The article defines five terms. Each quotation below is from it.
 
 | term            | definition                                                                                               |
 | --------------- | -------------------------------------------------------------------------------------------------------- |
-| Entity          | "domain objects (e.g., a Movie or a Shooting Location) — they have no knowledge of where they're stored"   |
-| Repository      | "interfaces to getting entities as well as creating and changing them"                                     |
-| Interactor      | "classes that orchestrate and perform domain actions"                                                      |
-| Data source     | "adapters to different storage implementations"                                                            |
-| Transport layer | "can trigger an interactor to perform business logic. We treat it as an input for our system"              |
+| Entity          | "domain objects (e.g., a Movie or a Shooting Location) — they have no knowledge of where they're stored" |
+| Repository      | "interfaces to getting entities as well as creating and changing them"                                   |
+| Interactor      | "classes that orchestrate and perform domain actions"                                                    |
+| Data source     | "adapters to different storage implementations"                                                          |
+| Transport layer | "can trigger an interactor to perform business logic. We treat it as an input for our system"            |
 
 The rule that holds them together is that all dependencies point inward.
 
 ## The conversion
 
 | retired word | replacement     | why the replacement fits                                                    |
-| ------------ | --------------- | ---------------------------------------------------------------------------- |
-| plane        | interactor      | a plane holds entities and the actions on them, and it holds no transport    |
-| edge plane   | transport layer | an edge plane terminates a transport and triggers an interactor              |
-| domain       | service         | the microservice is the unit that deploys, and the ring decides its members  |
-| store plane  | data source     | it implements repositories over FoundationDB and SQLite                      |
+| ------------ | --------------- | --------------------------------------------------------------------------- |
+| plane        | interactor      | a plane holds entities and the actions on them, and it holds no transport   |
+| edge plane   | transport layer | an edge plane terminates a transport and triggers an interactor             |
+| domain       | service         | the microservice is the unit that deploys, and the ring decides its members |
+| store plane  | data source     | it implements repositories over FoundationDB and SQLite                     |
 
 "Service" is the weakest of the four, because the Netflix article names
 microservices without defining one. It is the only deployment word the
@@ -61,18 +61,18 @@ a ring.
 
 ## One name for one concept
 
-| word            | the one meaning                                            | source   |
-| --------------- | ---------------------------------------------------------- | -------- |
-| entity          | one simulated thing in a zone, with position and velocity  | weft     |
-| repository      | an interface that gets, creates, and changes entities      | Netflix  |
-| interactor      | a process that performs actions on entities                | Netflix  |
-| data source     | an implementation of a repository                          | Netflix  |
-| transport layer | the input that triggers an interactor                      | Netflix  |
-| service         | the set of interactors that share a ring                   | Netflix  |
-| ring            | the iceoryx2 shared memory bus                             | weft     |
-| port            | a TCP or UDP listening socket                              | ordinary |
-| actor           | a runtime process with a single writer                     | weft     |
-| controller      | the human or the AI that controls an avatar                | weft     |
+| word            | the one meaning                                           | source   |
+| --------------- | --------------------------------------------------------- | -------- |
+| entity          | one simulated thing in a zone, with position and velocity | weft     |
+| repository      | an interface that gets, creates, and changes entities     | Netflix  |
+| interactor      | a process that performs actions on entities               | Netflix  |
+| data source     | an implementation of a repository                         | Netflix  |
+| transport layer | the input that triggers an interactor                     | Netflix  |
+| service         | the set of interactors that share a ring                  | Netflix  |
+| ring            | the iceoryx2 shared memory bus                            | weft     |
+| port            | a TCP or UDP listening socket                             | ordinary |
+| actor           | a runtime process with a single writer                    | weft     |
+| controller      | the human or the AI that controls an avatar               | weft     |
 
 weft and Netflix agree on "entity". Netflix says an entity does not know
 where it is stored. weft says an entity is the unit the data plane moves.
@@ -133,23 +133,23 @@ keeps its name. Bare "plane", as a noun for a process, is retired.
 
 Fifteen git repositories carry a retired word in the name.
 
-| now                       | after                          |
-| ------------------------- | ------------------------------ |
-| `fabric-authority-plane`  | `fabric-authority-interactor`  |
-| `fabric-crowd-plane`      | `fabric-crowd-interactor`      |
-| `fabric-taskweft-plane`   | `fabric-taskweft-interactor`   |
-| `fabric-motion-plane`     | `fabric-motion-interactor`     |
-| `fabric-janet-plane`      | `fabric-janet-interactor`      |
-| `fabric-tool-plane`       | `fabric-tool-interactor`       |
-| `fabric-weft-plane`       | `fabric-weft-interactor`       |
-| `fabric-store-plane`      | `fabric-store-datasource`      |
-| `fabric-gateway-edge`     | `fabric-gateway-transport`     |
-| `fabric-ingest-edge`      | `fabric-ingest-transport`      |
-| `fabric-fanout-edge`      | `fabric-fanout-transport`      |
-| `fabric-asset-edge`       | `fabric-asset-transport`       |
-| `fabric-zone-domain`      | `fabric-zone-service`          |
-| `fabric-behaviour-domain` | `fabric-behaviour-service`     |
-| `fabric-store-domain`     | `fabric-store-service`         |
+| now                       | after                         |
+| ------------------------- | ----------------------------- |
+| `fabric-authority-plane`  | `fabric-authority-interactor` |
+| `fabric-crowd-plane`      | `fabric-crowd-interactor`     |
+| `fabric-taskweft-plane`   | `fabric-taskweft-interactor`  |
+| `fabric-motion-plane`     | `fabric-motion-interactor`    |
+| `fabric-janet-plane`      | `fabric-janet-interactor`     |
+| `fabric-tool-plane`       | `fabric-tool-interactor`      |
+| `fabric-weft-plane`       | `fabric-weft-interactor`      |
+| `fabric-store-plane`      | `fabric-store-datasource`     |
+| `fabric-gateway-edge`     | `fabric-gateway-transport`    |
+| `fabric-ingest-edge`      | `fabric-ingest-transport`     |
+| `fabric-fanout-edge`      | `fabric-fanout-transport`     |
+| `fabric-asset-edge`       | `fabric-asset-transport`      |
+| `fabric-zone-domain`      | `fabric-zone-service`         |
+| `fabric-behaviour-domain` | `fabric-behaviour-service`    |
+| `fabric-store-domain`     | `fabric-store-service`        |
 
 GitHub redirects a renamed git repository, so a `git subtree` remote and a
 Lake `require ... from git` continue to resolve. Each pin gets updated in the

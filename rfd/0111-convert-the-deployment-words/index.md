@@ -19,12 +19,12 @@ ASD-STE100 permits one meaning for one word.
 Retire plane, edge plane, and domain. The Netflix formulation supplies the
 replacement for each one.
 
-| retired    | replacement     | the meaning that carries over               |
-| ---------- | --------------- | ------------------------------------------- |
-| plane      | interactor      | a process that holds entities and actions   |
-| edge plane | transport layer | the input that triggers an interactor       |
-| domain     | service         | the set that shares a ring, and a machine   |
-| store plane | data source    | the implementation behind a repository      |
+| retired     | replacement     | the meaning that carries over             |
+| ----------- | --------------- | ----------------------------------------- |
+| plane       | interactor      | a process that holds entities and actions |
+| edge plane  | transport layer | the input that triggers an interactor     |
+| domain      | service         | the set that shares a ring, and a machine |
+| store plane | data source     | the implementation behind a repository    |
 
 The rules do not change with the words. An interactor opens no listening
 socket. A transport layer holds no authority, runs no simulation, and keeps
