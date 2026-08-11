@@ -19,8 +19,7 @@ task queue, instead of holding an unbounded queue in the conversation.
 Decisions land as MADRs in the manuals, and in-flight work lands as PRs
 or issues; the conversation holds only the active item, and the backlog
 lives in durable, searchable storage. Work in progress stays bounded to
-one concern per PR, merged through the main merge queue before the next
-starts. Completed work is folded into durable artifacts (a changelog or
+one concern per PR, merged before the next starts. Completed work is folded into durable artifacts (a changelog or
 an MADR) and dropped from the working set, so finished items leave the
 context window; a periodic summary checkpoint resets the working
 context.

@@ -39,5 +39,4 @@ transcript; and the number of open PRs stays small.
 
 ## More Information
 
-The merge queue and the one-concern-per-PR rule are the work-in-progress
-bound; the changelog and MADR practice is the compaction step.
+The one-concern-per-PR rule is the work-in-progress bound; the changelog and MADR practice is the compaction step.

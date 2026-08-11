@@ -1,5 +1,5 @@
 ---
-title: "RFD 0021: Require pull requests and a merge queue on main"
+title: "RFD 0021: Require pull requests on main"
 rfd: "0021"
 state: published
 scope: repo branch protection and CI gating
@@ -8,36 +8,31 @@ scope: repo branch protection and CI gating
 ## Problem
 
 `main` had no branch protection. Pushes landed directly on the
-branch. Concurrent pull requests, each validated against an older tip
-of the branch, could conflict with each other once both landed.
+branch. Pull requests merged with no guarantee that their checks ran
+against the tip they were about to join.
 
 ## Decision
 
-`main` had no branch protection: pushes landed directly, and
-concurrent pull requests validated against an older tip could
-conflict once both landed. The repository now applies a ruleset on
-the default branch that blocks direct pushes and branch deletion,
-requires a pull request (with zero mandatory approvals), and requires
-a merge queue that serializes entries against the branch tip before
-they land. Two later amendments close gaps found in practice: the
-repository enables automatic deletion of a merged pull request's
-source branch, since the merge queue itself cannot delete it; and the
-ruleset must carry a `required_status_checks` rule naming the real CI
-jobs, since the merge-queue rule alone does not require any check to
-pass.
+The repository applies a ruleset on the default branch that blocks
+direct pushes and branch deletion, requires a pull request (with zero
+mandatory approvals), and requires the real CI jobs to pass with a
+strict up-to-date policy, so a PR rebases onto the current tip before
+it merges. The repository also enables automatic deletion of a merged
+pull request's source branch, so merged feature branches do not pile
+up.
+
+A merge queue is not part of the policy. The strict
+`required_status_checks` policy covers the same ground at this volume
+of changes, without the enqueue step, the snapshot races, and the rules
+the queue needed around branch deletion and late fixes.
 
 ## References
 
-- Full context, decision drivers, considered options, consequences,
-  confirmation steps, and both amendments: `DETAILS.md`
+- Full context, options, consequences, and confirmation: `DETAILS.md`
 - Original record:
   `decisions/20260606-require-pr-and-merge-queue-on-main.md`
 - `gh api repos/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/rulesets` (ruleset
   id `17352485`)
-
-## Related
-
-- `rfd/0012-amend-pr-before-it-enters-the-queue`
 
 ## Detail
 

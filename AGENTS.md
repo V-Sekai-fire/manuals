@@ -55,8 +55,9 @@ elixir scripts/create_changelog_entry.exs 20260512
 
 ## Checks
 
-Pull requests run `prek` (prettier on Markdown) and a static tropes check, and land
-through the `main` merge queue. Run them locally before pushing:
+Pull requests run `prek` (prettier on Markdown) and a static tropes check, and both
+must pass on a branch that is up to date with `main` before the PR merges. Run them
+locally before pushing:
 
 ```sh
 prek run --all-files          # prettier + tropes (scripts/check_tropes.sh)
@@ -95,4 +96,4 @@ naming-convention decision.
 - No hardcoded absolute filesystem paths; use env vars or placeholders (e.g. `$GODOT_SRC`)
 - Do not commit `_site/` — it is build output
 - Commit style: sentence case, no `type(scope):` prefix
-- One concern per PR; PRs land via the `main` merge queue
+- One concern per PR; PRs land through a pull request with `prek` and `tropes` green
