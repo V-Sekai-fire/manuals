@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#status" id="toc-status" class="nav-link active" data-scroll-target="#status">Status</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
@@ -330,7 +331,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0012: Amend a PR before it enters the merge queue, not after</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> CI</p>
+<p><strong>State:</strong> abandoned · <strong>Scope:</strong> CI</p>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p><code>main</code> no longer runs a merge queue. <code>rfd/0021</code> requires a pull request plus strict status checks, so there is no enqueue step and no head commit snapshot for a late push to race. This RFD stays as the record of why the queue needed the rule.</p>
+</section>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>Enqueueing a pull request marks its current head commit ready to merge. The merge queue snapshots that head commit the instant it enters the queue. A push made after enqueueing can race the merge and get orphaned. A correction pushed seconds after enqueueing once merged the earlier commit and orphaned the fix, and the fix then needed a second PR to land.</p>

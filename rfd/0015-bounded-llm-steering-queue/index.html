@@ -337,7 +337,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>The project steers an LLM by externalizing, bounding, and compacting the task queue, instead of holding an unbounded queue in the conversation. Decisions land as MADRs in the manuals, and in-flight work lands as PRs or issues; the conversation holds only the active item, and the backlog lives in durable, searchable storage. Work in progress stays bounded to one concern per PR, merged through the main merge queue before the next starts. Completed work is folded into durable artifacts (a changelog or an MADR) and dropped from the working set, so finished items leave the context window; a periodic summary checkpoint resets the working context.</p>
+<p>The project steers an LLM by externalizing, bounding, and compacting the task queue, instead of holding an unbounded queue in the conversation. Decisions land as MADRs in the manuals, and in-flight work lands as PRs or issues; the conversation holds only the active item, and the backlog lives in durable, searchable storage. Work in progress stays bounded to one concern per PR, merged before the next starts. Completed work is folded into durable artifacts (a changelog or an MADR) and dropped from the working set, so finished items leave the context window; a periodic summary checkpoint resets the working context.</p>
 <p>An unbounded queue held only in conversation overflows two scarce resources: the operator loses track of what is pending versus done, and the model’s context window fills up. Externalizing avoids both.</p>
 </section>
 <section id="references" class="level2">
@@ -390,7 +390,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="more-information" class="level2">
 <h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>The merge queue and the one-concern-per-PR rule are the work-in-progress bound; the changelog and MADR practice is the compaction step.</p>
+<p>The one-concern-per-PR rule is the work-in-progress bound; the changelog and MADR practice is the compaction step.</p>
 
 
 </section>
