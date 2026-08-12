@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -301,7 +301,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#back-pressure-which-needs-a-rule-per-channel" id="toc-back-pressure-which-needs-a-rule-per-channel" class="nav-link" data-scroll-target="#back-pressure-which-needs-a-rule-per-channel">Back-pressure, which needs a rule per channel</a></li>
   <li><a href="#the-sandbox-this-removes" id="toc-the-sandbox-this-removes" class="nav-link" data-scroll-target="#the-sandbox-this-removes">The sandbox this removes</a></li>
   <li><a href="#what-this-resolves-in-rfd-0107" id="toc-what-this-resolves-in-rfd-0107" class="nav-link" data-scroll-target="#what-this-resolves-in-rfd-0107">What this resolves in RFD 0107</a></li>
-  <li><a href="#superseded-2026-08-07" id="toc-superseded-2026-08-07" class="nav-link" data-scroll-target="#superseded-2026-08-07">Superseded, 2026-08-07</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0108-local-cabi-guests-and-in-tick-fanout/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -448,10 +447,6 @@ ul.task-list li input[type="checkbox"] {
 <p>Where Elixir and <code>zone-backend</code> sit is unchanged by this record.</p>
 <p>Which part terminates a WebTransport session stays open, and it now matters more. This record binds a subscriber to the loop that owns its connection. <code>rfd/0097</code> states that the zone server holds subscriber connections through picoquic and WebTransport, and <code>rfd/0088</code> chose picoquic over h2o’s own QUIC. So the owning loop is h2o’s thread for HTTP and picoquic’s loop for WebTransport. Whether those unify decides how many cross-loop wakeups a tick needs.</p>
 <p>How a UGC guest runs is the new question. Local mode does not sandbox, so the UGC loop needs its own record.</p>
-</section>
-<section id="superseded-2026-08-07" class="level2">
-<h2 class="anchored" data-anchor-id="superseded-2026-08-07">Superseded, 2026-08-07</h2>
-<p><code>rfd/0109</code> supersedes this record. The tier count drops to two, the store stays FoundationDB, and 276.48 USD per month is the cost floor. The in-tick ring and the C ABI guest boundary both belonged to the native host. The measurements it cites from <code>rfd/0097</code> stay valid, and its back-pressure rule still applies to any relay.</p>
 
 
 </section>

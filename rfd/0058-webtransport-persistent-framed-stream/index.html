@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -289,8 +289,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#status" id="toc-status" class="nav-link active" data-scroll-target="#status">Status</a></li>
-  <li><a href="#problem" id="toc-problem" class="nav-link" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
@@ -329,12 +328,6 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0058: WebTransport reliable delivery on one persistent framed stream per session</em></p>
 <p><strong>State:</strong> abandoned · <strong>Scope:</strong> webtransportd WebTransport transport adapter</p>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>There is no framed stream. WebTransport carries message boundaries already: a datagram is one message, and a stream’s FIN is where its message ends. So reliable traffic takes one bidirectional stream per message and is read to <code>picohttp_callback_post_fin</code>, unreliable traffic takes one datagram per message, and an unreliable stream that needs sequencing carries the application’s own counter in its own payload. A length prefix in front of data that already knows where it stops is redundant, and it hides the boundary the transport gives for nothing.</p>
-<p>The silent server this record was written to fix has a different cause. <code>picowt_set_transport_parameters</code>, which runs per connection, raises <code>initial_max_stream_id_bidir</code> and <code>initial_max_stream_id_unidir</code> to <code>0x3F</code> along with the flow control limits. <code>picowt_set_default_transport_parameters</code>, which runs once for the <code>picoquic_quic_t</code>, raises neither — it sets only <code>is_reset_stream_at_enabled</code> and <code>max_datagram_frame_size</code>. A server configured through the second one gets no extra stream credit, so a stream per message exhausts it, the exhausted credit blocks the connect-accepted response on the control stream, and the fourth session never finishes its handshake. That is the symptom this RFD describes. The fix is the per-connection call, not a wire format.</p>
-<p>This RFD stays as the record of the failure and of what was tried. The scope line names <code>webtransportd</code>, which <code>rfd/0047</code> abandons.</p>
-</section>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>The picoquic WebTransport server goes silent once four or more sessions connect. A fresh bidirectional stream per reliable message uses up the connection’s stream credit. The used-up credit blocks the connect-accepted response on the control stream, so a late session never finishes its handshake.</p>

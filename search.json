@@ -868,13 +868,6 @@
     "text": "What this resolves in RFD 0107\nTwo of the four open questions close.\nThe tick drives the libfdb_c callbacks, and h2o’s ingress loop does not. The callback chain of rfd/0073 moves with the tick, and the durable append runs off-tick.\nThe guest boundary sits in-process, over the C ABI, for simulation guests.\nTwo questions stay open, and one arrives.\nWhere Elixir and zone-backend sit is unchanged by this record.\nWhich part terminates a WebTransport session stays open, and it now matters more. This record binds a subscriber to the loop that owns its connection. rfd/0097 states that the zone server holds subscriber connections through picoquic and WebTransport, and rfd/0088 chose picoquic over h2o’s own QUIC. So the owning loop is h2o’s thread for HTTP and picoquic’s loop for WebTransport. Whether those unify decides how many cross-loop wakeups a tick needs.\nHow a UGC guest runs is the new question. Local mode does not sandbox, so the UGC loop needs its own record."
   },
   {
-    "objectID": "rfd/0108-local-cabi-guests-and-in-tick-fanout/index.html#superseded-2026-08-07",
-    "href": "rfd/0108-local-cabi-guests-and-in-tick-fanout/index.html#superseded-2026-08-07",
-    "title": "RFD 0108: Local C ABI zone guests, with fan-out inside the tick",
-    "section": "Superseded, 2026-08-07",
-    "text": "Superseded, 2026-08-07\nrfd/0109 supersedes this record. The tier count drops to two, the store stays FoundationDB, and 276.48 USD per month is the cost floor. The in-tick ring and the C ABI guest boundary both belonged to the native host. The measurements it cites from rfd/0097 stay valid, and its back-pressure rule still applies to any relay."
-  },
-  {
     "objectID": "rfd/0107-janet-scripting-over-a-c-taskweft-core/index.html",
     "href": "rfd/0107-janet-scripting-over-a-c-taskweft-core/index.html",
     "title": "RFD 0107: Janet scripting over a C taskweft core, behind h2o",
@@ -957,13 +950,6 @@
     "title": "RFD 0107: Janet scripting over a C taskweft core, behind h2o",
     "section": "Open questions this record does not settle",
     "text": "Open questions this record does not settle\nWhich part talks to FoundationDB. rfd/0073 drove libfdb_c callbacks from the libh2o event loop, when h2o was the whole server. If h2o is ingress and reverse proxy only, the loop that drives the callbacks may belong to libtaskweft instead. Janet has no libfdb_c binding in this project today.\nWhere Elixir goes. The four parts name no Elixir. zone-backend is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. rfd/0090 is its production release shape, and rfd/0103 puts it on ecto_foundationdb. Nothing here retires it, and nothing here places it.\nWhether Janet replaces the libriscv guests. rfd/0094 keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per rfd/0092. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.\nWhere the game transport lives. rfd/0008 and rfd/0023 put game traffic on WebTransport over HTTP/3, and rfd/0088 chose picoquic and picotls over h2o’s own QUIC. If h2o terminates HTTP as ingress, the record that says which part terminates a WebTransport session does not exist."
-  },
-  {
-    "objectID": "rfd/0107-janet-scripting-over-a-c-taskweft-core/index.html#superseded-2026-08-07",
-    "href": "rfd/0107-janet-scripting-over-a-c-taskweft-core/index.html#superseded-2026-08-07",
-    "title": "RFD 0107: Janet scripting over a C taskweft core, behind h2o",
-    "section": "Superseded, 2026-08-07",
-    "text": "Superseded, 2026-08-07\nrfd/0109 supersedes this record. The tier count drops to two, the store stays FoundationDB, and 276.48 USD per month is the cost floor. h2o, Janet, and the C libtaskweft core are dropped. The planner stays an Elixir NIF, which V-Sekai-fire/multiplayer-fabric-taskweft already is."
   },
   {
     "objectID": "rfd/0106-split-the-archive-into-its-own-repo/index.html",
@@ -3847,7 +3833,7 @@
     "href": "rfd/0052-http3-listener-session-findings/index.html#decision",
     "title": "RFD 0052: One transport listener per authority pending http3 multi-session fixes",
     "section": "Decision",
-    "text": "Decision\nThe four-player contention smoke drives one WebTransportPeer.create_server listener in the merged assembly with four concurrent client sessions. Incoming datagrams from every session multiplex into the server’s packet queue correctly, but replies reach only one session regardless of set_target_peer or get_packet_peer, and a session teardown during traffic aborts the process with a double free. A second create_server in the same process fails with “server already listening”, so the backend holds one listener per process. Until the module carries per-session peer routing and clean teardown, the loop runs one listener per authority process, attributes requesters in the message body rather than by transport peer id, and verifies the authority’s resolutions at the harness against the Lean golden vectors. The four-player smoke verifies authoritative resolution (64 rounds matching the golden vectors from four concurrent clients) while grant delivery waits on the reply-routing fix. The loot and combat wire parities stay unaffected, because a single session per listener works end to end."
+    "text": "Decision\nThe four-player contention smoke drives one WebTransportPeer.create_server listener in the merged assembly with four concurrent client sessions. Incoming datagrams from every session multiplex into the server’s packet queue correctly, but replies reach only one session regardless of set_target_peer or get_packet_peer, and a session teardown during traffic aborts the process with a double free. A second create_server in the same process fails with “server already listening”, so the backend holds one listener per process. Until the module carries per-session peer routing and clean teardown, the loop runs one listener per authority process, attributes requesters in the message body rather than by transport peer id, and verifies the authority’s resolutions at the harness against the Lean golden vectors. The four-player smoke verifies authoritative resolution (64 rounds matching the golden vectors from four concurrent clients) while grant delivery waits on the reply-routing fix. The loot and combat wire parities stay unaffected, because a single session per listener works end to end.\nA server that opens a bidirectional stream per reliable message needs the stream credit to carry them. picowt_set_transport_parameters, which runs per connection, raises initial_max_stream_id_bidir and initial_max_stream_id_unidir to 0x3F along with the flow-control limits. picowt_set_default_transport_parameters, which runs once for the picoquic_quic_t, raises neither: it sets is_reset_stream_at_enabled and max_datagram_frame_size and nothing else. A server that takes only the second one holds the default credit, so a fourth session finds none left, and the exhausted credit blocks the connect-accepted response on the control stream, which leaves that session short of the open state."
   },
   {
     "objectID": "rfd/0052-http3-listener-session-findings/index.html#references",
@@ -7084,13 +7070,6 @@
     "text": "Manuals › RFD 0012: Amend a PR before it enters the merge queue, not after\nState: abandoned · Scope: CI"
   },
   {
-    "objectID": "rfd/0012-amend-pr-before-it-enters-the-queue/index.html#status",
-    "href": "rfd/0012-amend-pr-before-it-enters-the-queue/index.html#status",
-    "title": "RFD 0012: Amend a PR before it enters the merge queue, not after",
-    "section": "Status",
-    "text": "Status\nmain no longer runs a merge queue. rfd/0021 requires a pull request plus strict status checks, so there is no enqueue step and no head commit snapshot for a late push to race. This RFD stays as the record of why the queue needed the rule."
-  },
-  {
     "objectID": "rfd/0012-amend-pr-before-it-enters-the-queue/index.html#problem",
     "href": "rfd/0012-amend-pr-before-it-enters-the-queue/index.html#problem",
     "title": "RFD 0012: Amend a PR before it enters the merge queue, not after",
@@ -9233,13 +9212,6 @@
     "text": "Manuals › RFD 0047: webtransportd as the out-of-process core transport adapter\nState: abandoned · Scope: transport adapter for the event-driven hexagonal cores"
   },
   {
-    "objectID": "rfd/0047-webtransportd-core-transport-adapter/index.html#status",
-    "href": "rfd/0047-webtransportd-core-transport-adapter/index.html#status",
-    "title": "RFD 0047: webtransportd as the out-of-process core transport adapter",
-    "section": "Status",
-    "text": "Status\nwebtransportd is not used. A program that needs WebTransport terminates QUIC itself, in process, over picoquic — which is what modules/http3 already does on the client and what the vendored transport/ does on the server. There is no out-of-process bridge, no child per connection, and no [flag | varint len | payload] protocol over stdin and stdout.\nThis RFD stays as the record of why a piped child looked like the answer for the event-driven cores. What it costs to keep is a second transport implementation and a process boundary in the middle of the per-packet path, for cores that can link the same QUIC library the rest of the stack already builds."
-  },
-  {
     "objectID": "rfd/0047-webtransportd-core-transport-adapter/index.html#problem",
     "href": "rfd/0047-webtransportd-core-transport-adapter/index.html#problem",
     "title": "RFD 0047: webtransportd as the out-of-process core transport adapter",
@@ -9553,13 +9525,6 @@
     "title": "RFD 0058: WebTransport reliable delivery on one persistent framed stream per session",
     "section": "",
     "text": "Manuals › RFD 0058: WebTransport reliable delivery on one persistent framed stream per session\nState: abandoned · Scope: webtransportd WebTransport transport adapter"
-  },
-  {
-    "objectID": "rfd/0058-webtransport-persistent-framed-stream/index.html#status",
-    "href": "rfd/0058-webtransport-persistent-framed-stream/index.html#status",
-    "title": "RFD 0058: WebTransport reliable delivery on one persistent framed stream per session",
-    "section": "Status",
-    "text": "Status\nThere is no framed stream. WebTransport carries message boundaries already: a datagram is one message, and a stream’s FIN is where its message ends. So reliable traffic takes one bidirectional stream per message and is read to picohttp_callback_post_fin, unreliable traffic takes one datagram per message, and an unreliable stream that needs sequencing carries the application’s own counter in its own payload. A length prefix in front of data that already knows where it stops is redundant, and it hides the boundary the transport gives for nothing.\nThe silent server this record was written to fix has a different cause. picowt_set_transport_parameters, which runs per connection, raises initial_max_stream_id_bidir and initial_max_stream_id_unidir to 0x3F along with the flow control limits. picowt_set_default_transport_parameters, which runs once for the picoquic_quic_t, raises neither — it sets only is_reset_stream_at_enabled and max_datagram_frame_size. A server configured through the second one gets no extra stream credit, so a stream per message exhausts it, the exhausted credit blocks the connect-accepted response on the control stream, and the fourth session never finishes its handshake. That is the symptom this RFD describes. The fix is the per-connection call, not a wire format.\nThis RFD stays as the record of the failure and of what was tried. The scope line names webtransportd, which rfd/0047 abandons."
   },
   {
     "objectID": "rfd/0058-webtransport-persistent-framed-stream/index.html#problem",
