@@ -10,7 +10,264 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 11 Aug 2026 20:46:34 GMT</lastBuildDate>
+<lastBuildDate>Wed, 12 Aug 2026 00:28:34 GMT</lastBuildDate>
+<item>
+  <title>RFD 0114: Prove the store by breaking it</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0114: Prove the store by breaking it</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> store verification, fault tolerance test, disaster recovery procedure</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A FoundationDB cluster reports its own fault tolerance. A test that reads <code>Fault Tolerance - 1 zones</code> and stops there asserts nothing. A cluster that reports tolerance, and then loses data when a zone stops, passes that test.</p>
+<p><code>ci.yml</code> in the store plane already names this failure: a green step that asserted nothing is the failure the suite exists to prevent.</p>
+<p>A backup that nobody restores is a belief, not a backup.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Stop a zone. Then read the data.</strong> The test writes 200 keys, stops one zone with <code>kill -9</code>, and then checks that the cluster still answers and that all 200 keys are still readable. It then restarts the zone and waits for tolerance to return.</p>
+<p>Use many keys, not one. One key lives on one storage team. A stop can miss it, and placement luck then looks like redundancy. The first version of this test passed with one key under <code>single</code> redundancy, which holds no second copy at all.</p>
+<p><strong>Stop two of three zones. Then confirm the cluster refuses to work.</strong> With no quorum, FoundationDB must stop answering. It must not take a write it cannot order. In this stage a working cluster is a failure, because a minority that answers can split-brain.</p>
+<p><strong>Restore into a cluster that was wiped, and prove it was empty first.</strong> The disaster recovery test backs up 200 keys, deletes the data directories, confirms the new cluster holds 0 keys, and then restores. Without the empty check, the restore proves nothing.</p>
+<p><strong>A backup is real only when <code>describe</code> says <code>Restorable: true</code>.</strong> Record the container, not the folder that the backup was sent to. <code>DETAILS.md</code> gives the trap.</p>
+<p><strong>Run these as <code>systemd</code> oneshot units.</strong> The run survives the shell, the exit status stays readable, and the output goes to the journal with times.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The two traps, and the negative control: <code>DETAILS.md</code></li>
+<li><code>rfd/0113-foundationdb-on-windows-built-from-source</code>: the store under test.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: why the store is FoundationDB.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="trap-one-a-backup-url-that-is-not-restorable-and-does-not-say-so" class="level2">
+<h2 class="anchored" data-anchor-id="trap-one-a-backup-url-that-is-not-restorable-and-does-not-say-so">Trap one: a backup URL that is not restorable, and does not say so</h2>
+<p><code>fdbbackup start -d file:///backup/</code> does not write the backup to that path. It makes a container under it, <code>backup-&lt;timestamp&gt;/</code>, and writes there.</p>
+<p>Point <code>describe</code> at the path you gave, and it answers:</p>
+<pre><code>URL: file:///backup/
+Restorable: false
+SnapshotBytes: 0</code></pre>
+<p>It does not fail. It reports a backup that cannot be restored, with a zero exit status. A runbook that records the <code>-d</code> path looks like it holds backups. It finds out at recovery time that it does not.</p>
+<p>A named subfolder does not correct this. It was measured. A backup sent to <code>named-by-procedure/</code> made <code>named-by-procedure/backup-&lt;timestamp&gt;/</code> inside it, and <code>describe</code> on the named folder still answered <code>Restorable: false</code> and <code>SnapshotBytes: 0</code>. The behaviour is unconditional, so no name is restorable by itself. A subfolder per run is still useful, because it lets one run expire without touching another. It is not a correction.</p>
+<p>Two rules follow:</p>
+<ol type="1">
+<li>Find the container. Do not assume it. <code>fdbbackup list -b &lt;base&gt;</code> gives it, and it works for <code>blobstore://</code> as well, which <code>ls</code> does not.</li>
+<li>Check <code>Restorable: true</code> before you trust a backup.</li>
+</ol>
+<p>The same procedure holds for S3. Only the URL changes, from <code>file://</code> to <code>blobstore://&lt;key&gt;:&lt;secret&gt;@&lt;host&gt;/&lt;name&gt;?bucket=&lt;bucket&gt;</code>.</p>
+</section>
+<section id="trap-two-a-key-count-that-reads-as-total-data-loss" class="level2">
+<h2 class="anchored" data-anchor-id="trap-two-a-key-count-that-reads-as-total-data-loss">Trap two: a key count that reads as total data loss</h2>
+<p><code>fdbcli</code> opens a quoted key with a backtick, not an apostrophe:</p>
+<pre><code>`weft/qa/k0001' is `v1'</code></pre>
+<p>A counter that matches a leading apostrophe counts zero keys. Zero keys after a restore reads exactly like total data loss. On a new platform this sends you to look for a durability defect in the storage layer that does not exist.</p>
+</section>
+<section id="the-negative-control" class="level2">
+<h2 class="anchored" data-anchor-id="the-negative-control">The negative control</h2>
+<p><code>single</code> redundancy holds one copy of every key. A zone that stops must lose data. The negative control runs the same test under <code>single</code> redundancy, and it must fail.</p>
+<p>It found a real weakness. The first version wrote one key, and the test passed under <code>single</code> redundancy: the stopped zone did not hold that key. The test measured placement luck. With 200 keys, a zone that stops always holds some of them, and the control fails as it must.</p>
+<p><code>SKIP_CLAIM=1</code> takes the control past the status line check, so that the stop, and not the reported number, is the thing under test.</p>
+</section>
+<section id="a-transaction-that-is-too-large-for-a-new-cluster" class="level2">
+<h2 class="anchored" data-anchor-id="a-transaction-that-is-too-large-for-a-new-cluster">A transaction that is too large for a new cluster</h2>
+<p>200 <code>set</code> commands in one <code>fdbcli</code> call return <code>commit_unknown_result (1021)</code> on a cluster that has just been configured. Data distribution is still settling and the whole batch is one commit.</p>
+<p>Write in batches of 50, and retry. Error 1021 means what it says: the commit may have succeeded. A repeated <code>set</code> of the same value is safe.</p>
+</section>
+<section id="what-one-machine-cannot-test" class="level2">
+<h2 class="anchored" data-anchor-id="what-one-machine-cannot-test">What one machine cannot test</h2>
+<p>These tests stop a process. They do not stop a machine, and they do not cut a network. A process that stops exercises the consensus path and the recovery path. It does not make a network partition, and it does not make two halves that both believe they hold the data.</p>
+<p>GitHub Actions runners cannot supply that. It needs two hosts.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0113: FoundationDB on Windows, built from source</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0113: FoundationDB on Windows, built from source</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> store platform support, build toolchain, packaging</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0109</code> selects FoundationDB as the store. The store must now also run on Windows. It must run the server, not only the client. A Linux virtual machine on the Windows host does not count.</p>
+<p>FoundationDB supplies no Windows binaries. Release 7.3.76 has deb, rpm, <code>.so</code>, x86_64 and aarch64 assets. A scan of the last 60 releases finds no Windows, MSI, DLL or EXE asset.</p>
+<p>Upstream looks like it tests this, and it does not. The <code>windows-boost-test.yml</code> workflow has a step with the name “Configure and Build”. That step runs only <code>cmake ..</code>. No step after configure runs on Windows.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Build FoundationDB for Windows from source.</strong> Nine other stores were examined. Each one failed on the same two constraints: a native Windows server, or a store that a second machine can reach. <code>DETAILS.md</code> lists them.</p>
+<p><strong>Use clang-cl. Do not use MSVC.</strong> Flow uses GNU <code>__attribute__</code> syntax in many files. It has never compiled with <code>cl.exe</code>. Use Ninja with clang-cl, and set the MSVC environment first. An attempt with the default MSVC toolset failed on <code>__PRETTY_FUNCTION__</code> and <code>swift_attr</code>. Those errors were the wrong compiler, not defects in FoundationDB.</p>
+<p><strong>Build Linux in the official image</strong>, <code>foundationdb/build</code>. The image has all dependencies. Linux is the control. A red Windows job has no meaning until Linux is green.</p>
+<p><strong>Package with fpm on Linux and macOS. Use FoundationDB’s own MSI on Windows.</strong> <code>packaging/msi/</code> already holds the WiX sources and <code>cmake/FindWIX.cmake</code>.</p>
+<p><strong>If the port fails, use sharded PostgreSQL.</strong> It supplies a native Windows server today. The cost is per-shard replication and promotion, built by hand.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The nine stores, the evidence, and the measurements: <code>DETAILS.md</code></li>
+<li>Work in progress: <code>v-sekai-multiplayer-fabric/foundationdb</code>, branch <code>portability-consensus</code></li>
+<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: why the store is FoundationDB.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0114-prove-the-store-by-breaking-it</code>: how a built store is verified.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-nine-stores-and-why-each-one-failed" class="level2">
+<h2 class="anchored" data-anchor-id="the-nine-stores-and-why-each-one-failed">The nine stores, and why each one failed</h2>
+<p>The store must satisfy four constraints at the same time: free and open source, reachable from a second machine, a native Windows server, and linear scaling per machine. It must also supply an ordered byte keyspace, atomic multi-key commits, and read-write conflict detection for the fence.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Store</th>
+<th>Why it failed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sqlite-in-sqlite, RocksDB, LeanStore, FASTER</td>
+<td>Embedded. No second machine can reach the data.</td>
+</tr>
+<tr class="even">
+<td>TiKV, Cassandra, ScyllaDB, LeanStore</td>
+<td>No native Windows server.</td>
+</tr>
+<tr class="odd">
+<td>TiKV, LeanStore</td>
+<td>Snapshot isolation. <code>check_fence</code> has no mechanism.</td>
+</tr>
+<tr class="even">
+<td>FASTER</td>
+<td>A hash index. No ordered range reads.</td>
+</tr>
+<tr class="odd">
+<td>Cassandra</td>
+<td>Partition size limits against 10 GiB actors. No isolation across partitions.</td>
+</tr>
+<tr class="even">
+<td>Zenoh, iceoryx2 tunnels and gateways</td>
+<td>Message transport, not a store. Asynchronous replication gives split-brain and silent loss.</td>
+</tr>
+<tr class="odd">
+<td>Ra</td>
+<td>A Raft library. You write the store yourself, on the BEAM this plane exists to leave.</td>
+</tr>
+<tr class="even">
+<td>FerretDB and MongoDB forks</td>
+<td>The wrong data model. Transactions have time and size limits.</td>
+</tr>
+</tbody>
+</table>
+<p>Two stores satisfy all four constraints: FoundationDB, if it can be built for Windows, and sharded PostgreSQL.</p>
+<p>A message transport cannot replace the store. If a commit is acknowledged locally and sent later, a machine that stops loses an unknown number of commits, and it does so silently. If the commit waits for a remote acknowledgement, it pays a network round trip. The local speed was the missing guarantee.</p>
+</section>
+<section id="what-the-build-already-shows" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-build-already-shows">What the build already shows</h2>
+<ul>
+<li><code>release-7.3</code> and <code>main</code> both complete <code>cmake</code> configure on Windows.</li>
+<li>The Windows disk path is complete in <code>release-7.3</code>. <code>fdbrpc/include/fdbrpc/AsyncFileWinASIO.actor.h</code> exists under <code>#ifdef WIN32</code>. It implements <code>IAsyncFile</code> over <code>boost::asio</code>, which uses IOCP on Windows. <code>AsyncFileKAIO</code> is <code>#ifdef __linux__</code>. <code>Net2FileSystem.cpp</code> selects KAIO only on Linux and falls through to <code>Net2AsyncFile</code> elsewhere. <strong>Nothing needs a rewrite, and io_uring is not a blocker in 7.3.</strong></li>
+<li>The Flow actor compiler is Python on <code>main</code>, and the C# implementation is a fallback behind <code>FDB_USE_CSHARP_TOOLS</code>. An earlier estimate called the C# compiler a blocker. It is not one.</li>
+<li><code>lattice-world-weft/weft-warp-loop</code> builds Flow, including the asio layer, green on <code>windows-latest</code>, with no Windows patch to the source.</li>
+</ul>
+<p>Windows IORing is not used. Its operation set started read-only, it needs Windows 11 or Server 2022, and it makes a storage engine faster that must first compile. <code>AsyncFileWinASIO</code> already supplies IOCP through <code>boost::asio</code>.</p>
+</section>
+<section id="dependencies-that-stop-the-build" class="level2">
+<h2 class="anchored" data-anchor-id="dependencies-that-stop-the-build">Dependencies that stop the build</h2>
+<p>Each one was found by a failure, and each one cost a full CI round:</p>
+<ul>
+<li><code>jemalloc</code>. Configure stops without it.</li>
+<li><code>fmt</code>. Configure stops without it.</li>
+<li>Jinja2. <code>flow/protocolversion/protocol_version.py</code> generates <code>ProtocolVersion.h</code>.</li>
+<li>Boost needs <code>format</code>, <code>asio</code> and <code>lockfree</code>. Upstream’s Windows workflow installs a component list that is enough to configure and not enough to compile.</li>
+</ul>
+<p>The official <code>foundationdb/build</code> image removes all of these on Linux. Use it instead of a dependency list.</p>
+</section>
+<section id="cost-measured" class="level2">
+<h2 class="anchored" data-anchor-id="cost-measured">Cost, measured</h2>
+<p><code>bench_vfs 2000</code> on one machine, in operations per second per core. The unit is the one <code>weft/limits.hpp</code> uses.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 12%">
+<col style="width: 27%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operation</th>
+<th>Local file</th>
+<th>FoundationDB, one node</th>
+<th>FoundationDB, consensus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Insert, one commit each</td>
+<td>262,438</td>
+<td>941</td>
+<td>433</td>
+</tr>
+<tr class="even">
+<td>Insert, one commit for all</td>
+<td>618,078</td>
+<td>399,456</td>
+<td>315,869</td>
+</tr>
+<tr class="odd">
+<td>Point read</td>
+<td>2,056,234</td>
+<td>1,892,751</td>
+<td>2,027,633</td>
+</tr>
+<tr class="even">
+<td>Scan</td>
+<td>12,149,044</td>
+<td>14,370,707</td>
+<td>15,144,402</td>
+</tr>
+</tbody>
+</table>
+<p>Read the first row with care. The local file column uses <code>journal_mode=MEMORY</code> and sets no <code>synchronous</code> value, so it is not durable. A durable local SQLite gives 2,008 commits per second per core, not 262,438. FoundationDB passes it at about four concurrent writers, because FoundationDB groups commits and a file per writer cannot.</p>
+<p><strong>Reads are already at parity.</strong> A point read costs 2,027,633 against a local file’s 2,056,234. No store choice can improve the read rows. The choice is decided on the commit row alone.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</link>
@@ -342,7 +599,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -743,7 +1000,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1057,7 +1314,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -1274,7 +1531,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -1415,7 +1672,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -1588,7 +1845,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -1754,7 +2011,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -1954,7 +2211,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -2097,7 +2354,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -2248,7 +2505,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -2442,7 +2699,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -2609,7 +2866,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -2832,7 +3089,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -2987,7 +3244,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3146,7 +3403,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -3316,7 +3573,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -3508,7 +3765,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0095: Two guest classes, a domain ABI, and Bubblewrap</title>
@@ -3730,228 +3987,7 @@ zone 0: guest exited, status 0, 221987 instructions</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0095-two-guest-classes-domain-abi-and-bubblewrap/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0094: zone-server-h2o hosts the minimum UGC game loop</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0094: zone-server-h2o hosts the minimum UGC game loop</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-middleham, zone-guest-gyre, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>zone-server-h2o</code>’s PR #22 removed the MUD subsystem (the phase-2 CDN-guest move). The first cut of that PR also deleted <code>thirdparty/libriscv</code> and <code>thirdparty/QCBOR</code>, because their only in-tree consumer was the MUD orchestrator. That deletion was wrong, and the review that caught it exposed an undocumented decision.</p>
-<p><code>rfd/0092</code> defines <em>how</em> the host gates guest access (ReBAC, a use plane and an admin plane). No RFD defines <em>what</em> the host repo must implement to close a user-generated-content game loop. No RFD says which repo is that host, or how many guests compose in one zone.</p>
-<p>Without that decision on record, the same mistake repeats. A cleanup of guest-adjacent code can delete host-side machinery that looks orphaned but is load-bearing for the loop.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><code>zone-server-h2o</code> is the host of the minimum UGC game loop. The loop is: a principal with administrative capability loads guest programs, and principals with normal capability interact with what those guests run. Guests are CDN-delivered riscv64 ELFs, not in-tree code.</p>
-<section id="what-the-host-keeps-vendored" class="level3">
-<h3 class="anchored" data-anchor-id="what-the-host-keeps-vendored">What the host keeps vendored</h3>
-<ul>
-<li><code>thirdparty/libriscv</code>: the guest execution engine. It is not MUD-specific.</li>
-<li><code>thirdparty/QCBOR</code>: the serialization layer for the host-to-guest ABI. The host must speak the same CBOR encoding the guests do.</li>
-</ul>
-<p>Both stay in <code>zone-server-h2o</code> even while no in-tree consumer exists. The QCBOR build wiring stays live in <code>CMakeLists.txt</code>, so the vendored copy compiles in CI and does not rot.</p>
-</section>
-<section id="two-capability-tiers" class="level3">
-<h3 class="anchored" data-anchor-id="two-capability-tiers">Two capability tiers</h3>
-<p>The tiers are <code>rfd/0092</code>’s two planes, bound to the ReBAC actions that <code>src/gen/rebac.{c,h}</code> already generates from <code>lean-rebac-core</code>:</p>
-<ul>
-<li><strong>Administrative capabilities</strong> (admin plane): fetch a guest ELF, load it, unload it, and grant it capabilities. These map to <code>REBAC_ACTION_MODIFY</code>, which <code>Action.minRelation</code> gates at <code>REBAC_RELATION_OWNER</code>. The orchestrator runs every admin check. A guest never reaches this plane.</li>
-<li><strong>Normal capabilities</strong> (use plane): the verbs a running guest exposes to players. These map to <code>REBAC_ACTION_INTERACT</code> and <code>REBAC_ACTION_OBSERVE</code>. Observe is public. Interact needs a real relation.</li>
-</ul>
-</section>
-<section id="guest-composition" class="level3">
-<h3 class="anchored" data-anchor-id="guest-composition">Guest composition</h3>
-<p>One zone process loads more than one guest, each as its own <code>libriscv::Machine</code> and its own ReBAC subject (per <code>rfd/0092</code>). The initial composition is:</p>
-<ul>
-<li><code>zone-guest-middleham</code>: the game-logic guest, and the first to load. Its ELF recipe already worked in-tree, and it is the smallest.</li>
-<li><code>zone-guest-gyre</code>: the presentation guest (the web client and its deploy), CDN-delivered on the same pipeline.</li>
-<li><code>zone-guest-godot</code>: Godot rv64 under <code>rvlinux</code>. This is the stress test of the same capability table, not a separate design.</li>
-</ul>
-</section>
-<section id="what-closes-the-loop" class="level3">
-<h3 class="anchored" data-anchor-id="what-closes-the-loop">What closes the loop</h3>
-<p>The minimum loop closes when three items land in <code>zone-server-h2o</code>:</p>
-<ol type="1">
-<li>A guest loader that links <code>thirdparty/libriscv</code> and boots one ELF. The last loader lived in <code>mud/orchestrator/main.cpp</code> and moved to <code>zone-guest-middleham</code>.</li>
-<li>A capability table: which host functions a loaded guest may call, keyed by the guest subject’s ReBAC relations, with QCBOR as the wire format.</li>
-<li><code>rebac_check</code> call sites at both tiers: at load time (modify, owner only) and per guest syscall (interact or observe).</li>
-</ol>
-<p>Two prerequisites sit outside those three items. First, identity: the server’s TLS cert and key are still <code>NULL</code>/<code>NULL</code>, and the admin plane cannot authorize a subject that does not exist. Second, an artifact to fetch: <code>zone-guest-middleham</code>’s release workflow fails on a <code>fabric-godot-core@feat/sandbox</code> checkout for libriscv, so no guest ELF exists on a CDN yet.</p>
-</section>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>The <code>fly/Containerfile</code> libriscv build and the riscv64-musl cross toolchain stay removed until item 1 lands. Building a static lib that nothing links is dead image weight.</li>
-<li>Repo cleanups must treat <code>thirdparty/libriscv</code> and <code>thirdparty/QCBOR</code> as host infrastructure, not guest leftovers.</li>
-<li>The client-command path (parse a datagram payload, write an entity, gate it with <code>rebac_check</code>) can close a create-modify-observe loop before any sandbox work. That path is compatible with, and smaller than, items 1 through 3.</li>
-</ul>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code> PR #22: the removal that exposed this decision.</li>
-<li><code>v-sekai-multiplayer-fabric/zone-guest-middleham</code>, <code>zone-guest-gyre</code>, <code>zone-guest-godot</code>: the guests.</li>
-<li><code>sinew-mocap/solve</code> org’s <code>lean-rebac-core</code>, <code>Rebac/core/ReBAC.lean</code>: the source the C types generate from.</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0092-rebac-gates-libriscv-guest-access</code>: the gating model this RFD binds to a host repo and a loop definition.</li>
-<li><code>rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv</code>: the sandboxing decision behind <code>zone-guest-godot</code>.</li>
-<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the rule that ReBAC types generate from <code>lean-rebac-core</code>.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0094-minimum-ugc-game-loop-guest-composition/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0093: Compile taskweft relation expressions to linear automata</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0093: Compile taskweft relation expressions to linear automata</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> taskweft-nif evaluation, zone-server-h2o ReBAC</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>taskweft</code> evaluates a relation expression by recursive descent with a fuel counter (<code>check_expr</code>). It searches the graph with a depth-first walk that copies its visited set at every branch (<code>_rebac_dfs</code>). Both backtrack. Neither has a termination bound except fuel, and a fuel-zero result denies silently.</p>
-<p>This runs on two hot paths, not one. <code>tw_domain.hpp</code> routes every planner goal binding through <code>check_expr</code>, so a backtracking planner calls a backtracking evaluator. <code>rfd/0092</code> then puts the same evaluator in front of a <code>libriscv</code> guest host call, which costs 3ns.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Compile, the way <code>google/re2</code> compiles. Treat a relation expression as a regular path query over edge labels. Build the automaton once, per named definition, with a Thompson construction. Then evaluate by simulating that automaton against the graph, as a product of automaton state and graph node. No backtracking runs, and no visited set gets copied.</p>
-<p>Take the algorithm, not the library. <code>re2</code> matches bytes. This alphabet is relation labels.</p>
-<p>Build the deterministic automaton lazily, and hold it in a bounded cache. Flush that cache when it fills, exactly as <code>re2</code> does. This is the mechanism behind <code>rfd/0092</code>’s resolution-equivalence theorem, and it retires the <code>p_fuel</code> parameter, because termination becomes structural.</p>
-<p>Two constructs resist this. Zanzibar already answers the first one. <code>difference</code> is non-monotonic, so follow Leopard’s rule: denormalize the monotone fragment only, and evaluate exclusion at query time over the compiled sets.</p>
-<p>The second stays open, and it decides feasibility. <code>tuple_to_userset</code> moves the object as well as the subject, and nobody checked whether it stays regular.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Construction, the two hard constructs, and Zanzibar’s own answer to the negation problem: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code> and <code>tw_domain.hpp</code></li>
-<li><code>google/re2</code>, <code>doc/syntax.html</code> and its linear-time guarantee</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0092-rebac-gates-libriscv-guest-access</code>: supplies the hot path this compilation serves, and open questions 4 and 7 that it closes.</li>
-<li><code>rfd/0002-taskweft-value-narrowing-primitives-and-refs</code>: the value model these expressions carry.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Discussion only. Nobody wrote a compiler, and nobody proved the two hard constructs below stay regular. That proof decides whether this RFD is buildable at all.</p>
-</section>
-<section id="what-backtracks-today" class="level2">
-<h2 class="anchored" data-anchor-id="what-backtracks-today">What backtracks today</h2>
-<p><code>tw_rebac.hpp</code> carries two evaluators, and both backtrack.</p>
-<p><code>check_expr</code> walks the expression tree by recursive descent. It decrements <code>p_fuel</code> at each <code>union</code>, <code>intersection</code>, <code>difference</code>, and <code>tuple_to_userset</code> node, and it returns <code>false</code> when fuel reaches zero. <code>check_base</code> recurses the same way through an <code>IS_MEMBER_OF</code> chain.</p>
-<p><code>_rebac_dfs</code> searches depth-first for a capability path. It copies its visited set at every branch:</p>
-<pre><code>std::vector&lt;std::string&gt; sub_path;
-std::unordered_set&lt;std::string&gt; sub_visited = p_visited;
-if (_rebac_dfs(p_g, e.object, p_target, sub_visited, sub_path, p_depth - 1)) {</code></pre>
-<p>Each element of that set is a heap-allocated string, so each branch allocates.</p>
-<p>Two hot paths call this work. <code>tw_domain.hpp</code>’s own goal-satisfaction comment records the first. A goal binding whose <code>var</code> is a JSON object gets:</p>
-<pre><code>parsed as a full RelationExpr (union, intersection, difference,
-tuple_to_userset, …) and evaluated via check_expr.</code></pre>
-<p>The planner therefore calls <code>check_expr</code> per binding, per candidate state, while it backtracks. <code>rfd/0092</code> adds the second: the same evaluator in front of a <code>libriscv</code> guest host call, whose own cost is 3ns.</p>
-</section>
-<section id="what-re2-does-instead" class="level2">
-<h2 class="anchored" data-anchor-id="what-re2-does-instead">What <code>re2</code> does instead</h2>
-<p><code>re2</code> refuses to backtrack. It compiles a pattern to a program, then simulates that program so every input position advances exactly once. Its guarantee is linear time in input length, with bounded memory, and no catastrophic blowup on an adversarial pattern. It builds the deterministic automaton lazily, and when the state cache fills, it flushes the cache rather than growing without limit.</p>
-<p>The same three moves apply here:</p>
-<ol type="1">
-<li>Compile once. A named definition in <code>TwReBACGraph::definitions</code> compiles to an automaton over relation labels, by a Thompson construction. <code>union</code> becomes an alternation. Concatenation comes from <code>tuple_to_userset</code>’s pivot. <code>IS_MEMBER_OF</code> inheritance becomes a Kleene star on that one label.</li>
-<li>Simulate, do not search. Evaluation runs the product of automaton state and graph node. States times edges bounds the work. Nothing copies a visited set, because the product state <em>is</em> the visited marker.</li>
-<li>Bound the cache. Hold the lazy deterministic states in a fixed budget, and flush when full.</li>
-</ol>
-<p><code>p_fuel</code> then disappears. It exists only because a backtracking search has no natural bound. A product simulation terminates because the product state space is finite.</p>
-</section>
-<section id="this-is-not-a-stretch-relation-expressions-are-path-queries" class="level2">
-<h2 class="anchored" data-anchor-id="this-is-not-a-stretch-relation-expressions-are-path-queries">This is not a stretch: relation expressions are path queries</h2>
-<p>A ReBAC relation expression describes a set of label paths from a subject to an object. That is a regular path query, the same object graph databases already evaluate. Zanzibar’s userset rewrite rules describe a restricted regular path language for the same reason. The <code>base</code> case is a single label. <code>IS_MEMBER_OF</code> inheritance is that label starred. So most of <code>check_expr</code> already denotes a regular language, and a compiler for it is a translation, not an invention.</p>
-</section>
-<section id="the-two-constructs-that-resist" class="level2">
-<h2 class="anchored" data-anchor-id="the-two-constructs-that-resist">The two constructs that resist</h2>
-<p><strong><code>difference</code> needs complement.</strong> Complement needs a deterministic automaton, and determinization is worst-case exponential in the number of states. <code>re2</code> lives with the same fact and answers it with a lazy deterministic automaton plus a flushable cache. The same answer applies here.</p>
-<p>The sharper problem is not cost. It is monotonicity. An expression of the form “A and not B” turns a grant into a denial as soon as an edge satisfies B. An earlier <code>rfd/0092</code> draft claimed the opposite, as an append-only monotonicity theorem, and used it to justify caching a resolved capability table. <strong><code>difference</code> makes that theorem false.</strong></p>
-<p>Zanzibar already answers this, because Zanzibar ships exclusion. A userset expression there combines sub-expressions:</p>
-<pre><code>by operations such as union, intersection, and exclusion</code></pre>
-<p>Google never claims monotonicity. Their cache correctness rests on a version instead:</p>
-<pre><code>We avoid reusing results evaluated from a different snapshot by
-encoding snapshot timestamps in cache keys.</code></pre>
-<p><code>rfd/0092</code> now carries that correction. Its table keys on the FoundationDB read version that <code>zf_zonetick.c</code> already opens per tick. That correction closes the conflict, and negation stays available.</p>
-<section id="leopards-rule-do-not-denormalize-through-exclusion" class="level3">
-<h3 class="anchored" data-anchor-id="leopards-rule-do-not-denormalize-through-exclusion">Leopard’s rule: do not denormalize through exclusion</h3>
-<p>Zanzibar’s index draws a sharper line, and this RFD adopts it. Leopard denormalizes only the monotone fragment. Its two set types are <code>GROUP2GROUP</code> and <code>MEMBER2GROUP</code>, and both express pure reachability:</p>
-<pre><code>Group membership can be considered as a reachability problem in a
-graph, where nodes represent groups and users and edges represent
-direct membership.</code></pre>
-<p>Exclusion never enters the index. It runs at query time over the indexed sets:</p>
-<pre><code>A query evaluates an expression of union, intersection, or exclusion
-of named sets</code></pre>
-<p>So the rule is not “ban <code>difference</code>”. The rule is: compile and denormalize the monotone fragment, then apply <code>union</code>, <code>intersection</code>, and <code>difference</code> at query time over those compiled sets. A negated sub-expression stays a live query, and it never becomes a cached edge set.</p>
-<p>Google also treats this indexing as opt-in, “For selected namespaces that exhibit such structure”, not as a universal transform. This RFD takes the same position for taskweft’s own definitions.</p>
-<p><strong><code>tuple_to_userset</code> moves the object.</strong> A plain regular path query fixes its target and varies the path. <code>tuple_to_userset</code> pivots through one relation and then evaluates an inner expression against a <em>different</em> subject, as <code>check_expr</code> shows:</p>
-<pre><code>for (size_t idx : sit-&gt;second) {
-    const TwEdge &amp;e = p_g.edges[idx];
-    if (e.rel == pivot) {
-        if (check_expr(p_g, e.object, iit-&gt;second, p_obj, p_fuel - 1)) {</code></pre>
-<p>Whether that stays regular is the open question that decides this whole design. Nobody checked it. If it does stay regular, the product construction above holds as written. If it does not, this RFD needs a pushdown model or a restriction on nesting depth, and the linear-time claim weakens accordingly.</p>
-</section>
-</section>
-<section id="verification-this-needs" class="level2">
-<h2 class="anchored" data-anchor-id="verification-this-needs">Verification this needs</h2>
-<p><code>taskweft</code> already sets the precedent for proving a fast path equal to a slow path. <code>tw_rebac.hpp</code>’s own comment on the <code>member_edges</code> index reads:</p>
-<pre><code>Formally justified by Planner.ExpandIndex: expand_index_equiv proves
-that iterating member_edges gives the same result as scanning all
-edges.</code></pre>
-<p>The same obligation applies, at a larger scale:</p>
-<ul>
-<li>Compilation equivalence. The compiled automaton accepts exactly the subject and object pairs <code>check_expr</code> grants. This is <code>rfd/0092</code>’s resolution-equivalence theorem, and this RFD supplies its mechanism.</li>
-<li>Termination without fuel. The product simulation halts on every input, with no fuel parameter.</li>
-<li>A cache flush changes no answer. Flushing lazy deterministic states affects speed only, never a grant or a denial.</li>
-<li>Differential test. Run the compiled evaluator and the existing <code>check_expr</code> against the same graphs, and compare every answer, in the same shape <code>test/unit/test_xr_grid_entity_packet.c</code> compares a generated codec against golden vectors.</li>
-</ul>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: one mechanism closes <code>rfd/0092</code>’s open question 4 (fuel has no owner) and open question 7 (cost on the 64 Hz path). The fuel parameter stops being a silent denial source. Planning and access control share one evaluator, because both already call <code>check_expr</code>.</p>
-<p>Bad: this is a compiler, and nobody wrote it. Nobody answered the <code>tuple_to_userset</code> regularity question, and a negative answer weakens the central claim. None of this work has a caller yet, because <code>thirdparty/taskweft-nif</code> is not wired into <code>zone-server-h2o</code>, and <code>rfd/0092</code>’s guest surface does not exist either. Adopting Leopard’s split also costs something real: a negated sub-expression stays a live query forever, so it never gains the compiled path’s speed.</p>
-</section>
-<section id="revisit-when" class="level2">
-<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
-<p>Somebody answers the <code>tuple_to_userset</code> regularity question. That answer decides whether to build the product construction as written, or to fall back to a pushdown model with a bounded nesting depth. It is now the one open question that decides this design, because Zanzibar already settled the <code>difference</code> question above.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0093-compile-taskweft-to-linear-automata/</guid>
-  <pubDate>Tue, 11 Aug 2026 20:46:34 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 00:28:34 GMT</pubDate>
 </item>
 </channel>
 </rss>

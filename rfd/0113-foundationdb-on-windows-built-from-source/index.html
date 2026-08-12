@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>RFD 0113: FoundationDB on Windows, built from source – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../pages/changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/rfd.html"> 
+    <a class="nav-link" href="../../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/references.html"> 
+    <a class="nav-link" href="../../pages/references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,22 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#the-nine-stores-and-why-each-one-failed" id="toc-the-nine-stores-and-why-each-one-failed" class="nav-link" data-scroll-target="#the-nine-stores-and-why-each-one-failed">The nine stores, and why each one failed</a></li>
+  <li><a href="#what-the-build-already-shows" id="toc-what-the-build-already-shows" class="nav-link" data-scroll-target="#what-the-build-already-shows">What the build already shows</a></li>
+  <li><a href="#dependencies-that-stop-the-build" id="toc-dependencies-that-stop-the-build" class="nav-link" data-scroll-target="#dependencies-that-stop-the-build">Dependencies that stop the build</a></li>
+  <li><a href="#cost-measured" id="toc-cost-measured" class="nav-link" data-scroll-target="#cost-measured">Cost, measured</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0113-foundationdb-on-windows-built-from-source/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +307,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">RFD 0113: FoundationDB on Windows, built from source</h1>
 </div>
 
 
@@ -370,116 +324,164 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
+<p><em><a href="../../index.html">Manuals</a> › RFD 0113: FoundationDB on Windows, built from source</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> store platform support, build toolchain, packaging</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0109</code> selects FoundationDB as the store. The store must now also run on Windows. It must run the server, not only the client. A Linux virtual machine on the Windows host does not count.</p>
+<p>FoundationDB supplies no Windows binaries. Release 7.3.76 has deb, rpm, <code>.so</code>, x86_64 and aarch64 assets. A scan of the last 60 releases finds no Windows, MSI, DLL or EXE asset.</p>
+<p>Upstream looks like it tests this, and it does not. The <code>windows-boost-test.yml</code> workflow has a step with the name “Configure and Build”. That step runs only <code>cmake ..</code>. No step after configure runs on Windows.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Build FoundationDB for Windows from source.</strong> Nine other stores were examined. Each one failed on the same two constraints: a native Windows server, or a store that a second machine can reach. <code>DETAILS.md</code> lists them.</p>
+<p><strong>Use clang-cl. Do not use MSVC.</strong> Flow uses GNU <code>__attribute__</code> syntax in many files. It has never compiled with <code>cl.exe</code>. Use Ninja with clang-cl, and set the MSVC environment first. An attempt with the default MSVC toolset failed on <code>__PRETTY_FUNCTION__</code> and <code>swift_attr</code>. Those errors were the wrong compiler, not defects in FoundationDB.</p>
+<p><strong>Build Linux in the official image</strong>, <code>foundationdb/build</code>. The image has all dependencies. Linux is the control. A red Windows job has no meaning until Linux is green.</p>
+<p><strong>Package with fpm on Linux and macOS. Use FoundationDB’s own MSI on Windows.</strong> <code>packaging/msi/</code> already holds the WiX sources and <code>cmake/FindWIX.cmake</code>.</p>
+<p><strong>If the port fails, use sharded PostgreSQL.</strong> It supplies a native Windows server today. The cost is per-shard replication and promotion, built by hand.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The nine stores, the evidence, and the measurements: <code>DETAILS.md</code></li>
+<li>Work in progress: <code>v-sekai-multiplayer-fabric/foundationdb</code>, branch <code>portability-consensus</code></li>
+<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: why the store is FoundationDB.</li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0114-prove-the-store-by-breaking-it</code>: how a built store is verified.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="the-nine-stores-and-why-each-one-failed" class="level2">
+<h2 class="anchored" data-anchor-id="the-nine-stores-and-why-each-one-failed">The nine stores, and why each one failed</h2>
+<p>The store must satisfy four constraints at the same time: free and open source, reachable from a second machine, a native Windows server, and linear scaling per machine. It must also supply an ordered byte keyspace, atomic multi-key commits, and read-write conflict detection for the fence.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 67%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
+<tr class="header">
+<th>Store</th>
+<th>Why it failed</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="10" data-listing-word-count-sort="1848" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)" data-listing-filename-sort="20260807-deck-log.md">
-<td>
-<a href="../changelog/2026/20260807-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)</a>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>sqlite-in-sqlite, RocksDB, LeanStore, FASTER</td>
+<td>Embedded. No second machine can reach the data.</td>
 </tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="../changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
+<tr class="even">
+<td>TiKV, Cassandra, ScyllaDB, LeanStore</td>
+<td>No native Windows server.</td>
 </tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="../changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
+<tr class="odd">
+<td>TiKV, LeanStore</td>
+<td>Snapshot isolation. <code>check_fence</code> has no mechanism.</td>
 </tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="../changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
+<tr class="even">
+<td>FASTER</td>
+<td>A hash index. No ordered range reads.</td>
 </tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="../changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
+<tr class="odd">
+<td>Cassandra</td>
+<td>Partition size limits against 10 GiB actors. No isolation across partitions.</td>
 </tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="../changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
+<tr class="even">
+<td>Zenoh, iceoryx2 tunnels and gateways</td>
+<td>Message transport, not a store. Asynchronous replication gives split-brain and silent loss.</td>
 </tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="../changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
+<tr class="odd">
+<td>Ra</td>
+<td>A Raft library. You write the store yourself, on the BEAM this plane exists to leave.</td>
 </tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="../changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
+<tr class="even">
+<td>FerretDB and MongoDB forks</td>
+<td>The wrong data model. Transactions have time and size limits.</td>
 </tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1786494422034" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="../changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="9" data-listing-file-modified-sort="1786494422033" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="../changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<p>Two stores satisfy all four constraints: FoundationDB, if it can be built for Windows, and sharded PostgreSQL.</p>
+<p>A message transport cannot replace the store. If a commit is acknowledged locally and sent later, a machine that stops loses an unknown number of commits, and it does so silently. If the commit waits for a remote acknowledgement, it pays a network round trip. The local speed was the missing guarantee.</p>
+</section>
+<section id="what-the-build-already-shows" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-build-already-shows">What the build already shows</h2>
+<ul>
+<li><code>release-7.3</code> and <code>main</code> both complete <code>cmake</code> configure on Windows.</li>
+<li>The Windows disk path is complete in <code>release-7.3</code>. <code>fdbrpc/include/fdbrpc/AsyncFileWinASIO.actor.h</code> exists under <code>#ifdef WIN32</code>. It implements <code>IAsyncFile</code> over <code>boost::asio</code>, which uses IOCP on Windows. <code>AsyncFileKAIO</code> is <code>#ifdef __linux__</code>. <code>Net2FileSystem.cpp</code> selects KAIO only on Linux and falls through to <code>Net2AsyncFile</code> elsewhere. <strong>Nothing needs a rewrite, and io_uring is not a blocker in 7.3.</strong></li>
+<li>The Flow actor compiler is Python on <code>main</code>, and the C# implementation is a fallback behind <code>FDB_USE_CSHARP_TOOLS</code>. An earlier estimate called the C# compiler a blocker. It is not one.</li>
+<li><code>lattice-world-weft/weft-warp-loop</code> builds Flow, including the asio layer, green on <code>windows-latest</code>, with no Windows patch to the source.</li>
+</ul>
+<p>Windows IORing is not used. Its operation set started read-only, it needs Windows 11 or Server 2022, and it makes a storage engine faster that must first compile. <code>AsyncFileWinASIO</code> already supplies IOCP through <code>boost::asio</code>.</p>
+</section>
+<section id="dependencies-that-stop-the-build" class="level2">
+<h2 class="anchored" data-anchor-id="dependencies-that-stop-the-build">Dependencies that stop the build</h2>
+<p>Each one was found by a failure, and each one cost a full CI round:</p>
+<ul>
+<li><code>jemalloc</code>. Configure stops without it.</li>
+<li><code>fmt</code>. Configure stops without it.</li>
+<li>Jinja2. <code>flow/protocolversion/protocol_version.py</code> generates <code>ProtocolVersion.h</code>.</li>
+<li>Boost needs <code>format</code>, <code>asio</code> and <code>lockfree</code>. Upstream’s Windows workflow installs a component list that is enough to configure and not enough to compile.</li>
+</ul>
+<p>The official <code>foundationdb/build</code> image removes all of these on Linux. Use it instead of a dependency list.</p>
+</section>
+<section id="cost-measured" class="level2">
+<h2 class="anchored" data-anchor-id="cost-measured">Cost, measured</h2>
+<p><code>bench_vfs 2000</code> on one machine, in operations per second per core. The unit is the one <code>weft/limits.hpp</code> uses.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 12%">
+<col style="width: 27%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operation</th>
+<th>Local file</th>
+<th>FoundationDB, one node</th>
+<th>FoundationDB, consensus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Insert, one commit each</td>
+<td>262,438</td>
+<td>941</td>
+<td>433</td>
+</tr>
+<tr class="even">
+<td>Insert, one commit for all</td>
+<td>618,078</td>
+<td>399,456</td>
+<td>315,869</td>
+</tr>
+<tr class="odd">
+<td>Point read</td>
+<td>2,056,234</td>
+<td>1,892,751</td>
+<td>2,027,633</td>
+</tr>
+<tr class="even">
+<td>Scan</td>
+<td>12,149,044</td>
+<td>14,370,707</td>
+<td>15,144,402</td>
+</tr>
+</tbody>
+</table>
+<p>Read the first row with care. The local file column uses <code>journal_mode=MEMORY</code> and sets no <code>synchronous</code> value, so it is not durable. A durable local SQLite gives 2,008 commits per second per core, not 262,438. FoundationDB passes it at about four concurrent writers, because FoundationDB groups commits and a file per writer cannot.</p>
+<p><strong>Reads are already at parity.</strong> A point read costs 2,027,633 against a local file’s 2,056,234. No store choice can improve the read rows. The choice is decided on the commit row alone.</p>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -901,7 +903,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/pages/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0113-foundationdb-on-windows-built-from-source/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

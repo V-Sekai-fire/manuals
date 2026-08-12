@@ -17,6 +17,8 @@
   {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0114-prove-the-store-by-breaking-it/index.html",
+      "/rfd/0113-foundationdb-on-windows-built-from-source/index.html",
       "/rfd/0112-lexical-for-the-slash-command-interface/index.html",
       "/rfd/0111-convert-the-deployment-words/index.html",
       "/rfd/0110-h2o-libriscv-as-a-rivet-actor/index.html",
