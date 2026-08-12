@@ -289,7 +289,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#status" id="toc-status" class="nav-link active" data-scroll-target="#status">Status</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
@@ -334,7 +335,13 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><em><a href="../../index.html">Manuals</a> › RFD 0112: Lexical for the slash command interface</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> the Queen of the Gyre, and what serves her</p>
+<p><strong>State:</strong> abandoned · <strong>Scope:</strong> the Queen of the Gyre, and what serves her</p>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>The slash command field is not being built. The client the Gyre is getting has hands in it rather than a caret: RFD 0119 puts salvage in a headset under distributed physics authority, and RFD 0118 takes the pipeline to a Godot release template driven by sandboxed guests. A Lexical editor serves neither.</p>
+<p>The argument that chose Lexical over ProseMirror was about the caret – that a parameter must be one thing to it, and that a decorator node crosses in one key press where an atom node can trap. That argument was correct and it no longer has a subject.</p>
+<p>What survives is the boundary the RFD drew rather than the widget it chose. Commands still arrive as a command in and reply bytes out, <code>thirdparty/interactor</code> still carries that contract, and the server still checks on receipt whatever a client chose to show, because a filtered menu is a convenience and never an authorization. The browser client in <code>fabric-store-domain/client/</code> reached a working editor and a passing caret suite, and it never opened a live session outside its own test.</p>
+</section>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>fabric-store-domain/src/queen.c</code> has no client. Its <code>main()</code> founds a ward, runs the cycles, prints, and exits, with no socket and no instance that outlives the run. A slash command interface needs a live game and a field to type into, and neither exists.</p>
