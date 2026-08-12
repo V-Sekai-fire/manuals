@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -323,10 +323,11 @@ ul.task-list li input[type="checkbox"] {
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>This repository writes Request-for-Discussion documents in the Oxide style, the same style <code>weftspun/request-for-discussion</code> uses. Each RFD lives in its own folder, <code>rfd/NNNN-kebab-title/</code>, not a single flat file. Each RFD has a state: prediscussion, ideation, discussion, published, committed, abandoned, or moved.</p>
-<p>Each RFD’s <code>README.md</code> has a <code>## Problem</code> section before <code>## Decision</code>. The <code>## Problem</code> section states, in one short paragraph, what is wrong or missing today, and why that matters. A reader must understand the problem before they read the decision.</p>
+<p>Each RFD’s <code>index.md</code> has a <code>## Problem</code> section before <code>## Decision</code>. The <code>## Problem</code> section states, in one short paragraph, what is wrong or missing today, and why that matters. A reader must understand the problem before they read the decision.</p>
+<p>Quarto renders the folder through <code>index.md</code>, and its frontmatter carries the title, the number, the state, and the scope.</p>
 <p>The repository writes prose in ASD-STE100 Simplified Technical English. Code and identifiers do not follow STE. STE applies to documents, comments, and user-visible text.</p>
 <p>The repository keeps designs in one place. <code>decisions/</code> holds MADR records, one point decision each, dated. An RFD points to a MADR, a source file, or another RFD. It does not copy the source.</p>
-<p>Each RFD’s <code>README.md</code> stays under 40 lines. It states the state, the scope, and the decision, in the fewest lines that keep all three true. A measurement, a verification log, a status table, or a deep walkthrough does not fit. Move it to a sibling file, <code>DETAILS.md</code>, in the same RFD folder. The <code>README.md</code> names that file in one line.</p>
+<p>A section belongs in <code>index.md</code> when a reader needs it to reach the decision. A measurement, a verification log, a status table, or a deep walkthrough goes to a sibling file, <code>DETAILS.md</code>, in the same RFD folder. The <code>index.md</code> names that file under <code>## References</code> and pulls it in at the end with <code>{{&lt; include DETAILS.md &gt;}}</code>, so one page renders whole and the short form stays readable on its own.</p>
 <p><code>decisions/</code> (MADR, <code>YYYYMMDD-title.md</code>) still records a single point decision. <code>rfd/</code> records a longer-lived design that can carry a proposal forward and get amended over time. The project migrates existing MADR files into <code>rfd/</code> gradually. Once a MADR file has a matching <code>rfd/NNNN</code> folder, delete the MADR file. Do not keep a pointer stub. Git history still holds the deleted file’s content and its old path.</p>
 <p>A new RFD takes the next unused four-digit number under <code>rfd/</code>; check <code>pages/rfd.html</code>’s live listing (sorted newest first), not any other repo’s own numbering, for what is already taken.</p>
 </section>
