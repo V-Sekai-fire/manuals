@@ -31,7 +31,7 @@ _STEM = r"[0-9]{8}-[a-z0-9-]+"
 _SUPERSEDED = re.compile(r"^superseded by\s+(\S+)\.md\s*$", re.IGNORECASE)
 _LINK = re.compile(r"\]\(([^)\s]+)\)")
 _PAGE_EXT = (".md", ".qmd", ".html")
-_SKIP_DIRS = ("_site/", "decisions/attachments/", "scripts/")
+_SKIP_DIRS = ("_site/", "scripts/")
 
 
 def _posix(path):
@@ -127,7 +127,7 @@ def _status_inlines(status):
     return [Str(status)]
 
 
-_SECTIONS = {"decisions": "Decisions", "changelog": "Changelog"}
+_SECTIONS = {"rfd": "RFDs", "changelog": "Changelog"}
 
 # The section listing pages (changelog.qmd, rfd.qmd, references.qmd) live under
 # pages/, so a breadcrumb back to a section resolves there, not at the root.
