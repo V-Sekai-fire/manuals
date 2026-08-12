@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -297,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#fps-comparison-as-settled-context" id="toc-fps-comparison-as-settled-context" class="nav-link" data-scroll-target="#fps-comparison-as-settled-context">fps comparison, as settled context</a></li>
   </ul></li>
   <li><a href="#recommendation-and-next-steps" id="toc-recommendation-and-next-steps" class="nav-link" data-scroll-target="#recommendation-and-next-steps">Recommendation and next steps</a></li>
-  <li><a href="#open-questions-and-verification" id="toc-open-questions-and-verification" class="nav-link" data-scroll-target="#open-questions-and-verification">Open questions and verification</a></li>
+  <li><a href="#verification-and-questions-this-record-handed-on" id="toc-verification-and-questions-this-record-handed-on" class="nav-link" data-scroll-target="#verification-and-questions-this-record-handed-on">Verification, and questions this record handed on</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -452,10 +452,11 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Wire real TLS certificate and key material before any real client-handshake test runs. <code>main.c</code> still passes <code>NULL</code> for both today.</p></li>
 </ol>
 </section>
-<section id="open-questions-and-verification" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions-and-verification">Open questions and verification</h2>
+<section id="verification-and-questions-this-record-handed-on" class="level2">
+<h2 class="anchored" data-anchor-id="verification-and-questions-this-record-handed-on">Verification, and questions this record handed on</h2>
+<p>This record holds no open question of its own. It holds a re-verification procedure, and two pointers to the records that took its questions.</p>
 <p>A future session checks this RFD’s claims still hold this way. Re-run the local equivalent of <code>zone-server-h2o</code>’s <code>real-build.yml</code>. Grep <code>src/</code> for calls to <code>rebac_check</code>, <code>mj_physics_step</code>, and <code>sinew_align</code>. Zero calls exist outside the unit tests today, so this check reveals whether the wiring work in item 1 above happened. Check <code>zf_kv.h</code>’s own scoping comment, and confirm whether the <code>zf/zone_state/</code>, <code>zf/effect/</code>, and <code>zf/fanout/</code> keys exist yet.</p>
-<p>Resolved: the sandboxed-CastSpell approach in item 4 needs its own follow-up RFD. That is because the scope differs between a client-side sandbox and a server-side one running under load. That follow-up is <code>rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md</code>. Its own open questions, on <code>jsonld-cpp</code>’s maintenance risk, the authoring tool’s sandboxing, and the <code>QCBOR</code>-versus-<code>zcbor</code> pick, live there, not here.</p>
+<p>Resolved: the sandboxed-CastSpell approach in item 4 needs its own follow-up RFD. That is because the scope differs between a client-side sandbox and a server-side one running under load. That follow-up is <code>rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md</code>. That record settled the <code>QCBOR</code>-versus-<code>zcbor</code> pick. What it carries forward is an accepted risk on <code>jsonld-cpp</code>’s maintenance and a deferral on sandboxing the authoring tool, and both live there, not here.</p>
 <p>Resolved, item 6: the scope of <code>libriscv</code>/<code>godot-sandbox</code>’s API surface CastSpell effects need, and the choice to embed <code>libgodot</code> instead of reimplementing that surface. That decision, and its own open performance-measurement gate (part 2 of the spike), live in <code>rfd/0004-castspell-libgodot-sandbox-runtime-scope/index.md</code>.</p>
 
 

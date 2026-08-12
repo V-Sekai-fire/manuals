@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -415,6 +415,9 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="open-questions-this-record-does-not-settle" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions-this-record-does-not-settle">Open questions this record does not settle</h2>
+<p>This record is abandoned, so none of the four questions below stay open in the form they take here. Each one asks where a part goes in a four-part stack that the project does not build. The records that carry the same subject forward are these.</p>
+<p><code>rfd/0109</code> places Elixir and the store. The tier is Elixir plus FoundationDB, and <code>rfd/0103</code> puts Uro on <code>ecto_foundationdb</code>, so the Elixir tier drives the database path. <code>rfd/0110</code> places the guest runtime and the transport. One pinned Godot build hosts libriscv guests through its <code>sandbox</code> module and terminates WebTransport through its <code>http3</code> module, and no Janet layer exists to compete with either. <code>rfd/0108</code> closed the first and third questions before it was abandoned in turn.</p>
+<p>The four questions stay written below as the record left them.</p>
 <p><strong>Which part talks to FoundationDB.</strong> <code>rfd/0073</code> drove <code>libfdb_c</code> callbacks from the libh2o event loop, when h2o was the whole server. If h2o is ingress and reverse proxy only, the loop that drives the callbacks may belong to <code>libtaskweft</code> instead. Janet has no <code>libfdb_c</code> binding in this project today.</p>
 <p><strong>Where Elixir goes.</strong> The four parts name no Elixir. <code>zone-backend</code> is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. <code>rfd/0090</code> is its production release shape, and <code>rfd/0103</code> puts it on <code>ecto_foundationdb</code>. Nothing here retires it, and nothing here places it.</p>
 <p><strong>Whether Janet replaces the libriscv guests.</strong> <code>rfd/0094</code> keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per <code>rfd/0092</code>. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.</p>

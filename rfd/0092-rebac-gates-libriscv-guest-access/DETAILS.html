@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -487,18 +487,20 @@ encoding snapshot timestamps in cache keys.</code></pre>
 </section>
 <section id="open-questions" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
-<p>Ten questions stay open. Items 1 to 3 block implementation. The rest are design work.</p>
+<p>This record opened ten questions. Items 1, 4, and 7 are closed, and the closing note stays under its original number so that other records citing that number still land on the right item. Seven stay open. Items 2 and 3 block implementation. The rest are design work.</p>
 <ol type="1">
-<li><p>Engine choice. Resolved above: extend <code>lean-rebac-core</code> to the graph shape and generate the C, with <code>tw_rebac.hpp</code> as the reference shape and test oracle. Recorded here because an earlier draft called the two engines interchangeable, which is wrong.</p></li>
+<li><p>Closed. Engine choice. Extend <code>lean-rebac-core</code> to the graph shape and generate the C, with <code>tw_rebac.hpp</code> as the reference shape and test oracle. Recorded here because an earlier draft called the two engines interchangeable, which is wrong.</p></li>
 <li><p>Who may write edges. Answered above by the use/admin plane split, but its three sub-decisions (bootstrap, delegability, scope) stay open.</p></li>
 <li><p>Revocation does not exist. <code>tw_rebac.hpp</code> defines <code>add_edge</code> and <code>define</code>, and no counterpart that removes either. A search for <code>remove</code>, <code>revoke</code>, <code>erase</code>, and <code>delete</code> in that header returns nothing. The graph is append-only. Nobody can revoke a capability mid-session, and no rule covers a guest paused inside a <code>vmcall</code> when its access disappears.</p>
 <p>Zanzibar shows the shape of the fix. Leopard’s incremental layer stores each update as a <code>(T, s, e, t, d)</code> tuple. The paper defines the last two fields:</p>
 <pre><code>t is the timestamp of the update and d is a deletion marker</code></pre>
 <p>A query merges every update at or below its own timestamp on top of the offline index. So revocation is a tombstone plus a version merge, and the Lean migration above must carry both. An append-only graph is not the design. It is the current gap.</p></li>
-<li><p>Fuel has no owner. <code>check_expr</code> and <code>check_base</code> return <code>false</code> at zero fuel. That fails closed, which is correct. But a legitimate deep delegation chain then denies silently, and authorization depends on graph depth. Only <code>tw_expand</code> carries a default (<code>p_fuel = 3</code>). <code>check_expr</code>, <code>check_base</code>, and <code>rebac_can_json</code> each require the caller to supply one. No rule says who picks it.</p></li>
+<li><p>Closed by <code>rfd/0093</code>. Fuel has no owner. <code>check_expr</code> and <code>check_base</code> return <code>false</code> at zero fuel. That fails closed, which is correct. But a legitimate deep delegation chain then denies silently, and authorization depends on graph depth. Only <code>tw_expand</code> carries a default (<code>p_fuel = 3</code>). <code>check_expr</code>, <code>check_base</code>, and <code>rebac_can_json</code> each require the caller to supply one. No rule says who picks it.</p>
+<p><code>rfd/0093</code> compiles the policy to a linear automaton, which reads its input with no fuel parameter. The fuel parameter stops being a silent denial source, so this question has no subject left. It returns if that compilation does not hold, and <code>rfd/0093</code>’s own <code>tuple_to_userset</code> regularity question decides that.</p></li>
 <li><p>Identity and ID reuse. Subjects and objects are <code>std::string</code>. Godot recycles object instance IDs after a free. A stale <code>HAS_CAPABILITY</code> edge plus a recycled ID grants access to a different object than the authorized one. This RFD names no stable identity scheme.</p></li>
 <li><p>An inherited bypass. <code>godot-sandbox</code>’s own restrictions page states this: “Objects passed as function arguments remain accessible regardless of restrictions.” A check at the call boundary misses handles the guest already holds. No rule covers re-checking a held handle on a later tick.</p></li>
-<li><p>Cost on the 64 Hz path. <code>_rebac_dfs</code> copies the visited set at every branch (<code>sub_visited = p_visited</code>). A graph search per host call, on the zone tick, has no budget in this RFD.</p></li>
+<li><p>Closed by <code>rfd/0093</code>. Cost on the 64 Hz path. <code>_rebac_dfs</code> copies the visited set at every branch (<code>sub_visited = p_visited</code>). A graph search per host call, on the zone tick, has no budget in this RFD.</p>
+<p>The compiled evaluator replaces the graph search, so the copy on every branch goes away with it. This question closes on the same condition as item 4, and it returns on the same failure.</p></li>
 <li><p>Gas checking is circular. If budget extension is itself a ReBAC check, and that check costs time, no rule says whose budget pays.</p></li>
 <li><p>Denial leaks the graph. <code>rebac_can_json</code> returns <code>{"authorized":bool,"path":[...]}</code>. That path is the audit-trail advantage over <code>godot-sandbox</code>. Returning it to untrusted guest code leaks capability-graph structure.</p></li>
 <li><p>Which process may answer. <code>src/gen/rebac.h</code>’s own comment quotes the Lean source: only the authority zone evaluates <code>.interact</code> and <code>.modify</code>, and interest zones may evaluate <code>.observe</code> locally. <code>rfd/0086</code> defers that authority mechanism.</p></li>

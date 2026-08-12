@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -308,7 +308,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#naming-the-pattern-cheap-or-nasty" id="toc-naming-the-pattern-cheap-or-nasty" class="nav-link" data-scroll-target="#naming-the-pattern-cheap-or-nasty">Naming the pattern: Cheap or Nasty</a></li>
   </ul></li>
   <li><a href="#recommendation-and-next-steps" id="toc-recommendation-and-next-steps" class="nav-link" data-scroll-target="#recommendation-and-next-steps">Recommendation and next steps</a></li>
-  <li><a href="#open-questions-and-verification" id="toc-open-questions-and-verification" class="nav-link" data-scroll-target="#open-questions-and-verification">Open questions and verification</a></li>
+  <li><a href="#resolutions-accepted-risk-and-verification" id="toc-resolutions-accepted-risk-and-verification" class="nav-link" data-scroll-target="#resolutions-accepted-risk-and-verification">Resolutions, accepted risk, and verification</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -430,8 +430,9 @@ ul.task-list li input[type="checkbox"] {
 <li>Wire the ABI version check into the package loader, refusing any package whose declared version does not match the host’s own struct layout.</li>
 </ol>
 </section>
-<section id="open-questions-and-verification" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions-and-verification">Open questions and verification</h2>
+<section id="resolutions-accepted-risk-and-verification" class="level2">
+<h2 class="anchored" data-anchor-id="resolutions-accepted-risk-and-verification">Resolutions, accepted risk, and verification</h2>
+<p>No question stays open here. Five items below are resolved. One is an accepted risk on a dependency, and one is a deliberate deferral. Both of those carry a condition that brings them back, and neither blocks the work.</p>
 <p>Studied: <code>jsonld-cpp</code> (<code>dcdpr/jsonld-cpp</code> on GitHub) is a real, standard CMake C++ project, BSD-3-Clause licensed, depending only on a normal toolchain (<code>make</code>, <code>cmake</code>, <code>g++</code>, <code>libssl-dev</code>). It carries a real maintenance risk, though. It has 8 stars, 1 open issue, 0 open pull requests, and no push since May 2024.</p>
 <p>Accept this risk. The offline authoring tool keeps <code>jsonld-cpp</code> fully isolated from <code>zone-server-h2o</code>’s own runtime and build. A stale or eventually-abandoned dependency here costs a build-tool maintenance burden, not a deployed-server one. Confirm the offline tool’s own <code>CMakeLists.txt</code> never becomes part of <code>zone-server-h2o</code>’s own CMake target. Revisit <code>jsonld-cpp</code> if it goes fully unmaintained before task I lands.</p>
 <p>Recorded, not resolved: the offline authoring tool may deserve sandboxing itself someday, the same protection CastSpell effects get. Sandboxing it before task I’s own sandbox path proves out creates a chicken-and-egg problem. The tool would need to run inside the very sandbox infrastructure it exists to produce packages for. Leave it unsandboxed until task I’s sandbox path is itself proven, then revisit.</p>

@@ -47,9 +47,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-430847948372fa2b617625dd5cccfb8e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5c9368ec9cc366b0726b6e656dc2f485.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -294,7 +294,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
   <li><a href="#proposal" id="toc-proposal" class="nav-link" data-scroll-target="#proposal">Proposal</a></li>
   <li><a href="#recommendation-and-next-steps" id="toc-recommendation-and-next-steps" class="nav-link" data-scroll-target="#recommendation-and-next-steps">Recommendation and next steps</a></li>
-  <li><a href="#open-questions-and-verification" id="toc-open-questions-and-verification" class="nav-link" data-scroll-target="#open-questions-and-verification">Open questions and verification</a></li>
+  <li><a href="#deferred-work-and-verification" id="toc-deferred-work-and-verification" class="nav-link" data-scroll-target="#deferred-work-and-verification">Deferred work and verification</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0005-gltf-interactivity-value-type-taxonomy-correction/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -344,9 +344,10 @@ ul.task-list li input[type="checkbox"] {
 <li>When a future CastSpell parameter needs a <code>custom</code>-signature value, design its extension and its struct representation as a follow-up to this RFD, not as a silent addition to the primitive/<code>ref</code> split.</li>
 </ol>
 </section>
-<section id="open-questions-and-verification" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions-and-verification">Open questions and verification</h2>
-<p>Open: no current CastSpell parameter needs <code>custom</code>. Revisit this RFD once one does, and decide the extension and struct representation at that time.</p>
+<section id="deferred-work-and-verification" class="level2">
+<h2 class="anchored" data-anchor-id="deferred-work-and-verification">Deferred work and verification</h2>
+<p>No question stays open here. One item is deferred, which is a different thing, because nothing blocks on the answer.</p>
+<p>Deferred: no current CastSpell parameter needs <code>custom</code>. The decision waits on a parameter that needs it. Revisit this RFD when one appears, and decide the extension and the struct representation at that time.</p>
 <p>Verification: re-read <code>taskweft/thirdparty/gltf_interactivity/01_core_concepts.md</code> and <code>03_extending_gltf.md</code> directly to confirm the three-category taxonomy still holds. <code>taskweft/taskweft</code> is a project outside this org, and its vendored copy can move independently of this RFD.</p>
 
 
