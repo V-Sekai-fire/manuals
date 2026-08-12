@@ -270,7 +270,12 @@ nasty layer. Neither earns a third format's added build dependency.
    package whose declared version does not match the host's own
    struct layout.
 
-## Open questions and verification
+## Resolutions, accepted risk, and verification
+
+No question stays open here. Five items below are resolved. One is an
+accepted risk on a dependency, and one is a deliberate deferral. Both
+of those carry a condition that brings them back, and neither blocks
+the work.
 
 Studied: `jsonld-cpp` (`dcdpr/jsonld-cpp` on GitHub) is a real, standard
 CMake C++ project, BSD-3-Clause licensed, depending only on a normal

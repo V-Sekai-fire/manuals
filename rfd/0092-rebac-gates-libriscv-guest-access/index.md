@@ -56,7 +56,8 @@ constants. Budget extension becomes an authorized relationship.
 ## References
 
 - Engine comparison, mapping table, the `godot-sandbox` API this
-  replaces, and ten open questions: `DETAILS.md`
+  replaces, and the ten questions, of which seven stay open:
+  `DETAILS.md`
 - `v-sekai-multiplayer-fabric/zone-server-h2o`,
   `thirdparty/taskweft-nif/standalone/tw_rebac.hpp`
 - `sinew-mocap/solve` org's `lean-rebac-core`, `Rebac/core/ReBAC.lean`
@@ -68,6 +69,8 @@ constants. Budget extension becomes an authorized relationship.
   sandboxing decision this gates.
 - `rfd/0086-defer-nogod-gossip-zone-authority`: the other place
   `lean-rebac-core` is already in scope.
+- `rfd/0093-compile-taskweft-to-linear-automata`: closes questions 4
+  and 7.
 
 ## Detail
 
