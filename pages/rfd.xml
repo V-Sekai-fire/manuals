@@ -10,248 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Wed, 12 Aug 2026 01:38:53 GMT</lastBuildDate>
-<item>
-  <title>RFD 0116: ReBAC gates libriscv guest access, not five callbacks</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-rebac-gates-libriscv-guest-access/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0116: ReBAC gates libriscv guest access, not five callbacks</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-guest-middleham, godot-sandbox-style libriscv hosts</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0079</code> picked raw <code>libriscv</code> for sandboxed guest code (now living in <code>zone-guest-middleham</code>), but never defined what host capabilities a guest may reach. <code>rfd/0079</code>’s own “Consequences” section says so directly: “The exact <code>GodotInstance</code>/scene API <code>godot_tick</code> uses to apply entity input and read state back out is not yet nailed down.”</p>
-<p><code>godot-sandbox</code>, the reference <code>libriscv</code>-Godot integration, already solved this once, with five independent allow-callbacks: class, object, method, property, and resource. Each callback returns a plain boolean. None of the five shares state with the others, and none returns a reason or a path a reviewer could audit later.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Gate guest access through ReBAC, not five separate callbacks, and not a two-tier core/user split like <code>godot-luau-script</code>’s.</p>
-<p>Neither existing engine fits as it stands. <code>lean-rebac-core</code>’s <code>rebacCheck</code> carries real Lean proofs, but it is a five-rank total order, which is a tier model. <code>tw_rebac.hpp</code> has the right relationship-graph shape, but it carries no proofs.</p>
-<p>So extend <code>lean-rebac-core</code> in Lean to the relationship-graph shape, and generate the C from it. This keeps <code>rfd/0083</code>’s existing rule: ReBAC types generate from <code>lean-rebac-core</code>, not hand-duplicated per language. <code>tw_rebac.hpp</code> becomes the reference shape and the differential-test oracle, not the shipped engine. <code>DETAILS.md</code> lists the theorems this migration must carry.</p>
-<p>Model each guest <code>libriscv::Machine</code> instance as a ReBAC subject. Model each of <code>godot-sandbox</code>’s five gated things (a class, an object, a method, a property, a resource path) as a ReBAC object. Replace each boolean callback with one <code>check_expr</code>/<code>can()</code> call: does this guest subject have <code>HAS_CAPABILITY</code> (or a defined computed relation) to this object.</p>
-<p>Split the graph into a use plane and an admin plane. On the use plane a guest asks whether it may reach a capability. On the admin plane a principal asks whether it may add an edge. A <code>CAN_GRANT</code> relation governs the admin plane. The orchestrator runs every admin check, and a guest never reaches that plane.</p>
-<p>Also gate <code>libriscv</code>’s own execution-budget primitives (instruction- counted timeout, pause/resume) as ReBAC actions, not hardcoded constants. Budget extension becomes an authorized relationship.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Engine comparison, mapping table, the <code>godot-sandbox</code> API this replaces, and ten open questions: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code></li>
-<li><code>sinew-mocap/solve</code> org’s <code>lean-rebac-core</code>, <code>Rebac/core/ReBAC.lean</code></li>
-<li><code>libriscv/godot-sandbox</code>, <code>docs/host_langs/godot_integration/godot_docs/restrictions</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv</code>: the sandboxing decision this gates.</li>
-<li><code>rfd/0086-defer-nogod-gossip-zone-authority</code>: the other place <code>lean-rebac-core</code> is already in scope.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Discussion only. No implementation exists yet. Nothing today calls <code>check_expr</code>, <code>rebac_can_json</code>, or any <code>lean-rebac-core</code> predicate from a <code>libriscv</code> host callback.</p>
-</section>
-<section id="what-godot-sandbox-documents-today" class="level2">
-<h2 class="anchored" data-anchor-id="what-godot-sandbox-documents-today">What <code>godot-sandbox</code> documents today</h2>
-<p><code>godot-sandbox</code> is the reference <code>libriscv</code>-Godot integration. <code>libriscv</code> itself calls “pause and resume … a first-class citizen” in its own README, and documents an “optional execution timeout using instruction counting”. <code>godot-sandbox</code> exposes a <code>restrictions</code> property. Setting it <code>true</code> blocks all external access by default, then five independent callbacks each grant a narrow exception:</p>
-<ul>
-<li><code>set_class_allowed_callback(func(sandbox, name): ...)</code> — gates class instantiation. Checked with <code>is_allowed_class(name)</code>.</li>
-<li><code>add_allowed_object(obj)</code> / <code>remove_allowed_object(obj)</code> / <code>clear_allowed_objects()</code>, plus <code>set_object_allowed_callback(func(sandbox, obj): ...)</code> for anything not in the explicit list.</li>
-<li><code>set_method_allowed_callback(func(sandbox, obj, method): ...)</code> — gates method calls.</li>
-<li><code>set_property_allowed_callback(func(sandbox, obj, prop): ...)</code> — gates property reads/writes.</li>
-<li><code>set_resource_allowed_callback(func(sandbox, path): ...)</code>, checked with <code>is_allowed_resource(path)</code> — gates resource loads.</li>
-</ul>
-<p>Each callback returns a plain boolean, independently of the other four. None of them shares a subject/object model, a delegation concept, or an audit trail. One documented workaround for building a real whitelist is to run once in trace mode. This logs every access request a callback sees, then a person hand-promotes the log into a static allow-list. This RFD’s ReBAC model closes that gap structurally, not by manual log review.</p>
-</section>
-<section id="the-existing-rebac-engine-this-reuses" class="level2">
-<h2 class="anchored" data-anchor-id="the-existing-rebac-engine-this-reuses">The existing ReBAC engine this reuses</h2>
-<p><code>thirdparty/taskweft-nif/standalone/tw_rebac.hpp</code> (in <code>zone-server-h2o</code>, ported from <code>plan_memory/rebac.py</code>, no Godot dependency) already implements:</p>
-<ul>
-<li>A relation vocabulary: <code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>OWNS</code>, <code>IS_MEMBER_OF</code>, <code>DELEGATED_TO</code>, <code>SUPERVISOR_OF</code>, <code>PARTNER_OF</code>, plus an <code>UNKNOWN</code>/string-named escape hatch for domain-specific relations.</li>
-<li>A boolean expression algebra over relations: <code>base</code>, <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>tuple_to_userset</code> (Zanzibar’s own “pivot through another relation” pattern) — <code>check_expr()</code>.</li>
-<li><code>IS_MEMBER_OF</code> transitive inheritance and <code>CONTROLS</code>/<code>DELEGATED_TO</code> inversion, both handled inside <code>check_base()</code>, not bolted on per caller.</li>
-<li><code>can()</code>/<code>rebac_can_json()</code> — a DFS capability search that returns the actual path, not just a boolean, format: <code>{"authorized":bool,"path":[...]}</code>. This is the audit trail <code>godot-sandbox</code>’s five callbacks do not have today.</li>
-<li>JSON (de)serialization (<code>graph_from_json</code>/<code>graph_to_json</code>), so a guest’s capability graph is itself data, not code.</li>
-</ul>
-</section>
-<section id="the-two-engines-differ-and-neither-one-fits-as-it-stands" class="level2">
-<h2 class="anchored" data-anchor-id="the-two-engines-differ-and-neither-one-fits-as-it-stands">The two engines differ, and neither one fits as it stands</h2>
-<p>An earlier draft of this RFD called <code>lean-rebac-core</code>’s <code>rebacCheck</code> an interchangeable alternative to <code>tw_rebac.hpp</code>. That was wrong. The two carry different authorization semantics, and the difference decides this RFD’s whole premise.</p>
-<p>Read <code>zone-server-h2o</code>’s own port, <code>src/gen/rebac.h</code>. <code>rebac_check</code> grants access if and only if the claim’s highest relation rank is greater than or equal to the action’s minimum rank. The ranks form a fixed total order: <code>REBAC_RELATION_PUBLIC = 0</code>, <code>INSTANCE_MEMBER = 1</code>, <code>FRIEND = 2</code>, <code>GUILD_MEMBER = 3</code>, <code>OWNER = 4</code>. The actions are <code>REBAC_ACTION_OBSERVE</code>, <code>INTERACT</code>, and <code>MODIFY</code>.</p>
-<p>That is a five-tier lattice, not a relationship graph. It has no subjects, no objects, and no edges. This RFD exists to replace a two-tier model. A five-tier model is the same shape with three more tiers, so it does not answer the problem statement.</p>
-<p><code>lean-rebac-core</code> keeps its own value, and <code>rfd/0083</code> and <code>rfd/0086</code> both still depend on it. Its theorems are real (<code>rebac_empty_denied</code>, <code>rebac_public_observe</code>, the owner-only <code>.modify</code> boundary). It answers a different question: what rank a player claim needs for a world action. It does not answer what a sandboxed guest may reach on the host.</p>
-<p>The other candidate has the opposite problem. <code>tw_rebac.hpp</code> carries the right shape and no proofs.</p>
-</section>
-<section id="migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it" class="level2">
-<h2 class="anchored" data-anchor-id="migrate-lean-rebac-core-to-the-graph-shape-do-not-replace-it">Migrate <code>lean-rebac-core</code> to the graph shape, do not replace it</h2>
-<p>Do not ship the unproved engine. Extend <code>lean-rebac-core</code> in Lean from a rank lattice to a relationship graph, then generate the C from it. <code>rfd/0083</code> already sets this rule for this exact module: ReBAC types generate from <code>lean-rebac-core</code>, and they never get hand-duplicated per language. <code>zone-server-h2o</code>’s <code>src/gen/rebac.c</code> is already that generated artifact. This work extends the Lean source behind it, instead of adding a second, unproved authorization engine beside it.</p>
-<p><code>tw_rebac.hpp</code> keeps two roles in this plan. It is the reference shape, because its relation vocabulary and expression algebra already describe the target. It is also the differential-test oracle, in the same way <code>test/unit/test_xr_grid_entity_packet.c</code> checks a generated codec against golden vectors.</p>
-<p>Precedent exists inside <code>tw_rebac.hpp</code> itself. Its own comment on the <code>member_edges</code> index reads:</p>
-<pre><code>Formally justified by Planner.ExpandIndex: expand_index_equiv proves
-that iterating member_edges gives the same result as scanning all
-edges.</code></pre>
-<p>So <code>taskweft</code> already proves one fast path equal to its slow path, in Lean, for this same header. This migration generalizes that habit rather than inventing it.</p>
-<section id="theorems-this-migration-must-carry" class="level3">
-<h3 class="anchored" data-anchor-id="theorems-this-migration-must-carry">Theorems this migration must carry</h3>
-<ul>
-<li><code>rebac_empty_denied</code>, generalized: an empty graph denies every request. The rank version already proves this.</li>
-<li><strong>Fuel soundness.</strong> If <code>check_expr</code> grants at fuel <code>n</code>, it grants at fuel <code>n + 1</code>. More search never reverses a grant, and a fuel-zero denial is therefore always conservative. This closes open question 4.</li>
-<li><strong>Append-only monotonicity.</strong> Adding an edge never turns a grant into a denial. This is what makes a resolved capability table safe to cache.</li>
-<li><strong>Resolution equivalence.</strong> The flat capability table, built at bind time, answers exactly as a full graph walk answers. This is the same theorem shape as <code>expand_index_equiv</code>, and it is what makes the enforcement path trustworthy.</li>
-<li><strong>Plane separation.</strong> No use-plane derivation grants <code>CAN_GRANT</code>. A guest therefore cannot reach the admin plane. This closes open question 2.</li>
-<li><strong>Non-delegability</strong>, if the team takes that fork: no derivation grants <code>CAN_GRANT</code> to a subject that does not already hold a host-seeded <code>CAN_GRANT</code>.</li>
-</ul>
-</section>
-</section>
-<section id="administrative-relations-who-may-write-edges" class="level2">
-<h2 class="anchored" data-anchor-id="administrative-relations-who-may-write-edges">Administrative relations: who may write edges</h2>
-<p>A capability graph that its own subjects may edit grants nothing. <code>godot-luau-script</code> answers this with a coarse split, where core scripts may set their own permissions and user scripts may not. This RFD answers it inside the graph instead, with administrative relations.</p>
-<p>Every check belongs to one of two planes:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 49%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Plane</th>
-<th>Question</th>
-<th>Relations</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Use</td>
-<td>May this guest call <code>X</code>?</td>
-<td><code>HAS_CAPABILITY</code>, <code>CONTROLS</code>, <code>OWNS</code></td>
-</tr>
-<tr class="even">
-<td>Admin</td>
-<td>May this principal add edge <code>(S, O, R)</code>?</td>
-<td><code>CAN_GRANT</code></td>
-</tr>
-</tbody>
-</table>
-<p>A guest lives only on the use plane. Each grant request runs a <code>check_expr</code> on the admin plane first, and the orchestrator runs that check. <code>tw_rebac.hpp</code> supports <code>CAN_GRANT</code> today with no enum change, because <code>parse_rel</code> returns <code>UNKNOWN</code> for an unrecognized string and <code>check_base</code> then matches on <code>rel_name</code> directly. Reuse of the existing <code>SUPERVISOR_OF</code>, <code>OWNS</code>, or <code>DELEGATED_TO</code> relations needs a deliberate decision, because <code>check_base</code> already gives <code>DELEGATED_TO</code> a delegation meaning, not an administration meaning.</p>
-<p>Three sub-decisions stay open:</p>
-<ul>
-<li><strong>Bootstrap.</strong> If edge-writing authority is itself an edge, some agent must write the first edge. That seed grant belongs outside the graph, host-side, before any guest runs. <code>godot-luau-script</code> seeds at <code>SandboxService</code> in <code>init.lua</code>. The equivalent here is the orchestrator at <code>mud_boot</code> time.</li>
-<li><strong>Delegability.</strong> May a <code>CAN_GRANT</code> holder grant <code>CAN_GRANT</code> itself? A yes makes the relation viral, and one compromised administrator then owns the graph. Open question 3 below records that no revocation exists, so that capture stays permanent. Recommendation: make <code>CAN_GRANT</code> non-delegable in the first version.</li>
-<li><strong>Scope.</strong> A global admin right and a scoped one differ completely. A scoped admin edge must name what it governs, such as one relation type or an object prefix. <code>tuple_to_userset</code> already expresses scoped administration, because it pivots through one relation to evaluate another.</li>
-</ul>
-</section>
-<section id="proposed-mapping" class="level2">
-<h2 class="anchored" data-anchor-id="proposed-mapping">Proposed mapping</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 26%">
-<col style="width: 17%">
-<col style="width: 19%">
-<col style="width: 35%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><code>godot-sandbox</code> axis</th>
-<th>ReBAC subject</th>
-<th>ReBAC object</th>
-<th>Relation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Class instantiation</td>
-<td>the guest <code>Machine</code></td>
-<td>the class name</td>
-<td><code>HAS_CAPABILITY</code></td>
-</tr>
-<tr class="even">
-<td>Object access</td>
-<td>the guest <code>Machine</code></td>
-<td>the object instance</td>
-<td><code>HAS_CAPABILITY</code> or <code>CONTROLS</code></td>
-</tr>
-<tr class="odd">
-<td>Method call</td>
-<td>the guest <code>Machine</code></td>
-<td><code>&lt;object&gt;.&lt;method&gt;</code></td>
-<td><code>HAS_CAPABILITY</code></td>
-</tr>
-<tr class="even">
-<td>Property access</td>
-<td>the guest <code>Machine</code></td>
-<td><code>&lt;object&gt;.&lt;property&gt;</code></td>
-<td><code>HAS_CAPABILITY</code></td>
-</tr>
-<tr class="odd">
-<td>Resource load</td>
-<td>the guest <code>Machine</code></td>
-<td>the resource path</td>
-<td><code>HAS_CAPABILITY</code></td>
-</tr>
-<tr class="even">
-<td>Instruction-budget extension</td>
-<td>the guest <code>Machine</code></td>
-<td>the “more gas” action</td>
-<td><code>DELEGATED_TO</code> from a supervisor/owner</td>
-</tr>
-</tbody>
-</table>
-<p>Delegation, membership, and capability inheritance fall out of the expression algebra already in <code>tw_rebac.hpp</code>. A guest that is <code>IS_MEMBER_OF</code> a trusted group inherits that group’s <code>HAS_CAPABILITY</code> edges automatically, with no new code path per axis. <code>godot-sandbox</code> needs a new hand-written callback for each such case today.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Good: one authorization model instead of five independent callbacks plus a two-tier VM split. A denied check returns a real reason (no path found), not just <code>false</code>. The engine is not new, untested code. <code>tw_rebac.hpp</code> already has real callers in <code>taskweft-nif</code>.</p>
-<p>Bad: the team has not implemented this yet. <code>zone-guest-middleham</code>’s <code>mud-sandbox-orchestrator</code> calls exactly two <code>vmcall</code>-reachable guest functions today (<code>mud_boot</code>, <code>mud_step</code>). It has no host-capability surface yet for this model to gate. The design has nothing to attach to until that surface grows. No one wired <code>thirdparty/taskweft-nif</code> into <code>zone-server-h2o</code> yet — <code>mud/domains/README.md</code> already says the MUD guest does not use any of its three domains yet. So reusing <code>tw_rebac.hpp</code> here means depending on code that is itself not yet load-bearing anywhere.</p>
-<p>Bad, and stated plainly: the Lean migration above is real work, and nobody started it. Six theorems need proving, and two of them (resolution equivalence, plane separation) carry the security argument. Until they exist, this design has a proved rank model and an unproved graph model, and neither one gates a guest today.</p>
-</section>
-<section id="the-graph-authors-permissions.-it-does-not-enforce-them." class="level2">
-<h2 class="anchored" data-anchor-id="the-graph-authors-permissions.-it-does-not-enforce-them.">The graph authors permissions. It does not enforce them.</h2>
-<p>A guest runs at near-native speed. <code>libriscv</code>’s own README records a <code>vmcall</code> cost of 3ns, against 50 to 150ns for other sandboxes. The same README records a CoreMark score of 38223 against 41382 native, about 92%. Guest code therefore reaches the host boundary at native-code frequency.</p>
-<p><code>_rebac_dfs</code> allocates. It copies a <code>std::unordered_set&lt;std::string&gt;</code> at every branch (<code>sub_visited = p_visited</code>), and each element is a heap-allocated string. Nobody measured that cost yet, so this RFD states no figure. But an allocating graph search in front of a 3ns call inverts the cost model. The check would dominate the call it protects, and it would discard the one property <code>rfd/0079</code> chose <code>libriscv</code> for.</p>
-<p>So the ReBAC graph is the authoring model, not the enforcement model. Resolve the graph once, at guest boot time and again at each grant, into a flat capability table. The hot path then reads that table by index. It never walks the graph.</p>
-<p>Two existing properties make this sound:</p>
-<ul>
-<li>The graph is append-only (open question 3). Authorization is therefore monotonic. A resolved allow stays valid. Only a resolved deny needs invalidation, and only when a grant adds an edge.</li>
-<li><code>godot-sandbox</code> already documents the same shape from the other direction. Its trace-mode workaround produces a static allow-list by hand. This design produces the same artifact from the graph instead, which removes the manual review step.</li>
-</ul>
-<p>This also reframes open question 6. <code>godot-sandbox</code> documents that “Objects passed as function arguments remain accessible regardless of restrictions.” That reads as a bypass. It is instead an object-capability design: the handle itself is the authorization, checked once when the guest receives it. That choice is deliberate and fast. It needs a decision here, not an accident.</p>
-</section>
-<section id="open-questions" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
-<p>Ten questions stay open. Items 1 to 3 block implementation. The rest are design work.</p>
-<ol type="1">
-<li><strong>Engine choice.</strong> Resolved above: extend <code>lean-rebac-core</code> to the graph shape and generate the C, with <code>tw_rebac.hpp</code> as the reference shape and test oracle. Recorded here because an earlier draft called the two engines interchangeable, which is wrong.</li>
-<li><strong>Who may write edges.</strong> Answered above by the use/admin plane split, but its three sub-decisions (bootstrap, delegability, scope) stay open.</li>
-<li><strong>Revocation does not exist.</strong> <code>tw_rebac.hpp</code> defines <code>add_edge</code> and <code>define</code>, and no counterpart that removes either. A search for <code>remove</code>, <code>revoke</code>, <code>erase</code>, and <code>delete</code> in that header returns nothing. The graph is append-only. Nobody can revoke a capability mid-session, and no rule covers a guest paused inside a <code>vmcall</code> when its access disappears. Every over-broad grant stays permanent.</li>
-<li><strong>Fuel has no owner.</strong> <code>check_expr</code> and <code>check_base</code> return <code>false</code> at zero fuel. That fails closed, which is correct. But a legitimate deep delegation chain then denies silently, and authorization depends on graph depth. Only <code>tw_expand</code> carries a default (<code>p_fuel = 3</code>). <code>check_expr</code>, <code>check_base</code>, and <code>rebac_can_json</code> each require the caller to supply one. No rule says who picks it.</li>
-<li><strong>Identity and ID reuse.</strong> Subjects and objects are <code>std::string</code>. Godot recycles object instance IDs after a free. A stale <code>HAS_CAPABILITY</code> edge plus a recycled ID grants access to a different object than the authorized one. This RFD names no stable identity scheme.</li>
-<li><strong>An inherited bypass.</strong> <code>godot-sandbox</code>’s own restrictions page states this: “Objects passed as function arguments remain accessible regardless of restrictions.” A check at the call boundary misses handles the guest already holds. No rule covers re-checking a held handle on a later tick.</li>
-<li><strong>Cost on the 64 Hz path.</strong> <code>_rebac_dfs</code> copies the visited set at every branch (<code>sub_visited = p_visited</code>). A graph search per host call, on the zone tick, has no budget in this RFD.</li>
-<li><strong>Gas checking is circular.</strong> If budget extension is itself a ReBAC check, and that check costs time, no rule says whose budget pays.</li>
-<li><strong>Denial leaks the graph.</strong> <code>rebac_can_json</code> returns <code>{"authorized":bool,"path":[...]}</code>. That path is the audit-trail advantage over <code>godot-sandbox</code>. Returning it to untrusted guest code leaks capability-graph structure.</li>
-<li><strong>Which process may answer.</strong> <code>src/gen/rebac.h</code>’s own comment quotes the Lean source: only the authority zone evaluates <code>.interact</code> and <code>.modify</code>, and interest zones may evaluate <code>.observe</code> locally. <code>rfd/0086</code> defers that authority mechanism.</li>
-</ol>
-</section>
-<section id="revisit-when" class="level2">
-<h2 class="anchored" data-anchor-id="revisit-when">Revisit when</h2>
-<p><code>zone-guest-middleham</code>’s guest surface grows past <code>mud_boot</code>/<code>mud_step</code> into calling named host functions/classes/objects (the shape <code>rfd/0079</code> left open). At that point, build the five-axis mapping table above as real code, instead of ad hoc per-axis callbacks. Do the Lean migration first, and close open questions 2 and 3 with it. Prove resolution equivalence before anything trusts the flat capability table on the hot path.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-rebac-gates-libriscv-guest-access/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
-</item>
+<lastBuildDate>Wed, 12 Aug 2026 01:42:53 GMT</lastBuildDate>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</link>
@@ -319,7 +78,7 @@ edges.</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -406,7 +165,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -576,7 +335,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -909,7 +668,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -1310,7 +1069,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1624,7 +1383,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -1841,7 +1600,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -1978,7 +1737,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -2147,7 +1906,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2313,7 +2072,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2513,7 +2272,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -2656,7 +2415,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -2807,7 +2566,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3001,7 +2760,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3168,7 +2927,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -3391,7 +3150,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3546,7 +3305,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3705,7 +3464,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -3875,7 +3634,199 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Wed, 12 Aug 2026 01:38:53 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0096: Guest transport on Fly, measured</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0096: Guest transport on Fly, measured</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0095</code> says an engine guest reaches its zone over one <code>AF_UNIX</code> socket. It does not say why not something faster.</p>
+<p>That gap invited a reasonable question. Shared-memory rings are much faster than sockets in published benchmarks. io_uring can remove syscalls from an event loop. uBPF exists. Each looked like a candidate.</p>
+<p>The candidates were ranked twice from documentation. Both rankings were wrong in places. Documentation describes Linux. This system runs on one specific machine shape, and that shape decides the answer.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>A probe went to Fly.io and measured the machine that runs production.</p>
+<ul>
+<li>App: a throwaway app, destroyed after the run.</li>
+<li>Machine: <code>shared-cpu-1x</code>, 256 MB, region <code>iad</code>.</li>
+<li>Image: <code>ubuntu:24.04</code>, which is also the CI image.</li>
+<li>Kernel: <code>6.12.91-fly</code>.</li>
+<li>Reported memory: 212188 kB. Reported <code>nproc</code>: 1.</li>
+</ul>
+<p>Each latency figure is a round trip between two processes. Each test does 20000 iterations. The table reports the median.</p>
+<p>A second run on a 16-core development machine gives contrast.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 29%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Probe</th>
+<th>Fly <code>shared-cpu-1x</code></th>
+<th>Local, 16 cores</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
+<td>8910 ns</td>
+<td>59821 ns</td>
+</tr>
+<tr class="even">
+<td><code>AF_UNIX</code> <code>SOCK_STREAM</code></td>
+<td>9520 ns</td>
+<td>50181 ns</td>
+</tr>
+<tr class="odd">
+<td>Busy-polled shared-memory ring</td>
+<td>did not finish</td>
+<td>110 ns</td>
+</tr>
+</tbody>
+</table>
+<p>Capability results on Fly:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Probe</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bwrap --unshare-all</code> as root</td>
+<td>OK</td>
+</tr>
+<tr class="even">
+<td><code>bwrap --unshare-net</code></td>
+<td>OK</td>
+</tr>
+<tr class="odd">
+<td><code>bwrap</code> unprivileged, uid 1000</td>
+<td>OK</td>
+</tr>
+<tr class="even">
+<td>Interfaces inside <code>--unshare-net</code></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Interfaces outside</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td><code>kernel.io_uring_disabled</code></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><code>io_uring_setup</code></td>
+<td>OK, returned fd 3</td>
+</tr>
+<tr class="even">
+<td><code>memfd_create</code></td>
+<td>OK</td>
+</tr>
+<tr class="odd">
+<td><code>fly-global-services</code></td>
+<td>172.19.15.243, <code>AF_INET</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="af_unix-sock_seqpacket-is-the-guest-transport" class="level3">
+<h3 class="anchored" data-anchor-id="af_unix-sock_seqpacket-is-the-guest-transport">1. <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> is the guest transport</h3>
+<p>The measured round trip is 8910 ns. One ZoneTick at 64 Hz is 15.6 ms. Transport cost is therefore 0.06 percent of a tick.</p>
+<p>There is no performance problem to solve at this tick rate.</p>
+</section>
+<section id="no-busy-polled-shared-memory-ring" class="level3">
+<h3 class="anchored" data-anchor-id="no-busy-polled-shared-memory-ring">2. No busy-polled shared-memory ring</h3>
+<p>The ring is the fastest option on hardware with spare cores. It measured 110 ns on 16 cores, which is 81 times faster than the socket on the same machine.</p>
+<p>On Fly it did not complete 20000 round trips in more than 8 minutes. The socket completed the same 20000 in less than one second.</p>
+<p><code>ps</code> shows the cause. Both processes stayed in <code>R</code> state at 24 percent CPU each, on a machine where <code>nproc</code> is 1. They consumed the shared-cpu burst balance and then spun against the throttle floor.</p>
+<p>The published ring benchmarks assume a spare core to spin on. <code>shared-cpu-1x</code> does not give one. A number measured on a workstation does not transfer to this deployment.</p>
+<p>This decision is conditional on the machine shape. A dedicated-CPU machine would change it, and this RFD does not forbid revisiting the choice there.</p>
+</section>
+<section id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop" class="level3">
+<h3 class="anchored" data-anchor-id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop">3. Keep epoll. Do not adopt io_uring for the event loop</h3>
+<p>io_uring is reachable on Fly. <code>io_uring_setup</code> returned a descriptor, and <code>kernel.io_uring_disabled</code> is 0. Availability is not the obstacle.</p>
+<p>Value is the obstacle. io_uring saves syscalls, and it pays back at high event rates. This system ticks at 64 Hz, and its transport already costs 0.06 percent of a tick.</p>
+<p><code>IORING_SETUP_SQPOLL</code> is the mode that removes syscalls completely. It spawns a kernel poller thread. That is the same shape as the busy-poll ring, so decision 2 applies to it unchanged.</p>
+</section>
+<section id="guests-must-not-reach-io_uring" class="level3">
+<h3 class="anchored" data-anchor-id="guests-must-not-reach-io_uring">4. Guests must not reach io_uring</h3>
+<p>A seccomp filter examines the syscalls a task makes. io_uring operations run on <code>io-wq</code> kernel worker threads, outside the filter of the task that submitted them. A filter cannot screen a call the task never makes.</p>
+<p>A guest that holds an io_uring descriptor can therefore perform work that the rest of the filter denies.</p>
+<p>This is settled practice. Android 12 and later block <code>io_uring_setup</code> in the default application policy. Chrome OS does the same. The Chrome renderer and GPU sandboxes reject it. gVisor rejects it.</p>
+<p><code>rfd/0095</code>’s seccomp filter must deny <code>io_uring_setup</code>, <code>io_uring_enter</code>, and <code>io_uring_register</code> by name.</p>
+</section>
+<section id="ubpf-is-not-a-transport" class="level3">
+<h3 class="anchored" data-anchor-id="ubpf-is-not-a-transport">5. uBPF is not a transport</h3>
+<p>uBPF is a userspace virtual machine that executes eBPF bytecode. It has no sockets, no I/O, and no packet path. It exists because the kernel implementation is GPL, and uBPF carries an Apache license.</p>
+<p>uBPF is therefore an alternative to libriscv, not an alternative to an event loop. <code>rfd/0095</code> already selects libriscv, and it gives a reason that uBPF does not answer: <code>serialize_to</code> and forking give bit-exact snapshot and replay.</p>
+<p>Kernel eBPF does accelerate networking, through <code>SOCKMAP</code> and AF_XDP. Neither applies here. A guest under <code>--unshare-net</code> has no sockets to redirect, and decision 4 and <code>rfd/0095</code> both deny the bpf family to guests.</p>
+</section>
+<section id="udp-must-bind-fly-global-services-and-it-is-ipv4" class="level3">
+<h3 class="anchored" data-anchor-id="udp-must-bind-fly-global-services-and-it-is-ipv4">6. UDP must bind <code>fly-global-services</code>, and it is IPv4</h3>
+<p>Fly requires a UDP service to bind <code>fly-global-services</code>. <code>0.0.0.0</code>, <code>*</code>, and <code>INADDR_ANY</code> do not work, because Linux then selects the wrong source address for replies.</p>
+<p><code>src/transport/webtransport_server.c:233</code> binds <code>in6addr_any</code>. The socket binds, packets arrive, and replies leave with the wrong source address. <code>fly/fly.toml</code> already declares <code>protocol = "udp"</code> on <code>internal_port = 7443</code>, so this is live configuration.</p>
+<p>The probe found a second fact that a documentation-only fix would miss. <code>fly-global-services</code> resolves to <code>172.19.15.243</code>, which is <code>AF_INET</code>. The current socket is <code>AF_INET6</code>. The fix needs an <code>AF_INET</code> socket or a v4-mapped address. It is not an address substitution.</p>
+<p>TCP cannot use <code>fly-global-services</code> and must bind the wildcard. The application therefore needs asymmetric binds.</p>
+</section>
+<section id="bubblewrap-works-on-fly-including-unprivileged" class="level3">
+<h3 class="anchored" data-anchor-id="bubblewrap-works-on-fly-including-unprivileged">7. Bubblewrap works on Fly, including unprivileged</h3>
+<p>All three <code>bwrap</code> probes passed, including the unprivileged case at uid 1000. <code>--unshare-net</code> left 1 interface inside the sandbox against 4 outside.</p>
+<p><code>rfd/0095</code> predicted this, because a Fly machine is a Firecracker VM and the process is root in its own kernel. The prediction is now a measurement.</p>
+<p>Note that Docker is the harder case, not Fly. The same probe failed every <code>bwrap</code> test under Docker, where user namespaces are blocked by default. CI must therefore grant <code>--cap-add SYS_ADMIN</code> and <code>--security-opt seccomp=unconfined</code>, or use podman.</p>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The engine guest transport is a plain <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> socket. It needs no new dependency and no tuning.</p>
+<p><code>memfd_create</code> works, so a bulk path over <code>SCM_RIGHTS</code> stays available if a future measurement justifies it. Size any such buffer against 212 MB of usable memory, not against 256 MB.</p>
+<p>Two guest-facing denials are now mandatory rather than advisory: io_uring and bpf.</p>
+<p>The UDP bind defect is real and unfixed. Nothing that this RFD decides matters while replies leave with the wrong source address.</p>
+</section>
+<section id="what-this-rfd-corrects" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-rfd-corrects">What this RFD corrects</h2>
+<p>Three claims in earlier rankings were wrong, and the measurement corrected each one.</p>
+<p>Shared-memory rings were ranked as the fastest option. They are the fastest option on a machine with spare cores, and they are unusable on this one.</p>
+<p>io_uring was ranked as unverified. It is available, and it is undesirable for separate reasons.</p>
+<p>Dropping h2o for <code>picoquic_packet_loop()</code> was ranked first at one point. The asymmetric bind requirement needs a TCP listener as well, and <code>picoquic_packet_loop()</code> serves UDP only.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li><a href="https://fly.io/docs/networking/udp-and-tcp/">Running apps on UDP and TCP, Fly Docs</a></li>
+<li><a href="https://community.fly.io/t/fly-machines-security-update-dirtyfrag-fragnesia-and-copyfail/28018">Fly Machines Security Update, kernel v6.12.91</a></li>
+<li><a href="https://kernel-internals.org/io-uring/security/">io_uring security model</a></li>
+<li><a href="https://blog.0x74696d.com/posts/iouring-and-seccomp/">io_uring and seccomp</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/sysctl/kernel.html">Documentation for /proc/sys/kernel</a></li>
+<li><a href="https://github.com/iovisor/ubpf">uBPF</a></li>
+<li><a href="https://victoranderssen.com/blog/linux-ipc-benchmark/">Linux IPC Shootout, shared memory against Unix domain sockets</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
+  <pubDate>Wed, 12 Aug 2026 01:42:53 GMT</pubDate>
 </item>
 </channel>
 </rss>
