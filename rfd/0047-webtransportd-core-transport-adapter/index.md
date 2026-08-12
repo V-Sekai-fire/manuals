@@ -5,21 +5,6 @@ state: abandoned
 scope: transport adapter for the event-driven hexagonal cores
 ---
 
-## Status
-
-`webtransportd` is not used. A program that needs WebTransport
-terminates QUIC itself, in process, over picoquic — which is what
-`modules/http3` already does on the client and what the vendored
-`transport/` does on the server. There is no out-of-process bridge, no
-child per connection, and no `[flag | varint len | payload]` protocol
-over stdin and stdout.
-
-This RFD stays as the record of why a piped child looked like the
-answer for the event-driven cores. What it costs to keep is a second
-transport implementation and a process boundary in the middle of the
-per-packet path, for cores that can link the same QUIC library the rest
-of the stack already builds.
-
 ## Problem
 
 The cores expose a flat C ABI and need a transport adapter to carry
