@@ -13,10 +13,13 @@ lives in its own folder, `rfd/NNNN-kebab-title/`, not a single flat
 file. Each RFD has a state: prediscussion, ideation, discussion,
 published, committed, abandoned, or moved.
 
-Each RFD's `README.md` has a `## Problem` section before `## Decision`.
+Each RFD's `index.md` has a `## Problem` section before `## Decision`.
 The `## Problem` section states, in one short paragraph, what is wrong
 or missing today, and why that matters. A reader must understand the
 problem before they read the decision.
+
+Quarto renders the folder through `index.md`, and its frontmatter
+carries the title, the number, the state, and the scope.
 
 The repository writes prose in ASD-STE100 Simplified Technical
 English. Code and identifiers do not follow STE. STE applies to
@@ -26,11 +29,12 @@ The repository keeps designs in one place. `decisions/` holds MADR
 records, one point decision each, dated. An RFD points to a MADR, a
 source file, or another RFD. It does not copy the source.
 
-Each RFD's `README.md` stays under 40 lines. It states the state, the
-scope, and the decision, in the fewest lines that keep all three true.
-A measurement, a verification log, a status table, or a deep
-walkthrough does not fit. Move it to a sibling file, `DETAILS.md`, in
-the same RFD folder. The `README.md` names that file in one line.
+A section belongs in `index.md` when a reader needs it to reach the
+decision. A measurement, a verification log, a status table, or a deep
+walkthrough goes to a sibling file, `DETAILS.md`, in the same RFD
+folder. The `index.md` names that file under `## References` and pulls
+it in at the end with `{{< include DETAILS.md >}}`, so one page renders
+whole and the short form stays readable on its own.
 
 `decisions/` (MADR, `YYYYMMDD-title.md`) still records a single point
 decision. `rfd/` records a longer-lived design that can carry a
