@@ -203,7 +203,11 @@ List these follow-ups in PERT order.
 10. Wire real TLS certificate and key material before any real
     client-handshake test runs. `main.c` still passes `NULL` for both today.
 
-## Open questions and verification
+## Verification, and questions this record handed on
+
+This record holds no open question of its own. It holds a
+re-verification procedure, and two pointers to the records that took
+its questions.
 
 A future session checks this RFD's claims still hold this way. Re-run the
 local equivalent of `zone-server-h2o`'s `real-build.yml`. Grep `src/` for
@@ -216,9 +220,10 @@ comment, and confirm whether the `zf/zone_state/`, `zf/effect/`, and
 Resolved: the sandboxed-CastSpell approach in item 4 needs its own
 follow-up RFD. That is because the scope differs between a client-side
 sandbox and a server-side one running under load. That follow-up is
-`rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md`. Its own
-open questions, on `jsonld-cpp`'s maintenance risk, the authoring
-tool's sandboxing, and the `QCBOR`-versus-`zcbor` pick, live there, not
+`rfd/0003-castspell-sandbox-package-and-manifest-encoding/index.md`. That
+record settled the `QCBOR`-versus-`zcbor` pick. What it carries
+forward is an accepted risk on `jsonld-cpp`'s maintenance and a
+deferral on sandboxing the authoring tool, and both live there, not
 here.
 
 Resolved, item 6: the scope of `libriscv`/`godot-sandbox`'s API surface

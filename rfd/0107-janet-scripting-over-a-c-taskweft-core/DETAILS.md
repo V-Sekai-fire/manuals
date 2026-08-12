@@ -68,6 +68,22 @@ survives the language change.
 
 ## Open questions this record does not settle
 
+This record is abandoned, so none of the four questions below stay
+open in the form they take here. Each one asks where a part goes in a
+four-part stack that the project does not build. The records that
+carry the same subject forward are these.
+
+`rfd/0109` places Elixir and the store. The tier is Elixir plus
+FoundationDB, and `rfd/0103` puts Uro on `ecto_foundationdb`, so the
+Elixir tier drives the database path. `rfd/0110` places the guest
+runtime and the transport. One pinned Godot build hosts libriscv
+guests through its `sandbox` module and terminates WebTransport
+through its `http3` module, and no Janet layer exists to compete with
+either. `rfd/0108` closed the first and third questions before it was
+abandoned in turn.
+
+The four questions stay written below as the record left them.
+
 **Which part talks to FoundationDB.** `rfd/0073` drove `libfdb_c`
 callbacks from the libh2o event loop, when h2o was the whole server. If
 h2o is ingress and reverse proxy only, the loop that drives the

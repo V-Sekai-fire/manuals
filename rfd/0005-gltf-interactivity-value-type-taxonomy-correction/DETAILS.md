@@ -80,11 +80,14 @@ must happen before this project's struct layout could carry it.
    design its extension and its struct representation as a follow-up
    to this RFD, not as a silent addition to the primitive/`ref` split.
 
-## Open questions and verification
+## Deferred work and verification
 
-Open: no current CastSpell parameter needs `custom`. Revisit this RFD
-once one does, and decide the extension and struct representation at
-that time.
+No question stays open here. One item is deferred, which is a
+different thing, because nothing blocks on the answer.
+
+Deferred: no current CastSpell parameter needs `custom`. The decision
+waits on a parameter that needs it. Revisit this RFD when one appears,
+and decide the extension and the struct representation at that time.
 
 Verification: re-read
 `taskweft/thirdparty/gltf_interactivity/01_core_concepts.md` and

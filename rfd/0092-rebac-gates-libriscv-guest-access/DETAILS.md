@@ -279,13 +279,15 @@ fast. It needs a decision here, not an accident.
 
 ## Open questions
 
-Ten questions stay open. Items 1 to 3 block implementation. The rest
-are design work.
+This record opened ten questions. Items 1, 4, and 7 are closed, and
+the closing note stays under its original number so that other records
+citing that number still land on the right item. Seven stay open.
+Items 2 and 3 block implementation. The rest are design work.
 
-1. Engine choice. Resolved above: extend `lean-rebac-core` to the
-   graph shape and generate the C, with `tw_rebac.hpp` as the
-   reference shape and test oracle. Recorded here because an earlier
-   draft called the two engines interchangeable, which is wrong.
+1. Closed. Engine choice. Extend `lean-rebac-core` to the graph shape
+   and generate the C, with `tw_rebac.hpp` as the reference shape and
+   test oracle. Recorded here because an earlier draft called the two
+   engines interchangeable, which is wrong.
 2. Who may write edges. Answered above by the use/admin plane
    split, but its three sub-decisions (bootstrap, delegability,
    scope) stay open.
@@ -309,12 +311,20 @@ are design work.
    merge, and the Lean migration above must carry both. An
    append-only graph is not the design. It is the current gap.
 
-4. Fuel has no owner. `check_expr` and `check_base` return `false`
-   at zero fuel. That fails closed, which is correct. But a legitimate
-   deep delegation chain then denies silently, and authorization
-   depends on graph depth. Only `tw_expand` carries a default
-   (`p_fuel = 3`). `check_expr`, `check_base`, and `rebac_can_json`
-   each require the caller to supply one. No rule says who picks it.
+4. Closed by `rfd/0093`. Fuel has no owner. `check_expr` and
+   `check_base` return `false` at zero fuel. That fails closed, which
+   is correct. But a legitimate deep delegation chain then denies
+   silently, and authorization depends on graph depth. Only
+   `tw_expand` carries a default (`p_fuel = 3`). `check_expr`,
+   `check_base`, and `rebac_can_json` each require the caller to
+   supply one. No rule says who picks it.
+
+   `rfd/0093` compiles the policy to a linear automaton, which reads
+   its input with no fuel parameter. The fuel parameter stops being a
+   silent denial source, so this question has no subject left. It
+   returns if that compilation does not hold, and `rfd/0093`'s own
+   `tuple_to_userset` regularity question decides that.
+
 5. Identity and ID reuse. Subjects and objects are `std::string`.
    Godot recycles object instance IDs after a free. A stale
    `HAS_CAPABILITY` edge plus a recycled ID grants access to a
@@ -325,9 +335,15 @@ are design work.
    accessible regardless of restrictions." A check at the call
    boundary misses handles the guest already holds. No rule covers
    re-checking a held handle on a later tick.
-7. Cost on the 64 Hz path. `_rebac_dfs` copies the visited set at
-   every branch (`sub_visited = p_visited`). A graph search per host
-   call, on the zone tick, has no budget in this RFD.
+7. Closed by `rfd/0093`. Cost on the 64 Hz path. `_rebac_dfs` copies
+   the visited set at every branch (`sub_visited = p_visited`). A
+   graph search per host call, on the zone tick, has no budget in this
+   RFD.
+
+   The compiled evaluator replaces the graph search, so the copy on
+   every branch goes away with it. This question closes on the same
+   condition as item 4, and it returns on the same failure.
+
 8. Gas checking is circular. If budget extension is itself a ReBAC
    check, and that check costs time, no rule says whose budget pays.
 9. Denial leaks the graph. `rebac_can_json` returns
