@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Wed, 12 Aug 2026 00:43:16 GMT</lastBuildDate>
+<lastBuildDate>Wed, 12 Aug 2026 01:21:58 GMT</lastBuildDate>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</link>
@@ -78,7 +78,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -165,7 +165,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -335,7 +335,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -668,7 +668,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -1069,7 +1069,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1383,7 +1383,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -1600,7 +1600,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -1741,7 +1741,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -1914,7 +1914,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2080,7 +2080,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2280,7 +2280,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -2423,7 +2423,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -2574,7 +2574,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -2768,7 +2768,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -2935,7 +2935,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -3158,7 +3158,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3313,7 +3313,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3472,7 +3472,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -3642,7 +3642,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -3834,7 +3834,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:43:16 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 01:21:58 GMT</pubDate>
 </item>
 </channel>
 </rss>
