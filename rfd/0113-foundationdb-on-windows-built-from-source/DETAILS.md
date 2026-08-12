@@ -5,16 +5,16 @@ source, reachable from a second machine, a native Windows server, and
 linear scaling per machine. It must also supply an ordered byte keyspace,
 atomic multi-key commits, and read-write conflict detection for the fence.
 
-| Store | Why it failed |
-| --- | --- |
-| sqlite-in-sqlite, RocksDB, LeanStore, FASTER | Embedded. No second machine can reach the data. |
-| TiKV, Cassandra, ScyllaDB, LeanStore | No native Windows server. |
-| TiKV, LeanStore | Snapshot isolation. `check_fence` has no mechanism. |
-| FASTER | A hash index. No ordered range reads. |
-| Cassandra | Partition size limits against 10 GiB actors. No isolation across partitions. |
-| Zenoh, iceoryx2 tunnels and gateways | Message transport, not a store. Asynchronous replication gives split-brain and silent loss. |
-| Ra | A Raft library. You write the store yourself, on the BEAM this plane exists to leave. |
-| FerretDB and MongoDB forks | The wrong data model. Transactions have time and size limits. |
+| Store                                        | Why it failed                                                                               |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| sqlite-in-sqlite, RocksDB, LeanStore, FASTER | Embedded. No second machine can reach the data.                                             |
+| TiKV, Cassandra, ScyllaDB, LeanStore         | No native Windows server.                                                                   |
+| TiKV, LeanStore                              | Snapshot isolation. `check_fence` has no mechanism.                                         |
+| FASTER                                       | A hash index. No ordered range reads.                                                       |
+| Cassandra                                    | Partition size limits against 10 GiB actors. No isolation across partitions.                |
+| Zenoh, iceoryx2 tunnels and gateways         | Message transport, not a store. Asynchronous replication gives split-brain and silent loss. |
+| Ra                                           | A Raft library. You write the store yourself, on the BEAM this plane exists to leave.       |
+| FerretDB and MongoDB forks                   | The wrong data model. Transactions have time and size limits.                               |
 
 Two stores satisfy all four constraints: FoundationDB, if it can be built
 for Windows, and sharded PostgreSQL.
@@ -66,12 +66,12 @@ it instead of a dependency list.
 `bench_vfs 2000` on one machine, in operations per second per core. The
 unit is the one `weft/limits.hpp` uses.
 
-| Operation | Local file | FoundationDB, one node | FoundationDB, consensus |
-| --- | --- | --- | --- |
-| Insert, one commit each | 262,438 | 941 | 433 |
-| Insert, one commit for all | 618,078 | 399,456 | 315,869 |
-| Point read | 2,056,234 | 1,892,751 | 2,027,633 |
-| Scan | 12,149,044 | 14,370,707 | 15,144,402 |
+| Operation                  | Local file | FoundationDB, one node | FoundationDB, consensus |
+| -------------------------- | ---------- | ---------------------- | ----------------------- |
+| Insert, one commit each    | 262,438    | 941                    | 433                     |
+| Insert, one commit for all | 618,078    | 399,456                | 315,869                 |
+| Point read                 | 2,056,234  | 1,892,751              | 2,027,633               |
+| Scan                       | 12,149,044 | 14,370,707             | 15,144,402              |
 
 Read the first row with care. The local file column uses
 `journal_mode=MEMORY` and sets no `synchronous` value, so it is not
