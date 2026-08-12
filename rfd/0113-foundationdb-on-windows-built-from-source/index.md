@@ -50,7 +50,7 @@ hand.
 - The nine stores, the evidence, and the measurements: `DETAILS.md`
 - Work in progress: `v-sekai-multiplayer-fabric/foundationdb`, branch
   `portability-consensus`
-- `rfd/0109-two-tiers-fdb-and-the-cost-floor`: why the store is FoundationDB.
+- `rfd/0109-two-tiers-with-foundationdb-as-the-store`: why the store is FoundationDB.
 
 ## Related
 

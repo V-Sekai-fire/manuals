@@ -52,7 +52,7 @@ exit status stays readable, and the output goes to the journal with times.
 
 ## Related
 
-- `rfd/0109-two-tiers-fdb-and-the-cost-floor`: why the store is FoundationDB.
+- `rfd/0109-two-tiers-with-foundationdb-as-the-store`: why the store is FoundationDB.
 
 ## Detail
 

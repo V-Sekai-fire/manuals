@@ -66,8 +66,8 @@ advantage is memory per process, and that advantage is unmeasured.
 Build it when a measurement forces it.
 
 FoundationDB backs both the Rivet engine and the zone state, so
-`rfd/0109`'s store selection and cost floor both stand. This record
-amends only `rfd/0109`'s server tier.
+`rfd/0109`'s store selection stands. This record amends only
+`rfd/0109`'s server tier.
 
 ## References
 
@@ -83,8 +83,8 @@ amends only `rfd/0109`'s server tier.
   inside the engine.
 - `rfd/0020-pin-engine-to-frozen-godot-4-7`: the pinning practice this
   applies to one named tag.
-- `rfd/0109-two-tiers-fdb-and-the-cost-floor`: the store, the cost
-  floor, and the relay this replaces.
+- `rfd/0109-two-tiers-with-foundationdb-as-the-store`: the store and the
+  relay this replaces.
 
 ## Detail
 

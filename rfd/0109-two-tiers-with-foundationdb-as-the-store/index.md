@@ -2,7 +2,7 @@
 title: "RFD 0109: Two tiers, with FoundationDB as the store"
 rfd: "0109"
 state: published
-scope: tier count, store selection, deployment cost baseline
+scope: tier count, store selection
 ---
 
 ## Problem
