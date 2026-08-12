@@ -17,6 +17,7 @@
   {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0116-rebac-gates-libriscv-guest-access/index.html",
       "/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/index.html",
       "/rfd/0114-prove-the-store-by-breaking-it/index.html",
       "/rfd/0113-foundationdb-on-windows-built-from-source/index.html",
