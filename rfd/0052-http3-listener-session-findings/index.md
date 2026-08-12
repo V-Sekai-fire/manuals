@@ -34,6 +34,18 @@ vectors from four concurrent clients) while grant delivery waits on
 the reply-routing fix. The loot and combat wire parities stay
 unaffected, because a single session per listener works end to end.
 
+A server that opens a bidirectional stream per reliable message needs
+the stream credit to carry them. `picowt_set_transport_parameters`,
+which runs per connection, raises `initial_max_stream_id_bidir` and
+`initial_max_stream_id_unidir` to `0x3F` along with the flow-control
+limits. `picowt_set_default_transport_parameters`, which runs once for
+the `picoquic_quic_t`, raises neither: it sets
+`is_reset_stream_at_enabled` and `max_datagram_frame_size` and nothing
+else. A server that takes only the second one holds the default credit,
+so a fourth session finds none left, and the exhausted credit blocks
+the connect-accepted response on the control stream, which leaves that
+session short of the open state.
+
 ## References
 
 - The upstream fix, its landed pattern, and post-fix behavior:
