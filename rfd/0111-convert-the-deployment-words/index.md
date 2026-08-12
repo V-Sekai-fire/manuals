@@ -7,12 +7,7 @@ scope: architecture vocabulary across all repositories
 
 ## Problem
 
-This stack names one component twice. RFD 0028 names its structure. A second
-set of words names its deployment: plane, edge plane, and domain. A reader
-must hold both sets and map between them. The second set has no RFD.
-`lib/weft.ex` defines it, and more than ten READMEs copy the definition. The
-two sets also give one word two meanings, for domain, for edge, and for port.
-ASD-STE100 permits one meaning for one word.
+The two sets of terms for hexagon vocabulary bring confusion.
 
 ## Decision
 
