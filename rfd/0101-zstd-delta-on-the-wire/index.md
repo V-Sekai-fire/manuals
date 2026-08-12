@@ -60,18 +60,28 @@ datagram transport requires.
 
 ## Data
 
-| Strategy                         | Bytes per tick | Rate at 20 Hz | Compress CPU |
-| -------------------------------- | -------------- | ------------- | ------------ |
-| Raw, no compression              | 44800          | 7168.0 kbps   | none         |
-| zstd level 1, no dictionary      | 3727           | 596.3 kbps    | 42.4 us      |
-| zstd level 3, no dictionary      | 3239           | 518.3 kbps    | 44.8 us      |
-| zstd L1, prefix is previous tick | 2980           | 476.9 kbps    | 63.3 us      |
-| zstd L3, prefix is previous tick | 2774           | 443.9 kbps    | 66.5 us      |
-| zstd L1, prefix is acked minus 2 | 3014           | 482.3 kbps    | 68.0 us      |
-| zstd L1, prefix is acked minus 4 | 3015           | 482.5 kbps    | 68.2 us      |
-| zstd L1, prefix is acked minus 8 | 3006           | 480.9 kbps    | 63.9 us      |
+| Strategy                         | Bytes per tick | Compress CPU |
+| -------------------------------- | -------------- | ------------ |
+| Raw, no compression              | 44800          | none         |
+| zstd level 1, no dictionary      | 3727           | 42.4 us      |
+| zstd level 3, no dictionary      | 3239           | 44.8 us      |
+| zstd L1, prefix is previous tick | 2980           | 63.3 us      |
+| zstd L3, prefix is previous tick | 2774           | 66.5 us      |
+| zstd L1, prefix is acked minus 2 | 3014           | 68.0 us      |
+| zstd L1, prefix is acked minus 4 | 3015           | 68.2 us      |
+| zstd L1, prefix is acked minus 8 | 3006           | 63.9 us      |
 
 Client-side decompression is 17.3 us, and the result verifies as exact.
+
+Provenance: `run_id = ci-container` in `data/measurements/`. Every cell
+above is a stored row.
+
+```sql
+SELECT s.subject, s.bytes, l.median_ns / 1000.0 AS compress_us
+FROM read_parquet('size.parquet') s
+LEFT JOIN read_parquet('latency.parquet') l USING (run_id, subject)
+WHERE s.subject LIKE 'zstd%';
+```
 
 ## Decisions
 

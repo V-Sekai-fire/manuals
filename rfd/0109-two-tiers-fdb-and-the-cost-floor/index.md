@@ -1,5 +1,5 @@
 ---
-title: "RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor"
+title: "RFD 0109: Two tiers, with FoundationDB as the store"
 rfd: "0109"
 state: published
 scope: tier count, store selection, deployment cost baseline
@@ -12,19 +12,17 @@ scope: tier count, store selection, deployment cost baseline
 carry four runtimes, and neither record is built.
 
 The tier count moved three times in one day, and the store moved five
-times, with no record of either. `rfd/0104` states why little of it
-mattered. The database is not the constraint, and bandwidth is, by
-roughly 100 times.
+times, with no record of either. The database is not the constraint.
+Bandwidth is.
 
-No record names the cost of the target. Without a cost floor, every
-architecture argument runs on an unstated budget, and each session
+No record names the tier count or the store. Without one, each session
 re-derives a different answer.
 
 ## Decision
 
-**The cost floor is 276.48 USD per month.** That is 1000 concurrent
-players at 4 hours per day, from `rfd/0104`. It is table stakes, not a
-ceiling. The design assumes it.
+**Egress dominates the bill, and the store does not.** Bandwidth per
+client sets the cost, and one node serves the database load. No probe
+measures a running deployment, so this record carries no cost figure.
 
 **Two tiers.**
 
@@ -53,9 +51,9 @@ This supersedes `rfd/0107` and `rfd/0108`.
 
 ## References
 
-- The arithmetic, the stores considered, and the open questions:
+- The stores considered, Rivet examined, and the open questions:
   `DETAILS.md`
-- `rfd/0104-hypothesis-1000-concurrent`, `rfd/0075-fdb-over-cockroachdb-for-zone-state`
+- `rfd/0075-fdb-over-cockroachdb-for-zone-state`
 
 ## Related
 

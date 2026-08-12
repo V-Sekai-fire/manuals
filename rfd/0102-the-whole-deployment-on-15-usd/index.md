@@ -76,25 +76,23 @@ So a client fetches avatars and maps straight from Tigris. Those bytes
 never cross the zone server, and they never count against `rfd/0100`'s
 256 kbps cap.
 
-Routing assets through the zone server would put them on Fly egress at
-0.02 USD per GB. One 20 MB avatar fetched by 39 clients is 0.78 GB,
-which is 6.8 client-hours spent on a single asset.
+Routing assets through the zone server puts them on Fly egress at 0.02
+USD per GB, and Tigris egress is free. Asset bytes are large next to a
+pose stream, so the zone server carries none of them.
 
 ## Cost
 
-| Topology                          | Fixed USD | Egress USD | GB      | Concurrent at 4 h/day |
-| --------------------------------- | --------- | ---------- | ------- | --------------------- |
-| `rfd/0100`, zone only, incomplete | 2.17      | 12.83      | 642     | 46.4                  |
-| **Uro and PostgreSQL colocated**  | **4.34**  | **10.66**  | **533** | **38.6**              |
-| Uro and PostgreSQL separate       | 6.36      | 8.64       | 432     | 31.2                  |
+The machine and volume prices above come from Fly's published price
+list. What they buy in concurrent users is unmeasured, because no
+deployment runs and `data/measurements/` holds no row for one.
 
-Take the colocated form. Phoenix and PostgreSQL on one 256 MB machine
-is tight, and it is the difference between 38.6 and 31.2 concurrent
-users. Measure the memory before committing, because 256 MB is the
-constraint that `rfd/0096` measured as 212188 kB usable.
+Take the colocated form. Phoenix and PostgreSQL share one 256 MB
+machine, which costs one machine rather than two. Measure the memory
+before committing, because `run_id = fly-shared-1x-256` in the store
+records 212188 kB usable on that machine class.
 
-The complete deployment costs 7.8 concurrent users against `rfd/0100`'s
-number. Without those services there is no game.
+Uro and `aria-storage` are the services a game needs, and adding them
+spends budget that the zone-only topology does not.
 
 ## The default map ships in the image
 

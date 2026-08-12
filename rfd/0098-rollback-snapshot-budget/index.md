@@ -79,12 +79,21 @@ the arena.
 | Measure                   | Script guest, 4016 B | Engine guest, 84982776 B  |
 | ------------------------- | -------------------- | ------------------------- |
 | Snapshot size             | 41864 B (0.04 MB)    | 67148424 B (**64.04 MB**) |
-| 7 live snapshots          | 0.28 MB              | **448.26 MB**             |
 | `serialize_to` median     | 0.8 us               | **12370.2 us**            |
 | `serialize_to` p99        | 1.2 us               | **17063.0 us**            |
 | `deserialize_from` median | 1.9 us               | 15227.0 us                |
 | Fork construct median     | 0.3 us               | **384.2 us**              |
 | Determinism, 2 replays    | IDENTICAL            | IDENTICAL                 |
+
+Provenance: `run_id = ci-container` in `data/measurements/`. Every row
+above is a stored row. Latency is nanoseconds in the store and
+microseconds in this table.
+
+```sql
+SELECT subject, operation, median_ns, p99_ns
+FROM read_parquet('latency.parquet')
+WHERE subject LIKE 'libriscv%';
+```
 
 ## Decisions
 
