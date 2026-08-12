@@ -1,9 +1,31 @@
 ---
 title: "RFD 0112: Lexical for the slash command interface"
 rfd: "0112"
-state: published
+state: abandoned
 scope: the Queen of the Gyre, and what serves her
 ---
+
+## Status
+
+The slash command field is not being built. The client the Gyre is
+getting has hands in it rather than a caret: RFD 0119 puts salvage in a
+headset under distributed physics authority, and RFD 0118 takes the
+pipeline to a Godot release template driven by sandboxed guests. A
+Lexical editor serves neither.
+
+The argument that chose Lexical over ProseMirror was about the caret --
+that a parameter must be one thing to it, and that a decorator node
+crosses in one key press where an atom node can trap. That argument was
+correct and it no longer has a subject.
+
+What survives is the boundary the RFD drew rather than the widget it
+chose. Commands still arrive as a command in and reply bytes out,
+`thirdparty/interactor` still carries that contract, and the server
+still checks on receipt whatever a client chose to show, because a
+filtered menu is a convenience and never an authorization. The browser
+client in `fabric-store-domain/client/` reached a working editor and a
+passing caret suite, and it never opened a live session outside its own
+test.
 
 ## Problem
 
