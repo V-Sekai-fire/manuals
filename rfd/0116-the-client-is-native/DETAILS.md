@@ -34,12 +34,12 @@ slash command and cannot put anybody anywhere.
 `fabric-godot-core` at `gyre` carries the client's whole stack as engine modules. This decision
 adds no engine code; it selects.
 
-| Module | What it provides | What it replaces |
-| --- | --- | --- |
-| `modules/http3` | `WebTransportPeer`, `quic_picoquic_backend.cpp` | the browser's WebTransport |
-| `modules/xr_grid` | `XRGridEntityPacket` | `client/src/cbor.js` |
+| Module                       | What it provides                                 | What it replaces           |
+| ---------------------------- | ------------------------------------------------ | -------------------------- |
+| `modules/http3`              | `WebTransportPeer`, `quic_picoquic_backend.cpp`  | the browser's WebTransport |
+| `modules/xr_grid`            | `XRGridEntityPacket`                             | `client/src/cbor.js`       |
 | `modules/multiplayer_fabric` | `FabricMultiplayerPeer`, zone, snapshot, journal | `client/src/main.js` state |
-| `modules/sqlite` | a local store for what the client caches | nothing; new |
+| `modules/sqlite`             | a local store for what the client caches         | nothing; new               |
 
 `FabricMultiplayerPeer` documents WebTransport as its example backend and notes that a peer must
 open independent streams per packet, which WebTransport does. That is the same property
