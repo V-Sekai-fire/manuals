@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Wed, 12 Aug 2026 18:03:04 GMT</lastBuildDate>
+<lastBuildDate>Thu, 13 Aug 2026 10:38:14 GMT</lastBuildDate>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</link>
@@ -78,7 +78,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -165,7 +165,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -335,7 +335,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -674,7 +674,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -732,6 +732,7 @@ SnapshotBytes: 0</code></pre>
 </table>
 <p>The rules do not change with the words. An interactor opens no listening socket. A transport layer holds no authority, runs no simulation, and keeps no durable state. A service is the set of interactors that share a ring, because a ring is shared memory and forces co-location.</p>
 <p>“Control plane” and “data plane” stay. They come from networking, they name a class of traffic, and neither names a process.</p>
+<p>A git repository name states its type first and drops the <code>fabric-</code> prefix, which the organisation name already carries: <code>fabric-authority-plane</code> becomes <code>interactor-authority</code>. Thirty git repositories are renamed. Five of them carry no retired word and are renamed because the type they state is in the wrong place or is not theirs. <code>DETAILS.md</code> holds the list and the six names the shape does not decide.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -886,27 +887,33 @@ SnapshotBytes: 0</code></pre>
 <td>Netflix</td>
 </tr>
 <tr class="odd">
+<td>contract</td>
+<td>what two sides compose against, checked at the seam</td>
+<td>weft</td>
+</tr>
+<tr class="even">
 <td>ring</td>
 <td>the iceoryx2 shared memory bus</td>
 <td>weft</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>port</td>
 <td>a TCP or UDP listening socket</td>
 <td>ordinary</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>actor</td>
 <td>a runtime process with a single writer</td>
 <td>weft</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>controller</td>
 <td>the human or the AI that controls an avatar</td>
 <td>weft</td>
 </tr>
 </tbody>
 </table>
+<p>“Contract” is not one of the five Netflix terms, and this RFD adds it. The article has no word for the interface an interactor and a transport both compose against, because it writes about classes inside one component rather than about git repositories that must build without each other. The word is weft’s and it is already load-bearing here: <code>PredictiveBvh.core.CurveContract</code> asserts a property against whatever the manifest pins, and <code>fabric-interactor</code>’s README says the boundary is held by the linker. Both are the agreement at a seam, checked rather than assumed, so one meaning covers them.</p>
 <p>weft and Netflix agree on “entity”. Netflix says an entity does not know where it is stored. weft says an entity is the unit the data plane moves. Both keep the entity away from its storage, so one meaning covers both.</p>
 </section>
 <section id="where-the-terms-land-in-this-stack" class="level2">
@@ -978,9 +985,15 @@ SnapshotBytes: 0</code></pre>
 <h2 class="anchored" data-anchor-id="what-plane-keeps">What “plane” keeps</h2>
 <p>“Control plane” and “data plane” stay whole. They come from networking, they name a class of traffic, and neither one names a process. <code>Weft.DataPlane</code> keeps its name. Bare “plane”, as a noun for a process, is retired.</p>
 </section>
+<section id="the-name-shape" class="level2">
+<h2 class="anchored" data-anchor-id="the-name-shape">The name shape</h2>
+<p>A converted name puts the type first and drops the <code>fabric-</code> prefix: <code>&lt;type&gt;-&lt;name&gt;</code>. <code>fabric-authority-plane</code> becomes <code>interactor-authority</code>.</p>
+<p>Type first sorts the git repositories by role. Every interactor is then adjacent, and the number of each type is the length of a run, so the list above can be read off the organisation page. Type last sorted them by subsystem, which kept <code>fabric-store-domain</code> beside <code>fabric-store-plane</code> and put the seven planes in seven places. One order is available or the other, not both, and role is what a reader of this RFD is looking for.</p>
+<p>The <code>fabric-</code> prefix goes because the organisation name already carries it. That also frees the bare word, which one git repository takes below.</p>
+</section>
 <section id="the-rename-list" class="level2">
 <h2 class="anchored" data-anchor-id="the-rename-list">The rename list</h2>
-<p>Fifteen git repositories carry a retired word in the name.</p>
+<p>Thirty git repositories are renamed: twenty-five carry a retired word, three carry the right word in the wrong order, and two state a type that is not theirs.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -991,69 +1004,145 @@ SnapshotBytes: 0</code></pre>
 <tbody>
 <tr class="odd">
 <td><code>fabric-authority-plane</code></td>
-<td><code>fabric-authority-interactor</code></td>
+<td><code>interactor-authority</code></td>
 </tr>
 <tr class="even">
 <td><code>fabric-crowd-plane</code></td>
-<td><code>fabric-crowd-interactor</code></td>
-</tr>
-<tr class="odd">
-<td><code>fabric-taskweft-plane</code></td>
-<td><code>fabric-taskweft-interactor</code></td>
-</tr>
-<tr class="even">
-<td><code>fabric-motion-plane</code></td>
-<td><code>fabric-motion-interactor</code></td>
+<td><code>interactor-crowd</code></td>
 </tr>
 <tr class="odd">
 <td><code>fabric-janet-plane</code></td>
-<td><code>fabric-janet-interactor</code></td>
+<td><code>interactor-janet</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-motion-plane</code></td>
+<td><code>interactor-motion</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-taskweft-plane</code></td>
+<td><code>interactor-taskweft</code></td>
 </tr>
 <tr class="even">
 <td><code>fabric-tool-plane</code></td>
-<td><code>fabric-tool-interactor</code></td>
+<td><code>interactor-tool</code></td>
 </tr>
 <tr class="odd">
 <td><code>fabric-weft-plane</code></td>
-<td><code>fabric-weft-interactor</code></td>
+<td><code>interactor-weft</code></td>
 </tr>
 <tr class="even">
-<td><code>fabric-store-plane</code></td>
-<td><code>fabric-store-datasource</code></td>
+<td><code>gyreplane</code></td>
+<td><code>interactor-gyre</code></td>
 </tr>
 <tr class="odd">
-<td><code>fabric-gateway-edge</code></td>
-<td><code>fabric-gateway-transport</code></td>
-</tr>
-<tr class="even">
-<td><code>fabric-ingest-edge</code></td>
-<td><code>fabric-ingest-transport</code></td>
-</tr>
-<tr class="odd">
-<td><code>fabric-fanout-edge</code></td>
-<td><code>fabric-fanout-transport</code></td>
+<td><code>fabric-physics-interactor</code></td>
+<td><code>interactor-physics</code></td>
 </tr>
 <tr class="even">
 <td><code>fabric-asset-edge</code></td>
-<td><code>fabric-asset-transport</code></td>
+<td><code>transport-asset</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-fanout-edge</code></td>
+<td><code>transport-fanout</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-gateway-edge</code></td>
+<td><code>transport-gateway</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-ingest-edge</code></td>
+<td><code>transport-ingest</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-edge</code></td>
+<td><code>transport-picoquic</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-behaviour-domain</code></td>
+<td><code>service-behaviour</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-store-domain</code></td>
+<td><code>service-store</code></td>
 </tr>
 <tr class="odd">
 <td><code>fabric-zone-domain</code></td>
-<td><code>fabric-zone-service</code></td>
+<td><code>service-zone</code></td>
 </tr>
 <tr class="even">
-<td><code>fabric-behaviour-domain</code></td>
-<td><code>fabric-behaviour-service</code></td>
+<td><code>fabric-godot-service</code></td>
+<td><code>service-godot</code></td>
 </tr>
 <tr class="odd">
-<td><code>fabric-store-domain</code></td>
-<td><code>fabric-store-service</code></td>
+<td><code>fabric-physics-service</code></td>
+<td><code>service-physics</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-store-plane</code></td>
+<td><code>datasource-store</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-flow-adapters</code></td>
+<td><code>datasource-flow</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-flow-adapters-project</code></td>
+<td><code>datasource-flow-project</code></td>
+</tr>
+<tr class="odd">
+<td><code>lean-combat-core</code></td>
+<td><code>entities-lean-combat</code></td>
+</tr>
+<tr class="even">
+<td><code>lean-loot-core</code></td>
+<td><code>entities-lean-loot</code></td>
+</tr>
+<tr class="odd">
+<td><code>lean-progression-core</code></td>
+<td><code>entities-lean-progression</code></td>
+</tr>
+<tr class="even">
+<td><code>lean-rebac-core</code></td>
+<td><code>entities-lean-rebac</code></td>
+</tr>
+<tr class="odd">
+<td><code>lean-shared-core</code></td>
+<td><code>entities-lean-shared</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-godot-core</code></td>
+<td><code>entities-godot</code></td>
+</tr>
+<tr class="odd">
+<td><code>fabric-interactor</code></td>
+<td><code>contract-command</code></td>
+</tr>
+<tr class="even">
+<td><code>fabric-service-meta</code></td>
+<td><code>fabric</code></td>
 </tr>
 </tbody>
 </table>
 <p>GitHub redirects a renamed git repository, so a <code>git subtree</code> remote and a Lake <code>require ... from git</code> continue to resolve. Each pin gets updated in the same pass.</p>
 <p>Three git repositories hold the RFD 0028 triad on disk: <code>loot</code>, <code>combat</code>, and <code>progression</code>. Each <code>core/</code> becomes <code>entities/</code>, each <code>ports/</code> becomes <code>repositories/</code>, and each <code>adapters/</code> becomes <code>datasources/</code>.</p>
-<p>Five git repositories carry “core” in the name: <code>lean-shared-core</code>, <code>lean-rebac-core</code>, <code>lean-combat-core</code>, <code>lean-loot-core</code>, and <code>lean-progression-core</code>. Each becomes <code>lean-*-entities</code>.</p>
+</section>
+<section id="the-names-the-shape-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="the-names-the-shape-does-not-decide">The names the shape does not decide</h2>
+<p>Six entries above do not follow from the conversion table, and each one is a decision this RFD makes rather than a rule it applies.</p>
+<p><code>fabric-edge</code> holds both an ingest edge and a gateway edge over picoquic, and the two also exist as git repositories of their own. It is one transport layer that the other two are built from, not an umbrella over them, so it takes the name of the transport it terminates: <code>transport-picoquic</code>. Bare <code>transport</code> would read as a name that went missing.</p>
+<p><code>gyreplane</code> carries the retired word inside a compound. It is a process that holds entities, so the word is retired there as well and the name is regularised to <code>interactor-gyre</code>. A compound is not an exemption.</p>
+<p><code>fabric-flow-adapters</code> and its <code>-project</code> companion carry RFD 0028’s “adapters”, which this RFD retires for directories. The retirement extends to git repository names. A word retired in the tree and live in the name is the same drift this RFD exists to stop, and the name is the copy a reader sees first.</p>
+<p><code>fabric-godot-core</code> becomes <code>entities-godot</code>, and the rename is of the git repository name only. The <code>core/</code> directory inside it is the Godot engine’s, it comes from upstream, and it is not the “core” of RFD 0028. Renaming it would fork the vocabulary of an engine this project tracks rather than owns.</p>
+<p><code>fabric-interactor</code> is not an interactor. It holds the contract that interactors and transports compose against — <code>include/weft/interactor.h</code> declares both — and its README states the reason it is a git repository of its own: “a contract that lives in either side makes the other its dependent”. A name of <code>interactor-anything</code> picks the side the git repository exists to avoid picking. The type is contract and the subject is the command, so it is <code>contract-command</code>. “Contract” is the one type word here that Netflix does not supply, and the entry above says where it comes from. <code>fabric-harness</code> is the same argument about the bus and the limits, and becomes <code>contract-bus</code> when that pass is taken.</p>
+<p><code>fabric-service-meta</code> is not a service. It holds the <code>.meta</code> manifest that names every git repository here, and the conventions over them. <code>service-meta</code> would assert the thing that is false, and <code>meta</code> alone collides with a company that owns the word in every search. It takes the bare <code>fabric</code>, which the dropped prefix frees: after this pass the word is in one name, and that name is the git repository the other names are listed in. <code>openusd-fabric</code> keeps the OpenUSD scene-data meaning and keeps its qualifier, the same resolution this RFD uses for “git repository”.</p>
+<p>Fourteen <code>lean-*</code> git repositories are not hexagon cores, and they keep the language-first name while five siblings move. <code>lean-</code> marks a Lean workspace that this RFD does not classify. The convention applies where there is a word for the thing, and nowhere else.</p>
+</section>
+<section id="considered-and-rejected-the-agent-noun" class="level2">
+<h2 class="anchored" data-anchor-id="considered-and-rejected-the-agent-noun">Considered and rejected: the agent noun</h2>
+<p>“Interactor” was challenged on the ground that RFD 0000 applies ASD-STE100, that STE forbids a nominalized verb, and that “interact” fails to discriminate, because a transport layer and a data source interact as well. Both objections hold. The word is kept anyway.</p>
+<p>The alternatives were checked against the words this workspace already uses, across every checkout. <code>tick</code> appears 1091 times and this RFD itself says the process holds a tick. <code>warp</code> collides with the GPU warp in <code>SIMT.lean</code> and with the MJX-Warp tree vendored inside the physics git repository. <code>cell</code> appears 2651 times, <code>kernel</code> 8615, and <code>shard</code> 663. <code>hexagon</code> is already the house word for the code shape, and a transport layer has that shape too, so it recreates the collision this RFD closes. <code>loom</code> was the only clean candidate at zero uses, and it is a metaphor that would have to be taught.</p>
+<p>Netflix supplies “interactor”, two git repositories already carry it, and a word with a stated weakness costs less than a word this project invents. The objection is recorded here so that the next reader of eight new names finds it answered rather than open.</p>
 </section>
 <section id="a-gap-this-pass-found" class="level2">
 <h2 class="anchored" data-anchor-id="a-gap-this-pass-found">A gap this pass found</h2>
@@ -1065,8 +1154,10 @@ SnapshotBytes: 0</code></pre>
 <li>One component has one name. A reader learns one vocabulary.</li>
 <li>Each word has one meaning, and STE holds across the git repositories.</li>
 <li>The definitions leave the READMEs and live here, so the copies stop drifting.</li>
-<li><code>Weft.VocabularyTest</code> gains the retired words: plane, edge plane, domain, core, and domain logic. The test then holds this decision. The entries for “control plane” and “data plane” must not match, so the pattern needs a word boundary and a check for the preceding word.</li>
-<li>The rename touches fifteen git repository names, three directory triads, five more names, and every README that copies a definition. Every one is mechanical, and none changes a build.</li>
+<li><code>Weft.VocabularyTest</code> gains the retired words: plane, edge plane, domain, core, domain logic, and adapters. The test then holds this decision. The entries for “control plane” and “data plane” must not match, so the pattern needs a word boundary and a check for the preceding word. “Core” needs the same treatment, because <code>fabric-godot-core</code>’s <code>core/</code> directory is upstream’s and must not match either.</li>
+<li>The test reads one git repository, so it holds the decision only where it runs. Thirty git repositories are renamed here and one of them can hold a copy of the definitions, which is the arrangement the test cannot check. That gap is not closed by this RFD.</li>
+<li>The rename touches thirty git repository names, three directory triads, and every README that copies a definition. Every one is mechanical, and none changes a build.</li>
+<li>Twenty-five of the thirty carry a retired word. The other five do not, and a reader will not predict them from the conversion table. <code>fabric-physics-interactor</code>, <code>fabric-godot-service</code>, and <code>fabric-physics-service</code> are already converted and are renamed for the order alone. <code>fabric-interactor</code> and <code>fabric-service-meta</code> state a type that is not theirs, which the conversion table cannot catch, because it looks for the words that are wrong rather than for the words that are misapplied.</li>
 <li>This RFD does not rename the <code>domain</code> field on the wire in RFD 0091. That is a protocol change and needs its own RFD.</li>
 </ul>
 
@@ -1075,7 +1166,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1389,7 +1480,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -1606,7 +1697,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -1743,7 +1834,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -1915,7 +2006,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2081,7 +2172,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2281,7 +2372,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -2424,7 +2515,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -2575,7 +2666,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -2769,7 +2860,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -2936,7 +3027,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -3159,7 +3250,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3314,7 +3405,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3473,7 +3564,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -3643,7 +3734,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0096: Guest transport on Fly, measured</title>
@@ -3835,7 +3926,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Wed, 12 Aug 2026 18:03:04 GMT</pubDate>
+  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
 </item>
 </channel>
 </rss>
