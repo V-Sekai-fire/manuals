@@ -34,6 +34,13 @@ because a ring is shared memory and forces co-location.
 "Control plane" and "data plane" stay. They come from networking, they name
 a class of traffic, and neither names a process.
 
+A git repository name states its type first and drops the `fabric-` prefix,
+which the organisation name already carries: `fabric-authority-plane` becomes
+`interactor-authority`. Thirty git repositories are renamed. Five of them
+carry no retired word and are renamed because the type they state is in the
+wrong place or is not theirs. `DETAILS.md` holds the list and the six names
+the shape does not decide.
+
 ## References
 
 - Netflix, "Ready for changes with Hexagonal Architecture":
