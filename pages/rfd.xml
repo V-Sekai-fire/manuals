@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 14:28:05 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 14:32:08 GMT</lastBuildDate>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -511,7 +511,186 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0120: The Gyre became a settlement game</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0120: The Gyre became a settlement game</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> the Gyre’s shape, the player’s role, and what the ward simulates</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>RFD 0085 records the Gyre as a MUD on the loot and action shell: a Hub in the Under-Market and the Commons, bounded contracts out in the field, six zones, and a player who is a Spark taking work to pay down a debt. <code>service-store</code> built something else — the player is the Queen, the Sparks act on their own, and the loop is commissioning rather than travelling. The code has run this way since the first ward played while the record still describes the earlier design, so anyone reading 0085 to understand what <code>queen</code> does will be wrong about the player, the loop, and the map. This RFD records what was built, so the two stop disagreeing.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>The player is the Queen, and the Queen never takes a contract.</strong> The shape is <code>My Life as a King</code>: commission, then wait. Sparks choose their own work, and the whole of the player’s game is deciding what to build and in what order. The comment in <code>src/queen.c</code> states the reasoning, which is that a loop like this is a state machine over days with nothing in the critical path to draw, and that is the one game shape genuinely better as a database than as an engine.</p>
+<p><strong>Six venues replace six zones.</strong> The Under-Market and the Commons survive as the two decks a venue stands on, thirty metres apart. What they hold is a build list rather than a map to travel: Cycle’s End Tavern, Splicer’s Den, Transit Rails, Exchange Plaza, Chapel of the Backup, Broadcast Row. Each changes how Sparks behave rather than granting a number, so the Tavern makes them bolder because they rest and the Rails put more work on the board.</p>
+<p><strong>A contract resolves against risk, on the board, in a cycle.</strong> Nine kinds post to a board of six, or nine once the Rails stand. A Spark takes one if its nerve carries it, and a draw against the contract’s risk decides the outcome. Seven of the nine still resolve without a fight, which is the part of 0085 that carried over unchanged.</p>
+<p><strong>The Debt Clock is the antagonist, and it compounds.</strong> Debt grows one percent per cycle and the treasury pays it down. Income from contracts is the only thing that makes scrip, which is what lets one sum decide whether the ward is honest.</p>
+<p><strong>The currency is scrip.</strong> 0085 calls it chits. The implementation calls it scrip throughout, and the invariant is written in those terms.</p>
+<p><strong>A cycle is game time and never wall-clock time.</strong> The ward publishes at 20 Hz because the rest of the fabric does, and that clock says nothing except how often the ward publishes. Tying the two would tie the rate debt compounds at to the rate the network publishes at, and it would end the replay check.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0085: the setting, which this amends rather than replaces. RFD 0119: the interaction model that depends on which loop is real</li>
+<li><code>service-store</code>: <code>src/queen.c</code>, the venues, the board, and the clock</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-changed-line-by-line" class="level2">
+<h2 class="anchored" data-anchor-id="what-changed-line-by-line">What changed, line by line</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 36%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>RFD 0085</th>
+<th><code>service-store</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The player</td>
+<td>A Spark taking contracts</td>
+<td>The Queen, commissioning venues</td>
+</tr>
+<tr class="even">
+<td>The loop</td>
+<td>Hub, field, return</td>
+<td>Commission, then wait a cycle</td>
+</tr>
+<tr class="odd">
+<td>The map</td>
+<td>Six zones to travel</td>
+<td>Six venues on two decks</td>
+</tr>
+<tr class="even">
+<td>Contracts</td>
+<td>Taken by the player</td>
+<td>Chosen by Sparks, resolved against risk</td>
+</tr>
+<tr class="odd">
+<td>Currency</td>
+<td>Chits</td>
+<td>Scrip</td>
+</tr>
+<tr class="even">
+<td>Antagonist</td>
+<td>Overseer Q-11</td>
+<td>The Debt Clock, compounding one percent a cycle</td>
+</tr>
+<tr class="odd">
+<td>Combat</td>
+<td>One of nine, avoidable</td>
+<td>One of nine, avoidable</td>
+</tr>
+<tr class="even">
+<td>Failure</td>
+<td>Death, and a dropped Memory Drive</td>
+<td>Wear, capped, and a Frame that stops earning</td>
+</tr>
+</tbody>
+</table>
+<p>The last two rows are what survived intact.</p>
+</section>
+<section id="the-venues-and-what-each-one-does" class="level2">
+<h2 class="anchored" data-anchor-id="the-venues-and-what-each-one-does">The venues, and what each one does</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 5%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Venue</th>
+<th>Cost</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cycle’s End Tavern</td>
+<td>120</td>
+<td>Rest, so a Spark takes longer odds</td>
+</tr>
+<tr class="even">
+<td>Splicer’s Den</td>
+<td>200</td>
+<td>Frames repaired, so wear stops ending careers</td>
+</tr>
+<tr class="odd">
+<td>Transit Rails</td>
+<td>260</td>
+<td>More contracts reach the board</td>
+</tr>
+<tr class="even">
+<td>Exchange Plaza</td>
+<td>340</td>
+<td>Salvage sells for what it is worth</td>
+</tr>
+<tr class="odd">
+<td>Chapel of the Backup</td>
+<td>420</td>
+<td>A failure costs a cycle rather than a Spark</td>
+</tr>
+<tr class="even">
+<td>Broadcast Row</td>
+<td>500</td>
+<td>Word gets out, and Sparks arrive</td>
+</tr>
+</tbody>
+</table>
+<p>A venue changes behaviour rather than adding a number. The Tavern and the Chapel raise the nerve a Spark brings to a contract, the Den takes wear back faster than rest does, the Rails widen the board, and the Row is the only source of new Sparks. Each is a decision about what kind of ward this becomes.</p>
+</section>
+<section id="the-numbers-the-ward-holds" class="level2">
+<h2 class="anchored" data-anchor-id="the-numbers-the-ward-holds">The numbers the ward holds</h2>
+<p>A ward starts with a treasury of 300 against a debt of 4000. Debt compounds at one percent a cycle, and what the treasury can spare pays it down and counts as retired. A contract that succeeds pays its posted amount, and that is the only event that issues scrip.</p>
+<p>Wear rises by 2 on a success and 5 on a failure, falls by 1 for the cycle’s rest, falls a further 4 where the Den stands, and is held between 0 and 90. Nerve is 100 less wear, plus 25 with the Tavern and 20 with the Chapel. A Spark with no nerve for anything on the board stands idle.</p>
+<p>Somebody hears the Broadcast Row every 12 cycles. The arrival counts cycles rather than drawing, so a replay puts the newcomer in the same place.</p>
+<p>A ward holds at most 48 Sparks, because a subscriber’s slice holds 64 entities and the venues, the Queen and a full board come out of that budget first. A larger ward is refused, and a game past that size is more than one ward, to a limit of eight.</p>
+</section>
+<section id="why-the-shape-changed" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-shape-changed">Why the shape changed</h2>
+<p>The comment at the top of <code>src/queen.c</code> gives the reason directly. A settlement game is a state machine over days with nothing in the critical path to draw, which makes it the one game shape genuinely better as a database than as an engine. The Queen commissions and waits, so a cycle is a transaction and the whole of the visible state is a query.</p>
+<p>The MUD shape needed a room, a description, and a player standing in it, none of which a store plane exercises. The settlement shape gave <code>service-store</code> a workload that is exactly the thing the store plane claims to be good at: N Sparks is N databases committing every cycle, and paying one is a transfer between two of them under the parallel commit protocol.</p>
+</section>
+<section id="what-this-leaves-open" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-leaves-open">What this leaves open</h2>
+<p>Whether the Spark-facing game returns. Nothing here forecloses it, and RFD 0119 assumes it does, with hands and salvage in a headset. The ward would be the economy underneath it rather than the whole of it.</p>
+<p>Whether Memory Drives arrive with that, since they are the one adversarial interaction the setting describes and the one object whose duplication is unsurvivable in the fiction.</p>
+<p>Whether the absent zones come back as places, given that venues, Sparks and contracts already carry coordinates in micrometres for the interest filter.</p>
+</section>
+<section id="what-has-not-been-built" class="level2">
+<h2 class="anchored" data-anchor-id="what-has-not-been-built">What has not been built</h2>
+<p>The Reclamation Wards, the Tangle, the Sub-Net and the Underhull have no representation in the ward. Splicer Jax, Overseer Q-11 and Rook are absent, though the Splicer’s Den carries Jax’s role as a venue. Memory Drives, and the looting and ransoming of them, are unimplemented, which matters because they are the setting’s one adversarial interaction and RFD 0119 turns on them.</p>
+<p>These stay in 0085 as setting. This RFD narrows what <code>service-store</code> claims to simulate rather than retiring the fiction around it.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>0085 remains the setting record and stops being the design record for the ward. A reader who wants to know what the simulation does reads this one.</p>
+<p>The salvage and interaction model in RFD 0119 sits on the cycle boundary rather than on a Hub and Field loop, because the loop it was written against is not the loop that exists.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0119: Salvage you can hold</title>
@@ -651,7 +830,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -996,7 +1175,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -1120,7 +1299,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1189,7 +1368,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1276,7 +1455,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -1446,7 +1625,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -1785,7 +1964,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2277,7 +2456,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -2591,7 +2770,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -2772,7 +2951,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -2909,7 +3088,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -3081,7 +3260,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -3247,7 +3426,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -3447,7 +3626,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -3631,7 +3810,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3785,7 +3964,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3976,7 +4155,7 @@ font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, and three send rates</title>
@@ -4113,162 +4292,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0099: Server authority on Fly, and what the client is allowed to do</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0095</code> through <code>rfd/0098</code> decided how guests run, how they store data, how they talk, and what rollback costs. None of them says who decides what is true.</p>
-<p>The server must be authoritative. A client that reports its own position can report any position. <code>rfd/0092</code>’s ReBAC planes do not help here, because the client holds a legitimate relation to its own avatar.</p>
-<p>This RFD states the authority boundary. It also states the budget the boundary must fit, because a 256 MB machine with one shared vCPU cannot hold an unbounded design.</p>
-</section>
-<section id="what-the-code-already-provides" class="level2">
-<h2 class="anchored" data-anchor-id="what-the-code-already-provides">What the code already provides</h2>
-<p>Three facts came out of reading the tree, and each one changes the design.</p>
-<section id="the-physics-is-already-integer-so-determinism-is-already-solved" class="level3">
-<h3 class="anchored" data-anchor-id="the-physics-is-already-integer-so-determinism-is-already-solved">The physics is already integer, so determinism is already solved</h3>
-<p><code>src/gen/xr_grid_entity_packet.h</code> is explicit: “no floats at all – position is int64 absolute micrometers, velocity is int16”.</p>
-<p><code>src/zf_zonetick.h</code> gives the update rule:</p>
-<pre><code>pos_um += (int64_t)vel_i16 * V_MAX_PHYSICAL_DEFAULT_UM_PER_TICK / INT16_MAX</code></pre>
-<p>That is integer arithmetic, applied per tick. It produces identical results on every machine, with no dependence on compiler, operating system, or instruction set.</p>
-<p>Glenn Fiedler rejects deterministic lockstep for a shooter because float determinism across platforms is nearly impossible. This codebase does not have that problem, and it does not need libriscv to avoid it. Fixed-point integers already avoid it.</p>
-<p>libriscv earns its place for UNTRUSTED guest code, per <code>rfd/0095</code>. It is not what makes the core entity update deterministic.</p>
-</section>
-<section id="the-packet-already-carries-an-owner-and-a-clock" class="level3">
-<h3 class="anchored" data-anchor-id="the-packet-already-carries-an-owner-and-a-clock">The packet already carries an owner and a clock</h3>
-<p><code>xr_grid_entity_packet_t</code> holds <code>class_owner</code>, which is <code>(class &lt;&lt; 24) | owner</code>, and <code>hlc</code>, which is <code>(frame &lt;&lt; 8) | counter</code>.</p>
-<p>So ownership and a hybrid logical clock exist on the wire already. The authority model does not need a new field. It needs a rule about what <code>owner</code> means.</p>
-</section>
-<section id="the-entity-record-is-100-bytes" class="level3">
-<h3 class="anchored" data-anchor-id="the-entity-record-is-100-bytes">The entity record is 100 bytes</h3>
-<p><code>XR_PACKET_SIZE</code> is 100. <code>rfd/0002</code> sizes a zone at 200 entities per tick.</p>
-</section>
-</section>
-<section id="decisions" class="level2">
-<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
-<section id="ownership-is-not-authority" class="level3">
-<h3 class="anchored" data-anchor-id="ownership-is-not-authority">1. Ownership is not authority</h3>
-<p><code>class_owner</code> names who a client speaks for. It does not make the client correct.</p>
-<p>A client sends INPUT. The server computes STATE. The server writes <code>zf/entity/{z_id}/{e_id}</code>, and a client never writes it.</p>
-<p>This is the whole boundary, and every decision below follows from it.</p>
-</section>
-<section id="clients-predict-with-the-same-integer-rule" class="level3">
-<h3 class="anchored" data-anchor-id="clients-predict-with-the-same-integer-rule">2. Clients predict with the same integer rule</h3>
-<p>A client runs the update rule from <code>zf_zonetick.h</code> locally, on its own inputs, and draws the result immediately.</p>
-<p>Because the rule is integer, the client and the server compute identical values from identical inputs. Divergence therefore means a missing input or a rejected input. It never means float drift.</p>
-<p>That is a stronger property than a float engine can offer, and it comes free with the existing packet format.</p>
-</section>
-<section id="server-side-lag-compensation-is-a-ring-of-packets-not-a-machine-snapshot" class="level3">
-<h3 class="anchored" data-anchor-id="server-side-lag-compensation-is-a-ring-of-packets-not-a-machine-snapshot">3. Server-side lag compensation is a ring of packets, not a machine snapshot</h3>
-<p>To validate a hit, the server rewinds entity positions to what the shooter saw, then tests the shot.</p>
-<p>That needs entity history, not a virtual machine snapshot. The size is small:</p>
-<pre><code>200 entities x 100 bytes x 7 ticks = 140000 bytes</code></pre>
-<p>140 KB covers about 100 ms of compensation at 64 Hz. A full second of history is 1.28 MB.</p>
-<p><code>rfd/0098</code> measured a libriscv snapshot of an engine guest at 64.04 MB, and 7 of them at 448.26 MB, which does not fit the machine. Lag compensation does not pay that cost, because it does not snapshot a machine. It copies 100-byte records.</p>
-<p>Keep these two mechanisms separate. Lag compensation uses the ring. Guest rollback uses forking, under <code>rfd/0098</code>’s 8 MB budget.</p>
-</section>
-<section id="interest-management-is-required-not-an-optimization" class="level3">
-<h3 class="anchored" data-anchor-id="interest-management-is-required-not-an-optimization">4. Interest management is required, not an optimization</h3>
-<p>The bandwidth arithmetic settles this.</p>
-<pre><code>200 entities x 100 bytes            = 20000 bytes per tick
-20000 bytes x 64 Hz                 = 1280000 bytes per second
-                                    = 10.2 Mbit per second, per client</code></pre>
-<p>Ten clients on one zone is 102 Mbit per second of egress. That is implausible for a client connection and expensive on Fly.</p>
-<p>So a zone must not send every entity to every client. Interest management and delta compression are load-bearing requirements of the design. <code>rfd/0002</code> and the interest-management literature already cover the algorithms.</p>
-<p>State this in the fan-out work (<code>zone-server-h2o</code> issue #41) rather than discovering it after the loop exists.</p>
-</section>
-<section id="the-per-tick-budget-on-fly" class="level3">
-<h3 class="anchored" data-anchor-id="the-per-tick-budget-on-fly">5. The per-tick budget on Fly</h3>
-<p>One tick is 15625 us. Measured and known costs:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 36%">
-<col style="width: 49%">
-<col style="width: 14%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Item</th>
-<th>Cost</th>
-<th>Source</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>FDB commit for the tick</td>
-<td>3552.9 us</td>
-<td><code>rfd/0097</code></td>
-</tr>
-<tr class="even">
-<td>Entity history ring write</td>
-<td>20000 byte copy</td>
-<td>this RFD</td>
-</tr>
-<tr class="odd">
-<td>Fan-out serialize</td>
-<td>one encode per entity</td>
-<td>issue #41</td>
-</tr>
-<tr class="even">
-<td>Fan-out send</td>
-<td>one queued datagram per subscriber</td>
-<td>issue #41</td>
-</tr>
-</tbody>
-</table>
-<p>The database commit is 23 percent of the tick before any game logic runs. That is the dominant fixed cost, and it grows on a real cluster, because <code>rfd/0097</code> measured a single node with memory storage.</p>
-</section>
-<section id="authority-must-not-stall-behind-the-database" class="level3">
-<h3 class="anchored" data-anchor-id="authority-must-not-stall-behind-the-database">6. Authority must not stall behind the database</h3>
-<p><code>zonetick_fdb_this_zone()</code> skips a tick while the previous FDB commit stays open. Fan-out must not sit inside that guard.</p>
-<p>If it does, a slow database freezes every client’s view of the world. Measured p99 commit is 5112.5 us against a 15625 us tick, so there is headroom today, and a real cluster removes some of it.</p>
-<p>Send authoritative state every tick. Let the database write fall behind when it must. The server stays authoritative either way, because authority lives in the server’s own state, and the database is where that state is made durable.</p>
-</section>
-<section id="rebac-gates-what-a-client-may-propose" class="level3">
-<h3 class="anchored" data-anchor-id="rebac-gates-what-a-client-may-propose">7. ReBAC gates what a client may propose</h3>
-<p><code>rfd/0092</code>’s use plane decides whether a client may act on an entity at all. <code>class_owner</code> decides which entity a client speaks for.</p>
-<p>Neither decides whether the result is correct. Decision 1 does.</p>
-</section>
-</section>
-<section id="stale-numbers-found-while-writing-this" class="level2">
-<h2 class="anchored" data-anchor-id="stale-numbers-found-while-writing-this">Stale numbers found while writing this</h2>
-<p>The tree names three tick rates. <code>webtransport_server.h:20</code> defines <code>ZONE_TICK_HZ</code> as 64, which is what runs. <code>zf_zonetick.h:19</code> refers to a “fixed 30Hz assumption”, and <code>webtransport_server.h:12</code> mentions <code>PBVH_SIM_TICK_HZ = 20</code> from the original Godot implementation.</p>
-<p>64 is correct. The other two are stale comments. Correct them, because every budget in <code>rfd/0096</code> through <code>rfd/0099</code> divides by 15625 us.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>The client is a predictor and an input source. It is never a source of truth.</p>
-<p>Two rewind mechanisms exist, and they must not be confused. Lag compensation rewinds 100-byte entity records in a 140 KB ring. Guest rollback forks a libriscv machine under an 8 MB working-set budget.</p>
-<p>Interest management moves from future work to a requirement, because 10.2 Mbit per second per client is not shippable.</p>
-<p>Determinism of the core simulation does not depend on libriscv. It depends on the integer packet format, which already exists and already has golden vectors.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li><code>src/gen/xr_grid_entity_packet.h</code>, the integer packet format</li>
-<li><code>src/zf_zonetick.h</code>, the integer per-tick update rule</li>
-<li><a href="https://gafferongames.com/post/deterministic_lockstep/">Deterministic Lockstep, Gaffer On Games</a></li>
-<li><a href="https://gafferongames.com/post/floating_point_determinism/">Floating Point Determinism, Gaffer On Games</a></li>
-<li><a href="https://doi.org/10.1145/3519023">A Survey and Taxonomy of Latency Compensation Techniques for Network Computer Games</a></li>
-<li><a href="https://doi.org/10.1145/2535417">Interest Management for Distributed Virtual Environments: A Survey</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
 </item>
 </channel>
 </rss>
