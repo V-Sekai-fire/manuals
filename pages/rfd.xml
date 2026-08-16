@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 14:09:06 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 14:28:05 GMT</lastBuildDate>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -511,7 +511,147 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0119: Salvage you can hold</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0119: Salvage you can hold</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> client interaction model, authority, the boundary between physics and the ledger</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>service-store</code> holds an invariant: salvage is unique, and no item is in two Sparks’ hands. A transaction across two databases enforces it, and <code>honest()</code> checks it every cycle. Glenn Fiedler’s VR cubes hold the same invariant under another name — ownership stops two players holding one cube, and a sequence number per cube enforces it while a host arbitrates. His rule is exact: “Ownership sequence increments each time a player grabs a cube. Ownership is stronger than authority, such that an increase in ownership sequence wins over an increase in authority sequence number.”</p>
+<p>One invariant, two mechanisms, three orders of magnitude apart in cost: the transaction is exact and takes a round trip, the sequence number converges and takes nothing. RFD 0085 makes the question urgent by naming the object that carries it. Memory Drives house a Spark’s consciousness, drop on death, and can be looted or ransomed. A drive is holdable, contested, and the one item where duplication is unsurvivable in the fiction as well as in the ledger: two people holding one drive is two people holding one person.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Two authorities, split by what a mistake costs.</strong> Physics authority is distributed and taken by whoever last touched an object, and it is allowed to be briefly wrong. Economic authority stays with <code>service-store</code>, single-writer and transactional, and is never allowed to be wrong. A dropped crate costs a frame of jitter; a duplicated drive costs the invariant every other check rests on.</p>
+<p><strong>The cycle is the line, because a cycle is already one transaction.</strong> <code>service-store</code> makes each cycle a single group commit across the ward and every Spark it touches. Salvage loose in the world between cycles is physics the ledger has never heard of, and the cycle that ends is the commit that takes it. The boundary the interaction model needs is the one the store already draws, so nothing new carries it.</p>
+<p><strong>A claim is one transaction that deletes and inserts together.</strong> Converting loose salvage into a row removes the physical object and writes the <code>held</code> entry in the same commit, and drawing an item back into the world runs it backwards. Uniqueness holds because the ledger counts only what it has committed, and the conversion is the only place the two representations meet.</p>
+<p><strong>Memory Drives never enter the distributed regime.</strong> Fiedler states his model suits “cooperative experiences only, as it does not provide the security of a server-authoritative network model”. Seven of the Gyre’s nine contracts resolve without a fight, so that limitation costs almost nothing. Drive looting and ransom is the exception and is adversarial by design, so custody stays transactional even while the physical shell is thrown around.</p>
+<p><strong>Physics never reaches the seeded simulation.</strong> <code>CLAUDE.md</code> requires that a cycle not advance on wall-clock time and that the RNG draw order never move. PhysX is non-deterministic, which is why Fiedler rejected lockstep. A thrown crate may not decide a contract, feed a draw, or advance a cycle: the physics layer reads the ward and the ward declines to read it back.</p>
+<p><strong>The board is the second layer, played at the same time.</strong> PRAGMATA runs Hugh’s movement and Diana’s hacking together, one player coordinating both. The Gyre has both halves already — hands in the world at frame rate, and the Queen’s board of contracts and cycles deciding what the object in your hand is worth. Neither pauses for the other.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><a href="https://gafferongames.com/post/networked_physics_in_virtual_reality/">Networked Physics in Virtual Reality</a>, Glenn Fiedler: the authority model, the priority accumulator, and the delta encoding; <a href="https://store.steampowered.com/app/3357650/PRAGMATA/">PRAGMATA</a>, CAPCOM: two characters played at once</li>
+<li>RFD 0085: the setting, the Hub and Field loop, and Memory Drives</li>
+<li><code>service-store</code> (the ward, the invariants, the parallel commit), <code>transport-fanout</code> (the interest filter and entity packet), <code>interactor-authority</code> (the single writer the ledger keeps)</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="one-invariant-at-two-consistency-levels" class="level2">
+<h2 class="anchored" data-anchor-id="one-invariant-at-two-consistency-levels">One invariant at two consistency levels</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 43%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Loose, between cycles</th>
+<th>Claimed, at the cycle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Enforced by</td>
+<td>Ownership sequence number, host arbitrates</td>
+<td>Transaction across two databases</td>
+</tr>
+<tr class="even">
+<td>Cost</td>
+<td>Nothing. Rides in the state update</td>
+<td>About one round trip</td>
+</tr>
+<tr class="odd">
+<td>Wrong for</td>
+<td>A few frames, then converges</td>
+<td>Never</td>
+</tr>
+<tr class="even">
+<td>Checked by</td>
+<td>Convergence</td>
+<td><code>honest()</code>, every cycle</td>
+</tr>
+<tr class="odd">
+<td>Failure looks like</td>
+<td>A crate snaps to another pose</td>
+<td>Scrip or salvage that does not add up</td>
+</tr>
+</tbody>
+</table>
+<p>The two rows describe the same rule. What differs is the price paid for it and how long it may be violated.</p>
+</section>
+<section id="what-fiedlers-model-supplies" class="level2">
+<h2 class="anchored" data-anchor-id="what-fiedlers-model-supplies">What Fiedler’s model supplies</h2>
+<p>Authority passes to whoever last interacted with an object, and ownership stops a second player taking it while it is held. Both ride as sequence numbers in every state update, and the host accepts an update when its sequence is newer. Conflicts are reported as rare in practice even under significant latency.</p>
+<p>State is quantized identically on both sides before each physics step, at 1/1000th of a centimetre, and synchronized at 10 Hz against PhysX’s non-determinism. A priority accumulator decides which objects fit in each packet, boosting whatever collided or was recently thrown, which gives direct control over bandwidth against a fixed packet size. Delta compression against per-object baselines encodes an unchanged object in one bit and a ballistic-predicted object in one more. Four players fit under 256 kbps each.</p>
+<p>A held object leaves the physics stream entirely and rides in the holder’s avatar packet as a relative transform, which stops the hand and the object disagreeing. Avatar state arrives through a 100 ms jitter buffer.</p>
+</section>
+<section id="what-the-gyre-supplies" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-gyre-supplies">What the Gyre supplies</h2>
+<p>The ward is a SQLite database over a VFS whose pages live in FoundationDB, and every Spark is a database of their own. Paying one is a transfer between two databases under the parallel commit protocol. Three invariants hold every cycle: scrip is conserved, salvage is unique, and one seed makes one ward.</p>
+<p>The third is what constrains this design most. A cycle may not advance on wall-clock time, and no change may alter the RNG draw order, because <code>check</code> plays a seed twice and compares a fingerprint. A physics simulation that fed the ward would end that check, and PhysX is the reason Fiedler rejected lockstep in the first place.</p>
+</section>
+<section id="what-pragmata-supplies" class="level2">
+<h2 class="anchored" data-anchor-id="what-pragmata-supplies">What PRAGMATA supplies</h2>
+<p>Two characters played at once: Hugh moves, shoots and jumps while Diana hacks in real time. The interest is in the division of attention rather than in either half alone.</p>
+<p>The Gyre has both halves already. Hands work at frame rate, and the Queen’s board of contracts, venues and cycles runs as a discrete layer that decides what the object in a hand is worth. The claim is the moment the two layers touch.</p>
+</section>
+<section id="the-memory-drive-as-the-worked-case" class="level2">
+<h2 class="anchored" data-anchor-id="the-memory-drive-as-the-worked-case">The Memory Drive as the worked case</h2>
+<p>RFD 0085 has Memory Drives housing a Spark’s consciousness, dropping on death, and available to be looted or ransomed. Every property that makes an object hard here is present at once. It is holdable, so it wants distributed authority. It is contested between players who benefit from taking it, so it cannot have distributed authority. It is unique in the fiction as strongly as in the ledger, because duplicating a drive duplicates a person.</p>
+<p>The split resolves it. The shell is a physics object under the ordinary rules, and custody is a row that moves only by transaction. A player can carry, drop and hand over the shell at frame rate while the question of who owns the drive is answered somewhere that cannot be raced.</p>
+</section>
+<section id="failure-modes-to-design-against" class="level2">
+<h2 class="anchored" data-anchor-id="failure-modes-to-design-against">Failure modes to design against</h2>
+<p>A claim that inserts before it deletes duplicates the item for the width of the window. A claim that deletes before it inserts destroys it for the same width. The parallel commit exists to make both halves land together, and the claim is exactly the transaction it was built for.</p>
+<p>An object committed by a cycle and still simulated afterwards exists twice, with the ledger aware of one copy. This shows up as a violated invariant on the next cycle rather than as a visual artefact, which is the reason to prefer this arrangement over one that reconciles later.</p>
+<p>Distributed authority over anything priced in scrip lets a player take what they were not given. This is the whole content of Fiedler’s cooperative-only caveat applied to a setting that has an economy.</p>
+<p>Physics feeding the seeded simulation ends the replay check silently. Nothing fails at the moment it happens, and <code>check</code> starts disagreeing with itself on runs that used to match.</p>
+</section>
+<section id="alternatives-considered" class="level2">
+<h2 class="anchored" data-anchor-id="alternatives-considered">Alternatives considered</h2>
+<p>Server-authoritative physics with client-side prediction. This removes the security caveat and the split, at the cost of rollback and resimulation for every interaction, and of a round trip in the hands of a player holding an object. Fiedler weighed the same trade and observed that for this class of interaction the security is effectively the same either way, since the client is trusted about its own hands regardless.</p>
+<p>One consistency level for everything, chosen as the strong one. Every crate becomes a transaction, and throwing anything costs a commit. This holds every invariant and gives up the interaction the RFD exists to enable.</p>
+<p>One consistency level for everything, chosen as the weak one. Scrip and drives converge like cubes do. This is fast, simple, and hands the treasury to whoever writes a client.</p>
+<p>Deterministic lockstep across all clients. This gives exactness without a ledger, and requires a deterministic physics engine the stack does not have.</p>
+</section>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+<pre><code>gyre X networked physics in vr X pragmata</code></pre>
+<p>The Gyre supplies an economy a database can prove. Networked physics in VR supplies hands that pass an object between two people across a network. PRAGMATA supplies the shape of playing both at once.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The 100-byte entity packet and the interest filter in <code>transport-fanout</code> become the physics transport, which is what they were built for. <code>interactor-authority</code>’s single writer keeps the ledger and holds no opinion about where a crate is.</p>
+<p>Two representations of one object exist while it is loose, and exactly one exists once it is claimed. A bug in the conversion surfaces as a violated invariant on the next cycle rather than as a visual glitch, which is the failure mode to want.</p>
+<p>The second layer runs against the board the Queen already plays, so it costs content rather than architecture.</p>
+</section>
+<section id="open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
+<p>Whether the host-arbiter topology survives a dedicated ward process. Fiedler’s host is a player; <code>queen serve</code> is not, and it already terminates WebTransport in its own process.</p>
+<p>What a claim costs in latency, given it is a parallel commit across two databases while the player is holding the object.</p>
+<p>Whether a drive’s physical shell can be thrown at all while its custody stays transactional, or whether the shell has to be inert to keep the two from disagreeing.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -856,7 +996,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -980,7 +1120,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1049,7 +1189,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1136,7 +1276,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -1306,7 +1446,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -1645,7 +1785,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2137,7 +2277,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -2451,7 +2591,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -2632,7 +2772,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -2769,7 +2909,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -2941,7 +3081,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -3107,7 +3247,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -3307,7 +3447,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -3491,7 +3631,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3645,7 +3785,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3836,7 +3976,7 @@ font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, and three send rates</title>
@@ -3973,7 +4113,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -4128,181 +4268,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0098: The rollback snapshot budget, measured</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0098: The rollback snapshot budget, measured</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0095</code> puts hybrid rollback-kinematic networking on libriscv. The stated reason is that <code>serialize_to</code> (<code>machine.hpp:431</code>) and forking (<code>machine.hpp:61</code>) give bit-exact snapshot and replay, and that a Linux process cannot.</p>
-<p>That reason is correct and it was never measured. This RFD measures it.</p>
-<p>The measurement matters because rollback has a hard budget. One tick at 64 Hz is 15625 us. Lag compensation of 100 ms rewinds about 7 ticks. So the host takes one snapshot every tick and holds about 7 of them.</p>
-<p>If a snapshot costs more than a tick, rollback is impossible. If 7 snapshots do not fit in memory, rollback is impossible. Neither number was known.</p>
-</section>
-<section id="prior-art" class="level2">
-<h2 class="anchored" data-anchor-id="prior-art">Prior art</h2>
-<p>This approach is not new, and the reason to use a virtual machine is well understood.</p>
-<p>Glenn Fiedler rejects deterministic lockstep for a first-person shooter on two grounds. Float determinism across compilers, operating systems and instruction sets is nearly impossible. Also, every player waits for the most lagged player.</p>
-<p>A virtual machine answers the first objection, because the guest executes the same instructions everywhere. Rollback answers the second, because rollback predicts and re-simulates instead of waiting.</p>
-<p>WebAssembly is the common choice for this. <code>bevy_ggrs</code> runs rollback under WASM, and Easel builds a language that guarantees determinism. The requirement is the same in every case: snapshot the state, restore it, and re-simulate.</p>
-<p>No prior art was found for RISC-V as the determinism boundary. The technique is established. The choice of libriscv rather than WASM is what <code>rfd/0095</code> decides, and what this RFD tests.</p>
-</section>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>The probe loads a guest ELF, runs 2 million instructions to warm it, then measures <code>serialize_to</code>, <code>deserialize_from</code>, and fork construction 200 times each. It reports the median and the 99th percentile.</p>
-<p>It also replays the same snapshot twice and hashes all 32 integer registers plus the program counter. Rollback is worthless if two replays differ.</p>
-<p>Two guests, chosen as the two ends of the range:</p>
-<ul>
-<li><code>kv_smoke.elf</code>, a 4016 byte script guest.</li>
-<li><code>godot_instance_harness</code>, an 84982776 byte engine guest.</li>
-</ul>
-<p>Both ran with a 64 MB arena.</p>
-</section>
-<section id="finding-0-serialize_to-needs-the-fast-path-turned-off" class="level2">
-<h2 class="anchored" data-anchor-id="finding-0-serialize_to-needs-the-fast-path-turned-off">Finding 0: serialize_to needs the fast path turned off</h2>
-<p><code>serialize_to</code> refuses to run against libriscv’s default memory configuration. <code>serialize.cpp:99</code> throws <code>FEATURE_DISABLED</code>, with the message <code>Serialize is incompatible with flat read-write arena</code>.</p>
-<p>So <code>MachineOptions::use_memory_arena</code> must be false to snapshot at all. The flat arena is the fast memory path. Snapshotting costs it.</p>
-<p>Every number below therefore describes a machine that already gave up the arena.</p>
-</section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 35%">
-<col style="width: 28%">
-<col style="width: 35%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Measure</th>
-<th>Script guest, 4016 B</th>
-<th>Engine guest, 84982776 B</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Snapshot size</td>
-<td>41864 B (0.04 MB)</td>
-<td>67148424 B (<strong>64.04 MB</strong>)</td>
-</tr>
-<tr class="even">
-<td><code>serialize_to</code> median</td>
-<td>0.8 us</td>
-<td><strong>12370.2 us</strong></td>
-</tr>
-<tr class="odd">
-<td><code>serialize_to</code> p99</td>
-<td>1.2 us</td>
-<td><strong>17063.0 us</strong></td>
-</tr>
-<tr class="even">
-<td><code>deserialize_from</code> median</td>
-<td>1.9 us</td>
-<td>15227.0 us</td>
-</tr>
-<tr class="odd">
-<td>Fork construct median</td>
-<td>0.3 us</td>
-<td><strong>384.2 us</strong></td>
-</tr>
-<tr class="even">
-<td>Determinism, 2 replays</td>
-<td>IDENTICAL</td>
-<td>IDENTICAL</td>
-</tr>
-</tbody>
-</table>
-<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. Every row above is a stored row. Latency is nanoseconds in the store and microseconds in this table.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">SELECT</span> subject, operation, median_ns, p99_ns</span>
-<span id="cb1-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'latency.parquet'</span>)</span>
-<span id="cb1-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">WHERE</span> subject <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'libriscv%'</span>;</span></code></pre></div></div>
-</section>
-<section id="decisions" class="level2">
-<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
-<section id="determinism-holds-and-that-was-the-core-claim" class="level3">
-<h3 class="anchored" data-anchor-id="determinism-holds-and-that-was-the-core-claim">1. Determinism holds, and that was the core claim</h3>
-<p>Two replays of the same snapshot produced identical register state and program counter on both guests. <code>rfd/0095</code>’s central argument survives measurement.</p>
-</section>
-<section id="serialize_to-cannot-snapshot-an-engine-guest" class="level3">
-<h3 class="anchored" data-anchor-id="serialize_to-cannot-snapshot-an-engine-guest">2. <code>serialize_to</code> cannot snapshot an engine guest</h3>
-<p>The engine guest takes 12370 us to serialize. One tick is 15625 us. So a single snapshot consumes 79 percent of a tick at the median.</p>
-<p>At the 99th percentile it takes 17063 us, which is longer than the whole tick. The snapshot alone misses the deadline.</p>
-<p>Memory disqualifies it a second time. Seven live snapshots need 448.26 MB. A Fly machine in <code>fly/fly.toml</code> has 256 MB, and <code>rfd/0096</code> measured 212188 kB of that as usable. The rewind window does not fit.</p>
-</section>
-<section id="snapshot-cost-tracks-the-working-set-so-cap-the-working-set" class="level3">
-<h3 class="anchored" data-anchor-id="snapshot-cost-tracks-the-working-set-so-cap-the-working-set">3. Snapshot cost tracks the working set, so cap the working set</h3>
-<p>The script guest snapshots to 41864 bytes from the same 64 MB arena that produced 64.04 MB for the engine guest. Size follows what the guest touches, not what it may address.</p>
-<p>Both figures divide out near memory bandwidth, at roughly 5 to 50 GB per second. Snapshot cost is a memory copy, so it is predictable:</p>
-<pre><code>snapshot_us ~= working_set_bytes / 5 GB per second</code></pre>
-<p>Turned into a budget: keep snapshot cost under 10 percent of a tick, which is 1562 us. That allows a working set of approximately 8 MB.</p>
-<p><strong>8 MB is the rollback guest budget.</strong> A program on the rollback path must fit it. That is a design constraint on the guest, and it is not a tuning parameter of the host.</p>
-</section>
-<section id="prefer-forking-and-treat-serialize_to-as-the-fallback" class="level3">
-<h3 class="anchored" data-anchor-id="prefer-forking-and-treat-serialize_to-as-the-fallback">4. Prefer forking, and treat <code>serialize_to</code> as the fallback</h3>
-<p>Fork construction costs 384.2 us for the engine guest, against 12370.2 us to serialize the same machine. That is roughly 32 times faster, because copy-on-write does not copy untouched pages.</p>
-<p>For the script guest it is 0.3 us against 0.8 us.</p>
-<p>Fork is therefore the mechanism for the rollback window. <code>serialize_to</code> stays useful for a durable snapshot that must outlive the process, and for moving a machine between hosts.</p>
-</section>
-<section id="engine-guests-do-not-roll-back-and-that-is-already-the-design" class="level3">
-<h3 class="anchored" data-anchor-id="engine-guests-do-not-roll-back-and-that-is-already-the-design">5. Engine guests do not roll back, and that is already the design</h3>
-<p><code>rfd/0095</code> puts engine guests under Bubblewrap as separate processes. They were never on the rollback path.</p>
-<p>This measurement confirms that boundary rather than moving it. An engine-sized guest cannot meet the rollback budget under libriscv either. The split was right, and the reason is now numeric.</p>
-</section>
-</section>
-<section id="open-question-a-rolling-window-of-forks" class="level2">
-<h2 class="anchored" data-anchor-id="open-question-a-rolling-window-of-forks">Open question: a rolling window of forks</h2>
-<p><code>machine.hpp:61</code> states that the main machine must outlive its forks, and that it must not be modified while a fork runs.</p>
-<p>A rollback window needs about 7 snapshots at different ticks. Whether that is expressible as a chain of forks, or needs one frozen parent per tick, is not established here. It was not measured.</p>
-<p>Resolve this before building the rollback window, because decision 4 depends on it.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>The rollback path carries an explicit size limit of approximately 8 MB of working set. State that limit in the guest ABI documentation, so a guest author learns it before writing a program that cannot roll back.</p>
-<p><code>use_memory_arena</code> must be false on any machine that will snapshot. Measure the cost of losing the arena before enabling snapshots on a hot path.</p>
-<p><code>rfd/0095</code> claimed <code>serialize_to</code> and forking as equivalent evidence for the same argument. They are not equivalent. Forking is roughly 32 times faster on an engine-sized machine, and <code>serialize_to</code> cannot meet the tick deadline there at all.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<p>Probe source is <code>rollback.cpp</code> beside this RFD.</p>
-<ul>
-<li><a href="https://gafferongames.com/post/floating_point_determinism/">Floating Point Determinism, Gaffer On Games</a></li>
-<li><a href="https://gafferongames.com/post/deterministic_lockstep/">Deterministic Lockstep, Gaffer On Games</a></li>
-<li><a href="https://github.com/mas-bandwidth/fps">mas-bandwidth/fps</a></li>
-<li><a href="https://johanhelsing.studio/posts/extreme-bevy">Extreme Bevy, rollback in Rust and WASM</a></li>
-<li><a href="https://easel.games/docs/learn/multiplayer/rollback-netcode">Easel, deterministic rollback netcode</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:28:05 GMT</pubDate>
 </item>
 </channel>
 </rss>
