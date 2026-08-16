@@ -36,7 +36,7 @@ glTF.
 
 ## What is already true
 
-- `fabric-godot-core` carries `modules/basis_universal` and `modules/gltf`.
+- `entities-godot` carries `modules/basis_universal` and `modules/gltf`.
 - `godot-images` has no `module_*_enabled=no` on any platform, so both are in every artifact it publishes.
 - `zone-client-godot` builds `scons platform=web target=template_release` and ships `bin/godot.web.template_release.*`
   with no editor involved.
@@ -60,3 +60,17 @@ than expected.
 Emit binary `.scn` instead of `.tscn`. Loading is faster. The binary format's compatibility across engine versions is
 a weaker contract for a baker to hold than the text format's, and the parse cost is paid once per scene load against
 a network fetch that costs more.
+
+## Consequences
+
+The pipeline becomes scons for the template, the baker for the content, the module for the mount, and the sandbox for
+the logic. No step needs a GUI, and no step needs a machine with the editor installed.
+
+The module is the new failure surface. Three ways it fails quietly are recorded in `DETAILS.md`, and the first one
+compiles, links, and resolves nothing.
+
+## Open question
+
+Whether a release template boots an unpacked project directory or requires a `.pck`. The module answers this by
+construction once it exists. Until it does, the question is unsettled and a short experiment against
+`linux-template-release` would settle it.
