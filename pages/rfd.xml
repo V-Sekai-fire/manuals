@@ -10,7 +10,436 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Thu, 13 Aug 2026 10:38:14 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 12:55:22 GMT</lastBuildDate>
+<item>
+  <title>RFD 0116: Amend RFD 0111 against the tree</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-amend-rfd-0111-against-the-tree/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0116: Amend RFD 0111 against the tree</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>RFD 0111 is executed: the thirty renames landed, and GitHub redirects each old name. Four of its statements disagree with the organisation and the checkout today, and each reads as a survey, so a wrong one names a thing that is not there.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Amend RFD 0111 in four places. <code>DETAILS.md</code> holds the evidence for each, with the command that produces it and the date it was run.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 45%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>the statement</th>
+<th>the tree on 2026-08-16</th>
+<th>the amendment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>the word <code>fabric</code> is in one name</td>
+<td>fifteen names carry the prefix, six are live and owned, and 0111 names one</td>
+<td>claim the five that remain, and list them</td>
+</tr>
+<tr class="even">
+<td><code>entities-godot</code> holds entities</td>
+<td>the Godot engine: <code>SConstruct</code>, <code>editor/</code>, <code>drivers/</code>, <code>servers/</code></td>
+<td>move it to the names the shape does not decide</td>
+</tr>
+<tr class="odd">
+<td><code>ports/</code> becomes <code>repositories/</code></td>
+<td><code>repository</code> is the one collision RFD 0111 creates</td>
+<td>rename to <code>repository/</code>, singular</td>
+</tr>
+<tr class="even">
+<td>five READMEs describe absent directories</td>
+<td><code>entities-lean-rebac</code> holds <code>Rebac/core/</code> and <code>Rebac/ports/</code>, both in Lean</td>
+<td>correct three READMEs, and qualify rebac’s paths</td>
+</tr>
+</tbody>
+</table>
+<p>A fifth claim was checked and withdrawn: repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> do hold the RFD 0028 triad, so that statement stands.</p>
+<p>The conversion table, the retired deployment words, the type-first name shape, the thirty renames, and the case for “interactor” all hold, unchanged by this RFD.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0111, amended by this RFD. RFD 0028, for the triad this RFD keeps naming</li>
+<li>RFD 0000, for the rule that one fact has one source, and that it is not prose</li>
+<li>The survey, the commands that produced it, and the counts: <code>DETAILS.md</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="how-this-was-checked" class="level2">
+<h2 class="anchored" data-anchor-id="how-this-was-checked">How this was checked</h2>
+<p>Every count below comes from the GitHub API or from a checkout on disk, on 2026-08-16, against <code>repo</code> manifest revision <code>main</code>. Each claim states the command that produces it, so a later reader can re-run it rather than trust the number.</p>
+<p>The renames of RFD 0111 have landed. GitHub answers the old names with the new ones:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> api repos/v-sekai-multiplayer-fabric/fabric-authority-plane <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--jq</span> .full_name</span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># v-sekai-multiplayer-fabric/interactor-authority</span></span>
+<span id="cb1-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> api repos/v-sekai-multiplayer-fabric/fabric-interactor <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--jq</span> .full_name</span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># v-sekai-multiplayer-fabric/contract-command</span></span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> api repos/v-sekai-multiplayer-fabric/fabric-service-meta <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--jq</span> .full_name</span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># v-sekai-multiplayer-fabric/fabric</span></span></code></pre></div></div>
+</section>
+<section id="the-prefix-survives-in-five-live-names" class="level2">
+<h2 class="anchored" data-anchor-id="the-prefix-survives-in-five-live-names">The prefix survives in five live names</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> api <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"orgs/v-sekai-multiplayer-fabric/repos?per_page=100"</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--paginate</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--jq</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.[].name'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'^fabric-'</span></span></code></pre></div></div>
+<p>Fifteen names carry the prefix. The bare <code>fabric</code> is the sixteenth match for <code>^fabric</code> and is the name RFD 0111 frees, so it is excluded here.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 12%">
+<col style="width: 6%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>archived</th>
+<th>fork</th>
+<th>reaches the convention</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fabric-ardy</code></td>
+<td>no</td>
+<td>yes</td>
+<td>no, upstream name</td>
+</tr>
+<tr class="even">
+<td><code>fabric-casync-central</code></td>
+<td>yes</td>
+<td>no</td>
+<td>no, archived</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-container-verify</code></td>
+<td>yes</td>
+<td>no</td>
+<td>no, archived</td>
+</tr>
+<tr class="even">
+<td><code>fabric-game-observability</code></td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-godot-assembly</code></td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><code>fabric-godot-packaging</code></td>
+<td>yes</td>
+<td>no</td>
+<td>no, archived</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-harness</code></td>
+<td>no</td>
+<td>no</td>
+<td>yes, deferred by 0111</td>
+</tr>
+<tr class="even">
+<td><code>fabric-locomotion-generator</code></td>
+<td>no</td>
+<td>yes</td>
+<td>no, upstream name</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-motion-diffusion</code></td>
+<td>no</td>
+<td>yes</td>
+<td>no, upstream name</td>
+</tr>
+<tr class="even">
+<td><code>fabric-platform-central</code></td>
+<td>yes</td>
+<td>no</td>
+<td>no, archived</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-quickstart</code></td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><code>fabric-scoop-central</code></td>
+<td>yes</td>
+<td>no</td>
+<td>no, archived</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-stage-runtime</code></td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><code>fabric-wholebody-control</code></td>
+<td>no</td>
+<td>yes</td>
+<td>no, upstream name</td>
+</tr>
+<tr class="odd">
+<td><code>fabric-wt-harness</code></td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>Five archived and four forks leave six live and owned. RFD 0111 names <code>fabric-harness</code> and says it becomes <code>contract-bus</code> when that pass is taken, which leaves five the RFD does not mention at all.</p>
+<p>Two of the five sit in the <code>repo</code> manifest and check out on every <code>repo sync</code>: <code>fabric-godot-assembly</code> and <code>fabric-wt-harness</code>. A reader of the workspace root sees the retired prefix on the first listing.</p>
+</section>
+<section id="entities-godot-is-the-engine" class="level2">
+<h2 class="anchored" data-anchor-id="entities-godot-is-the-engine"><code>entities-godot</code> is the engine</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> api repos/v-sekai-multiplayer-fabric/entities-godot/contents <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--jq</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'[.[].name]|join(" ")'</span></span></code></pre></div></div>
+<pre><code>.clang-format .clang-tidy .clangd .editorconfig .git-blame-ignore-revs
+.gitattributes .github .gitignore .mailmap .pre-commit-config.yaml AUTHORS.md
+CHANGELOG.md CONTRIBUTING.md COPYRIGHT.txt DONORS.md LICENSE.txt README.md
+SConstruct core doc drivers editor gles3_builders.py glsl_builders.py main
+methods.py misc modules platform platform_methods.py pyproject.toml scene
+scu_builders.py servers tests thirdparty version.py</code></pre>
+<p><code>SConstruct</code>, <code>editor/</code>, <code>drivers/</code>, <code>platform/</code>, <code>servers/</code>, <code>modules/</code>, and <code>thirdparty/</code> are the Godot engine tree, 1 708 369 KB of C++ by the API’s own size field. The Netflix definition of an entity is a domain object that has no knowledge of where it is stored. An engine that renders, builds, and ships an editor holds many things, and a set of such domain objects is a small part of none of the directories above.</p>
+<p>RFD 0111 defends this name in one paragraph, and the paragraph argues a different point: that the <code>core/</code> directory inside the repository comes from upstream and must keep its name. That reasoning is sound and this RFD keeps it. It says nothing about whether <code>entities-</code> describes the repository.</p>
+<p>The test RFD 0111 applies elsewhere is whether a name asserts something false. <code>fabric-service-meta</code> was rejected as <code>service-meta</code> because “<code>service-meta</code> would assert the thing that is false”. <code>contract-command</code> was chosen over <code>interactor-anything</code> because the latter “picks the side the git repository exists to avoid picking”. <code>entities-godot</code> fails the same test and is the seventh name the shape does not decide.</p>
+</section>
+<section id="repositories-puts-the-created-collision-in-the-tree" class="level2">
+<h2 class="anchored" data-anchor-id="repositories-puts-the-created-collision-in-the-tree"><code>repositories/</code> puts the created collision in the tree</h2>
+<p>RFD 0111 renames the RFD 0028 triad in three git repositories. Those three exist and hold the triad, which the API confirms:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> r <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> loot combat progression<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span></span>
+<span id="cb5-2">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gh</span> api <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"repos/v-sekai-multiplayer-fabric/</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$r</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/contents"</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--jq</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'[.[]|select(.type=="dir").name]|join(" ")'</span></span>
+<span id="cb5-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">done</span></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># loot:        .github adapters core ports</span></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># combat:      adapters core ports</span></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># progression: adapters core ports</span></span></code></pre></div></div>
+<p>RFD 0111 states the resolution for the word it takes from Netflix: write “git repository” in full, and keep “repository” alone for the interface. It chooses that over keeping Cockburn’s “port” on the ground that “a collision in prose costs less than a collision in code”.</p>
+<p>A directory named <code>repositories/</code> sits in the tree of a git repository, which is the place the RFD ranks as the more expensive of the two. The plural reads as a collection of checkouts, which is the meaning the RFD spends the section pushing away. The singular <code>repository/</code> reads as the interface, matches <code>core/</code> and <code>ports/</code> in number, and costs nothing to adopt because the rename has not run yet.</p>
+<p>The other two renames in that triad stand. <code>core/</code> to <code>entities/</code> and <code>adapters/</code> to <code>datasources/</code> carry no collision.</p>
+<p>Three git repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> are also absent from the rename list and from the <code>repo</code> manifest, and their names state no type. Whether the type-first convention reaches them is a question this RFD raises and does not answer, because the answer decides three more names.</p>
+</section>
+<section id="the-gap-is-three-readmes-rather-than-five" class="level2">
+<h2 class="anchored" data-anchor-id="the-gap-is-three-readmes-rather-than-five">The gap is three READMEs rather than five</h2>
+<p>RFD 0111 says the <code>lean-*-core</code> READMEs state a hexagon layout of <code>core/</code>, <code>ports/</code>, and <code>adapters/</code>, that those directories do not exist, and that each of those git repositories holds one Lean namespace directory. The checkout disagrees in two of the five.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> d <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> entities-lean-<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span></span>
+<span id="cb6-2">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">printf</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'%-28s '</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb6-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">find</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-type</span> d <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-not</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-path</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'*/.git/*'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-not</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-name</span> .git <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sed</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"s|^</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/||"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tr</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'\n'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">' '</span></span>
+<span id="cb6-4">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span></span>
+<span id="cb6-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">done</span></span></code></pre></div></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>git repository</th>
+<th>the directories it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>entities-lean-combat</code></td>
+<td><code>CombatCore</code></td>
+</tr>
+<tr class="even">
+<td><code>entities-lean-loot</code></td>
+<td><code>r128gpu</code> <code>r128test</code> <code>parity</code> <code>LootCore</code> <code>.github</code></td>
+</tr>
+<tr class="odd">
+<td><code>entities-lean-progression</code></td>
+<td><code>ProgressionCore</code></td>
+</tr>
+<tr class="even">
+<td><code>entities-lean-rebac</code></td>
+<td><code>Rebac</code> <code>Rebac/core</code> <code>Rebac/ports</code> <code>.github</code></td>
+</tr>
+<tr class="odd">
+<td><code>entities-lean-shared</code></td>
+<td><code>Shared</code> <code>.github</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>entities-lean-rebac</code> holds <code>core/</code> and <code>ports/</code>, one namespace directory down, and both carry Lean sources: <code>Rebac/core/NoGod.lean</code>, <code>Rebac/core/ReBAC.lean</code>, and <code>Rebac/ports/AuthQuery.lean</code>. Its README says</p>
+<blockquote class="blockquote">
+<ul>
+<li><code>core/</code> — dependency-free domain logic + proofs</li>
+<li><code>ports/</code> — narrow driving (source) / driven (sink) contracts</li>
+</ul>
+</blockquote>
+<p>which describes what is there. The correction it needs is the prefix <code>Rebac/</code> on each path, and the removal of <code>adapters/</code>, which the repository does not have.</p>
+<p><code>entities-lean-loot</code> holds three directories beside <code>LootCore</code>, so “one Lean namespace directory” describes three of the five rather than all of them.</p>
+<p>Three READMEs need the correction RFD 0111 describes. One needs its paths qualified. The count in that section, and the sentence “Those directories do not exist”, are the two claims to amend.</p>
+</section>
+<section id="what-this-rfd-leaves-alone" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-rfd-leaves-alone">What this RFD leaves alone</h2>
+<p>The conversion table, the retirement of plane, edge plane, domain, and store plane, the type-first name shape, the thirty renames, and the reasoning for “interactor” over the alternatives all hold. Every one of them was checked against the organisation and matches.</p>
+<p>The <code>domain</code> field on the wire in RFD 0091 is still unrenamed, and still needs its own RFD, as RFD 0111 says.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-amend-rfd-0111-against-the-tree/</guid>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</link>
@@ -78,7 +507,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -165,7 +594,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -335,7 +764,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -674,7 +1103,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -1166,7 +1595,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1480,7 +1909,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -1697,7 +2126,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -1834,7 +2263,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -2006,7 +2435,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2172,7 +2601,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2372,7 +2801,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -2515,7 +2944,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -2666,7 +3095,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -2860,7 +3289,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3027,7 +3456,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -3250,7 +3679,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3405,7 +3834,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3564,7 +3993,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -3734,199 +4163,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0096: Guest transport on Fly, measured</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0096: Guest transport on Fly, measured</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0095</code> says an engine guest reaches its zone over one <code>AF_UNIX</code> socket. It does not say why not something faster.</p>
-<p>That gap invited a reasonable question. Shared-memory rings are much faster than sockets in published benchmarks. io_uring can remove syscalls from an event loop. uBPF exists. Each looked like a candidate.</p>
-<p>The candidates were ranked twice from documentation. Both rankings were wrong in places. Documentation describes Linux. This system runs on one specific machine shape, and that shape decides the answer.</p>
-</section>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>A probe went to Fly.io and measured the machine that runs production.</p>
-<ul>
-<li>App: a throwaway app, destroyed after the run.</li>
-<li>Machine: <code>shared-cpu-1x</code>, 256 MB, region <code>iad</code>.</li>
-<li>Image: <code>ubuntu:24.04</code>, which is also the CI image.</li>
-<li>Kernel: <code>6.12.91-fly</code>.</li>
-<li>Reported memory: 212188 kB. Reported <code>nproc</code>: 1.</li>
-</ul>
-<p>Each latency figure is a round trip between two processes. Each test does 20000 iterations. The table reports the median.</p>
-<p>A second run on a 16-core development machine gives contrast.</p>
-</section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 46%">
-<col style="width: 29%">
-<col style="width: 23%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Probe</th>
-<th>Fly <code>shared-cpu-1x</code></th>
-<th>Local, 16 cores</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
-<td>8910 ns</td>
-<td>59821 ns</td>
-</tr>
-<tr class="even">
-<td><code>AF_UNIX</code> <code>SOCK_STREAM</code></td>
-<td>9520 ns</td>
-<td>50181 ns</td>
-</tr>
-<tr class="odd">
-<td>Busy-polled shared-memory ring</td>
-<td>did not finish</td>
-<td>110 ns</td>
-</tr>
-</tbody>
-</table>
-<p>Capability results on Fly:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Probe</th>
-<th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>bwrap --unshare-all</code> as root</td>
-<td>OK</td>
-</tr>
-<tr class="even">
-<td><code>bwrap --unshare-net</code></td>
-<td>OK</td>
-</tr>
-<tr class="odd">
-<td><code>bwrap</code> unprivileged, uid 1000</td>
-<td>OK</td>
-</tr>
-<tr class="even">
-<td>Interfaces inside <code>--unshare-net</code></td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td>Interfaces outside</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td><code>kernel.io_uring_disabled</code></td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td><code>io_uring_setup</code></td>
-<td>OK, returned fd 3</td>
-</tr>
-<tr class="even">
-<td><code>memfd_create</code></td>
-<td>OK</td>
-</tr>
-<tr class="odd">
-<td><code>fly-global-services</code></td>
-<td>172.19.15.243, <code>AF_INET</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="decisions" class="level2">
-<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
-<section id="af_unix-sock_seqpacket-is-the-guest-transport" class="level3">
-<h3 class="anchored" data-anchor-id="af_unix-sock_seqpacket-is-the-guest-transport">1. <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> is the guest transport</h3>
-<p>The measured round trip is 8910 ns. One ZoneTick at 64 Hz is 15.6 ms. Transport cost is therefore 0.06 percent of a tick.</p>
-<p>There is no performance problem to solve at this tick rate.</p>
-</section>
-<section id="no-busy-polled-shared-memory-ring" class="level3">
-<h3 class="anchored" data-anchor-id="no-busy-polled-shared-memory-ring">2. No busy-polled shared-memory ring</h3>
-<p>The ring is the fastest option on hardware with spare cores. It measured 110 ns on 16 cores, which is 81 times faster than the socket on the same machine.</p>
-<p>On Fly it did not complete 20000 round trips in more than 8 minutes. The socket completed the same 20000 in less than one second.</p>
-<p><code>ps</code> shows the cause. Both processes stayed in <code>R</code> state at 24 percent CPU each, on a machine where <code>nproc</code> is 1. They consumed the shared-cpu burst balance and then spun against the throttle floor.</p>
-<p>The published ring benchmarks assume a spare core to spin on. <code>shared-cpu-1x</code> does not give one. A number measured on a workstation does not transfer to this deployment.</p>
-<p>This decision is conditional on the machine shape. A dedicated-CPU machine would change it, and this RFD does not forbid revisiting the choice there.</p>
-</section>
-<section id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop" class="level3">
-<h3 class="anchored" data-anchor-id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop">3. Keep epoll. Do not adopt io_uring for the event loop</h3>
-<p>io_uring is reachable on Fly. <code>io_uring_setup</code> returned a descriptor, and <code>kernel.io_uring_disabled</code> is 0. Availability is not the obstacle.</p>
-<p>Value is the obstacle. io_uring saves syscalls, and it pays back at high event rates. This system ticks at 64 Hz, and its transport already costs 0.06 percent of a tick.</p>
-<p><code>IORING_SETUP_SQPOLL</code> is the mode that removes syscalls completely. It spawns a kernel poller thread. That is the same shape as the busy-poll ring, so decision 2 applies to it unchanged.</p>
-</section>
-<section id="guests-must-not-reach-io_uring" class="level3">
-<h3 class="anchored" data-anchor-id="guests-must-not-reach-io_uring">4. Guests must not reach io_uring</h3>
-<p>A seccomp filter examines the syscalls a task makes. io_uring operations run on <code>io-wq</code> kernel worker threads, outside the filter of the task that submitted them. A filter cannot screen a call the task never makes.</p>
-<p>A guest that holds an io_uring descriptor can therefore perform work that the rest of the filter denies.</p>
-<p>This is settled practice. Android 12 and later block <code>io_uring_setup</code> in the default application policy. Chrome OS does the same. The Chrome renderer and GPU sandboxes reject it. gVisor rejects it.</p>
-<p><code>rfd/0095</code>’s seccomp filter must deny <code>io_uring_setup</code>, <code>io_uring_enter</code>, and <code>io_uring_register</code> by name.</p>
-</section>
-<section id="ubpf-is-not-a-transport" class="level3">
-<h3 class="anchored" data-anchor-id="ubpf-is-not-a-transport">5. uBPF is not a transport</h3>
-<p>uBPF is a userspace virtual machine that executes eBPF bytecode. It has no sockets, no I/O, and no packet path. It exists because the kernel implementation is GPL, and uBPF carries an Apache license.</p>
-<p>uBPF is therefore an alternative to libriscv, not an alternative to an event loop. <code>rfd/0095</code> already selects libriscv, and it gives a reason that uBPF does not answer: <code>serialize_to</code> and forking give bit-exact snapshot and replay.</p>
-<p>Kernel eBPF does accelerate networking, through <code>SOCKMAP</code> and AF_XDP. Neither applies here. A guest under <code>--unshare-net</code> has no sockets to redirect, and decision 4 and <code>rfd/0095</code> both deny the bpf family to guests.</p>
-</section>
-<section id="udp-must-bind-fly-global-services-and-it-is-ipv4" class="level3">
-<h3 class="anchored" data-anchor-id="udp-must-bind-fly-global-services-and-it-is-ipv4">6. UDP must bind <code>fly-global-services</code>, and it is IPv4</h3>
-<p>Fly requires a UDP service to bind <code>fly-global-services</code>. <code>0.0.0.0</code>, <code>*</code>, and <code>INADDR_ANY</code> do not work, because Linux then selects the wrong source address for replies.</p>
-<p><code>src/transport/webtransport_server.c:233</code> binds <code>in6addr_any</code>. The socket binds, packets arrive, and replies leave with the wrong source address. <code>fly/fly.toml</code> already declares <code>protocol = "udp"</code> on <code>internal_port = 7443</code>, so this is live configuration.</p>
-<p>The probe found a second fact that a documentation-only fix would miss. <code>fly-global-services</code> resolves to <code>172.19.15.243</code>, which is <code>AF_INET</code>. The current socket is <code>AF_INET6</code>. The fix needs an <code>AF_INET</code> socket or a v4-mapped address. It is not an address substitution.</p>
-<p>TCP cannot use <code>fly-global-services</code> and must bind the wildcard. The application therefore needs asymmetric binds.</p>
-</section>
-<section id="bubblewrap-works-on-fly-including-unprivileged" class="level3">
-<h3 class="anchored" data-anchor-id="bubblewrap-works-on-fly-including-unprivileged">7. Bubblewrap works on Fly, including unprivileged</h3>
-<p>All three <code>bwrap</code> probes passed, including the unprivileged case at uid 1000. <code>--unshare-net</code> left 1 interface inside the sandbox against 4 outside.</p>
-<p><code>rfd/0095</code> predicted this, because a Fly machine is a Firecracker VM and the process is root in its own kernel. The prediction is now a measurement.</p>
-<p>Note that Docker is the harder case, not Fly. The same probe failed every <code>bwrap</code> test under Docker, where user namespaces are blocked by default. CI must therefore grant <code>--cap-add SYS_ADMIN</code> and <code>--security-opt seccomp=unconfined</code>, or use podman.</p>
-</section>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>The engine guest transport is a plain <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> socket. It needs no new dependency and no tuning.</p>
-<p><code>memfd_create</code> works, so a bulk path over <code>SCM_RIGHTS</code> stays available if a future measurement justifies it. Size any such buffer against 212 MB of usable memory, not against 256 MB.</p>
-<p>Two guest-facing denials are now mandatory rather than advisory: io_uring and bpf.</p>
-<p>The UDP bind defect is real and unfixed. Nothing that this RFD decides matters while replies leave with the wrong source address.</p>
-</section>
-<section id="what-this-rfd-corrects" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-rfd-corrects">What this RFD corrects</h2>
-<p>Three claims in earlier rankings were wrong, and the measurement corrected each one.</p>
-<p>Shared-memory rings were ranked as the fastest option. They are the fastest option on a machine with spare cores, and they are unusable on this one.</p>
-<p>io_uring was ranked as unverified. It is available, and it is undesirable for separate reasons.</p>
-<p>Dropping h2o for <code>picoquic_packet_loop()</code> was ranked first at one point. The asymmetric bind requirement needs a TCP listener as well, and <code>picoquic_packet_loop()</code> serves UDP only.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li><a href="https://fly.io/docs/networking/udp-and-tcp/">Running apps on UDP and TCP, Fly Docs</a></li>
-<li><a href="https://community.fly.io/t/fly-machines-security-update-dirtyfrag-fragnesia-and-copyfail/28018">Fly Machines Security Update, kernel v6.12.91</a></li>
-<li><a href="https://kernel-internals.org/io-uring/security/">io_uring security model</a></li>
-<li><a href="https://blog.0x74696d.com/posts/iouring-and-seccomp/">io_uring and seccomp</a></li>
-<li><a href="https://docs.kernel.org/admin-guide/sysctl/kernel.html">Documentation for /proc/sys/kernel</a></li>
-<li><a href="https://github.com/iovisor/ubpf">uBPF</a></li>
-<li><a href="https://victoranderssen.com/blog/linux-ipc-benchmark/">Linux IPC Shootout, shared memory against Unix domain sockets</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Thu, 13 Aug 2026 10:38:14 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 12:55:22 GMT</pubDate>
 </item>
 </channel>
 </rss>
