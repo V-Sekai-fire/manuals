@@ -977,21 +977,21 @@
     "href": "rfd/0111-convert-the-deployment-words/index.html#problem",
     "title": "RFD 0111: Convert the deployment words to the hexagon vocabulary",
     "section": "Problem",
-    "text": "Problem\nThis stack names one component twice. RFD 0028 names its structure. A second set of words names its deployment: plane, edge plane, and domain. A reader must hold both sets and map between them. The second set has no RFD. lib/weft.ex defines it, and more than ten READMEs copy the definition. The two sets also give one word two meanings, for domain, for edge, and for port. ASD-STE100 permits one meaning for one word."
+    "text": "Problem\nThis stack names one component twice. RFD 0028 names its structure; a second set names its deployment — plane, edge plane, domain — with no RFD, defined in lib/weft.ex, copied into ten or more READMEs, and giving domain, edge, and port two meanings each where ASD-STE100 permits one."
   },
   {
     "objectID": "rfd/0111-convert-the-deployment-words/index.html#decision",
     "href": "rfd/0111-convert-the-deployment-words/index.html#decision",
     "title": "RFD 0111: Convert the deployment words to the hexagon vocabulary",
     "section": "Decision",
-    "text": "Decision\nRetire plane, edge plane, and domain. The Netflix formulation supplies the replacement for each one.\n\n\n\n\n\n\n\n\nretired\nreplacement\nthe meaning that carries over\n\n\n\n\nplane\ninteractor\na process that holds entities and actions\n\n\nedge plane\ntransport layer\nthe input that triggers an interactor\n\n\ndomain\nservice\nthe set that shares a ring, and a machine\n\n\nstore plane\ndata source\nthe implementation behind a repository\n\n\n\nThe rules do not change with the words. An interactor opens no listening socket. A transport layer holds no authority, runs no simulation, and keeps no durable state. A service is the set of interactors that share a ring, because a ring is shared memory and forces co-location.\n“Control plane” and “data plane” stay. They come from networking, they name a class of traffic, and neither names a process.\nA git repository name states its type first and drops the fabric- prefix, which the organisation name already carries: fabric-authority-plane becomes interactor-authority. Thirty git repositories are renamed. Five of them carry no retired word and are renamed because the type they state is in the wrong place or is not theirs. DETAILS.md holds the list and the six names the shape does not decide."
+    "text": "Decision\nRetire plane, edge plane, and domain; the Netflix formulation supplies each replacement.\n\n\n\n\n\n\n\n\nretired\nreplacement\nthe meaning that carries over\n\n\n\n\nplane\ninteractor\na process that holds entities and actions\n\n\nedge plane\ntransport layer\nthe input that triggers an interactor\n\n\ndomain\nservice\nthe set that shares a ring, and a machine\n\n\nstore plane\ndata source\nthe implementation behind a repository\n\n\n\nThe rules do not change with the words. An interactor opens no listening socket. A transport layer holds no authority, runs no simulation, and keeps no durable state. A service is the set of interactors that share a ring, because a ring is shared memory and forces co-location. “Control plane” and “data plane” stay: they name a class of traffic rather than a process. A git repository name states its type first and drops the fabric- prefix the organisation already carries, so fabric-authority-plane becomes interactor-authority. Thirty are renamed, five carrying no retired word."
   },
   {
     "objectID": "rfd/0111-convert-the-deployment-words/index.html#references",
     "href": "rfd/0111-convert-the-deployment-words/index.html#references",
     "title": "RFD 0111: Convert the deployment words to the hexagon vocabulary",
     "section": "References",
-    "text": "References\n\nNetflix, “Ready for changes with Hexagonal Architecture”: https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749\nCockburn, the origin of the pattern: https://alistair.cockburn.us/hexagonal-architecture\nRFD 0028, amended by this RFD. lib/weft.ex, the Weft moduledoc.\nThe term table, the collisions, and the rename list: DETAILS.md"
+    "text": "References\n\nNetflix on hexagonal architecture, and Cockburn\nRFD 0028, amended by this RFD; RFD 0121 amends this one against the tree. The term table, the collisions, and the rename list are in DETAILS.md"
   },
   {
     "objectID": "rfd/0111-convert-the-deployment-words/index.html#detail",

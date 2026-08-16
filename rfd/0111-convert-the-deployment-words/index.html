@@ -338,11 +338,11 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>State:</strong> published · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>This stack names one component twice. RFD 0028 names its structure. A second set of words names its deployment: plane, edge plane, and domain. A reader must hold both sets and map between them. The second set has no RFD. <code>lib/weft.ex</code> defines it, and more than ten READMEs copy the definition. The two sets also give one word two meanings, for domain, for edge, and for port. ASD-STE100 permits one meaning for one word.</p>
+<p>This stack names one component twice. RFD 0028 names its structure; a second set names its deployment — plane, edge plane, domain — with no RFD, defined in <code>lib/weft.ex</code>, copied into ten or more READMEs, and giving domain, edge, and port two meanings each where ASD-STE100 permits one.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Retire plane, edge plane, and domain. The Netflix formulation supplies the replacement for each one.</p>
+<p>Retire plane, edge plane, and domain; the Netflix formulation supplies each replacement.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 16%">
@@ -379,17 +379,13 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>The rules do not change with the words. An interactor opens no listening socket. A transport layer holds no authority, runs no simulation, and keeps no durable state. A service is the set of interactors that share a ring, because a ring is shared memory and forces co-location.</p>
-<p>“Control plane” and “data plane” stay. They come from networking, they name a class of traffic, and neither names a process.</p>
-<p>A git repository name states its type first and drops the <code>fabric-</code> prefix, which the organisation name already carries: <code>fabric-authority-plane</code> becomes <code>interactor-authority</code>. Thirty git repositories are renamed. Five of them carry no retired word and are renamed because the type they state is in the wrong place or is not theirs. <code>DETAILS.md</code> holds the list and the six names the shape does not decide.</p>
+<p>The rules do not change with the words. An interactor opens no listening socket. A transport layer holds no authority, runs no simulation, and keeps no durable state. A service is the set of interactors that share a ring, because a ring is shared memory and forces co-location. “Control plane” and “data plane” stay: they name a class of traffic rather than a process. A git repository name states its type first and drops the <code>fabric-</code> prefix the organisation already carries, so <code>fabric-authority-plane</code> becomes <code>interactor-authority</code>. Thirty are renamed, five carrying no retired word.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>Netflix, “Ready for changes with Hexagonal Architecture”: <a href="https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749" class="uri">https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749</a></li>
-<li>Cockburn, the origin of the pattern: <a href="https://alistair.cockburn.us/hexagonal-architecture" class="uri">https://alistair.cockburn.us/hexagonal-architecture</a></li>
-<li>RFD 0028, amended by this RFD. <code>lib/weft.ex</code>, the <code>Weft</code> moduledoc.</li>
-<li>The term table, the collisions, and the rename list: <code>DETAILS.md</code></li>
+<li><a href="https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749">Netflix on hexagonal architecture</a>, and <a href="https://alistair.cockburn.us/hexagonal-architecture">Cockburn</a></li>
+<li>RFD 0028, amended by this RFD; RFD 0121 amends this one against the tree. The term table, the collisions, and the rename list are in <code>DETAILS.md</code></li>
 </ul>
 </section>
 <section id="detail" class="level2">
