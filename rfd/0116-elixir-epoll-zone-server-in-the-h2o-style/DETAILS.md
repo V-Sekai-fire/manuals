@@ -61,3 +61,12 @@ measurement, not an extrapolation from the old one.
 `ecto_foundationdb` and `ecto-bench-tpcc` are active repositories that
 exist to put Uro on FoundationDB. This decision removes their reason.
 Their repository state is open.
+
+## Related
+
+- `rfd/0006-cockroachdb-with-mtls-role-separation`: the database this
+  tier returns to.
+- `rfd/0046-server-authoritative-simulation-deferred-rollback`: the
+  authority model the new server implements.
+- `rfd/0117-retire-the-h2o-tier-record-set`: retires the records that
+  described the native tier.

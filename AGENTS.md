@@ -17,9 +17,10 @@ See `rfd/0000-conventions/` for the format, the states, and the `index.md` and
 `DETAILS.md` split.
 
 The `decisions/` directory held MADR records before the migration into `rfd/`.
-The migration is complete and the directory is gone. Git history holds the
-deleted files and their old paths, so a link to `decisions/YYYYMMDD-*.md` in an
-older changelog entry or RFD points at history, not at a live file.
+The migration is complete, and what stays there is `madr-proposal-template.md`,
+which RFD 0106 keeps as the live template. Git history holds the migrated records
+and their old paths, so a link to `decisions/YYYYMMDD-*.md` in an older changelog
+entry or RFD points at history rather than at a live file.
 
 ## Adding a changelog entry
 

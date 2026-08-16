@@ -85,8 +85,8 @@ measurement stands as history. It guides nothing on the new tier.
 
 YAGNI keeps a record when a live consumer needs it now.
 
-- `rfd/0005` glTF interactivity value types. `fabric-flow-adapters`
-  and `fabric-flow-adapters-project` are live repositories, and this
+- `rfd/0005` glTF interactivity value types. `datasource-flow`
+  and `datasource-flow-project` are live repositories, and this
   record describes their taxonomy.
 - `rfd/0007` Godot double-precision `template_release`. The scope names
   an archived repository, and `zone-client-godot`, `zone-baker`, and
@@ -107,3 +107,9 @@ stay as citations, which follows `rfd/0106`.
 through rfd/0103". Both records are retired. The parquet files stay in
 the manuals repository, and whether the measurement data follows its
 records into the archive is open.
+
+## Related
+
+- `rfd/0071-yagni-times-structure-to-need`: the rule this applies.
+- `rfd/0106-split-the-archive-into-its-own-repo`: the method and the
+  destination.
