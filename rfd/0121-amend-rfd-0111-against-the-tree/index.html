@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>details – V-Sekai Fire — Manuals</title>
+<title>RFD 0121: Amend RFD 0111 against the tree – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -324,22 +324,101 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-this-was-checked" id="toc-how-this-was-checked" class="nav-link active" data-scroll-target="#how-this-was-checked">How this was checked</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#how-this-was-checked" id="toc-how-this-was-checked" class="nav-link" data-scroll-target="#how-this-was-checked">How this was checked</a></li>
   <li><a href="#the-prefix-survives-in-five-live-names" id="toc-the-prefix-survives-in-five-live-names" class="nav-link" data-scroll-target="#the-prefix-survives-in-five-live-names">The prefix survives in five live names</a></li>
   <li><a href="#entities-godot-is-the-engine" id="toc-entities-godot-is-the-engine" class="nav-link" data-scroll-target="#entities-godot-is-the-engine"><code>entities-godot</code> is the engine</a></li>
   <li><a href="#repositories-puts-the-created-collision-in-the-tree" id="toc-repositories-puts-the-created-collision-in-the-tree" class="nav-link" data-scroll-target="#repositories-puts-the-created-collision-in-the-tree"><code>repositories/</code> puts the created collision in the tree</a></li>
   <li><a href="#the-gap-is-three-readmes-rather-than-five" id="toc-the-gap-is-three-readmes-rather-than-five" class="nav-link" data-scroll-target="#the-gap-is-three-readmes-rather-than-five">The gap is three READMEs rather than five</a></li>
   <li><a href="#what-this-rfd-leaves-alone" id="toc-what-this-rfd-leaves-alone" class="nav-link" data-scroll-target="#what-this-rfd-leaves-alone">What this RFD leaves alone</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0116-amend-rfd-0111-against-the-tree/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0121-amend-rfd-0111-against-the-tree/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">RFD 0121: Amend RFD 0111 against the tree</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0121: Amend RFD 0111 against the tree</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>RFD 0111 is executed: the thirty renames landed, and GitHub redirects each old name. Four of its statements disagree with the organisation and the checkout today, and each reads as a survey, so a wrong one names a thing that is not there.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Amend RFD 0111 in four places. <code>DETAILS.md</code> holds the evidence for each, with the command that produces it and the date it was run.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 45%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>the statement</th>
+<th>the tree on 2026-08-16</th>
+<th>the amendment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>the word <code>fabric</code> is in one name</td>
+<td>fifteen names carry the prefix, six are live and owned, and 0111 names one</td>
+<td>claim the five that remain, and list them</td>
+</tr>
+<tr class="even">
+<td><code>entities-godot</code> holds entities</td>
+<td>the Godot engine: <code>SConstruct</code>, <code>editor/</code>, <code>drivers/</code>, <code>servers/</code></td>
+<td>move it to the names the shape does not decide</td>
+</tr>
+<tr class="odd">
+<td><code>ports/</code> becomes <code>repositories/</code></td>
+<td><code>repository</code> is the one collision RFD 0111 creates</td>
+<td>rename to <code>repository/</code>, singular</td>
+</tr>
+<tr class="even">
+<td>five READMEs describe absent directories</td>
+<td><code>entities-lean-rebac</code> holds <code>Rebac/core/</code> and <code>Rebac/ports/</code>, both in Lean</td>
+<td>correct three READMEs, and qualify rebac’s paths</td>
+</tr>
+</tbody>
+</table>
+<p>A fifth claim was checked and withdrawn: repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> do hold the RFD 0028 triad, so that statement stands.</p>
+<p>The conversion table, the retired deployment words, the type-first name shape, the thirty renames, and the case for “interactor” all hold, unchanged by this RFD.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0111, amended by this RFD. RFD 0028, for the triad this RFD keeps naming</li>
+<li>RFD 0000, for the rule that one fact has one source, and that it is not prose</li>
+<li>The survey, the commands that produced it, and the counts: <code>DETAILS.md</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
 <section id="how-this-was-checked" class="level2">
 <h2 class="anchored" data-anchor-id="how-this-was-checked">How this was checked</h2>
 <p>Every count below comes from the GitHub API or from a checkout on disk, on 2026-08-16, against <code>repo</code> manifest revision <code>main</code>. Each claim states the command that produces it, so a later reader can re-run it rather than trust the number.</p>
@@ -976,7 +1055,7 @@ scu_builders.py servers tests thirdparty version.py</code></pre>
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0116-amend-rfd-0111-against-the-tree/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0121-amend-rfd-0111-against-the-tree/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
