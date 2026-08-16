@@ -354,7 +354,7 @@ ul.task-list li input[type="checkbox"] {
 <p>One process per room removes the multi-zone problem. The binary hosts one room, so it needs no zone routing and no cross-zone authority. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> become unnecessary, and <code>rfd/0080</code> narrows to one room’s entities.</p>
 <p>The CBOR actor input names the child command, its args, and its env, and it names the scene or guest the room loads. That is <code>rfd/0094</code>’s guest delivery, moved to the actor boundary.</p>
 <p>A C child, h2o with libriscv, stays possible and is not built. Its only advantage is memory per process, and that advantage is unmeasured. Build it when a measurement forces it.</p>
-<p>FoundationDB backs both the Rivet engine and the zone state, so <code>rfd/0109</code>’s store selection and cost floor both stand. This record amends only <code>rfd/0109</code>’s server tier.</p>
+<p>FoundationDB backs both the Rivet engine and the zone state, so <code>rfd/0109</code>’s store selection stands. This record amends only <code>rfd/0109</code>’s server tier.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -369,7 +369,7 @@ ul.task-list li input[type="checkbox"] {
 <li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the decision this reverses, because the zone returns to Godot.</li>
 <li><code>rfd/0037-generated-behavior-sandboxed-riscv</code>: the libriscv path inside the engine.</li>
 <li><code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>: the pinning practice this applies to one named tag.</li>
-<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: the store, the cost floor, and the relay this replaces.</li>
+<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: the store and the relay this replaces.</li>
 </ul>
 </section>
 <section id="detail" class="level2">

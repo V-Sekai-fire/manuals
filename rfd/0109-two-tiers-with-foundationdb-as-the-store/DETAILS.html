@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor – V-Sekai Fire — Manuals</title>
+<title>details – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -289,147 +324,31 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
-  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
-  <li><a href="#the-cost-floor-derived" id="toc-the-cost-floor-derived" class="nav-link" data-scroll-target="#the-cost-floor-derived">The cost floor, derived</a></li>
+  <li><a href="#egress-is-the-cost-and-the-store-is-not" id="toc-egress-is-the-cost-and-the-store-is-not" class="nav-link active" data-scroll-target="#egress-is-the-cost-and-the-store-is-not">Egress is the cost, and the store is not</a></li>
   <li><a href="#the-database-is-not-what-the-money-buys" id="toc-the-database-is-not-what-the-money-buys" class="nav-link" data-scroll-target="#the-database-is-not-what-the-money-buys">The database is not what the money buys</a></li>
   <li><a href="#stores-considered" id="toc-stores-considered" class="nav-link" data-scroll-target="#stores-considered">Stores considered</a></li>
   <li><a href="#rivet-2.0-examined" id="toc-rivet-2.0-examined" class="nav-link" data-scroll-target="#rivet-2.0-examined">Rivet 2.0, examined</a></li>
   <li><a href="#the-trade-this-record-accepts" id="toc-the-trade-this-record-accepts" class="nav-link" data-scroll-target="#the-trade-this-record-accepts">The trade this record accepts</a></li>
   <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0109-two-tiers-fdb-and-the-cost-floor/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0109-two-tiers-with-foundationdb-as-the-store/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection, deployment cost baseline</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0107</code> describes four runtimes: h2o, Janet, a C core, and Godot. <code>rfd/0108</code> adds local C ABI guests to that host. One person cannot carry four runtimes, and neither record is built.</p>
-<p>The tier count moved three times in one day, and the store moved five times, with no record of either. <code>rfd/0104</code> states why little of it mattered. The database is not the constraint, and bandwidth is, by roughly 100 times.</p>
-<p>No record names the cost of the target. Without a cost floor, every architecture argument runs on an unstated budget, and each session re-derives a different answer.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>The cost floor is 276.48 USD per month.</strong> That is 1000 concurrent players at 4 hours per day, from <code>rfd/0104</code>. It is table stakes, not a ceiling. The design assumes it.</p>
-<p><strong>Two tiers.</strong></p>
-<ul>
-<li>Zone client: Godot. Rendering, XR, IK, and local physics.</li>
-<li>Server: Elixir and Phoenix. Identity, room directory, and the presence relay.</li>
-</ul>
-<p>The server relays presence rather than simulating it. Phoenix supplies identity, sessions, and migrations, which a Godot server would need written in GDScript.</p>
-<p><strong>The store is FoundationDB</strong>, through <code>ecto_foundationdb</code>. <code>rfd/0075</code> stands, and it is Apache 2.0, C++, write-optimized, and linearly scalable by process. <code>rfd/0103</code>’s limits are accepted, so no joins, no <code>or</code>, and no aggregates in the database.</p>
-<p>That trade holds because the relational need is analytical, and the analytical half does not use this store. Event logs and measurements stay zstd Parquet in essential tuple normal form, read by DuckDB. OLTP access is point lookups by player and room identity.</p>
-<p><strong>taskweft stays an Elixir NIF.</strong> <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already has that shape. Janet and the C <code>libtaskweft</code> are dropped.</p>
-<p>This supersedes <code>rfd/0107</code> and <code>rfd/0108</code>.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>The arithmetic, the stores considered, and the open questions: <code>DETAILS.md</code></li>
-<li><code>rfd/0104-hypothesis-1000-concurrent</code>, <code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0103-uro-on-ecto-foundationdb</code>: the adapter and its limits.</li>
-<li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: the authority model a relay does not provide.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="the-cost-floor-derived" class="level2">
-<h2 class="anchored" data-anchor-id="the-cost-floor-derived">The cost floor, derived</h2>
-<p>Every figure comes from <code>rfd/0100</code> and <code>rfd/0104</code>.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Quantity</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Bandwidth per client, <code>rfd/0100</code></td>
-<td>256 kbps</td>
-</tr>
-<tr class="even">
-<td>Volume per client-hour</td>
-<td>0.1152 GB</td>
-</tr>
-<tr class="odd">
-<td>Sustained upstream at 1000 concurrent</td>
-<td>256 Mbps</td>
-</tr>
-<tr class="even">
-<td>Monthly egress, 1000 at 4 h/day</td>
-<td>13824 GB</td>
-</tr>
-<tr class="odd">
-<td>Monthly egress, as binary units</td>
-<td>13.5 TiB</td>
-</tr>
-<tr class="even">
-<td>Cost at 0.02 USD per GB</td>
-<td>276.48 USD</td>
-</tr>
-<tr class="odd">
-<td>Cost at 1000 concurrent, 24/7</td>
-<td>1658.88 USD</td>
-</tr>
-</tbody>
-</table>
-<p>The earlier 15 USD budget of <code>rfd/0102</code> bought 642 GB. Spread across 1000 users that is 0.19 hours per day each, so it never reached the target.</p>
-<p>The 256 Mbps figure is the one to shop bandwidth on. Metered cloud egress at 13.5 TiB per month is the expensive way to buy it. Unmetered capacity is worth pricing against the 276.48 USD.</p>
+<section id="egress-is-the-cost-and-the-store-is-not" class="level2">
+<h2 class="anchored" data-anchor-id="egress-is-the-cost-and-the-store-is-not">Egress is the cost, and the store is not</h2>
+<p>Bandwidth per client sets the bill. <code>rfd/0100</code> caps a client at 256 kbps, and egress scales with concurrent clients and hours played. No deployment runs, so no monthly figure exists.</p>
 </section>
 <section id="the-database-is-not-what-the-money-buys" class="level2">
 <h2 class="anchored" data-anchor-id="the-database-is-not-what-the-money-buys">The database is not what the money buys</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Case</th>
-<th>Ops/s needed</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1000 players at 10 req/min</td>
-<td>166.7</td>
-</tr>
-<tr class="even">
-<td>1000 players at 60 req/min</td>
-<td>1000.0</td>
-</tr>
-</tbody>
-</table>
-<p>Measured ceilings, from <code>throughput.parquet</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. One node serves the target.</p>
+<p>Measured ceilings, <code>run_id = fly-shared-1x-1g</code> and <code>local-16core</code> in <code>data/measurements/</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. Both are the concurrency 32 row, which is the highest the probe ran.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> run_id, ops <span class="op">/</span> seconds <span class="kw">AS</span> ops_per_sec</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'throughput.parquet'</span>) <span class="kw">WHERE</span> concurrency <span class="op">=</span> <span class="dv">32</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Presence never reaches the store. A pose is transient, and the next tick supersedes it. Persistent writes are login, avatar change, and room join.</p>
 </section>
 <section id="stores-considered" class="level2">
@@ -521,8 +440,8 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="open-questions" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
-<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. Accepting the 276.48 USD floor makes server-hosting affordable at 1000 concurrent. It does not make it the better choice.</p>
-<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number, and a crowd of 1000 is where it pays most.</p>
+<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. This record picks server-hosted and does not price the alternative.</p>
+<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number.</p>
 <p><strong>Server authority.</strong> A relay is not server-authoritative, so a client can assert a false pose. <code>rfd/0046</code> does not hold for presence. That is tolerable for social VR and wrong for the loot-action combat loop.</p>
 <p><strong>WebTransport interoperation.</strong> Whether the Godot client of <code>rfd/0023</code> speaks to a Phoenix endpoint is untested here. WebSocket is the fallback, at a cost in latency.</p>
 <p><strong>How many FoundationDB processes, and where.</strong> One machine hosting every process is one failure domain. Real availability needs separate machines, and this record does not fund them.</p>
@@ -952,7 +871,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0109-two-tiers-fdb-and-the-cost-floor/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0109-two-tiers-with-foundationdb-as-the-store/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

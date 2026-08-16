@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 13:35:58 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 13:57:45 GMT</lastBuildDate>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -511,7 +511,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -580,7 +580,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -618,7 +618,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: why the store is FoundationDB.</li>
+<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: why the store is FoundationDB.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -667,7 +667,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -699,7 +699,7 @@ SnapshotBytes: 0</code></pre>
 <ul>
 <li>The nine stores, the evidence, and the measurements: <code>DETAILS.md</code></li>
 <li>Work in progress: <code>v-sekai-multiplayer-fabric/foundationdb</code>, branch <code>portability-consensus</code></li>
-<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: why the store is FoundationDB.</li>
+<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: why the store is FoundationDB.</li>
 </ul>
 </section>
 <section id="related" class="level2">
@@ -837,7 +837,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -1176,7 +1176,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -1668,7 +1668,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1698,7 +1698,7 @@ SnapshotBytes: 0</code></pre>
 <p>One process per room removes the multi-zone problem. The binary hosts one room, so it needs no zone routing and no cross-zone authority. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> become unnecessary, and <code>rfd/0080</code> narrows to one room’s entities.</p>
 <p>The CBOR actor input names the child command, its args, and its env, and it names the scene or guest the room loads. That is <code>rfd/0094</code>’s guest delivery, moved to the actor boundary.</p>
 <p>A C child, h2o with libriscv, stays possible and is not built. Its only advantage is memory per process, and that advantage is unmeasured. Build it when a measurement forces it.</p>
-<p>FoundationDB backs both the Rivet engine and the zone state, so <code>rfd/0109</code>’s store selection and cost floor both stand. This record amends only <code>rfd/0109</code>’s server tier.</p>
+<p>FoundationDB backs both the Rivet engine and the zone state, so <code>rfd/0109</code>’s store selection stands. This record amends only <code>rfd/0109</code>’s server tier.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -1713,7 +1713,7 @@ SnapshotBytes: 0</code></pre>
 <li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the decision this reverses, because the zone returns to Godot.</li>
 <li><code>rfd/0037-generated-behavior-sandboxed-riscv</code>: the libriscv path inside the engine.</li>
 <li><code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>: the pinning practice this applies to one named tag.</li>
-<li><code>rfd/0109-two-tiers-fdb-and-the-cost-floor</code>: the store, the cost floor, and the relay this replaces.</li>
+<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: the store and the relay this replaces.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -1982,28 +1982,28 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</link>
+  <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection, deployment cost baseline</p>
+<p><em><a href="../../index.html">Manuals</a> › RFD 0109: Two tiers, with FoundationDB as the store</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>rfd/0107</code> describes four runtimes: h2o, Janet, a C core, and Godot. <code>rfd/0108</code> adds local C ABI guests to that host. One person cannot carry four runtimes, and neither record is built.</p>
-<p>The tier count moved three times in one day, and the store moved five times, with no record of either. <code>rfd/0104</code> states why little of it mattered. The database is not the constraint, and bandwidth is, by roughly 100 times.</p>
-<p>No record names the cost of the target. Without a cost floor, every architecture argument runs on an unstated budget, and each session re-derives a different answer.</p>
+<p>The tier count moved three times in one day, and the store moved five times, with no record of either. The database is not the constraint. Bandwidth is.</p>
+<p>No record names the tier count or the store. Without one, each session re-derives a different answer.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>The cost floor is 276.48 USD per month.</strong> That is 1000 concurrent players at 4 hours per day, from <code>rfd/0104</code>. It is table stakes, not a ceiling. The design assumes it.</p>
+<p><strong>Egress dominates the bill, and the store does not.</strong> Bandwidth per client sets the cost, and one node serves the database load. No probe measures a running deployment, so this record carries no cost figure.</p>
 <p><strong>Two tiers.</strong></p>
 <ul>
 <li>Zone client: Godot. Rendering, XR, IK, and local physics.</li>
@@ -2018,8 +2018,8 @@ SnapshotBytes: 0</code></pre>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>The arithmetic, the stores considered, and the open questions: <code>DETAILS.md</code></li>
-<li><code>rfd/0104-hypothesis-1000-concurrent</code>, <code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
+<li>The stores considered, Rivet examined, and the open questions: <code>DETAILS.md</code></li>
+<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
 </ul>
 </section>
 <section id="related" class="level2">
@@ -2032,71 +2032,35 @@ SnapshotBytes: 0</code></pre>
 <section id="detail" class="level2">
 <h2 class="anchored" data-anchor-id="detail">Detail</h2>
 </section>
-<section id="the-cost-floor-derived" class="level2">
-<h2 class="anchored" data-anchor-id="the-cost-floor-derived">The cost floor, derived</h2>
-<p>Every figure comes from <code>rfd/0100</code> and <code>rfd/0104</code>.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Quantity</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Bandwidth per client, <code>rfd/0100</code></td>
-<td>256 kbps</td>
-</tr>
-<tr class="even">
-<td>Volume per client-hour</td>
-<td>0.1152 GB</td>
-</tr>
-<tr class="odd">
-<td>Sustained upstream at 1000 concurrent</td>
-<td>256 Mbps</td>
-</tr>
-<tr class="even">
-<td>Monthly egress, 1000 at 4 h/day</td>
-<td>13824 GB</td>
-</tr>
-<tr class="odd">
-<td>Monthly egress, as binary units</td>
-<td>13.5 TiB</td>
-</tr>
-<tr class="even">
-<td>Cost at 0.02 USD per GB</td>
-<td>276.48 USD</td>
-</tr>
-<tr class="odd">
-<td>Cost at 1000 concurrent, 24/7</td>
-<td>1658.88 USD</td>
-</tr>
-</tbody>
-</table>
-<p>The earlier 15 USD budget of <code>rfd/0102</code> bought 642 GB. Spread across 1000 users that is 0.19 hours per day each, so it never reached the target.</p>
-<p>The 256 Mbps figure is the one to shop bandwidth on. Metered cloud egress at 13.5 TiB per month is the expensive way to buy it. Unmetered capacity is worth pricing against the 276.48 USD.</p>
+<section id="egress-is-the-cost-and-the-store-is-not" class="level2">
+<h2 class="anchored" data-anchor-id="egress-is-the-cost-and-the-store-is-not">Egress is the cost, and the store is not</h2>
+<p>Bandwidth per client sets the bill. <code>rfd/0100</code> caps a client at 256 kbps, and egress scales with concurrent clients and hours played. No deployment runs, so no monthly figure exists.</p>
 </section>
 <section id="the-database-is-not-what-the-money-buys" class="level2">
 <h2 class="anchored" data-anchor-id="the-database-is-not-what-the-money-buys">The database is not what the money buys</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Case</th>
-<th>Ops/s needed</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1000 players at 10 req/min</td>
-<td>166.7</td>
-</tr>
-<tr class="even">
-<td>1000 players at 60 req/min</td>
-<td>1000.0</td>
-</tr>
-</tbody>
-</table>
-<p>Measured ceilings, from <code>throughput.parquet</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. One node serves the target.</p>
+<p>Measured ceilings, <code>run_id = fly-shared-1x-1g</code> and <code>local-16core</code> in <code>data/measurements/</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. Both are the concurrency 32 row, which is the highest the probe ran.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">SELECT</span> run_id, ops <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> seconds <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">AS</span> ops_per_sec</span>
+<span id="cb1-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'throughput.parquet'</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">WHERE</span> concurrency <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>;</span></code></pre></div></div>
 <p>Presence never reaches the store. A pose is transient, and the next tick supersedes it. Persistent writes are login, avatar change, and room join.</p>
 </section>
 <section id="stores-considered" class="level2">
@@ -2188,8 +2152,8 @@ SnapshotBytes: 0</code></pre>
 </section>
 <section id="open-questions" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
-<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. Accepting the 276.48 USD floor makes server-hosting affordable at 1000 concurrent. It does not make it the better choice.</p>
-<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number, and a crowd of 1000 is where it pays most.</p>
+<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. This record picks server-hosted and does not price the alternative.</p>
+<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number.</p>
 <p><strong>Server authority.</strong> A relay is not server-authoritative, so a client can assert a false pose. <code>rfd/0046</code> does not hold for presence. That is tolerable for social VR and wrong for the loot-action combat loop.</p>
 <p><strong>WebTransport interoperation.</strong> Whether the Godot client of <code>rfd/0023</code> speaks to a Phoenix endpoint is untested here. WebSocket is the fallback, at a cost in latency.</p>
 <p><strong>How many FoundationDB processes, and where.</strong> One machine hosting every process is one failure domain. Real availability needs separate machines, and this record does not fund them.</p>
@@ -2198,8 +2162,8 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -2336,7 +2300,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -2482,7 +2446,7 @@ SnapshotBytes: 0</code></pre>
 <li>Execution speed is near native.</li>
 </ul>
 <p>None of the three is measured in this project. <code>data/measurements/</code> holds throughput and latency parquet for a FoundationDB probe and the libh2o host, and nothing for Janet or for a C taskweft core.</p>
-<p>A record that states this tier’s ceiling needs a measurement of this tier. <code>rfd/0104</code> shows the failure mode to avoid, where a number extrapolated from a 32-worker probe reads as a measurement of 1000 concurrent users.</p>
+<p>A record that states this tier’s ceiling needs a measurement of this tier. A number extrapolated from a 32-worker probe is not a measurement of 1000 concurrent users, and this project keeps no such extrapolation.</p>
 </section>
 <section id="why-rust-is-out" class="level2">
 <h2 class="anchored" data-anchor-id="why-rust-is-out">Why Rust is out</h2>
@@ -2508,7 +2472,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2674,7 +2638,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2874,150 +2838,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0104: Hypothesis, what 1000 concurrent users costs</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-backend</p>
-<section id="this-is-a-hypothesis-not-a-measurement" class="level2">
-<h2 class="anchored" data-anchor-id="this-is-a-hypothesis-not-a-measurement">This is a hypothesis, not a measurement</h2>
-<p>Nothing here ran at 1000 concurrent. Every number extrapolates from <code>data/measurements/</code>, which tops out at 32 workers on one machine.</p>
-<p>The record exists so the guess is written down, falsifiable and attributable, rather than repeated as if measured. Each claim below carries the test that would break it.</p>
-</section>
-<section id="the-claim" class="level2">
-<h2 class="anchored" data-anchor-id="the-claim">The claim</h2>
-<p><strong>The database is not the constraint. Bandwidth is, by roughly 100 times.</strong></p>
-</section>
-<section id="database-side" class="level2">
-<h2 class="anchored" data-anchor-id="database-side">Database side</h2>
-<p>Measured ceilings, from <code>throughput.parquet</code>:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Host</th>
-<th>vcpus</th>
-<th>Ceiling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Fly <code>shared-cpu-1x</code></td>
-<td>1</td>
-<td>2159.1 ops/s</td>
-</tr>
-<tr class="even">
-<td>Workstation</td>
-<td>16</td>
-<td>6086.5 ops/s</td>
-</tr>
-</tbody>
-</table>
-<p><code>rfd/0102</code> estimates a user at about 10 requests per minute.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 18%">
-<col style="width: 47%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Load</th>
-<th>Required</th>
-<th>Fraction of one <code>shared-cpu-1x</code></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1000 users, 10 req/min</td>
-<td>166.7 ops/s</td>
-<td><strong>0.08</strong></td>
-</tr>
-<tr class="even">
-<td>1000 users, 60 req/min</td>
-<td>1000.0 ops/s</td>
-<td><strong>0.46</strong></td>
-</tr>
-</tbody>
-</table>
-<p>So one machine carries 1000 users on the database side, with room left over. That is the surprising half of this record.</p>
-</section>
-<section id="bandwidth-side" class="level2">
-<h2 class="anchored" data-anchor-id="bandwidth-side">Bandwidth side</h2>
-<p><code>rfd/0100</code> caps a client at 256 kbps, which is 0.1152 GB per client-hour.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 43%">
-<col style="width: 18%">
-<col style="width: 37%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Usage</th>
-<th>GB per month</th>
-<th>Egress at 0.02 USD per GB</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1000 concurrent, 4 h/day peak</td>
-<td>13824</td>
-<td><strong>276.48 USD</strong></td>
-</tr>
-<tr class="even">
-<td>1000 concurrent, 24/7</td>
-<td>82944</td>
-<td><strong>1658.88 USD</strong></td>
-</tr>
-</tbody>
-</table>
-<p>Against a 15 USD budget, one machine and a volume leave 642 GB. Spread across 1000 users that is 5.6 client-hours per month, or <strong>0.19 hours per day</strong>.</p>
-<p>So 1000 concurrent users is an 18 to 110 times budget increase, and none of it buys database capacity.</p>
-</section>
-<section id="why-each-number-could-be-wrong" class="level2">
-<h2 class="anchored" data-anchor-id="why-each-number-could-be-wrong">Why each number could be wrong</h2>
-<p><strong>The Fly ceiling is soft.</strong> The curve reads 2.20, 1.64, 1.11, 1.10, then 1.23 times per doubling. A clean saturation does not rise again at the end. So 2159.1 ops/s may be noise around a lower plateau. The machine may also never reach saturation at all.</p>
-<p><strong>1000 users is not 1000 workers.</strong> The probe ran at most 32 concurrent transactions. A thousand idle connections consume memory and scheduler time that this never measured.</p>
-<p><strong>Contention was never exercised.</strong> Zero aborts at every level, across 1000 districts. A thousand users in fewer zones would collide, and FoundationDB would abort and retry. That reverses the conclusion if the abort rate is high.</p>
-<p><strong>The request rate is assumed.</strong> 10 per minute per user comes from <code>rfd/0102</code> and is not measured against a real client.</p>
-<p><strong>Interest management is assumed to work.</strong> <code>rfd/0100</code> gets 256 kbps by sending 8 avatars, not 1000. If a zone must show more, the per-client rate rises and the egress figure rises with it.</p>
-</section>
-<section id="tests-that-would-settle-it" class="level2">
-<h2 class="anchored" data-anchor-id="tests-that-would-settle-it">Tests that would settle it</h2>
-<ol type="1">
-<li>Run the existing probe at 128, 256, 512 and 1024 workers on one machine. If throughput still climbs past 32, the ceiling is wrong.</li>
-<li>Hold 1000 idle connections open and measure memory and idle CPU.</li>
-<li>Rerun with 10 districts rather than 1000, and record the abort rate. That is the contention case, deliberately.</li>
-<li>Measure a real client’s request rate, and replace the 10 per minute assumption.</li>
-</ol>
-<p>Tests 1 and 3 reuse <code>probe/fly/scaling.exs</code> from <code>ecto-bench-tpcc</code> with different constants.</p>
-</section>
-<section id="what-follows-if-it-holds" class="level2">
-<h2 class="anchored" data-anchor-id="what-follows-if-it-holds">What follows if it holds</h2>
-<p>Scale the database last. One machine covers 1000 users, so effort belongs in bandwidth: interest management, the send rate, delta compression and the voice bitrate.</p>
-<p><code>rfd/0101</code> measured zstd delta at 16.1 times on the wire. That is the lever with the most headroom, and it is already built.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li><code>data/measurements/</code>, the raw rows behind every measured figure</li>
-<li><code>rfd/0100</code> for the 256 kbps cap, <code>rfd/0102</code> for the budget</li>
-<li><code>ecto-bench-tpcc</code> ADR 0007 for the throughput runs</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -3108,6 +2929,39 @@ SnapshotBytes: 0</code></pre>
 </tbody>
 </table>
 <p>0.405 ms is the floor for a <code>Repo.get</code>, and 0.157 ms is the floor inside <code>Repo.transactional/2</code>. That is 4.8 and 1.9 times PostgreSQL, in the same order rather than a different one.</p>
+<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. All four rows are stored rows, and the two ratios are arithmetic over them. The PostgreSQL row has <code>samples = 1</code>, so it carries no distribution.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">SELECT</span> subject, median_ns <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1e6</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">AS</span> median_ms, samples</span>
+<span id="cb1-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'latency.parquet'</span>)</span>
+<span id="cb1-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">WHERE</span> operation <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'point_%'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">ORDER</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 </section>
 <section id="what-this-gives-up" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-gives-up">What this gives up</h2>
@@ -3168,7 +3022,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3221,53 +3075,13 @@ Tigris object storage                             0 USD
 <h2 class="anchored" data-anchor-id="assets-never-pass-through-the-zone-server">Assets never pass through the zone server</h2>
 <p>Tigris charges 0.02 USD per GB stored and <strong>0 USD egress</strong>, and it replicates to Fly edge regions automatically. That replication is the CDN.</p>
 <p>So a client fetches avatars and maps straight from Tigris. Those bytes never cross the zone server, and they never count against <code>rfd/0100</code>’s 256 kbps cap.</p>
-<p>Routing assets through the zone server would put them on Fly egress at 0.02 USD per GB. One 20 MB avatar fetched by 39 clients is 0.78 GB, which is 6.8 client-hours spent on a single asset.</p>
+<p>Routing assets through the zone server puts them on Fly egress at 0.02 USD per GB, and Tigris egress is free. Asset bytes are large next to a pose stream, so the zone server carries none of them.</p>
 </section>
 <section id="cost" class="level2">
 <h2 class="anchored" data-anchor-id="cost">Cost</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 41%">
-<col style="width: 11%">
-<col style="width: 12%">
-<col style="width: 8%">
-<col style="width: 26%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Topology</th>
-<th>Fixed USD</th>
-<th>Egress USD</th>
-<th>GB</th>
-<th>Concurrent at 4 h/day</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>rfd/0100</code>, zone only, incomplete</td>
-<td>2.17</td>
-<td>12.83</td>
-<td>642</td>
-<td>46.4</td>
-</tr>
-<tr class="even">
-<td><strong>Uro and PostgreSQL colocated</strong></td>
-<td><strong>4.34</strong></td>
-<td><strong>10.66</strong></td>
-<td><strong>533</strong></td>
-<td><strong>38.6</strong></td>
-</tr>
-<tr class="odd">
-<td>Uro and PostgreSQL separate</td>
-<td>6.36</td>
-<td>8.64</td>
-<td>432</td>
-<td>31.2</td>
-</tr>
-</tbody>
-</table>
-<p>Take the colocated form. Phoenix and PostgreSQL on one 256 MB machine is tight, and it is the difference between 38.6 and 31.2 concurrent users. Measure the memory before committing, because 256 MB is the constraint that <code>rfd/0096</code> measured as 212188 kB usable.</p>
-<p>The complete deployment costs 7.8 concurrent users against <code>rfd/0100</code>’s number. Without those services there is no game.</p>
+<p>The machine and volume prices above come from Fly’s published price list. What they buy in concurrent users is unmeasured, because no deployment runs and <code>data/measurements/</code> holds no row for one.</p>
+<p>Take the colocated form. Phoenix and PostgreSQL share one 256 MB machine, which costs one machine rather than two. Measure the memory before committing, because <code>run_id = fly-shared-1x-256</code> in the store records 212188 kB usable on that machine class.</p>
+<p>Uro and <code>aria-storage</code> are the services a game needs, and adding them spends budget that the zone-only topology does not.</p>
 </section>
 <section id="the-default-map-ships-in-the-image" class="level2">
 <h2 class="anchored" data-anchor-id="the-default-map-ships-in-the-image">The default map ships in the image</h2>
@@ -3362,7 +3176,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3404,17 +3218,10 @@ Tigris object storage                             0 USD
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 45%">
-<col style="width: 19%">
-<col style="width: 18%">
-<col style="width: 16%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Strategy</th>
 <th>Bytes per tick</th>
-<th>Rate at 20 Hz</th>
 <th>Compress CPU</th>
 </tr>
 </thead>
@@ -3422,54 +3229,85 @@ Tigris object storage                             0 USD
 <tr class="odd">
 <td>Raw, no compression</td>
 <td>44800</td>
-<td>7168.0 kbps</td>
 <td>none</td>
 </tr>
 <tr class="even">
 <td>zstd level 1, no dictionary</td>
 <td>3727</td>
-<td>596.3 kbps</td>
 <td>42.4 us</td>
 </tr>
 <tr class="odd">
 <td>zstd level 3, no dictionary</td>
 <td>3239</td>
-<td>518.3 kbps</td>
 <td>44.8 us</td>
 </tr>
 <tr class="even">
 <td>zstd L1, prefix is previous tick</td>
 <td>2980</td>
-<td>476.9 kbps</td>
 <td>63.3 us</td>
 </tr>
 <tr class="odd">
 <td>zstd L3, prefix is previous tick</td>
 <td>2774</td>
-<td>443.9 kbps</td>
 <td>66.5 us</td>
 </tr>
 <tr class="even">
 <td>zstd L1, prefix is acked minus 2</td>
 <td>3014</td>
-<td>482.3 kbps</td>
 <td>68.0 us</td>
 </tr>
 <tr class="odd">
 <td>zstd L1, prefix is acked minus 4</td>
 <td>3015</td>
-<td>482.5 kbps</td>
 <td>68.2 us</td>
 </tr>
 <tr class="even">
 <td>zstd L1, prefix is acked minus 8</td>
 <td>3006</td>
-<td>480.9 kbps</td>
 <td>63.9 us</td>
 </tr>
 </tbody>
 </table>
 <p>Client-side decompression is 17.3 us, and the result verifies as exact.</p>
+<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. Every cell above is a stored row.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">SELECT</span> s.subject, s.bytes, l.median_ns <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000.0</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">AS</span> compress_us</span>
+<span id="cb1-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'size.parquet'</span>) s</span>
+<span id="cb1-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">LEFT</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">JOIN</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'latency.parquet'</span>) l <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">USING</span> (run_id, subject)</span>
+<span id="cb1-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">WHERE</span> s.subject <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
 </section>
 <section id="decisions" class="level2">
 <h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
@@ -3529,10 +3367,10 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
+  <title>RFD 0100: 256 kbps per client, one machine, and three send rates</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</link>
   <description><![CDATA[ 
 
@@ -3540,11 +3378,11 @@ Tigris object storage                             0 USD
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0100: 256 kbps per client, one machine, 47 concurrent</em></p>
+<p><em><a href="../../index.html">Manuals</a> › RFD 0100: 256 kbps per client, one machine, and three send rates</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>256 kbps per client. One Fly machine plus a 1 GB volume. 46 concurrent at peak.</strong></p>
+<p><strong>256 kbps per client. One Fly machine plus a 1 GB volume.</strong></p>
 <p>The budget is 15 USD per month. Bandwidth is the only binding constraint, so spend the budget on bandwidth and not on machines.</p>
 </section>
 <section id="topology" class="level2">
@@ -3559,71 +3397,10 @@ Tigris object storage                             0 USD
   +- no TCP service: no HTTP surface remains</code></pre>
 <p>One process serves one zone. To add zones, add machines and join them over 6PN, where <code>&lt;app&gt;.internal</code> resolves every machine. <code>rfd/0096</code> measured that path at 880 us median between two machines in <code>iad</code>.</p>
 </section>
-<section id="machine-cost-against-concurrency" class="level2">
-<h2 class="anchored" data-anchor-id="machine-cost-against-concurrency">Machine cost against concurrency</h2>
-<p>A <code>shared-cpu-1x</code> 256 MB machine is 2.02 USD per month. Egress is 0.02 USD per GB in North America and Europe. At 256 kbps a client uses 0.1152 GB per hour.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 19%">
-<col style="width: 16%">
-<col style="width: 4%">
-<col style="width: 19%">
-<col style="width: 6%">
-<col style="width: 19%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Machines</th>
-<th>Machines USD</th>
-<th>Egress USD</th>
-<th>GB</th>
-<th>Client-hours</th>
-<th>24/7</th>
-<th>4 h/day peak</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>1</strong></td>
-<td>2.02</td>
-<td>12.98</td>
-<td>649</td>
-<td>5634</td>
-<td>7.8</td>
-<td><strong>46.9</strong></td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>4.04</td>
-<td>10.96</td>
-<td>548</td>
-<td>4757</td>
-<td>6.6</td>
-<td>39.6</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>6.06</td>
-<td>8.94</td>
-<td>447</td>
-<td>3880</td>
-<td>5.4</td>
-<td>32.3</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>8.08</td>
-<td>6.92</td>
-<td>346</td>
-<td>3003</td>
-<td>4.2</td>
-<td>25.0</td>
-</tr>
-</tbody>
-</table>
-<p>Every added machine costs about 7 concurrent users at peak. So run one machine until a second zone is genuinely needed.</p>
-<p>Asia Pacific doubles the egress price, and Africa and India multiply it by six.</p>
+<section id="machine-cost-against-bandwidth" class="level2">
+<h2 class="anchored" data-anchor-id="machine-cost-against-bandwidth">Machine cost against bandwidth</h2>
+<p>A <code>shared-cpu-1x</code> 256 MB machine is 2.02 USD per month, and egress is 0.02 USD per GB in North America and Europe. Both come from Fly’s published price list. Every machine added spends budget that would otherwise buy egress, so run one machine until a second zone is genuinely needed.</p>
+<p>Asia Pacific doubles the egress price, and Africa and India multiply it by six. How many concurrent clients the budget buys is unmeasured, because no deployment runs.</p>
 </section>
 <section id="durability-three-layers-each-doing-one-job" class="level2">
 <h2 class="anchored" data-anchor-id="durability-three-layers-each-doing-one-job">Durability: three layers, each doing one job</h2>
@@ -3688,38 +3465,13 @@ Tigris object storage                             0 USD
 <p>A snapshot is local to Fly and periodic. It restores a bad deploy in minutes, and it does not survive the loss of the region or the account.</p>
 <p><code>fdbbackup</code> streams mutations continuously to a blob store, so the recovery point is seconds rather than hours, and the copy sits outside Fly. It restores into a different cluster.</p>
 <p>The project already runs an object store for casync, per <code>rfd/0095</code>, so this adds a destination rather than a dependency. Mutation volume is small, because live entity state is 20 KB per zone and the guest key-value quota is 8 MB per zone.</p>
-<p>RAM redundancy is not on this list. It answers availability, not durability, and at this budget it costs 14 concurrent users.</p>
+<p>RAM redundancy is not on this list. It answers availability, not durability, and it costs a second machine that the budget spends on egress instead.</p>
 </section>
 <section id="what-binds-and-what-does-not" class="level2">
 <h2 class="anchored" data-anchor-id="what-binds-and-what-does-not">What binds, and what does not</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Resource</th>
-<th>At 47 clients</th>
-<th>Ceiling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Egress</td>
-<td>649 GB per month</td>
-<td><strong>binding</strong></td>
-</tr>
-<tr class="even">
-<td>CPU, zstd compression</td>
-<td>3.2 percent of a core</td>
-<td>not binding</td>
-</tr>
-<tr class="odd">
-<td>Memory, per-client baselines</td>
-<td>2.1 MB</td>
-<td>not binding</td>
-</tr>
-</tbody>
-</table>
-<p><code>rfd/0101</code> measured compression at 68 us per client per tick. At 10 Hz that is 0.068 percent of a core per client.</p>
-<p>Reuse one <code>ZSTD_CCtx</code> across clients rather than holding one each. Compression runs sequentially inside the tick, and a per-client context would cost roughly 1.3 MB each, which is 61 MB at 47 clients.</p>
+<p>Egress binds. CPU and memory do not.</p>
+<p><code>rfd/0101</code> measures compression at 68 us per client per tick, <code>run_id = ci-container</code>. At 10 Hz that is 0.068 percent of a core per client, so compression stays far from a core at any client count this budget reaches.</p>
+<p>Reuse one <code>ZSTD_CCtx</code> across clients rather than holding one each. Compression runs sequentially inside the tick, so one context serves every client, and a context per client spends memory for nothing.</p>
 </section>
 <section id="how-256-kbps-is-met" class="level2">
 <h2 class="anchored" data-anchor-id="how-256-kbps-is-met">How 256 kbps is met</h2>
@@ -3729,12 +3481,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 <section id="two-corrections-this-depends-on" class="level2">
 <h2 class="anchored" data-anchor-id="two-corrections-this-depends-on">Two corrections this depends on</h2>
-<p><strong>Three rates, not one.</strong> Simulation stays at <code>ZONE_TICK_HZ</code> 64. State sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in <code>modules/speech</code>. <code>rfd/0096</code> through <code>rfd/0099</code> assumed one rate and produced 10.2 Mbit per second.</p>
+<p><strong>Three rates, not one.</strong> Simulation stays at <code>ZONE_TICK_HZ</code> 64. State sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in <code>modules/speech</code>. <code>rfd/0096</code> through <code>rfd/0099</code> assume one rate, which overstates the bandwidth a client needs.</p>
 <p><strong>An entity is a bone.</strong> VRM 1.0 gives 55 humanoid bones plus 1 root, so 56 per avatar, and only the root and hips translate. <code>rfd/0002</code>’s 200 entities is 3.6 avatars, not 200 objects.</p>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Interest management is required. 8 avatars fits 256 kbps. 47 does not, so a client sees 8 of the 47 at full rate.</p>
+<p>Interest management is required. 8 avatars fits 256 kbps, and a populated zone holds more than 8, so a client sees 8 of them at full rate.</p>
 <p><code>modules/speech</code> sets <code>OPUS_APPLICATION_AUDIO</code> and never calls <code>OPUS_SET_BITRATE</code>, so it takes the default near 64 kbps, which is 25 percent of the cap. Set the bitrate, and evaluate <code>OPUS_APPLICATION_VOIP</code>.</p>
 <p>Server-side voice mixing is unbuilt. Without it, voice grows with speaker count and the cap breaks.</p>
 </section>
@@ -3752,7 +3504,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3907,7 +3659,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3974,37 +3726,52 @@ total                                                = 245.9 kbps</code></pre>
 <td>67148424 B (<strong>64.04 MB</strong>)</td>
 </tr>
 <tr class="even">
-<td>7 live snapshots</td>
-<td>0.28 MB</td>
-<td><strong>448.26 MB</strong></td>
-</tr>
-<tr class="odd">
 <td><code>serialize_to</code> median</td>
 <td>0.8 us</td>
 <td><strong>12370.2 us</strong></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>serialize_to</code> p99</td>
 <td>1.2 us</td>
 <td><strong>17063.0 us</strong></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>deserialize_from</code> median</td>
 <td>1.9 us</td>
 <td>15227.0 us</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Fork construct median</td>
 <td>0.3 us</td>
 <td><strong>384.2 us</strong></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Determinism, 2 replays</td>
 <td>IDENTICAL</td>
 <td>IDENTICAL</td>
 </tr>
 </tbody>
 </table>
+<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. Every row above is a stored row. Latency is nanoseconds in the store and microseconds in this table.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">SELECT</span> subject, operation, median_ns, p99_ns</span>
+<span id="cb1-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'latency.parquet'</span>)</span>
+<span id="cb1-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">WHERE</span> subject <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'libriscv%'</span>;</span></code></pre></div></div>
 </section>
 <section id="decisions" class="level2">
 <h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
@@ -4066,7 +3833,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -4094,58 +3861,81 @@ total                                                = 245.9 kbps</code></pre>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 48%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Operation</th>
 <th>Median</th>
 <th>p99</th>
-<th>Fraction of one tick</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>FDB commit, one publish</td>
-<td>3552.9 us</td>
-<td>5112.5 us</td>
-<td>23 percent</td>
+<td>2975.3 us</td>
+<td>3872.0 us</td>
 </tr>
 <tr class="even">
 <td>FDB watch fire, publish to subscriber</td>
-<td>12214.3 us</td>
-<td>12579.5 us</td>
-<td><strong>78 percent</strong></td>
+<td>12115.1 us</td>
+<td>13873.7 us</td>
 </tr>
 <tr class="odd">
 <td>FDB versionstamp log append</td>
-<td>2509.5 us</td>
-<td>3691.2 us</td>
-<td>16 percent</td>
+<td>2521.9 us</td>
+<td>3635.1 us</td>
 </tr>
 <tr class="even">
 <td><code>AF_UNIX</code> round trip, from <code>rfd/0096</code></td>
 <td>8.9 us</td>
 <td>–</td>
-<td>0.06 percent</td>
 </tr>
 </tbody>
 </table>
 <p>Concurrent watches, measured to the failure point:</p>
 <pre><code>FDBPUB concurrent watches held = 10000,
        stopped at error 1032 (Too many watches currently set)</code></pre>
+<p>Provenance: <code>run_id = ci-container</code>, <code>subject = fdb_memory_engine</code> in <code>data/measurements/</code>, which matches the memory storage engine the Method names. An earlier revision of this table carried three medians that no stored row holds, and the store is the record.</p>
+<p>Watch fire is the figure that decides this record. At 12115.1 us it takes most of one 15.6 ms tick.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">SELECT</span> subject, operation, median_ns <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000.0</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">AS</span> median_us, samples</span>
+<span id="cb2-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'latency.parquet'</span>)</span>
+<span id="cb2-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">WHERE</span> subject <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'fdb_%engine'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">ORDER</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">BY</span> operation, subject;</span></code></pre></div></div>
 </section>
 <section id="decisions" class="level2">
 <h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
 <section id="real-time-pubsub-runs-in-userspace" class="level3">
 <h3 class="anchored" data-anchor-id="real-time-pubsub-runs-in-userspace">1. Real-time pubsub runs in userspace</h3>
-<p>A watch fires 12214 us after the publish. That is 78 percent of a 15.6 ms tick, on the fastest possible FoundationDB configuration.</p>
-<p>An <code>AF_UNIX</code> round trip is 8.9 us. The watch path is approximately 1371 times slower.</p>
-<p>A tick cannot spend 78 percent of itself on notification. The zone server already holds every subscriber connection through picoquic and WebTransport. Fan-out belongs there.</p>
+<p>A watch fires 12115.1 us after the publish. That is most of a 15.6 ms tick, on the fastest possible FoundationDB configuration.</p>
+<p>An <code>AF_UNIX</code> round trip is 8.9 us, so the watch path is three orders of magnitude slower.</p>
+<p>A tick cannot spend most of itself on notification. The zone server already holds every subscriber connection through picoquic and WebTransport. Fan-out belongs there.</p>
 </section>
 <section id="foundationdb-is-not-a-message-bus-and-the-watch-cap-proves-it" class="level3">
 <h3 class="anchored" data-anchor-id="foundationdb-is-not-a-message-bus-and-the-watch-cap-proves-it">2. FoundationDB is not a message bus, and the watch cap proves it</h3>
@@ -4236,7 +4026,221 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0096: Guest transport on Fly, measured</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › RFD 0096: Guest transport on Fly, measured</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0095</code> says an engine guest reaches its zone over one <code>AF_UNIX</code> socket. It does not say why not something faster.</p>
+<p>That gap invited a reasonable question. Shared-memory rings are much faster than sockets in published benchmarks. io_uring can remove syscalls from an event loop. uBPF exists. Each looked like a candidate.</p>
+<p>The candidates were ranked twice from documentation. Both rankings were wrong in places. Documentation describes Linux. This system runs on one specific machine shape, and that shape decides the answer.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>A probe went to Fly.io and measured the machine that runs production.</p>
+<ul>
+<li>App: a throwaway app, destroyed after the run.</li>
+<li>Machine: <code>shared-cpu-1x</code>, 256 MB, region <code>iad</code>.</li>
+<li>Image: <code>ubuntu:24.04</code>, which is also the CI image.</li>
+<li>Kernel: <code>6.12.91-fly</code>.</li>
+<li>Reported memory: 212188 kB. Reported <code>nproc</code>: 1.</li>
+</ul>
+<p>Each latency figure is a round trip between two processes. Each test does 20000 iterations. The table reports the median.</p>
+<p>A second run on a 16-core development machine gives contrast.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 29%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Probe</th>
+<th>Fly <code>shared-cpu-1x</code></th>
+<th>Local, 16 cores</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
+<td>8910 ns</td>
+<td>59821 ns</td>
+</tr>
+<tr class="even">
+<td><code>AF_UNIX</code> <code>SOCK_STREAM</code></td>
+<td>9520 ns</td>
+<td>50181 ns</td>
+</tr>
+<tr class="odd">
+<td>Busy-polled shared-memory ring</td>
+<td>did not finish</td>
+<td>110 ns</td>
+</tr>
+</tbody>
+</table>
+<p>Capability results on Fly:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Probe</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bwrap --unshare-all</code> as root</td>
+<td>OK</td>
+</tr>
+<tr class="even">
+<td><code>bwrap --unshare-net</code></td>
+<td>OK</td>
+</tr>
+<tr class="odd">
+<td><code>bwrap</code> unprivileged, uid 1000</td>
+<td>OK</td>
+</tr>
+<tr class="even">
+<td>Interfaces inside <code>--unshare-net</code></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Interfaces outside</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td><code>kernel.io_uring_disabled</code></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><code>io_uring_setup</code></td>
+<td>OK, returned fd 3</td>
+</tr>
+<tr class="even">
+<td><code>memfd_create</code></td>
+<td>OK</td>
+</tr>
+<tr class="odd">
+<td><code>fly-global-services</code></td>
+<td>172.19.15.243, <code>AF_INET</code></td>
+</tr>
+</tbody>
+</table>
+<p>Provenance: <code>run_id = fly-shared-1x-256</code> for the Fly column and the capability table, and <code>run_id = local-16core</code> for the local column. Every row above is a stored row in <code>data/measurements/</code>. The two columns are not the same hardware, which is why the ring result inverts between them.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">SELECT</span> run_id, subject, operation, median_ns</span>
+<span id="cb1-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'latency.parquet'</span>)</span>
+<span id="cb1-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">WHERE</span> subject <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">IN</span> (<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'af_unix'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'shm_ring'</span>);</span></code></pre></div></div>
+</section>
+<section id="decisions" class="level2">
+<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
+<section id="af_unix-sock_seqpacket-is-the-guest-transport" class="level3">
+<h3 class="anchored" data-anchor-id="af_unix-sock_seqpacket-is-the-guest-transport">1. <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> is the guest transport</h3>
+<p>The measured round trip is 8910 ns. One ZoneTick at 64 Hz is 15.6 ms. Transport cost is therefore 0.06 percent of a tick.</p>
+<p>There is no performance problem to solve at this tick rate.</p>
+</section>
+<section id="no-busy-polled-shared-memory-ring" class="level3">
+<h3 class="anchored" data-anchor-id="no-busy-polled-shared-memory-ring">2. No busy-polled shared-memory ring</h3>
+<p>The ring is the fastest option on hardware with spare cores. It measured 110 ns on 16 cores, which is 81 times faster than the socket on the same machine.</p>
+<p>On Fly it did not complete 20000 round trips in more than 8 minutes. The socket completed the same 20000 in less than one second.</p>
+<p><code>ps</code> shows the cause. Both processes stayed in <code>R</code> state at 24 percent CPU each, on a machine where <code>nproc</code> is 1. They consumed the shared-cpu burst balance and then spun against the throttle floor.</p>
+<p>The published ring benchmarks assume a spare core to spin on. <code>shared-cpu-1x</code> does not give one. A number measured on a workstation does not transfer to this deployment.</p>
+<p>This decision is conditional on the machine shape. A dedicated-CPU machine would change it, and this RFD does not forbid revisiting the choice there.</p>
+</section>
+<section id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop" class="level3">
+<h3 class="anchored" data-anchor-id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop">3. Keep epoll. Do not adopt io_uring for the event loop</h3>
+<p>io_uring is reachable on Fly. <code>io_uring_setup</code> returned a descriptor, and <code>kernel.io_uring_disabled</code> is 0. Availability is not the obstacle.</p>
+<p>Value is the obstacle. io_uring saves syscalls, and it pays back at high event rates. This system ticks at 64 Hz, and its transport already costs 0.06 percent of a tick.</p>
+<p><code>IORING_SETUP_SQPOLL</code> is the mode that removes syscalls completely. It spawns a kernel poller thread. That is the same shape as the busy-poll ring, so decision 2 applies to it unchanged.</p>
+</section>
+<section id="guests-must-not-reach-io_uring" class="level3">
+<h3 class="anchored" data-anchor-id="guests-must-not-reach-io_uring">4. Guests must not reach io_uring</h3>
+<p>A seccomp filter examines the syscalls a task makes. io_uring operations run on <code>io-wq</code> kernel worker threads, outside the filter of the task that submitted them. A filter cannot screen a call the task never makes.</p>
+<p>A guest that holds an io_uring descriptor can therefore perform work that the rest of the filter denies.</p>
+<p>This is settled practice. Android 12 and later block <code>io_uring_setup</code> in the default application policy. Chrome OS does the same. The Chrome renderer and GPU sandboxes reject it. gVisor rejects it.</p>
+<p><code>rfd/0095</code>’s seccomp filter must deny <code>io_uring_setup</code>, <code>io_uring_enter</code>, and <code>io_uring_register</code> by name.</p>
+</section>
+<section id="ubpf-is-not-a-transport" class="level3">
+<h3 class="anchored" data-anchor-id="ubpf-is-not-a-transport">5. uBPF is not a transport</h3>
+<p>uBPF is a userspace virtual machine that executes eBPF bytecode. It has no sockets, no I/O, and no packet path. It exists because the kernel implementation is GPL, and uBPF carries an Apache license.</p>
+<p>uBPF is therefore an alternative to libriscv, not an alternative to an event loop. <code>rfd/0095</code> already selects libriscv, and it gives a reason that uBPF does not answer: <code>serialize_to</code> and forking give bit-exact snapshot and replay.</p>
+<p>Kernel eBPF does accelerate networking, through <code>SOCKMAP</code> and AF_XDP. Neither applies here. A guest under <code>--unshare-net</code> has no sockets to redirect, and decision 4 and <code>rfd/0095</code> both deny the bpf family to guests.</p>
+</section>
+<section id="udp-must-bind-fly-global-services-and-it-is-ipv4" class="level3">
+<h3 class="anchored" data-anchor-id="udp-must-bind-fly-global-services-and-it-is-ipv4">6. UDP must bind <code>fly-global-services</code>, and it is IPv4</h3>
+<p>Fly requires a UDP service to bind <code>fly-global-services</code>. <code>0.0.0.0</code>, <code>*</code>, and <code>INADDR_ANY</code> do not work, because Linux then selects the wrong source address for replies.</p>
+<p><code>src/transport/webtransport_server.c:233</code> binds <code>in6addr_any</code>. The socket binds, packets arrive, and replies leave with the wrong source address. <code>fly/fly.toml</code> already declares <code>protocol = "udp"</code> on <code>internal_port = 7443</code>, so this is live configuration.</p>
+<p>The probe found a second fact that a documentation-only fix would miss. <code>fly-global-services</code> resolves to <code>172.19.15.243</code>, which is <code>AF_INET</code>. The current socket is <code>AF_INET6</code>. The fix needs an <code>AF_INET</code> socket or a v4-mapped address. It is not an address substitution.</p>
+<p>TCP cannot use <code>fly-global-services</code> and must bind the wildcard. The application therefore needs asymmetric binds.</p>
+</section>
+<section id="bubblewrap-works-on-fly-including-unprivileged" class="level3">
+<h3 class="anchored" data-anchor-id="bubblewrap-works-on-fly-including-unprivileged">7. Bubblewrap works on Fly, including unprivileged</h3>
+<p>All three <code>bwrap</code> probes passed, including the unprivileged case at uid 1000. <code>--unshare-net</code> left 1 interface inside the sandbox against 4 outside.</p>
+<p><code>rfd/0095</code> predicted this, because a Fly machine is a Firecracker VM and the process is root in its own kernel. The prediction is now a measurement.</p>
+<p>Note that Docker is the harder case, not Fly. The same probe failed every <code>bwrap</code> test under Docker, where user namespaces are blocked by default. CI must therefore grant <code>--cap-add SYS_ADMIN</code> and <code>--security-opt seccomp=unconfined</code>, or use podman.</p>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The engine guest transport is a plain <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> socket. It needs no new dependency and no tuning.</p>
+<p><code>memfd_create</code> works, so a bulk path over <code>SCM_RIGHTS</code> stays available if a future measurement justifies it. Size any such buffer against 212 MB of usable memory, not against 256 MB.</p>
+<p>Two guest-facing denials are now mandatory rather than advisory: io_uring and bpf.</p>
+<p>The UDP bind defect is real and unfixed. Nothing that this RFD decides matters while replies leave with the wrong source address.</p>
+</section>
+<section id="what-this-rfd-corrects" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-rfd-corrects">What this RFD corrects</h2>
+<p>Three claims in earlier rankings were wrong, and the measurement corrected each one.</p>
+<p>Shared-memory rings were ranked as the fastest option. They are the fastest option on a machine with spare cores, and they are unusable on this one.</p>
+<p>io_uring was ranked as unverified. It is available, and it is undesirable for separate reasons.</p>
+<p>Dropping h2o for <code>picoquic_packet_loop()</code> was ranked first at one point. The asymmetric bind requirement needs a TCP listener as well, and <code>picoquic_packet_loop()</code> serves UDP only.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li><a href="https://fly.io/docs/networking/udp-and-tcp/">Running apps on UDP and TCP, Fly Docs</a></li>
+<li><a href="https://community.fly.io/t/fly-machines-security-update-dirtyfrag-fragnesia-and-copyfail/28018">Fly Machines Security Update, kernel v6.12.91</a></li>
+<li><a href="https://kernel-internals.org/io-uring/security/">io_uring security model</a></li>
+<li><a href="https://blog.0x74696d.com/posts/iouring-and-seccomp/">io_uring and seccomp</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/sysctl/kernel.html">Documentation for /proc/sys/kernel</a></li>
+<li><a href="https://github.com/iovisor/ubpf">uBPF</a></li>
+<li><a href="https://victoranderssen.com/blog/linux-ipc-benchmark/">Linux IPC Shootout, shared memory against Unix domain sockets</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
+  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
 </item>
 </channel>
 </rss>

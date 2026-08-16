@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0100: 256 kbps per client, one machine, 47 concurrent – V-Sekai Fire — Manuals</title>
+<title>RFD 0100: 256 kbps per client, one machine, and three send rates – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -291,7 +291,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#decision" id="toc-decision" class="nav-link active" data-scroll-target="#decision">Decision</a></li>
   <li><a href="#topology" id="toc-topology" class="nav-link" data-scroll-target="#topology">Topology</a></li>
-  <li><a href="#machine-cost-against-concurrency" id="toc-machine-cost-against-concurrency" class="nav-link" data-scroll-target="#machine-cost-against-concurrency">Machine cost against concurrency</a></li>
+  <li><a href="#machine-cost-against-bandwidth" id="toc-machine-cost-against-bandwidth" class="nav-link" data-scroll-target="#machine-cost-against-bandwidth">Machine cost against bandwidth</a></li>
   <li><a href="#durability-three-layers-each-doing-one-job" id="toc-durability-three-layers-each-doing-one-job" class="nav-link" data-scroll-target="#durability-three-layers-each-doing-one-job">Durability: three layers, each doing one job</a></li>
   <li><a href="#what-binds-and-what-does-not" id="toc-what-binds-and-what-does-not" class="nav-link" data-scroll-target="#what-binds-and-what-does-not">What binds, and what does not</a></li>
   <li><a href="#how-256-kbps-is-met" id="toc-how-256-kbps-is-met" class="nav-link" data-scroll-target="#how-256-kbps-is-met">How 256 kbps is met</a></li>
@@ -307,7 +307,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">RFD 0100: 256 kbps per client, one machine, 47 concurrent</h1>
+<h1 class="title">RFD 0100: 256 kbps per client, one machine, and three send rates</h1>
 </div>
 
 
@@ -324,11 +324,11 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0100: 256 kbps per client, one machine, 47 concurrent</em></p>
+<p><em><a href="../../index.html">Manuals</a> › RFD 0100: 256 kbps per client, one machine, and three send rates</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>256 kbps per client. One Fly machine plus a 1 GB volume. 46 concurrent at peak.</strong></p>
+<p><strong>256 kbps per client. One Fly machine plus a 1 GB volume.</strong></p>
 <p>The budget is 15 USD per month. Bandwidth is the only binding constraint, so spend the budget on bandwidth and not on machines.</p>
 </section>
 <section id="topology" class="level2">
@@ -343,71 +343,10 @@ ul.task-list li input[type="checkbox"] {
   +- no TCP service: no HTTP surface remains</code></pre>
 <p>One process serves one zone. To add zones, add machines and join them over 6PN, where <code>&lt;app&gt;.internal</code> resolves every machine. <code>rfd/0096</code> measured that path at 880 us median between two machines in <code>iad</code>.</p>
 </section>
-<section id="machine-cost-against-concurrency" class="level2">
-<h2 class="anchored" data-anchor-id="machine-cost-against-concurrency">Machine cost against concurrency</h2>
-<p>A <code>shared-cpu-1x</code> 256 MB machine is 2.02 USD per month. Egress is 0.02 USD per GB in North America and Europe. At 256 kbps a client uses 0.1152 GB per hour.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 19%">
-<col style="width: 16%">
-<col style="width: 4%">
-<col style="width: 19%">
-<col style="width: 6%">
-<col style="width: 19%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Machines</th>
-<th>Machines USD</th>
-<th>Egress USD</th>
-<th>GB</th>
-<th>Client-hours</th>
-<th>24/7</th>
-<th>4 h/day peak</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>1</strong></td>
-<td>2.02</td>
-<td>12.98</td>
-<td>649</td>
-<td>5634</td>
-<td>7.8</td>
-<td><strong>46.9</strong></td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>4.04</td>
-<td>10.96</td>
-<td>548</td>
-<td>4757</td>
-<td>6.6</td>
-<td>39.6</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>6.06</td>
-<td>8.94</td>
-<td>447</td>
-<td>3880</td>
-<td>5.4</td>
-<td>32.3</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>8.08</td>
-<td>6.92</td>
-<td>346</td>
-<td>3003</td>
-<td>4.2</td>
-<td>25.0</td>
-</tr>
-</tbody>
-</table>
-<p>Every added machine costs about 7 concurrent users at peak. So run one machine until a second zone is genuinely needed.</p>
-<p>Asia Pacific doubles the egress price, and Africa and India multiply it by six.</p>
+<section id="machine-cost-against-bandwidth" class="level2">
+<h2 class="anchored" data-anchor-id="machine-cost-against-bandwidth">Machine cost against bandwidth</h2>
+<p>A <code>shared-cpu-1x</code> 256 MB machine is 2.02 USD per month, and egress is 0.02 USD per GB in North America and Europe. Both come from Fly’s published price list. Every machine added spends budget that would otherwise buy egress, so run one machine until a second zone is genuinely needed.</p>
+<p>Asia Pacific doubles the egress price, and Africa and India multiply it by six. How many concurrent clients the budget buys is unmeasured, because no deployment runs.</p>
 </section>
 <section id="durability-three-layers-each-doing-one-job" class="level2">
 <h2 class="anchored" data-anchor-id="durability-three-layers-each-doing-one-job">Durability: three layers, each doing one job</h2>
@@ -472,38 +411,13 @@ ul.task-list li input[type="checkbox"] {
 <p>A snapshot is local to Fly and periodic. It restores a bad deploy in minutes, and it does not survive the loss of the region or the account.</p>
 <p><code>fdbbackup</code> streams mutations continuously to a blob store, so the recovery point is seconds rather than hours, and the copy sits outside Fly. It restores into a different cluster.</p>
 <p>The project already runs an object store for casync, per <code>rfd/0095</code>, so this adds a destination rather than a dependency. Mutation volume is small, because live entity state is 20 KB per zone and the guest key-value quota is 8 MB per zone.</p>
-<p>RAM redundancy is not on this list. It answers availability, not durability, and at this budget it costs 14 concurrent users.</p>
+<p>RAM redundancy is not on this list. It answers availability, not durability, and it costs a second machine that the budget spends on egress instead.</p>
 </section>
 <section id="what-binds-and-what-does-not" class="level2">
 <h2 class="anchored" data-anchor-id="what-binds-and-what-does-not">What binds, and what does not</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Resource</th>
-<th>At 47 clients</th>
-<th>Ceiling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Egress</td>
-<td>649 GB per month</td>
-<td><strong>binding</strong></td>
-</tr>
-<tr class="even">
-<td>CPU, zstd compression</td>
-<td>3.2 percent of a core</td>
-<td>not binding</td>
-</tr>
-<tr class="odd">
-<td>Memory, per-client baselines</td>
-<td>2.1 MB</td>
-<td>not binding</td>
-</tr>
-</tbody>
-</table>
-<p><code>rfd/0101</code> measured compression at 68 us per client per tick. At 10 Hz that is 0.068 percent of a core per client.</p>
-<p>Reuse one <code>ZSTD_CCtx</code> across clients rather than holding one each. Compression runs sequentially inside the tick, and a per-client context would cost roughly 1.3 MB each, which is 61 MB at 47 clients.</p>
+<p>Egress binds. CPU and memory do not.</p>
+<p><code>rfd/0101</code> measures compression at 68 us per client per tick, <code>run_id = ci-container</code>. At 10 Hz that is 0.068 percent of a core per client, so compression stays far from a core at any client count this budget reaches.</p>
+<p>Reuse one <code>ZSTD_CCtx</code> across clients rather than holding one each. Compression runs sequentially inside the tick, so one context serves every client, and a context per client spends memory for nothing.</p>
 </section>
 <section id="how-256-kbps-is-met" class="level2">
 <h2 class="anchored" data-anchor-id="how-256-kbps-is-met">How 256 kbps is met</h2>
@@ -513,12 +427,12 @@ total                                                = 245.9 kbps</code></pre>
 </section>
 <section id="two-corrections-this-depends-on" class="level2">
 <h2 class="anchored" data-anchor-id="two-corrections-this-depends-on">Two corrections this depends on</h2>
-<p><strong>Three rates, not one.</strong> Simulation stays at <code>ZONE_TICK_HZ</code> 64. State sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in <code>modules/speech</code>. <code>rfd/0096</code> through <code>rfd/0099</code> assumed one rate and produced 10.2 Mbit per second.</p>
+<p><strong>Three rates, not one.</strong> Simulation stays at <code>ZONE_TICK_HZ</code> 64. State sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in <code>modules/speech</code>. <code>rfd/0096</code> through <code>rfd/0099</code> assume one rate, which overstates the bandwidth a client needs.</p>
 <p><strong>An entity is a bone.</strong> VRM 1.0 gives 55 humanoid bones plus 1 root, so 56 per avatar, and only the root and hips translate. <code>rfd/0002</code>’s 200 entities is 3.6 avatars, not 200 objects.</p>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Interest management is required. 8 avatars fits 256 kbps. 47 does not, so a client sees 8 of the 47 at full rate.</p>
+<p>Interest management is required. 8 avatars fits 256 kbps, and a populated zone holds more than 8, so a client sees 8 of them at full rate.</p>
 <p><code>modules/speech</code> sets <code>OPUS_APPLICATION_AUDIO</code> and never calls <code>OPUS_SET_BITRATE</code>, so it takes the default near 64 kbps, which is 25 percent of the cap. Set the bitrate, and evaluate <code>OPUS_APPLICATION_VOIP</code>.</p>
 <p>Server-side voice mixing is unbuilt. Without it, voice grows with speaker count and the cap breaks.</p>
 </section>

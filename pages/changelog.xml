@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 13:35:52 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 13:57:40 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</link>
@@ -72,13 +72,13 @@
 <h2 class="anchored" data-anchor-id="the-guest-boundary-recorded">The guest boundary, recorded</h2>
 <p><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/">RFD 0108</a> makes a simulation guest a local shared object loaded over the plain C ABI, and h2o routes to it with no network hop. The CDN keeps one job, which is bulk asset delivery, and it no longer delivers guest programs for simulation.</p>
 <p>Fan-out runs inside the tick. One publish ring per zone, one writer, and many readers holding cursors. The 100-byte packet of <code>rfd/0053</code> is serialized once and fanned out as a pointer and a refcount, so N subscribers cost one serialization rather than N. A cross-loop delivery takes one batched wakeup per tick, which caps a loop near 64 wakeups per second at 64 Hz.</p>
-<p>FoundationDB stays off that path. <code>rfd/0097</code> measured a watch fire at 12214.3 us, which is 78 percent of a 15.6 ms tick, against 8.9 us for an <code>AF_UNIX</code> round trip. The watch probe also failed at exactly 10000 watches with error 1032, and a watch is edge-triggered, so it loses values between the fire and the re-read. The tick owns the <code>libfdb_c</code> callback chain of <code>rfd/0073</code> and appends the durable log off-tick.</p>
+<p>FoundationDB stays off that path. <code>rfd/0097</code> measured a watch fire at 12115.1 us, which is most of a 15.6 ms tick, against 8.9 us for an <code>AF_UNIX</code> round trip. The watch probe also failed at exactly 10000 watches with error 1032, and a watch is edge-triggered, so it loses values between the fire and the re-read. The tick owns the <code>libfdb_c</code> callback chain of <code>rfd/0073</code> and appends the durable log off-tick.</p>
 <p>The record states the cost of local mode rather than hiding it. A local <code>.so</code> shares the zone’s address space, so a guest fault takes the zone down. <code>rfd/0083</code> chose Fil-C for memory safety and <code>rfd/0095</code> built two guest classes for the same reason, and local mode has neither property. That suits first-party simulation code and does not suit user-generated code, so <code>rfd/0094</code>’s UGC loop needs its own record.</p>
 <p>RFD 0108 closes two of RFD 0107’s four open questions, which are the database path owner and the guest boundary. Two stay open and one arrives: where Elixir and <code>zone-backend</code> sit, which part terminates a WebTransport session, and how a UGC guest runs.</p>
 </section>
-<section id="two-tiers-foundationdb-and-a-cost-floor" class="level2">
-<h2 class="anchored" data-anchor-id="two-tiers-foundationdb-and-a-cost-floor">Two tiers, FoundationDB, and a cost floor</h2>
-<p><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/">RFD 0109</a> names 276.48 USD per month as the cost floor. That is 1000 concurrent players at 4 hours per day, from <code>rfd/0104</code>. It is table stakes rather than a ceiling, and the design assumes it. The same numbers give a peak of 256 Mbps sustained upstream and 13824 GB per month, which is 13.5 TiB. The 15 USD budget of <code>rfd/0102</code> bought 642 GB, or 0.19 hours per day for each of 1000 users, so it never reached the target.</p>
+<section id="two-tiers-with-foundationdb-as-the-store" class="level2">
+<h2 class="anchored" data-anchor-id="two-tiers-with-foundationdb-as-the-store">Two tiers, with FoundationDB as the store</h2>
+<p><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/">RFD 0109</a> names egress as the cost that binds, and the store as the cost that does not. Bandwidth per client sets the bill, and one node serves the database load. No deployment runs, so the record carries no cost figure.</p>
 <p>The tier count drops to two. Godot is the client, holding rendering, XR, IK, and local physics. Elixir and Phoenix form the server, holding identity, the room directory, and the presence relay. The server relays presence rather than simulating it, so Phoenix supplies the identity and sessions that a Godot server would need written in GDScript.</p>
 <p>The store stays FoundationDB, through <code>ecto_foundationdb</code>, so <code>rfd/0075</code> stands. The record accepts <code>rfd/0103</code>’s limits rather than working around them: no joins, no <code>or</code>, no aggregates in the database, and one Between clause per query. That trade holds because the relational need is analytical, and the analytical half runs on zstd Parquet and DuckDB as <code>data/measurements/</code> already does. OLTP access is point lookups by player and room identity.</p>
 <p>Twelve stores are recorded with their outcome. TiDB, YDB, and Apache Ignite are viable and not chosen, and the record says why for each. TiDB is the one that keeps relational form with no adapter work, at the cost of more processes and MySQL’s weaker constraint set. Rust was banned and then unbanned during the search, which returned TiDB to the list. Rivet 2.0 is Apache 2.0 and ships a TypeScript SDK, with no Elixir or Godot client.</p>
@@ -101,7 +101,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -149,7 +149,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -191,7 +191,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -230,7 +230,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -306,7 +306,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -366,7 +366,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -430,7 +430,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -481,7 +481,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -569,7 +569,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -600,7 +600,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 13:35:52 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:57:40 GMT</pubDate>
 </item>
 </channel>
 </rss>

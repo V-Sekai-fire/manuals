@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -387,37 +422,36 @@ ul.task-list li input[type="checkbox"] {
 <td>67148424 B (<strong>64.04 MB</strong>)</td>
 </tr>
 <tr class="even">
-<td>7 live snapshots</td>
-<td>0.28 MB</td>
-<td><strong>448.26 MB</strong></td>
-</tr>
-<tr class="odd">
 <td><code>serialize_to</code> median</td>
 <td>0.8 us</td>
 <td><strong>12370.2 us</strong></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>serialize_to</code> p99</td>
 <td>1.2 us</td>
 <td><strong>17063.0 us</strong></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>deserialize_from</code> median</td>
 <td>1.9 us</td>
 <td>15227.0 us</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Fork construct median</td>
 <td>0.3 us</td>
 <td><strong>384.2 us</strong></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Determinism, 2 replays</td>
 <td>IDENTICAL</td>
 <td>IDENTICAL</td>
 </tr>
 </tbody>
 </table>
+<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. Every row above is a stored row. Latency is nanoseconds in the store and microseconds in this table.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> subject, operation, median_ns, p99_ns</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'latency.parquet'</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> subject <span class="kw">LIKE</span> <span class="st">'libriscv%'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="decisions" class="level2">
 <h2 class="anchored" data-anchor-id="decisions">Decisions</h2>

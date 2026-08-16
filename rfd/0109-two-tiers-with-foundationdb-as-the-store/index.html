@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RFD 0104: Hypothesis, what 1000 concurrent users costs – V-Sekai Fire — Manuals</title>
+<title>RFD 0109: Two tiers, with FoundationDB as the store – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -289,16 +324,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#this-is-a-hypothesis-not-a-measurement" id="toc-this-is-a-hypothesis-not-a-measurement" class="nav-link active" data-scroll-target="#this-is-a-hypothesis-not-a-measurement">This is a hypothesis, not a measurement</a></li>
-  <li><a href="#the-claim" id="toc-the-claim" class="nav-link" data-scroll-target="#the-claim">The claim</a></li>
-  <li><a href="#database-side" id="toc-database-side" class="nav-link" data-scroll-target="#database-side">Database side</a></li>
-  <li><a href="#bandwidth-side" id="toc-bandwidth-side" class="nav-link" data-scroll-target="#bandwidth-side">Bandwidth side</a></li>
-  <li><a href="#why-each-number-could-be-wrong" id="toc-why-each-number-could-be-wrong" class="nav-link" data-scroll-target="#why-each-number-could-be-wrong">Why each number could be wrong</a></li>
-  <li><a href="#tests-that-would-settle-it" id="toc-tests-that-would-settle-it" class="nav-link" data-scroll-target="#tests-that-would-settle-it">Tests that would settle it</a></li>
-  <li><a href="#what-follows-if-it-holds" id="toc-what-follows-if-it-holds" class="nav-link" data-scroll-target="#what-follows-if-it-holds">What follows if it holds</a></li>
-  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#egress-is-the-cost-and-the-store-is-not" id="toc-egress-is-the-cost-and-the-store-is-not" class="nav-link" data-scroll-target="#egress-is-the-cost-and-the-store-is-not">Egress is the cost, and the store is not</a></li>
+  <li><a href="#the-database-is-not-what-the-money-buys" id="toc-the-database-is-not-what-the-money-buys" class="nav-link" data-scroll-target="#the-database-is-not-what-the-money-buys">The database is not what the money buys</a></li>
+  <li><a href="#stores-considered" id="toc-stores-considered" class="nav-link" data-scroll-target="#stores-considered">Stores considered</a></li>
+  <li><a href="#rivet-2.0-examined" id="toc-rivet-2.0-examined" class="nav-link" data-scroll-target="#rivet-2.0-examined">Rivet 2.0, examined</a></li>
+  <li><a href="#the-trade-this-record-accepts" id="toc-the-trade-this-record-accepts" class="nav-link" data-scroll-target="#the-trade-this-record-accepts">The trade this record accepts</a></li>
+  <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0104-hypothesis-1000-concurrent/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0109-two-tiers-with-foundationdb-as-the-store/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -306,7 +344,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">RFD 0104: Hypothesis, what 1000 concurrent users costs</h1>
+<h1 class="title">RFD 0109: Two tiers, with FoundationDB as the store</h1>
 </div>
 
 
@@ -323,132 +361,150 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0104: Hypothesis, what 1000 concurrent users costs</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-backend</p>
-<section id="this-is-a-hypothesis-not-a-measurement" class="level2">
-<h2 class="anchored" data-anchor-id="this-is-a-hypothesis-not-a-measurement">This is a hypothesis, not a measurement</h2>
-<p>Nothing here ran at 1000 concurrent. Every number extrapolates from <code>data/measurements/</code>, which tops out at 32 workers on one machine.</p>
-<p>The record exists so the guess is written down, falsifiable and attributable, rather than repeated as if measured. Each claim below carries the test that would break it.</p>
+<p><em><a href="../../index.html">Manuals</a> › RFD 0109: Two tiers, with FoundationDB as the store</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0107</code> describes four runtimes: h2o, Janet, a C core, and Godot. <code>rfd/0108</code> adds local C ABI guests to that host. One person cannot carry four runtimes, and neither record is built.</p>
+<p>The tier count moved three times in one day, and the store moved five times, with no record of either. The database is not the constraint. Bandwidth is.</p>
+<p>No record names the tier count or the store. Without one, each session re-derives a different answer.</p>
 </section>
-<section id="the-claim" class="level2">
-<h2 class="anchored" data-anchor-id="the-claim">The claim</h2>
-<p><strong>The database is not the constraint. Bandwidth is, by roughly 100 times.</strong></p>
-</section>
-<section id="database-side" class="level2">
-<h2 class="anchored" data-anchor-id="database-side">Database side</h2>
-<p>Measured ceilings, from <code>throughput.parquet</code>:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Host</th>
-<th>vcpus</th>
-<th>Ceiling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Fly <code>shared-cpu-1x</code></td>
-<td>1</td>
-<td>2159.1 ops/s</td>
-</tr>
-<tr class="even">
-<td>Workstation</td>
-<td>16</td>
-<td>6086.5 ops/s</td>
-</tr>
-</tbody>
-</table>
-<p><code>rfd/0102</code> estimates a user at about 10 requests per minute.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 18%">
-<col style="width: 47%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Load</th>
-<th>Required</th>
-<th>Fraction of one <code>shared-cpu-1x</code></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1000 users, 10 req/min</td>
-<td>166.7 ops/s</td>
-<td><strong>0.08</strong></td>
-</tr>
-<tr class="even">
-<td>1000 users, 60 req/min</td>
-<td>1000.0 ops/s</td>
-<td><strong>0.46</strong></td>
-</tr>
-</tbody>
-</table>
-<p>So one machine carries 1000 users on the database side, with room left over. That is the surprising half of this record.</p>
-</section>
-<section id="bandwidth-side" class="level2">
-<h2 class="anchored" data-anchor-id="bandwidth-side">Bandwidth side</h2>
-<p><code>rfd/0100</code> caps a client at 256 kbps, which is 0.1152 GB per client-hour.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 43%">
-<col style="width: 18%">
-<col style="width: 37%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Usage</th>
-<th>GB per month</th>
-<th>Egress at 0.02 USD per GB</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1000 concurrent, 4 h/day peak</td>
-<td>13824</td>
-<td><strong>276.48 USD</strong></td>
-</tr>
-<tr class="even">
-<td>1000 concurrent, 24/7</td>
-<td>82944</td>
-<td><strong>1658.88 USD</strong></td>
-</tr>
-</tbody>
-</table>
-<p>Against a 15 USD budget, one machine and a volume leave 642 GB. Spread across 1000 users that is 5.6 client-hours per month, or <strong>0.19 hours per day</strong>.</p>
-<p>So 1000 concurrent users is an 18 to 110 times budget increase, and none of it buys database capacity.</p>
-</section>
-<section id="why-each-number-could-be-wrong" class="level2">
-<h2 class="anchored" data-anchor-id="why-each-number-could-be-wrong">Why each number could be wrong</h2>
-<p><strong>The Fly ceiling is soft.</strong> The curve reads 2.20, 1.64, 1.11, 1.10, then 1.23 times per doubling. A clean saturation does not rise again at the end. So 2159.1 ops/s may be noise around a lower plateau. The machine may also never reach saturation at all.</p>
-<p><strong>1000 users is not 1000 workers.</strong> The probe ran at most 32 concurrent transactions. A thousand idle connections consume memory and scheduler time that this never measured.</p>
-<p><strong>Contention was never exercised.</strong> Zero aborts at every level, across 1000 districts. A thousand users in fewer zones would collide, and FoundationDB would abort and retry. That reverses the conclusion if the abort rate is high.</p>
-<p><strong>The request rate is assumed.</strong> 10 per minute per user comes from <code>rfd/0102</code> and is not measured against a real client.</p>
-<p><strong>Interest management is assumed to work.</strong> <code>rfd/0100</code> gets 256 kbps by sending 8 avatars, not 1000. If a zone must show more, the per-client rate rises and the egress figure rises with it.</p>
-</section>
-<section id="tests-that-would-settle-it" class="level2">
-<h2 class="anchored" data-anchor-id="tests-that-would-settle-it">Tests that would settle it</h2>
-<ol type="1">
-<li>Run the existing probe at 128, 256, 512 and 1024 workers on one machine. If throughput still climbs past 32, the ceiling is wrong.</li>
-<li>Hold 1000 idle connections open and measure memory and idle CPU.</li>
-<li>Rerun with 10 districts rather than 1000, and record the abort rate. That is the contention case, deliberately.</li>
-<li>Measure a real client’s request rate, and replace the 10 per minute assumption.</li>
-</ol>
-<p>Tests 1 and 3 reuse <code>probe/fly/scaling.exs</code> from <code>ecto-bench-tpcc</code> with different constants.</p>
-</section>
-<section id="what-follows-if-it-holds" class="level2">
-<h2 class="anchored" data-anchor-id="what-follows-if-it-holds">What follows if it holds</h2>
-<p>Scale the database last. One machine covers 1000 users, so effort belongs in bandwidth: interest management, the send rate, delta compression and the voice bitrate.</p>
-<p><code>rfd/0101</code> measured zstd delta at 16.1 times on the wire. That is the lever with the most headroom, and it is already built.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Egress dominates the bill, and the store does not.</strong> Bandwidth per client sets the cost, and one node serves the database load. No probe measures a running deployment, so this record carries no cost figure.</p>
+<p><strong>Two tiers.</strong></p>
 <ul>
-<li><code>data/measurements/</code>, the raw rows behind every measured figure</li>
-<li><code>rfd/0100</code> for the 256 kbps cap, <code>rfd/0102</code> for the budget</li>
-<li><code>ecto-bench-tpcc</code> ADR 0007 for the throughput runs</li>
+<li>Zone client: Godot. Rendering, XR, IK, and local physics.</li>
+<li>Server: Elixir and Phoenix. Identity, room directory, and the presence relay.</li>
 </ul>
+<p>The server relays presence rather than simulating it. Phoenix supplies identity, sessions, and migrations, which a Godot server would need written in GDScript.</p>
+<p><strong>The store is FoundationDB</strong>, through <code>ecto_foundationdb</code>. <code>rfd/0075</code> stands, and it is Apache 2.0, C++, write-optimized, and linearly scalable by process. <code>rfd/0103</code>’s limits are accepted, so no joins, no <code>or</code>, and no aggregates in the database.</p>
+<p>That trade holds because the relational need is analytical, and the analytical half does not use this store. Event logs and measurements stay zstd Parquet in essential tuple normal form, read by DuckDB. OLTP access is point lookups by player and room identity.</p>
+<p><strong>taskweft stays an Elixir NIF.</strong> <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already has that shape. Janet and the C <code>libtaskweft</code> are dropped.</p>
+<p>This supersedes <code>rfd/0107</code> and <code>rfd/0108</code>.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The stores considered, Rivet examined, and the open questions: <code>DETAILS.md</code></li>
+<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
+</ul>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0103-uro-on-ecto-foundationdb</code>: the adapter and its limits.</li>
+<li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: the authority model a relay does not provide.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="egress-is-the-cost-and-the-store-is-not" class="level2">
+<h2 class="anchored" data-anchor-id="egress-is-the-cost-and-the-store-is-not">Egress is the cost, and the store is not</h2>
+<p>Bandwidth per client sets the bill. <code>rfd/0100</code> caps a client at 256 kbps, and egress scales with concurrent clients and hours played. No deployment runs, so no monthly figure exists.</p>
+</section>
+<section id="the-database-is-not-what-the-money-buys" class="level2">
+<h2 class="anchored" data-anchor-id="the-database-is-not-what-the-money-buys">The database is not what the money buys</h2>
+<p>Measured ceilings, <code>run_id = fly-shared-1x-1g</code> and <code>local-16core</code> in <code>data/measurements/</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. Both are the concurrency 32 row, which is the highest the probe ran.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> run_id, ops <span class="op">/</span> seconds <span class="kw">AS</span> ops_per_sec</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'throughput.parquet'</span>) <span class="kw">WHERE</span> concurrency <span class="op">=</span> <span class="dv">32</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Presence never reaches the store. A pose is transient, and the next tick supersedes it. Persistent writes are login, avatar change, and room join.</p>
+</section>
+<section id="stores-considered" class="level2">
+<h2 class="anchored" data-anchor-id="stores-considered">Stores considered</h2>
+<p>The search ran under four rules: FOSS, non-viral license, relational form, and linear scaling. Rust was banned and then unbanned during the search, which returned TiDB to the list.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Store</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FoundationDB</td>
+<td>Chosen. Apache 2.0, C++, linear, write-optimized</td>
+</tr>
+<tr class="even">
+<td>TiDB</td>
+<td>Viable, not chosen. Apache 2.0, MySQL wire, so <code>myxql</code> connects</td>
+</tr>
+<tr class="odd">
+<td>YDB</td>
+<td>Viable, not chosen. Apache 2.0, C++, and no Ecto adapter exists</td>
+</tr>
+<tr class="even">
+<td>Apache Ignite</td>
+<td>Viable, not chosen. Apache 2.0, Java, and no Ecto adapter exists</td>
+</tr>
+<tr class="odd">
+<td>YugabyteDB</td>
+<td>Vetoed</td>
+</tr>
+<tr class="even">
+<td>Stock PostgreSQL</td>
+<td>Blocklisted for operational reasons, which are vacuum and heap bloat</td>
+</tr>
+<tr class="odd">
+<td>SQLite</td>
+<td>Rejected. Weaker constraint enforcement than the requirement</td>
+</tr>
+<tr class="even">
+<td>CockroachDB</td>
+<td>Source-available since 2019, so it fails the FOSS rule</td>
+</tr>
+<tr class="odd">
+<td>Citus</td>
+<td>AGPL, so it fails the non-viral rule</td>
+</tr>
+<tr class="even">
+<td>MariaDB, MySQL</td>
+<td>GPL, so they fail the non-viral rule</td>
+</tr>
+<tr class="odd">
+<td>ScyllaDB, MongoDB</td>
+<td>AGPL or SSPL, so they fail the non-viral rule</td>
+</tr>
+<tr class="even">
+<td>DuckDB, for OLTP</td>
+<td>0.919 ms point read, the slowest of four measured in <code>rfd/0103</code></td>
+</tr>
+<tr class="odd">
+<td>Rivet 2.0</td>
+<td>Apache 2.0. Actor logic is TypeScript. See the section below</td>
+</tr>
+</tbody>
+</table>
+<p>TiDB is the option that keeps relational form with no adapter work. It costs more processes, because a cluster wants PD, TiDB servers, and three TiKV nodes. It also carries MySQL’s weaker constraint set, with no EXCLUDE constraints and no DOMAIN types.</p>
+</section>
+<section id="rivet-2.0-examined" class="level2">
+<h2 class="anchored" data-anchor-id="rivet-2.0-examined">Rivet 2.0, examined</h2>
+<p>An earlier draft of this record excluded Rivet because its SDK is TypeScript and it has no Elixir or Godot client. That reason is not accurate, and this section replaces it.</p>
+<p>Rivet reaches an actor without an SDK. Raw HTTP goes to <code>https://api.rivet.dev/gateway/{actorId}/request/{...path}</code>, and a raw WebSocket goes to <code>wss://api.rivet.dev/gateway/{actorId}@{token}/websocket/{...path}</code>. So a Godot client can connect. The repository’s own <code>Vanilla HTTP API</code> documentation page is a <code>TODO</code> stub, so that path is real and undocumented.</p>
+<p>What Rivet is, verified from the repository: Apache 2.0, 60.7 percent Rust, and pushed on 2026-08-07. The engine has four parts. Pegboard orchestrates actors, Gasoline runs durable execution, Guard routes traffic, and Epoxy is a multi-region key-value store over EPaxos. Self hosting is one binary or <code>docker run -p 6420:6420 rivetdev/engine</code>. Storage is SQLite for local development, FoundationDB for self-hosted deployments, or Postgres.</p>
+<p>The fit is genuine on one point. An actor per room with the <code>onWebSocket</code> handler is a presence relay, and <code>options: { canHibernateWebSocket: true }</code> makes an empty room cost nothing.</p>
+<p>The reason to decline is the comparison Rivet draws. Its published figures measure against Kubernetes: about 20 ms cold start against 6 s for a pod, and 0.6 KB per actor against 50 MB. This project’s alternative is a BEAM process, not a pod. Phoenix already supplies a process per connection, a process per topic, PubSub fan-out, and supervision. A BEAM process spawns in microseconds and sits in the same size order as 0.6 KB.</p>
+<p>Adopting Rivet moves room logic into TypeScript and adds a Rust engine. That is two runtimes replacing one, against this record’s two-tier decision.</p>
+<p>Three Rivet features have no Elixir equivalent to hand: Guard’s multi-region routing, Epoxy’s multi-region consensus, and Gasoline’s durable execution. A global player base is the case that would justify revisiting this.</p>
+</section>
+<section id="the-trade-this-record-accepts" class="level2">
+<h2 class="anchored" data-anchor-id="the-trade-this-record-accepts">The trade this record accepts</h2>
+<p><code>rfd/0103</code> states the FoundationDB limits directly. A query is valid only when one Get or one GetRange satisfies it. No joins. No <code>or</code>. No aggregates in the database, so filtering and grouping run in Elixir. One Between clause per query, on an indexed field.</p>
+<p>Those limits bite reporting, and reporting does not use this store. <code>data/measurements/</code> already holds the analytical record as zstd Parquet, and <code>lean-duckdb</code> already reads it. DuckDB supplies the joins and the aggregates.</p>
+<p>Point-read latency from <code>rfd/0103</code>: 0.405 ms for a new transaction per read, and 0.157 ms inside one transaction. PostgreSQL 16 measured 0.084 ms, so FoundationDB is 4.8 and 1.9 times that, in the same order rather than a different one.</p>
+</section>
+<section id="open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
+<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. This record picks server-hosted and does not price the alternative.</p>
+<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number.</p>
+<p><strong>Server authority.</strong> A relay is not server-authoritative, so a client can assert a false pose. <code>rfd/0046</code> does not hold for presence. That is tolerable for social VR and wrong for the loot-action combat loop.</p>
+<p><strong>WebTransport interoperation.</strong> Whether the Godot client of <code>rfd/0023</code> speaks to a Phoenix endpoint is untested here. WebSocket is the fallback, at a cost in latency.</p>
+<p><strong>How many FoundationDB processes, and where.</strong> One machine hosting every process is one failure domain. Real availability needs separate machines, and this record does not fund them.</p>
 
 
 </section>
@@ -875,7 +931,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0104-hypothesis-1000-concurrent/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0109-two-tiers-with-foundationdb-as-the-store/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

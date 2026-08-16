@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -360,17 +395,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 45%">
-<col style="width: 19%">
-<col style="width: 18%">
-<col style="width: 16%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Strategy</th>
 <th>Bytes per tick</th>
-<th>Rate at 20 Hz</th>
 <th>Compress CPU</th>
 </tr>
 </thead>
@@ -378,54 +406,51 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>Raw, no compression</td>
 <td>44800</td>
-<td>7168.0 kbps</td>
 <td>none</td>
 </tr>
 <tr class="even">
 <td>zstd level 1, no dictionary</td>
 <td>3727</td>
-<td>596.3 kbps</td>
 <td>42.4 us</td>
 </tr>
 <tr class="odd">
 <td>zstd level 3, no dictionary</td>
 <td>3239</td>
-<td>518.3 kbps</td>
 <td>44.8 us</td>
 </tr>
 <tr class="even">
 <td>zstd L1, prefix is previous tick</td>
 <td>2980</td>
-<td>476.9 kbps</td>
 <td>63.3 us</td>
 </tr>
 <tr class="odd">
 <td>zstd L3, prefix is previous tick</td>
 <td>2774</td>
-<td>443.9 kbps</td>
 <td>66.5 us</td>
 </tr>
 <tr class="even">
 <td>zstd L1, prefix is acked minus 2</td>
 <td>3014</td>
-<td>482.3 kbps</td>
 <td>68.0 us</td>
 </tr>
 <tr class="odd">
 <td>zstd L1, prefix is acked minus 4</td>
 <td>3015</td>
-<td>482.5 kbps</td>
 <td>68.2 us</td>
 </tr>
 <tr class="even">
 <td>zstd L1, prefix is acked minus 8</td>
 <td>3006</td>
-<td>480.9 kbps</td>
 <td>63.9 us</td>
 </tr>
 </tbody>
 </table>
 <p>Client-side decompression is 17.3 us, and the result verifies as exact.</p>
+<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. Every cell above is a stored row.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> s.subject, s.bytes, l.median_ns <span class="op">/</span> <span class="fl">1000.0</span> <span class="kw">AS</span> compress_us</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'size.parquet'</span>) s</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> read_parquet(<span class="st">'latency.parquet'</span>) l <span class="kw">USING</span> (run_id, subject)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> s.subject <span class="kw">LIKE</span> <span class="st">'zstd%'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="decisions" class="level2">
 <h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
