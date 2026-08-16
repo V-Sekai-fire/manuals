@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 13:29:40 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 13:35:58 GMT</lastBuildDate>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -32,8 +32,8 @@
 <table class="caption-top table">
 <colgroup>
 <col style="width: 24%">
-<col style="width: 45%">
-<col style="width: 29%">
+<col style="width: 46%">
+<col style="width: 28%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -60,8 +60,8 @@
 </tr>
 <tr class="even">
 <td>five READMEs describe absent directories</td>
-<td><code>entities-lean-rebac</code> holds <code>Rebac/core/</code> and <code>Rebac/ports/</code>, both in Lean</td>
-<td>correct three READMEs, and qualify rebac’s paths</td>
+<td>two of the five have a README, and rebac’s triad is real one namespace down</td>
+<td>correct shared’s, qualify rebac’s paths</td>
 </tr>
 </tbody>
 </table>
@@ -306,8 +306,8 @@ font-style: inherit;"># progression: adapters core ports</span></span></code></p
 <p>The other two renames in that triad stand. <code>core/</code> to <code>entities/</code> and <code>adapters/</code> to <code>datasources/</code> carry no collision.</p>
 <p>Three git repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> are also absent from the rename list and from the <code>repo</code> manifest, and their names state no type. Whether the type-first convention reaches them is a question this RFD raises and does not answer, because the answer decides three more names.</p>
 </section>
-<section id="the-gap-is-three-readmes-rather-than-five" class="level2">
-<h2 class="anchored" data-anchor-id="the-gap-is-three-readmes-rather-than-five">The gap is three READMEs rather than five</h2>
+<section id="the-gap-is-two-readmes-rather-than-five" class="level2">
+<h2 class="anchored" data-anchor-id="the-gap-is-two-readmes-rather-than-five">The gap is two READMEs rather than five</h2>
 <p>RFD 0111 says the <code>lean-*-core</code> READMEs state a hexagon layout of <code>core/</code>, <code>ports/</code>, and <code>adapters/</code>, that those directories do not exist, and that each of those git repositories holds one Lean namespace directory. The checkout disagrees in two of the five.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="cf" style="color: #003B4F;
 background-color: null;
@@ -426,7 +426,80 @@ font-style: inherit;">done</span></span></code></pre></div></div>
 </blockquote>
 <p>which describes what is there. The correction it needs is the prefix <code>Rebac/</code> on each path, and the removal of <code>adapters/</code>, which the repository does not have.</p>
 <p><code>entities-lean-loot</code> holds three directories beside <code>LootCore</code>, so “one Lean namespace directory” describes three of the five rather than all of them.</p>
-<p>Three READMEs need the correction RFD 0111 describes. One needs its paths qualified. The count in that section, and the sentence “Those directories do not exist”, are the two claims to amend.</p>
+<p>Three of the five carry no README at all, which is the larger half of this gap:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> d <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> entities-lean-<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">do</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">printf</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'%-28s %s\n'</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-C</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> ls-files <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-ci</span> readme<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">;</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">done</span></span>
+<span id="cb7-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># entities-lean-combat       0</span></span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># entities-lean-loot         0</span></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># entities-lean-progression  0</span></span>
+<span id="cb7-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># entities-lean-rebac        2</span></span>
+<span id="cb7-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># entities-lean-shared       1</span></span></code></pre></div></div>
+<p>So RFD 0111 describes five READMEs where two exist. <code>entities-lean-shared</code> is the one whose layout section is wholly false: it names the triad and the repository holds <code>Shared/Types.lean</code> and nothing else. <code>entities-lean-rebac</code> is the one that needs its paths qualified, in both its top-level README and the second one at <code>Rebac/README.md</code>, which names an <code>adapters/</code> that is absent.</p>
+<p>One README to correct and one to qualify. The count in that section, and the sentence “Those directories do not exist”, are the two claims to amend. Whether <code>combat</code>, <code>loot</code>, and <code>progression</code> should gain a README is a separate question this RFD does not answer.</p>
 </section>
 <section id="what-this-rfd-leaves-alone" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-rfd-leaves-alone">What this RFD leaves alone</h2>
@@ -438,7 +511,7 @@ font-style: inherit;">done</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -507,7 +580,7 @@ font-style: inherit;">done</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -594,7 +667,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -764,7 +837,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -1103,7 +1176,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -1595,7 +1668,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1909,7 +1982,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, FoundationDB, and 276.48 USD per month as the cost floor</title>
@@ -2126,7 +2199,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-fdb-and-the-cost-floor/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -2263,7 +2336,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -2435,7 +2508,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2601,7 +2674,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2801,7 +2874,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0104: Hypothesis, what 1000 concurrent users costs</title>
@@ -2944,7 +3017,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0104-hypothesis-1000-concurrent/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -3095,7 +3168,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3289,7 +3362,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3456,7 +3529,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, 47 concurrent</title>
@@ -3679,7 +3752,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3834,7 +3907,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3993,7 +4066,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
@@ -4163,7 +4236,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:29:40 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 13:35:58 GMT</pubDate>
 </item>
 </channel>
 </rss>

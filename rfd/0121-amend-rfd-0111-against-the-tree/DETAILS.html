@@ -328,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-prefix-survives-in-five-live-names" id="toc-the-prefix-survives-in-five-live-names" class="nav-link" data-scroll-target="#the-prefix-survives-in-five-live-names">The prefix survives in five live names</a></li>
   <li><a href="#entities-godot-is-the-engine" id="toc-entities-godot-is-the-engine" class="nav-link" data-scroll-target="#entities-godot-is-the-engine"><code>entities-godot</code> is the engine</a></li>
   <li><a href="#repositories-puts-the-created-collision-in-the-tree" id="toc-repositories-puts-the-created-collision-in-the-tree" class="nav-link" data-scroll-target="#repositories-puts-the-created-collision-in-the-tree"><code>repositories/</code> puts the created collision in the tree</a></li>
-  <li><a href="#the-gap-is-three-readmes-rather-than-five" id="toc-the-gap-is-three-readmes-rather-than-five" class="nav-link" data-scroll-target="#the-gap-is-three-readmes-rather-than-five">The gap is three READMEs rather than five</a></li>
+  <li><a href="#the-gap-is-two-readmes-rather-than-five" id="toc-the-gap-is-two-readmes-rather-than-five" class="nav-link" data-scroll-target="#the-gap-is-two-readmes-rather-than-five">The gap is two READMEs rather than five</a></li>
   <li><a href="#what-this-rfd-leaves-alone" id="toc-what-this-rfd-leaves-alone" class="nav-link" data-scroll-target="#what-this-rfd-leaves-alone">What this RFD leaves alone</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0121-amend-rfd-0111-against-the-tree/DETAILS.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -493,8 +493,8 @@ scu_builders.py servers tests thirdparty version.py</code></pre>
 <p>The other two renames in that triad stand. <code>core/</code> to <code>entities/</code> and <code>adapters/</code> to <code>datasources/</code> carry no collision.</p>
 <p>Three git repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> are also absent from the rename list and from the <code>repo</code> manifest, and their names state no type. Whether the type-first convention reaches them is a question this RFD raises and does not answer, because the answer decides three more names.</p>
 </section>
-<section id="the-gap-is-three-readmes-rather-than-five" class="level2">
-<h2 class="anchored" data-anchor-id="the-gap-is-three-readmes-rather-than-five">The gap is three READMEs rather than five</h2>
+<section id="the-gap-is-two-readmes-rather-than-five" class="level2">
+<h2 class="anchored" data-anchor-id="the-gap-is-two-readmes-rather-than-five">The gap is two READMEs rather than five</h2>
 <p>RFD 0111 says the <code>lean-*-core</code> READMEs state a hexagon layout of <code>core/</code>, <code>ports/</code>, and <code>adapters/</code>, that those directories do not exist, and that each of those git repositories holds one Lean namespace directory. The checkout disagrees in two of the five.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> d <span class="kw">in</span> entities-lean-<span class="pp">*</span><span class="kw">;</span> <span class="cf">do</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">'%-28s '</span> <span class="st">"</span><span class="va">$d</span><span class="st">"</span></span>
@@ -544,7 +544,15 @@ scu_builders.py servers tests thirdparty version.py</code></pre>
 </blockquote>
 <p>which describes what is there. The correction it needs is the prefix <code>Rebac/</code> on each path, and the removal of <code>adapters/</code>, which the repository does not have.</p>
 <p><code>entities-lean-loot</code> holds three directories beside <code>LootCore</code>, so “one Lean namespace directory” describes three of the five rather than all of them.</p>
-<p>Three READMEs need the correction RFD 0111 describes. One needs its paths qualified. The count in that section, and the sentence “Those directories do not exist”, are the two claims to amend.</p>
+<p>Three of the five carry no README at all, which is the larger half of this gap:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> d <span class="kw">in</span> entities-lean-<span class="pp">*</span><span class="kw">;</span> <span class="cf">do</span> <span class="bu">printf</span> <span class="st">'%-28s %s\n'</span> <span class="st">"</span><span class="va">$d</span><span class="st">"</span> <span class="st">"</span><span class="va">$(</span><span class="fu">git</span> <span class="at">-C</span> <span class="st">"</span><span class="va">$d</span><span class="st">"</span> ls-files <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-ci</span> readme<span class="va">)</span><span class="st">"</span><span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># entities-lean-combat       0</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># entities-lean-loot         0</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># entities-lean-progression  0</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># entities-lean-rebac        2</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># entities-lean-shared       1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>So RFD 0111 describes five READMEs where two exist. <code>entities-lean-shared</code> is the one whose layout section is wholly false: it names the triad and the repository holds <code>Shared/Types.lean</code> and nothing else. <code>entities-lean-rebac</code> is the one that needs its paths qualified, in both its top-level README and the second one at <code>Rebac/README.md</code>, which names an <code>adapters/</code> that is absent.</p>
+<p>One README to correct and one to qualify. The count in that section, and the sentence “Those directories do not exist”, are the two claims to amend. Whether <code>combat</code>, <code>loot</code>, and <code>progression</code> should gain a README is a separate question this RFD does not answer.</p>
 </section>
 <section id="what-this-rfd-leaves-alone" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-rfd-leaves-alone">What this RFD leaves alone</h2>
