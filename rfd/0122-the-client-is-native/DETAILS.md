@@ -1,6 +1,6 @@
 ## Context and problem statement
 
-RFD 0112 read the problem as a text field. `fabric-store-domain/src/queen.c` had no client at
+RFD 0112 read the problem as a text field. `service-store/src/queen.c` had no client at
 all when it was written, and the visible gap was that a player had nowhere to type. So the
 document spent its length on the field: a decorator node is one block to the caret, an atom node
 in ProseMirror can hold the caret and needs a plugin to correct it, and Meta tests the mobile
@@ -22,7 +22,7 @@ do. `lean-entity-packet` models the packet in Lean with a `packet_golden.csv` of
 bytes, and the JavaScript is not held to those vectors.
 
 A second transport. The browser's WebTransport is whatever the browser ships. `queen` terminates
-QUIC with picoquic and picotls, and `fabric-gateway-edge` vendors both precisely so that one
+QUIC with picoquic and picotls, and `transport-gateway` vendors both precisely so that one
 implementation and one TLS library run on both ends. A browser client gives that up and replaces
 it with compatibility, which is a thing you find out about in the field.
 
@@ -31,7 +31,7 @@ slash command and cannot put anybody anywhere.
 
 ## The parts already on the branch
 
-`fabric-godot-core` at `gyre` carries the client's whole stack as engine modules. This decision
+`entities-godot` at `gyre` carries the client's whole stack as engine modules. This decision
 adds no engine code; it selects.
 
 | Module                       | What it provides                                 | What it replaces           |
@@ -43,7 +43,7 @@ adds no engine code; it selects.
 
 `FabricMultiplayerPeer` documents WebTransport as its example backend and notes that a peer must
 open independent streams per packet, which WebTransport does. That is the same property
-`fabric-store-domain/CLAUDE.md` states from the server side: a datagram is one message and a
+`service-store/CLAUDE.md` states from the server side: a datagram is one message and a
 stream FIN is the boundary, so no framing layer exists on either end.
 
 ## The transport path
@@ -59,7 +59,7 @@ native client has no more standing than a browser one did.
 
 ## What happens to the web client
 
-`fabric-store-domain/client` is not deleted by this document. It is four source files, two
+`service-store/client` is not deleted by this document. It is four source files, two
 Playwright specs, and three npm dependencies, and none of it is on the CI path — `ci/inside.sh`
 runs `queen` and never runs npm. It can be removed in a change of its own, which is where the
 argument about whether to keep a browser build as a fallback belongs.
@@ -81,3 +81,14 @@ The field regresses before it improves. RFD 0112's field works today. A `Control
 parameter as an inline block has to be written, and the first version of it will be worse than
 the Lexical one. That is accepted for the same reason as the build cost: the field was never the
 part that determined whether this client was right.
+
+## Consequences
+
+RFD 0112 is abandoned. `service-store/client` — Lexical, esbuild, the Playwright specs and
+the JavaScript decoder — stops being the client. Removing it is its own change in its own
+repository and is not assumed by this document.
+
+The cost is a build. A browser client is served; a native client is compiled per platform from
+an engine fork, which is slower to produce and heavier to distribute. That is accepted, because
+the alternative was paying for a second decoder and a second transport forever to avoid paying
+for a build once.
