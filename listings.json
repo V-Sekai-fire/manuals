@@ -3,6 +3,8 @@
     "listing": "/pages/rfd.html",
     "items": [
       "/rfd/0121-amend-rfd-0111-against-the-tree/index.html",
+      "/rfd/0117-retire-the-h2o-tier-record-set/index.html",
+      "/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/index.html",
       "/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/index.html",
       "/rfd/0114-prove-the-store-by-breaking-it/index.html",
       "/rfd/0113-foundationdb-on-windows-built-from-source/index.html",

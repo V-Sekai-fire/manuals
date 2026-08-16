@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 13:57:45 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 14:09:06 GMT</lastBuildDate>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -20,7 +20,7 @@
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0121: Amend RFD 0111 against the tree</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0121: Amend RFD 0111 against the tree</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -511,7 +511,476 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0117: Retire the h2o tier record set under YAGNI</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> RFD lifecycle, records for the retired native tier</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0116</code> replaces the native zone server with an Elixir epoll server, and returns the state to CockroachDB. That decision leaves 43 records that describe things the project does not build: a libh2o event loop, a FoundationDB C path, a libriscv guest runtime, and repositories that are already archived.</p>
+<p>Every one of those records renders as live on the site. A reader cannot tell them from the records that still hold. Marking a record’s state does not help a reader who arrives through search.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Move all 43 records to <code>multiplayer-fabric-archive</code>, per <code>rfd/0106</code>. Keep no pointer stub, per <code>rfd/0000-conventions</code>.</p>
+<p><code>rfd/0071</code> supplies the rule. Structure arrives when a real near-term need arrives. A record whose subject the project does not build is structure ahead of need. Retiring it costs nothing, because the archive keeps it and the number stays reserved.</p>
+<p>The same rule settles the 18 records whose case cut both ways. Four have a live consumer today and stay. Fourteen do not, and go. A record comes back when a need arrives for it, rewritten against the tier that exists then, rather than restored on the guess that it still fits.</p>
+<p>Citations change in one way. A citation that names a full path, as <code>rfd/NNNN-slug</code>, becomes a link into the archive, because it names a location. A citation that names a bare number stays as it is, because it names a record.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The full list of 43, the four that stay, and the counts: <code>DETAILS.md</code></li>
+<li><code>rfd/0116-elixir-epoll-zone-server-in-the-h2o-style</code>: the decision that retires them.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="counts" class="level2">
+<h2 class="anchored" data-anchor-id="counts">Counts</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Set</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RFDs before this decision</td>
+<td>105</td>
+</tr>
+<tr class="even">
+<td>Retired to the archive</td>
+<td>43</td>
+</tr>
+<tr class="odd">
+<td>Live after this decision</td>
+<td>62</td>
+</tr>
+<tr class="even">
+<td>Live, plus <code>rfd/0116</code>, <code>rfd/0117</code></td>
+<td>64</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-native-zone-tier-12-records" class="level2">
+<h2 class="anchored" data-anchor-id="the-native-zone-tier-12-records">The native zone tier, 12 records</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>RFD</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0001</code></td>
+<td>Zonefabric roadmap and PERT order</td>
+</tr>
+<tr class="even">
+<td><code>0003</code></td>
+<td>CastSpell sandbox package format</td>
+</tr>
+<tr class="odd">
+<td><code>0004</code></td>
+<td>CastSpell embeds libgodot</td>
+</tr>
+<tr class="even">
+<td><code>0010</code></td>
+<td>Client transport handshake, gateway cycle 1</td>
+</tr>
+<tr class="odd">
+<td><code>0072</code></td>
+<td>Actor-lite worker pool</td>
+</tr>
+<tr class="even">
+<td><code>0076</code></td>
+<td>Macaroon with eBPF and XDP</td>
+</tr>
+<tr class="odd">
+<td><code>0077</code></td>
+<td>PERT critical path</td>
+</tr>
+<tr class="even">
+<td><code>0078</code></td>
+<td>plausible-witness-dag feature ablation</td>
+</tr>
+<tr class="odd">
+<td><code>0080</code></td>
+<td>Slotmap entity storage</td>
+</tr>
+<tr class="even">
+<td><code>0082</code></td>
+<td>Zonefabric scaling benchmark</td>
+</tr>
+<tr class="odd">
+<td><code>0083</code></td>
+<td>Replace FabricZone with zone-server-h2o</td>
+</tr>
+<tr class="even">
+<td><code>0086</code></td>
+<td>Defer NoGod.lean gossip authority</td>
+</tr>
+<tr class="odd">
+<td><code>0088</code></td>
+<td>picoquic and picotls over h2o’s own QUIC</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="foundationdb-7-records" class="level2">
+<h2 class="anchored" data-anchor-id="foundationdb-7-records">FoundationDB, 7 records</h2>
+<p>CockroachDB replaces it, so <code>rfd/0006</code> returns to force.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>RFD</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0002</code></td>
+<td>taskweft value narrowing in FDB encoding</td>
+</tr>
+<tr class="even">
+<td><code>0073</code></td>
+<td>Async FDB callback chain on the libh2o loop</td>
+</tr>
+<tr class="odd">
+<td><code>0074</code></td>
+<td>Binary value encoding for FDB values</td>
+</tr>
+<tr class="even">
+<td><code>0075</code></td>
+<td>FoundationDB over CockroachDB</td>
+</tr>
+<tr class="odd">
+<td><code>0084</code></td>
+<td>zstd compression for batched FDB values</td>
+</tr>
+<tr class="even">
+<td><code>0097</code></td>
+<td>Pubsub in userspace, FDB keeps the log</td>
+</tr>
+<tr class="odd">
+<td><code>0103</code></td>
+<td>Uro on ecto_foundationdb</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-libriscv-guest-runtime-5-records" class="level2">
+<h2 class="anchored" data-anchor-id="the-libriscv-guest-runtime-5-records">The libriscv guest runtime, 5 records</h2>
+<p>The Gyre survives. Its runtime does not.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>RFD</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0037</code></td>
+<td>Generated behavior as sandboxed RISC-V</td>
+</tr>
+<tr class="even">
+<td><code>0079</code></td>
+<td>Sandboxed Godot via raw libriscv</td>
+</tr>
+<tr class="odd">
+<td><code>0092</code></td>
+<td>ReBAC gates libriscv guest access</td>
+</tr>
+<tr class="even">
+<td><code>0095</code></td>
+<td>Two guest classes, a domain ABI, Bubblewrap</td>
+</tr>
+<tr class="odd">
+<td><code>0096</code></td>
+<td>Guest transport on Fly, measured</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="measurements-taken-on-the-retired-tier-5-records" class="level2">
+<h2 class="anchored" data-anchor-id="measurements-taken-on-the-retired-tier-5-records">Measurements taken on the retired tier, 5 records</h2>
+<p>Each number was measured against libh2o and FoundationDB. The measurement stands as history. It guides nothing on the new tier.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>RFD</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0098</code></td>
+<td>The rollback snapshot budget</td>
+</tr>
+<tr class="even">
+<td><code>0100</code></td>
+<td>256 kbps per client, 47 concurrent</td>
+</tr>
+<tr class="odd">
+<td><code>0101</code></td>
+<td>zstd delta on the wire</td>
+</tr>
+<tr class="even">
+<td><code>0102</code></td>
+<td>The whole deployment on 15 USD</td>
+</tr>
+<tr class="odd">
+<td><code>0104</code></td>
+<td>Hypothesis, 1000 concurrent users</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="records-whose-subject-is-an-archived-repository-8-records" class="level2">
+<h2 class="anchored" data-anchor-id="records-whose-subject-is-an-archived-repository-8-records">Records whose subject is an archived repository, 8 records</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 56%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>RFD</th>
+<th>Subject</th>
+<th>Archived repository</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0014</code></td>
+<td>Recursive art-game loop, prediscussion</td>
+<td><code>friends-art-game-loop</code></td>
+</tr>
+<tr class="even">
+<td><code>0027</code></td>
+<td>Umbrella package installs every component</td>
+<td><code>fabric-platform-central</code></td>
+</tr>
+<tr class="odd">
+<td><code>0047</code></td>
+<td>webtransportd out-of-process adapter</td>
+<td>no such repository exists</td>
+</tr>
+<tr class="even">
+<td><code>0056</code></td>
+<td>Verification smokes as a quadlet queue</td>
+<td><code>fabric-container-verify</code></td>
+</tr>
+<tr class="odd">
+<td><code>0057</code></td>
+<td>Repository map of the loot-action slice</td>
+<td><code>godot-loop-slice</code></td>
+</tr>
+<tr class="even">
+<td><code>0058</code></td>
+<td>WebTransport on one persistent stream</td>
+<td>follows <code>rfd/0047</code></td>
+</tr>
+<tr class="odd">
+<td><code>0065</code></td>
+<td>fabric-platform-central packaging</td>
+<td><code>fabric-platform-central</code></td>
+</tr>
+<tr class="even">
+<td><code>0069</code></td>
+<td>Defer the loot-slice hardening scope</td>
+<td><code>godot-loop-slice</code></td>
+</tr>
+<tr class="odd">
+<td><code>0070</code></td>
+<td>Loop-slice telemetry to the collector</td>
+<td><code>godot-loop-slice</code></td>
+</tr>
+<tr class="even">
+<td><code>0081</code></td>
+<td>Three-layer verification with CBMC</td>
+<td><code>zone-server-h2o</code></td>
+</tr>
+<tr class="odd">
+<td><code>0087</code></td>
+<td>Avatar IK with Align.lean over mink</td>
+<td><code>zone-server-h2o</code></td>
+</tr>
+<tr class="even">
+<td><code>0093</code></td>
+<td>taskweft relations to linear automata</td>
+<td><code>zone-server-h2o</code> ReBAC</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-four-that-stay-and-why" class="level2">
+<h2 class="anchored" data-anchor-id="the-four-that-stay-and-why">The four that stay, and why</h2>
+<p>YAGNI keeps a record when a live consumer needs it now.</p>
+<ul>
+<li><code>rfd/0005</code> glTF interactivity value types. <code>datasource-flow</code> and <code>datasource-flow-project</code> are live repositories, and this record describes their taxonomy.</li>
+<li><code>rfd/0007</code> Godot double-precision <code>template_release</code>. The scope names an archived repository, and <code>zone-client-godot</code>, <code>zone-baker</code>, and <code>rfd/0031</code>’s merged authoring build all need double precision.</li>
+<li><code>rfd/0045</code> Loot-action core-loop MVP. The record of what the game loop is. <code>rfd/0085</code>’s Gyre sits on this shell.</li>
+<li><code>rfd/0067</code> Release tag progression. The scope names an archived repository, and <code>rfd/0090</code>’s live Burrito release of <code>uro</code> uses the convention.</li>
+</ul>
+</section>
+<section id="inbound-citations" class="level2">
+<h2 class="anchored" data-anchor-id="inbound-citations">Inbound citations</h2>
+<p>53 citations in surviving files name a retired record. 16 name a full path and become links into the archive. The rest name a bare number and stay as citations, which follows <code>rfd/0106</code>.</p>
+<p><code>data/measurements/README.md</code> opens with “Measurements: rfd/0096 through rfd/0103”. Both records are retired. The parquet files stay in the manuals repository, and whether the measurement data follows its records into the archive is open.</p>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0071-yagni-times-structure-to-need</code>: the rule this applies.</li>
+<li><code>rfd/0106-split-the-archive-into-its-own-repo</code>: the method and the destination.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0116: The zone server is Elixir with epoll, in the h2o style</em></p>
+<p><strong>State:</strong> published · <strong>Scope:</strong> zone server implementation, deployment tier</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>rfd/0083</code> replaced the Godot <code>FabricZone</code> server with <code>zone-server-h2o</code>, a native libh2o and FoundationDB server built with Fil-C. That tier works. <code>rfd/0095</code> records a Godot ELF that runs 57.9 million instructions and reads <code>project.godot</code> out of FoundationDB.</p>
+<p>The tier is not affordable. It is a fourth language and a fourth runtime next to Elixir, CockroachDB, and Godot. Each one carries its own build, its own deployment, its own failure modes, and its own learning cost. <code>zone-server-h2o</code> is archived on GitHub for that reason.</p>
+<p>An archive with no replacement record leaves the project with no answer to what serves a zone.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>The zone server is Elixir, on an epoll loop, in the style h2o uses. It is slower than the native tier. The project accepts the slower server, because it costs no fifth thing to build and operate.</p>
+<p>The affordable tier is three parts, and the zone server is inside the first:</p>
+<ul>
+<li>Elixir, which holds the zone server and <code>zone-backend</code>.</li>
+<li>CockroachDB, which holds the state. <code>rfd/0006</code> returns to force.</li>
+<li>Godot, which is the client and the content tool.</li>
+</ul>
+<p>“In the h2o style” names the shape, not the library. A small number of event loops own their own sockets, each loop reads without blocking, and no request holds a loop while it waits. The work that <code>rfd/0072</code>-<code>0084</code> did against libh2o does not port. Those records are retired by <code>rfd/0117</code>.</p>
+<p>This supersedes <code>rfd/0083</code>.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>The cost argument, what carries over, and what does not: <code>DETAILS.md</code></li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0083-zone-server-h2o-replaces-godot-fabriczone"><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code></a>: the decision this supersedes.</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="why-the-native-tier-is-not-affordable" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-native-tier-is-not-affordable">Why the native tier is not affordable</h2>
+<p>The cost is not the machine. <code>rfd/0102</code> costed the deployment at 15 USD with the native server in it.</p>
+<p>The cost is the tier. <code>zone-server-h2o</code> adds C to a project that already runs Elixir, CockroachDB, and Godot. C brings its own toolchain, its own memory-safety burden, its own vendored <code>thirdparty/</code> tree, and its own class of bug. <code>rfd/0095</code> shows where that leads. Seventeen syscall handlers, an invented POSIX layer over a key-value store, and a list of next failures with no end.</p>
+<p>One person cannot carry four runtimes. The decision buys back a runtime and pays for it in throughput.</p>
+</section>
+<section id="what-carries-over" class="level2">
+<h2 class="anchored" data-anchor-id="what-carries-over">What carries over</h2>
+<p>The design records that describe the protocol, the state, and the game survive the host change. They are not about libh2o.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Record</th>
+<th>Why it survives</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rfd/0046</code> server authority with deferred rollback</td>
+<td>The authority model any zone server implements.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0049</code> fabric channels as reliability classes</td>
+<td>Wire protocol, independent of what serves it.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0050</code> five-second transaction limit</td>
+<td>Bounded operations, proven in <code>lean-connection-fsm</code>.</td>
+</tr>
+<tr class="even">
+<td><code>rfd/0053</code> integral entity-transform wire</td>
+<td>Generated from <code>lean-entity-packet</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>rfd/0008</code>, <code>rfd/0023</code> WebTransport over HTTP/3</td>
+<td>The transport choice. Elixir speaks it.</td>
+</tr>
+<tr class="even">
+<td>The hexagon cores and their Lean workspaces</td>
+<td><code>rfd/0044</code> puts Lean at build time behind flat C, which an Elixir NIF calls.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-does-not-carry-over" class="level2">
+<h2 class="anchored" data-anchor-id="what-does-not-carry-over">What does not carry over</h2>
+<p>Every record scoped to the internals of the native host retires. The work was real and the measurements were real. Neither transfers to a BEAM process.</p>
+<ul>
+<li>The libh2o event loop and its callback discipline.</li>
+<li>The FoundationDB C API path, its value encoding, and its compression.</li>
+<li><code>libriscv</code> as the guest engine, and the guest ABI built on it.</li>
+<li>eBPF and XDP in the request path.</li>
+<li>CBMC as a verification layer, which needs C to check.</li>
+</ul>
+<p><code>rfd/0117</code> lists all 43 retired records.</p>
+</section>
+<section id="the-gyre-keeps-its-setting-not-its-host" class="level2">
+<h2 class="anchored" data-anchor-id="the-gyre-keeps-its-setting-not-its-host">The Gyre keeps its setting, not its host</h2>
+<p><code>rfd/0085</code>, <code>rfd/0091</code>, and <code>rfd/0094</code> stay live. Each one names <code>zone-server-h2o</code> as the host. Each carries an amendment naming this record instead.</p>
+<p>The Gyre is a MUD setting and a web client. Neither needs a native host. <code>rfd/0094</code>’s UGC loop stays as an intent, and its libriscv mechanism does not.</p>
+</section>
+<section id="what-this-record-does-not-settle" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-record-does-not-settle">What this record does not settle</h2>
+<p>The throughput of the Elixir server is not measured. Every number in <code>data/measurements/</code> came off the native tier and a FoundationDB probe. A record that states the new tier’s ceiling needs a new measurement, not an extrapolation from the old one.</p>
+<p><code>ecto_foundationdb</code> and <code>ecto-bench-tpcc</code> are active repositories that exist to put Uro on FoundationDB. This decision removes their reason. Their repository state is open.</p>
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><code>rfd/0006-cockroachdb-with-mtls-role-separation</code>: the database this tier returns to.</li>
+<li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: the authority model the new server implements.</li>
+<li><code>rfd/0117-retire-the-h2o-tier-record-set</code>: retires the records that described the native tier.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -522,7 +991,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0115: A planner domain document is a cheap-layer surface</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0115: A planner domain document is a cheap-layer surface</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> planner domain encoding, CBOR-LD, taskweft, QCBOR</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -580,7 +1049,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -591,7 +1060,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0114: Prove the store by breaking it</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0114: Prove the store by breaking it</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> store verification, fault tolerance test, disaster recovery procedure</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -667,7 +1136,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -678,7 +1147,7 @@ SnapshotBytes: 0</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0113: FoundationDB on Windows, built from source</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0113: FoundationDB on Windows, built from source</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> store platform support, build toolchain, packaging</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -837,7 +1306,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -848,7 +1317,7 @@ SnapshotBytes: 0</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0112: Lexical for the slash command interface</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0112: Lexical for the slash command interface</em></p>
 <p><strong>State:</strong> abandoned · <strong>Scope:</strong> the Queen of the Gyre, and what serves her</p>
 <section id="status" class="level2">
 <h2 class="anchored" data-anchor-id="status">Status</h2>
@@ -1176,7 +1645,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -1187,7 +1656,7 @@ SnapshotBytes: 0</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0111: Convert the deployment words to the hexagon vocabulary</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0111: Convert the deployment words to the hexagon vocabulary</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -1668,7 +2137,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -1679,7 +2148,7 @@ SnapshotBytes: 0</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0110: One pinned Godot build, hosted as a Rivet actor</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0110: One pinned Godot build, hosted as a Rivet actor</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server implementation, orchestration, guest delivery</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -1982,7 +2451,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -1993,7 +2462,7 @@ SnapshotBytes: 0</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0109: Two tiers, with FoundationDB as the store</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0109: Two tiers, with FoundationDB as the store</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2163,7 +2632,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -2174,7 +2643,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0108: Local C ABI zone guests, with fan-out inside the tick</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0108: Local C ABI zone guests, with fan-out inside the tick</em></p>
 <p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone guest boundary, pubsub fan-out, h2o routing</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2300,7 +2769,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -2311,7 +2780,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
 <p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2472,7 +2941,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -2483,7 +2952,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0106: Split the archive into its own repository</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0106: Split the archive into its own repository</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> manuals repository layout, archived records</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2638,7 +3107,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -2649,7 +3118,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0105: Archive the self-host-era support repos and the empty stubs</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0105: Archive the self-host-era support repos and the empty stubs</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> org-wide repository lifecycle</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2838,7 +3307,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -2849,7 +3318,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0103: Uro on ecto_foundationdb</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0103: Uro on ecto_foundationdb</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-backend, aria-storage</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
@@ -3022,7 +3491,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3033,7 +3502,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-backend, aria-storage</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -3176,7 +3645,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -3187,7 +3656,7 @@ Tigris object storage                             0 USD
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0101: zstd delta on the wire, and the packet stays as it is</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0101: zstd delta on the wire, and the packet stays as it is</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -3367,7 +3836,7 @@ font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0100: 256 kbps per client, one machine, and three send rates</title>
@@ -3378,7 +3847,7 @@ font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0100: 256 kbps per client, one machine, and three send rates</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0100: 256 kbps per client, one machine, and three send rates</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
@@ -3504,7 +3973,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0099: Server authority on Fly, and what the client is allowed to do</title>
@@ -3515,7 +3984,7 @@ total                                                = 245.9 kbps</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0099: Server authority on Fly, and what the client is allowed to do</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0099: Server authority on Fly, and what the client is allowed to do</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -3659,7 +4128,7 @@ total                                                = 245.9 kbps</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0099-server-authority-on-fly/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0098: The rollback snapshot budget, measured</title>
@@ -3670,7 +4139,7 @@ total                                                = 245.9 kbps</code></pre>
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › RFD 0098: The rollback snapshot budget, measured</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0098: The rollback snapshot budget, measured</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -3833,414 +4302,7 @@ font-style: inherit;">'libriscv%'</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0098-rollback-snapshot-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0097: Pubsub belongs in userspace, and FoundationDB keeps the durable log</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>A zone fabric needs to publish. A zone server produces state at 64 Hz. Clients subscribe. Zones tell other zones about events.</p>
-<p>Three mechanisms were candidates. FoundationDB is already a dependency, it is linearizable, and it has a watch API that looks like exactly this. Userspace fan-out is already possible, because the zone server already holds every subscriber connection. eBPF was raised as a third option.</p>
-<p><code>rfd/0096</code> established that ranking these from documentation produces wrong answers. So this RFD measures first.</p>
-</section>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>A probe ran against FoundationDB in the CI image, single node, memory storage engine.</p>
-<p>That configuration is the FASTEST case. A real cluster replicates, crosses machines, and adds latency. Every FoundationDB number below is therefore a lower bound for production.</p>
-<p>The comparison figure is <code>rfd/0096</code>’s measured <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> round trip on Fly: 8910 ns. One ZoneTick at 64 Hz is 15.6 ms.</p>
-</section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Operation</th>
-<th>Median</th>
-<th>p99</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>FDB commit, one publish</td>
-<td>2975.3 us</td>
-<td>3872.0 us</td>
-</tr>
-<tr class="even">
-<td>FDB watch fire, publish to subscriber</td>
-<td>12115.1 us</td>
-<td>13873.7 us</td>
-</tr>
-<tr class="odd">
-<td>FDB versionstamp log append</td>
-<td>2521.9 us</td>
-<td>3635.1 us</td>
-</tr>
-<tr class="even">
-<td><code>AF_UNIX</code> round trip, from <code>rfd/0096</code></td>
-<td>8.9 us</td>
-<td>–</td>
-</tr>
-</tbody>
-</table>
-<p>Concurrent watches, measured to the failure point:</p>
-<pre><code>FDBPUB concurrent watches held = 10000,
-       stopped at error 1032 (Too many watches currently set)</code></pre>
-<p>Provenance: <code>run_id = ci-container</code>, <code>subject = fdb_memory_engine</code> in <code>data/measurements/</code>, which matches the memory storage engine the Method names. An earlier revision of this table carried three medians that no stored row holds, and the store is the record.</p>
-<p>Watch fire is the figure that decides this record. At 12115.1 us it takes most of one 15.6 ms tick.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">SELECT</span> subject, operation, median_ns <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1000.0</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">AS</span> median_us, samples</span>
-<span id="cb2-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'latency.parquet'</span>)</span>
-<span id="cb2-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">WHERE</span> subject <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'fdb_%engine'</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">ORDER</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">BY</span> operation, subject;</span></code></pre></div></div>
-</section>
-<section id="decisions" class="level2">
-<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
-<section id="real-time-pubsub-runs-in-userspace" class="level3">
-<h3 class="anchored" data-anchor-id="real-time-pubsub-runs-in-userspace">1. Real-time pubsub runs in userspace</h3>
-<p>A watch fires 12115.1 us after the publish. That is most of a 15.6 ms tick, on the fastest possible FoundationDB configuration.</p>
-<p>An <code>AF_UNIX</code> round trip is 8.9 us, so the watch path is three orders of magnitude slower.</p>
-<p>A tick cannot spend most of itself on notification. The zone server already holds every subscriber connection through picoquic and WebTransport. Fan-out belongs there.</p>
-</section>
-<section id="foundationdb-is-not-a-message-bus-and-the-watch-cap-proves-it" class="level3">
-<h3 class="anchored" data-anchor-id="foundationdb-is-not-a-message-bus-and-the-watch-cap-proves-it">2. FoundationDB is not a message bus, and the watch cap proves it</h3>
-<p>The probe held exactly 10000 concurrent watches and then failed with error 1032, <code>Too many watches currently set</code>.</p>
-<p>That cap belongs to the database, not to a zone. A fabric of many zones shares it. Ten thousand subscribers is a plausible target for a multiplayer fabric, so this is a real ceiling and not a theoretical one.</p>
-<p>Watches also carry semantics that do not match a message bus. A watch is edge-triggered and reports only that a key changed. It does not report what the value became. A subscriber must read the key again, and values that changed between the fire and the re-read are lost.</p>
-<p>That behavior is correct for “configuration changed, load it again”. It is wrong for an event stream.</p>
-</section>
-<section id="foundationdb-keeps-the-durable-event-log" class="level3">
-<h3 class="anchored" data-anchor-id="foundationdb-keeps-the-durable-event-log">3. FoundationDB keeps the durable event log</h3>
-<p>A versionstamp append commits in 2509 us. Versionstamps give a total order, assigned by the cluster, without coordination between writers.</p>
-<p>This is the right tool for events that must survive a process, need an order across zones, and arrive at a low rate. Zone lifecycle, guest load and unload, administrative actions, and ReBAC changes all fit.</p>
-<p>The rate limit is explicit. At 2509 us per commit, a publisher gets approximately 400 appends per second in the best case. Do not put a 64 Hz state stream here.</p>
-</section>
-<section id="watches-are-for-rare-signals-only" class="level3">
-<h3 class="anchored" data-anchor-id="watches-are-for-rare-signals-only">4. Watches are for rare signals only</h3>
-<p>A watch is acceptable when the event is rare and the subscriber count is small. Configuration reload is the example.</p>
-<p>Never place a watch on a per-tick key. Never allocate a watch per subscriber, because decision 2 gives the ceiling.</p>
-</section>
-<section id="ebpf-does-not-fan-out" class="level3">
-<h3 class="anchored" data-anchor-id="ebpf-does-not-fan-out">5. eBPF does not fan out</h3>
-<p><code>SOCKMAP</code> and <code>sk_msg</code> redirect a message from one socket to another. Redirection moves a message. It does not copy one message to many.</p>
-<p>Pubsub fan-out is one message to N subscribers. That is not the operation these programs perform, so no custom eBPF program replaces the userspace loop.</p>
-<p>This is the same category error that <code>rfd/0096</code> corrected for uBPF. eBPF is a filter and redirect facility. It is not a transport, and it is not a message bus.</p>
-<p>One eBPF case stays open and unmeasured. <code>SOCKMAP</code> splicing suits a RELAY, which is what the zone server becomes between a Godot guest and a WebTransport guest. That is one to one, so decision 5 does not exclude it. It needs its own measurement.</p>
-</section>
-</section>
-<section id="the-pattern" class="level2">
-<h2 class="anchored" data-anchor-id="the-pattern">The pattern</h2>
-<p>This is the same split that <code>rfd/0095</code> made for storage, applied to messaging.</p>
-<p><code>rfd/0095</code> put small hot state in FoundationDB and content in an object store, because each store does one job well. The same reasoning applies here. FoundationDB gives durability, ordering, and linearizability. It does not give low latency or fan-out. Userspace gives low latency and fan-out. It does not give durability.</p>
-<p>Route by what the message needs:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 27%">
-<col style="width: 28%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Message</th>
-<th>Path</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Per-tick state to clients</td>
-<td>Userspace, WebTransport</td>
-<td>64 Hz, needs 8.9 us and not 12214 us</td>
-</tr>
-<tr class="even">
-<td>Guest to zone</td>
-<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
-<td><code>rfd/0096</code></td>
-</tr>
-<tr class="odd">
-<td>Durable cross-zone event</td>
-<td>FDB versionstamp log</td>
-<td>Ordering and survival matter, rate is low</td>
-</tr>
-<tr class="even">
-<td>Configuration changed</td>
-<td>FDB watch</td>
-<td>Rare, few subscribers</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>The zone server owns fan-out. That work is a loop over subscriber connections, and it needs no new dependency.</p>
-<p>The 10000 watch ceiling is a fabric-wide budget. Any design that allocates a watch per subscriber, or per zone-and-subscriber pair, must state how it stays under that number.</p>
-<p>Every FoundationDB figure here is a lower bound, because the probe ran single node with memory storage. Re-measure against the deployed cluster before treating any of them as a headroom calculation.</p>
-<p><code>rfd/0096</code>’s lesson repeats. FoundationDB looked like a message bus because it has a watch API. Measurement showed the watch path costs 78 percent of a tick and stops at 10000 subscribers.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<p>Probe source and raw output live beside this RFD in <code>fdbpub.c</code>.</p>
-<ul>
-<li><a href="https://apple.github.io/foundationdb/developer-guide.html#watches">FoundationDB developer guide, watches</a></li>
-<li><a href="https://apple.github.io/foundationdb/known-limitations.html">FoundationDB known limitations</a></li>
-<li><code>rfd/0096</code> for the 8910 ns <code>AF_UNIX</code> measurement on Fly</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0097-pubsub-belongs-in-userspace/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0096: Guest transport on Fly, measured</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › RFD 0096: Guest transport on Fly, measured</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0095</code> says an engine guest reaches its zone over one <code>AF_UNIX</code> socket. It does not say why not something faster.</p>
-<p>That gap invited a reasonable question. Shared-memory rings are much faster than sockets in published benchmarks. io_uring can remove syscalls from an event loop. uBPF exists. Each looked like a candidate.</p>
-<p>The candidates were ranked twice from documentation. Both rankings were wrong in places. Documentation describes Linux. This system runs on one specific machine shape, and that shape decides the answer.</p>
-</section>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>A probe went to Fly.io and measured the machine that runs production.</p>
-<ul>
-<li>App: a throwaway app, destroyed after the run.</li>
-<li>Machine: <code>shared-cpu-1x</code>, 256 MB, region <code>iad</code>.</li>
-<li>Image: <code>ubuntu:24.04</code>, which is also the CI image.</li>
-<li>Kernel: <code>6.12.91-fly</code>.</li>
-<li>Reported memory: 212188 kB. Reported <code>nproc</code>: 1.</li>
-</ul>
-<p>Each latency figure is a round trip between two processes. Each test does 20000 iterations. The table reports the median.</p>
-<p>A second run on a 16-core development machine gives contrast.</p>
-</section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 46%">
-<col style="width: 29%">
-<col style="width: 23%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Probe</th>
-<th>Fly <code>shared-cpu-1x</code></th>
-<th>Local, 16 cores</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>AF_UNIX</code> <code>SOCK_SEQPACKET</code></td>
-<td>8910 ns</td>
-<td>59821 ns</td>
-</tr>
-<tr class="even">
-<td><code>AF_UNIX</code> <code>SOCK_STREAM</code></td>
-<td>9520 ns</td>
-<td>50181 ns</td>
-</tr>
-<tr class="odd">
-<td>Busy-polled shared-memory ring</td>
-<td>did not finish</td>
-<td>110 ns</td>
-</tr>
-</tbody>
-</table>
-<p>Capability results on Fly:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Probe</th>
-<th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>bwrap --unshare-all</code> as root</td>
-<td>OK</td>
-</tr>
-<tr class="even">
-<td><code>bwrap --unshare-net</code></td>
-<td>OK</td>
-</tr>
-<tr class="odd">
-<td><code>bwrap</code> unprivileged, uid 1000</td>
-<td>OK</td>
-</tr>
-<tr class="even">
-<td>Interfaces inside <code>--unshare-net</code></td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td>Interfaces outside</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td><code>kernel.io_uring_disabled</code></td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td><code>io_uring_setup</code></td>
-<td>OK, returned fd 3</td>
-</tr>
-<tr class="even">
-<td><code>memfd_create</code></td>
-<td>OK</td>
-</tr>
-<tr class="odd">
-<td><code>fly-global-services</code></td>
-<td>172.19.15.243, <code>AF_INET</code></td>
-</tr>
-</tbody>
-</table>
-<p>Provenance: <code>run_id = fly-shared-1x-256</code> for the Fly column and the capability table, and <code>run_id = local-16core</code> for the local column. Every row above is a stored row in <code>data/measurements/</code>. The two columns are not the same hardware, which is why the ring result inverts between them.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">SELECT</span> run_id, subject, operation, median_ns</span>
-<span id="cb1-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'latency.parquet'</span>)</span>
-<span id="cb1-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">WHERE</span> subject <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">IN</span> (<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'af_unix'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'shm_ring'</span>);</span></code></pre></div></div>
-</section>
-<section id="decisions" class="level2">
-<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
-<section id="af_unix-sock_seqpacket-is-the-guest-transport" class="level3">
-<h3 class="anchored" data-anchor-id="af_unix-sock_seqpacket-is-the-guest-transport">1. <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> is the guest transport</h3>
-<p>The measured round trip is 8910 ns. One ZoneTick at 64 Hz is 15.6 ms. Transport cost is therefore 0.06 percent of a tick.</p>
-<p>There is no performance problem to solve at this tick rate.</p>
-</section>
-<section id="no-busy-polled-shared-memory-ring" class="level3">
-<h3 class="anchored" data-anchor-id="no-busy-polled-shared-memory-ring">2. No busy-polled shared-memory ring</h3>
-<p>The ring is the fastest option on hardware with spare cores. It measured 110 ns on 16 cores, which is 81 times faster than the socket on the same machine.</p>
-<p>On Fly it did not complete 20000 round trips in more than 8 minutes. The socket completed the same 20000 in less than one second.</p>
-<p><code>ps</code> shows the cause. Both processes stayed in <code>R</code> state at 24 percent CPU each, on a machine where <code>nproc</code> is 1. They consumed the shared-cpu burst balance and then spun against the throttle floor.</p>
-<p>The published ring benchmarks assume a spare core to spin on. <code>shared-cpu-1x</code> does not give one. A number measured on a workstation does not transfer to this deployment.</p>
-<p>This decision is conditional on the machine shape. A dedicated-CPU machine would change it, and this RFD does not forbid revisiting the choice there.</p>
-</section>
-<section id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop" class="level3">
-<h3 class="anchored" data-anchor-id="keep-epoll.-do-not-adopt-io_uring-for-the-event-loop">3. Keep epoll. Do not adopt io_uring for the event loop</h3>
-<p>io_uring is reachable on Fly. <code>io_uring_setup</code> returned a descriptor, and <code>kernel.io_uring_disabled</code> is 0. Availability is not the obstacle.</p>
-<p>Value is the obstacle. io_uring saves syscalls, and it pays back at high event rates. This system ticks at 64 Hz, and its transport already costs 0.06 percent of a tick.</p>
-<p><code>IORING_SETUP_SQPOLL</code> is the mode that removes syscalls completely. It spawns a kernel poller thread. That is the same shape as the busy-poll ring, so decision 2 applies to it unchanged.</p>
-</section>
-<section id="guests-must-not-reach-io_uring" class="level3">
-<h3 class="anchored" data-anchor-id="guests-must-not-reach-io_uring">4. Guests must not reach io_uring</h3>
-<p>A seccomp filter examines the syscalls a task makes. io_uring operations run on <code>io-wq</code> kernel worker threads, outside the filter of the task that submitted them. A filter cannot screen a call the task never makes.</p>
-<p>A guest that holds an io_uring descriptor can therefore perform work that the rest of the filter denies.</p>
-<p>This is settled practice. Android 12 and later block <code>io_uring_setup</code> in the default application policy. Chrome OS does the same. The Chrome renderer and GPU sandboxes reject it. gVisor rejects it.</p>
-<p><code>rfd/0095</code>’s seccomp filter must deny <code>io_uring_setup</code>, <code>io_uring_enter</code>, and <code>io_uring_register</code> by name.</p>
-</section>
-<section id="ubpf-is-not-a-transport" class="level3">
-<h3 class="anchored" data-anchor-id="ubpf-is-not-a-transport">5. uBPF is not a transport</h3>
-<p>uBPF is a userspace virtual machine that executes eBPF bytecode. It has no sockets, no I/O, and no packet path. It exists because the kernel implementation is GPL, and uBPF carries an Apache license.</p>
-<p>uBPF is therefore an alternative to libriscv, not an alternative to an event loop. <code>rfd/0095</code> already selects libriscv, and it gives a reason that uBPF does not answer: <code>serialize_to</code> and forking give bit-exact snapshot and replay.</p>
-<p>Kernel eBPF does accelerate networking, through <code>SOCKMAP</code> and AF_XDP. Neither applies here. A guest under <code>--unshare-net</code> has no sockets to redirect, and decision 4 and <code>rfd/0095</code> both deny the bpf family to guests.</p>
-</section>
-<section id="udp-must-bind-fly-global-services-and-it-is-ipv4" class="level3">
-<h3 class="anchored" data-anchor-id="udp-must-bind-fly-global-services-and-it-is-ipv4">6. UDP must bind <code>fly-global-services</code>, and it is IPv4</h3>
-<p>Fly requires a UDP service to bind <code>fly-global-services</code>. <code>0.0.0.0</code>, <code>*</code>, and <code>INADDR_ANY</code> do not work, because Linux then selects the wrong source address for replies.</p>
-<p><code>src/transport/webtransport_server.c:233</code> binds <code>in6addr_any</code>. The socket binds, packets arrive, and replies leave with the wrong source address. <code>fly/fly.toml</code> already declares <code>protocol = "udp"</code> on <code>internal_port = 7443</code>, so this is live configuration.</p>
-<p>The probe found a second fact that a documentation-only fix would miss. <code>fly-global-services</code> resolves to <code>172.19.15.243</code>, which is <code>AF_INET</code>. The current socket is <code>AF_INET6</code>. The fix needs an <code>AF_INET</code> socket or a v4-mapped address. It is not an address substitution.</p>
-<p>TCP cannot use <code>fly-global-services</code> and must bind the wildcard. The application therefore needs asymmetric binds.</p>
-</section>
-<section id="bubblewrap-works-on-fly-including-unprivileged" class="level3">
-<h3 class="anchored" data-anchor-id="bubblewrap-works-on-fly-including-unprivileged">7. Bubblewrap works on Fly, including unprivileged</h3>
-<p>All three <code>bwrap</code> probes passed, including the unprivileged case at uid 1000. <code>--unshare-net</code> left 1 interface inside the sandbox against 4 outside.</p>
-<p><code>rfd/0095</code> predicted this, because a Fly machine is a Firecracker VM and the process is root in its own kernel. The prediction is now a measurement.</p>
-<p>Note that Docker is the harder case, not Fly. The same probe failed every <code>bwrap</code> test under Docker, where user namespaces are blocked by default. CI must therefore grant <code>--cap-add SYS_ADMIN</code> and <code>--security-opt seccomp=unconfined</code>, or use podman.</p>
-</section>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>The engine guest transport is a plain <code>AF_UNIX</code> <code>SOCK_SEQPACKET</code> socket. It needs no new dependency and no tuning.</p>
-<p><code>memfd_create</code> works, so a bulk path over <code>SCM_RIGHTS</code> stays available if a future measurement justifies it. Size any such buffer against 212 MB of usable memory, not against 256 MB.</p>
-<p>Two guest-facing denials are now mandatory rather than advisory: io_uring and bpf.</p>
-<p>The UDP bind defect is real and unfixed. Nothing that this RFD decides matters while replies leave with the wrong source address.</p>
-</section>
-<section id="what-this-rfd-corrects" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-rfd-corrects">What this RFD corrects</h2>
-<p>Three claims in earlier rankings were wrong, and the measurement corrected each one.</p>
-<p>Shared-memory rings were ranked as the fastest option. They are the fastest option on a machine with spare cores, and they are unusable on this one.</p>
-<p>io_uring was ranked as unverified. It is available, and it is undesirable for separate reasons.</p>
-<p>Dropping h2o for <code>picoquic_packet_loop()</code> was ranked first at one point. The asymmetric bind requirement needs a TCP listener as well, and <code>picoquic_packet_loop()</code> serves UDP only.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li><a href="https://fly.io/docs/networking/udp-and-tcp/">Running apps on UDP and TCP, Fly Docs</a></li>
-<li><a href="https://community.fly.io/t/fly-machines-security-update-dirtyfrag-fragnesia-and-copyfail/28018">Fly Machines Security Update, kernel v6.12.91</a></li>
-<li><a href="https://kernel-internals.org/io-uring/security/">io_uring security model</a></li>
-<li><a href="https://blog.0x74696d.com/posts/iouring-and-seccomp/">io_uring and seccomp</a></li>
-<li><a href="https://docs.kernel.org/admin-guide/sysctl/kernel.html">Documentation for /proc/sys/kernel</a></li>
-<li><a href="https://github.com/iovisor/ubpf">uBPF</a></li>
-<li><a href="https://victoranderssen.com/blog/linux-ipc-benchmark/">Linux IPC Shootout, shared memory against Unix domain sockets</a></li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0096-guest-transport-measured-on-fly/</guid>
-  <pubDate>Sun, 16 Aug 2026 13:57:45 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 14:09:06 GMT</pubDate>
 </item>
 </channel>
 </rss>
