@@ -119,7 +119,7 @@ from the rename list and from the `repo` manifest, and their names state no type
 Whether the type-first convention reaches them is a question this RFD raises and
 does not answer, because the answer decides three more names.
 
-## The gap is three READMEs rather than five
+## The gap is two READMEs rather than five
 
 RFD 0111 says the `lean-*-core` READMEs state a hexagon layout of `core/`,
 `ports/`, and `adapters/`, that those directories do not exist, and that each of
@@ -155,9 +155,27 @@ each path, and the removal of `adapters/`, which the repository does not have.
 `entities-lean-loot` holds three directories beside `LootCore`, so "one Lean
 namespace directory" describes three of the five rather than all of them.
 
-Three READMEs need the correction RFD 0111 describes. One needs its paths
-qualified. The count in that section, and the sentence "Those directories do not
-exist", are the two claims to amend.
+Three of the five carry no README at all, which is the larger half of this gap:
+
+```sh
+for d in entities-lean-*; do printf '%-28s %s\n' "$d" "$(git -C "$d" ls-files | grep -ci readme)"; done
+# entities-lean-combat       0
+# entities-lean-loot         0
+# entities-lean-progression  0
+# entities-lean-rebac        2
+# entities-lean-shared       1
+```
+
+So RFD 0111 describes five READMEs where two exist. `entities-lean-shared` is the
+one whose layout section is wholly false: it names the triad and the repository
+holds `Shared/Types.lean` and nothing else. `entities-lean-rebac` is the one that
+needs its paths qualified, in both its top-level README and the second one at
+`Rebac/README.md`, which names an `adapters/` that is absent.
+
+One README to correct and one to qualify. The count in that section, and the
+sentence "Those directories do not exist", are the two claims to amend. Whether
+`combat`, `loot`, and `progression` should gain a README is a separate question
+this RFD does not answer.
 
 ## What this RFD leaves alone
 
