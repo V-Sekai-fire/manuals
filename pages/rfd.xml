@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 14:32:08 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 15:25:59 GMT</lastBuildDate>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -511,7 +511,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0120: The Gyre became a settlement game</title>
@@ -690,7 +690,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0119: Salvage you can hold</title>
@@ -830,7 +830,117 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0118: A baker replaces the Godot editor</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0118: A baker replaces the Godot editor</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> client build pipeline, asset delivery, engine modules</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The Godot editor is a build-time dependency of every client artifact, and two steps are the reason. Resource import turns <code>.png</code> into <code>.ctex</code>, <code>.wav</code> into a sample, and mesh formats into meshes under <code>res://.godot/imported/</code>, and the importers live in <code>editor/</code>. Export builds the <code>.pck</code>, and <code>--export-release</code> lives there too. A <code>template_release</code> binary reads what both produce and can run neither.</p>
+<p>That places a GUI application in the middle of an automated pipeline. <code>godot-images</code> builds and publishes editors for Windows and Linux so that CI can call <code>--export-release</code>, and <code>windows-editor.zip</code> alone is 482 MB. The assets already arrive at runtime from <code>transport-asset</code>, so the editor is doing work for content it never sees.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Bake to <code>.tscn</code> in the backend.</strong> The text scene format is documented, and <code>ResourceFormatLoaderText</code> compiles into every target, so a baker that writes <code>.tscn</code> writes a file the release template already knows how to load. The editor is one program that happens to write the same format.</p>
+<p><strong>Carry textures as Basis Universal inside glTF.</strong> Import exists to choose a GPU format ahead of time, and Basis transcodes on the device, so that step has nothing left to do. <code>KHR_texture_basisu</code> puts the texture inside the glTF and <code>GLTFDocument</code> loads it at runtime. <code>modules/basis_universal</code> and <code>modules/gltf</code> are already in <code>entities-godot</code>, and <code>godot-images</code> disables no modules on any platform.</p>
+<p><strong>Run OpenUSD in the baker.</strong> openUSD is a C++ library. <code>idtx-flow</code> calls it from an editor import plugin; the baker calls the same library server-side and emits glTF and <code>.tscn</code>. This takes USD off artists’ machines and out of the engine.</p>
+<p><strong>Mount the filesystem with a small C++ module in the release template.</strong> A <code>PackSource</code> resolves <code>res://</code> against a directory or against <code>transport-asset</code>’s content-addressed chunks, registered at <code>MODULE_INITIALIZATION_LEVEL_CORE</code> because <code>PackedData</code> is core and has to be serving before anything asks for a path. It has to be a module: GDExtension initializes after the filesystem is up, so it cannot serve boot.</p>
+<p><strong>Keep gameplay out of the module.</strong> Logic stays RISC-V ELF in the sandbox, as <code>zone-guest-godot</code> and <code>zone-guest-middleham</code> already deliver it. The module is the one part of this stack no CDN can replace, so every line in it costs an engine release to change.</p>
+<p><strong>Stop building the editor when the baker covers every asset class.</strong> Until then <code>godot-images</code> keeps building it, and <code>--export-release</code> stays available as a fallback.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>entities-godot</code>, the engine fork and where the module lands under <code>modules/</code>; <code>godot-images</code>, the engine builds and the release that now carries templates alone</li>
+<li><code>zone-client-godot</code>, a client already shipping <code>template_release</code> and no editor; <code>zone-guest-godot</code> and <code>zone-guest-middleham</code>, the sandboxed guests the logic lives in</li>
+<li><code>transport-asset</code>, the content-addressed store the pack source reads; <code>idtx-flow</code>, the USD import the baker takes over</li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-requires-the-editor-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-requires-the-editor-today">What requires the editor today</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 69%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Mechanism</th>
+<th>Available in a template</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Import</td>
+<td><code>editor/import/*</code>, writing <code>res://.godot/imported/</code></td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>Export</td>
+<td><code>--export-release</code>, <code>--export-debug</code>, implemented under <code>editor/</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>Everything else a client does at runtime is already outside <code>editor/</code>. <code>ResourceFormatLoaderText</code> reads <code>.tscn</code>, <code>GLTFDocument</code> reads glTF, and the Basis transcoder reads supercompressed textures. All three compile into <code>target=template_release</code>.</p>
+</section>
+<section id="why-the-mount-is-a-module" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-mount-is-a-module">Why the mount is a module</h2>
+<p><code>PackedData</code> accepts additional backends through <code>PackSource</code>, which is how the <code>.pck</code> reader and the ZIP reader are both registered. A third source resolving <code>res://</code> against a directory or a chunk store is the same shape of object.</p>
+<p>The registration has to happen at core initialization. A GDExtension library loads after the filesystem is already serving, which is late enough that boot resources have been requested and failed. A module registered at <code>MODULE_INITIALIZATION_LEVEL_CORE</code> is in place before the first request.</p>
+<p>The usual argument against a module is that it costs an engine rebuild. <code>godot-images</code> already builds the engine for every platform on every run, so that cost is already paid.</p>
+</section>
+<section id="three-ways-this-fails-quietly" class="level2">
+<h2 class="anchored" data-anchor-id="three-ways-this-fails-quietly">Three ways this fails quietly</h2>
+<p><code>#ifdef TOOLS_ENABLED</code> around the registration. <code>template_release</code> strips the define, so the block disappears: the module compiles, the template links, and <code>res://</code> resolves to nothing with no diagnostic naming the cause.</p>
+<p>An unstable <code>uid://</code>. Godot 4 <code>.tscn</code> refers to external resources by UID. A baker that generates a fresh UID per run produces scenes whose references break on the second bake. Emitting plain <code>res://</code> paths avoids the class of bug entirely.</p>
+<p>A reference to an importable file. <code>res://foo.png</code> inside a baked <code>.tscn</code> reintroduces the import step for one asset and takes the editor back with it. Every external reference has to name a runtime-loadable file or live inside the glTF.</p>
+</section>
+<section id="what-is-already-true" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-already-true">What is already true</h2>
+<ul>
+<li><code>entities-godot</code> carries <code>modules/basis_universal</code> and <code>modules/gltf</code>.</li>
+<li><code>godot-images</code> has no <code>module_*_enabled=no</code> on any platform, so both are in every artifact it publishes.</li>
+<li><code>zone-client-godot</code> builds <code>scons platform=web target=template_release</code> and ships <code>bin/godot.web.template_release.*</code> with no editor involved.</li>
+<li><code>godot-images</code> now releases <code>windows-template-release.zip</code> and <code>linux-template-release.zip</code> alone. The editors still build, and <code>build-docker</code> still publishes <code>godot-editor-double</code> from that target.</li>
+</ul>
+</section>
+<section id="alternatives-considered" class="level2">
+<h2 class="anchored" data-anchor-id="alternatives-considered">Alternatives considered</h2>
+<p>Keep the editor headless in CI. This works today and is what happens now. It keeps a 482 MB GUI binary in the pipeline to perform a step whose inputs the baker already holds, and it keeps import as a build stage that content delivered at runtime never passes through.</p>
+<p>Commit <code>res://.godot/imported/</code>. This removes the import step from CI by moving its output into version control. The artifacts are engine-version-specific and binary, so an engine bump invalidates all of them at once, and review sees no meaningful diff.</p>
+<p>Pre-pack with a third-party <code>.pck</code> writer. The format is documented and writers exist. This solves export without solving import, so the editor stays for textures and meshes. It remains the fallback if the pack source proves harder than expected.</p>
+<p>Emit binary <code>.scn</code> instead of <code>.tscn</code>. Loading is faster. The binary format’s compatibility across engine versions is a weaker contract for a baker to hold than the text format’s, and the parse cost is paid once per scene load against a network fetch that costs more.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The pipeline becomes scons for the template, the baker for the content, the module for the mount, and the sandbox for the logic. No step needs a GUI, and no step needs a machine with the editor installed.</p>
+<p>The module is the new failure surface. Three ways it fails quietly are recorded in <code>DETAILS.md</code>, and the first one compiles, links, and resolves nothing.</p>
+</section>
+<section id="open-question" class="level2">
+<h2 class="anchored" data-anchor-id="open-question">Open question</h2>
+<p>Whether a release template boots an unpacked project directory or requires a <code>.pck</code>. The module answers this by construction once it exists. Until it does, the question is unsettled and a short experiment against <code>linux-template-release</code> would settle it.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</guid>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -1175,7 +1285,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -1299,7 +1409,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1368,7 +1478,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1455,7 +1565,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -1625,7 +1735,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -1964,7 +2074,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2456,7 +2566,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -2770,7 +2880,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -2951,7 +3061,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -3088,7 +3198,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -3260,7 +3370,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -3426,7 +3536,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -3626,7 +3736,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -3810,7 +3920,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -3964,7 +4074,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
@@ -4155,144 +4265,7 @@ font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0100: 256 kbps per client, one machine, and three send rates</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0100: 256 kbps per client, one machine, and three send rates</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>256 kbps per client. One Fly machine plus a 1 GB volume.</strong></p>
-<p>The budget is 15 USD per month. Bandwidth is the only binding constraint, so spend the budget on bandwidth and not on machines.</p>
-</section>
-<section id="topology" class="level2">
-<h2 class="anchored" data-anchor-id="topology">Topology</h2>
-<pre><code>1 Fly machine, shared-cpu-1x, 256 MB, region iad
-  |- 1 GB volume, ssd storage engine (live data)
-  |- volume snapshots (local rollback)
-  |- fdbbackup -&gt; S3 object store (disaster recovery)
-  |- fdbserver, single process
-  |- zone-server-h2o, one zone, ZONE_TICK_HZ 64
-  |- UDP 7443 bound to fly-global-services -&gt; WebTransport clients
-  +- no TCP service: no HTTP surface remains</code></pre>
-<p>One process serves one zone. To add zones, add machines and join them over 6PN, where <code>&lt;app&gt;.internal</code> resolves every machine. <code>rfd/0096</code> measured that path at 880 us median between two machines in <code>iad</code>.</p>
-</section>
-<section id="machine-cost-against-bandwidth" class="level2">
-<h2 class="anchored" data-anchor-id="machine-cost-against-bandwidth">Machine cost against bandwidth</h2>
-<p>A <code>shared-cpu-1x</code> 256 MB machine is 2.02 USD per month, and egress is 0.02 USD per GB in North America and Europe. Both come from Fly’s published price list. Every machine added spends budget that would otherwise buy egress, so run one machine until a second zone is genuinely needed.</p>
-<p>Asia Pacific doubles the egress price, and Africa and India multiply it by six. How many concurrent clients the budget buys is unmeasured, because no deployment runs.</p>
-</section>
-<section id="durability-three-layers-each-doing-one-job" class="level2">
-<h2 class="anchored" data-anchor-id="durability-three-layers-each-doing-one-job">Durability: three layers, each doing one job</h2>
-<p>A Fly volume is 0.15 USD per GB per month, and snapshots are 0.08 USD per GB with the first 10 GB free.</p>
-<p>So 1 GB of durable storage costs 0.15 USD, which is 0.5 concurrent users at peak. Three-machine RAM redundancy costs 4.04 USD, which is 14 concurrent users. Durability through a volume is 28 times cheaper.</p>
-<p>They also protect different failures. A volume survives a restart and a crash. RAM redundancy survives the loss of one machine and does NOT survive an app restart, because every RAM disk goes at once.</p>
-<p>The ssd engine costs nothing in commit latency. Measured on the same probe as <code>rfd/0097</code>:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Engine</th>
-<th>Commit</th>
-<th>Versionstamp append</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>memory</td>
-<td>2975.3 us</td>
-<td>2521.9 us</td>
-</tr>
-<tr class="even">
-<td>ssd</td>
-<td>2396.6 us</td>
-<td>2952.7 us</td>
-</tr>
-</tbody>
-</table>
-<p>ssd commits FASTER. FoundationDB’s memory engine still writes its transaction log to disk for durability, so the storage engine changes the read path and not the commit path. The memory engine also holds every key in RAM, which competes with the zone server for 212188 kB.</p>
-<p>The three layers do different jobs, and none replaces another:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 30%">
-<col style="width: 38%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Layer</th>
-<th>Job</th>
-<th>Cost</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>ssd engine on the volume</td>
-<td>live data</td>
-<td>0.15 USD per GB</td>
-</tr>
-<tr class="even">
-<td>Fly volume snapshots</td>
-<td>fast local rollback</td>
-<td>free below 10 GB</td>
-</tr>
-<tr class="odd">
-<td>FoundationDB backup to S3</td>
-<td>disaster recovery, off platform</td>
-<td>egress at 0.02 USD per GB</td>
-</tr>
-</tbody>
-</table>
-<p>A snapshot is local to Fly and periodic. It restores a bad deploy in minutes, and it does not survive the loss of the region or the account.</p>
-<p><code>fdbbackup</code> streams mutations continuously to a blob store, so the recovery point is seconds rather than hours, and the copy sits outside Fly. It restores into a different cluster.</p>
-<p>The project already runs an object store for casync, per <code>rfd/0095</code>, so this adds a destination rather than a dependency. Mutation volume is small, because live entity state is 20 KB per zone and the guest key-value quota is 8 MB per zone.</p>
-<p>RAM redundancy is not on this list. It answers availability, not durability, and it costs a second machine that the budget spends on egress instead.</p>
-</section>
-<section id="what-binds-and-what-does-not" class="level2">
-<h2 class="anchored" data-anchor-id="what-binds-and-what-does-not">What binds, and what does not</h2>
-<p>Egress binds. CPU and memory do not.</p>
-<p><code>rfd/0101</code> measures compression at 68 us per client per tick, <code>run_id = ci-container</code>. At 10 Hz that is 0.068 percent of a core per client, so compression stays far from a core at any client count this budget reaches.</p>
-<p>Reuse one <code>ZSTD_CCtx</code> across clients rather than holding one each. Compression runs sequentially inside the tick, so one context serves every client, and a context per client spends memory for nothing.</p>
-</section>
-<section id="how-256-kbps-is-met" class="level2">
-<h2 class="anchored" data-anchor-id="how-256-kbps-is-met">How 256 kbps is met</h2>
-<pre><code>8 avatars, 56 entities each, zstd L3 delta at 10 Hz  = 221.9 kbps
-Opus voice, server-mixed, VOIP mode                  =  24.0 kbps
-total                                                = 245.9 kbps</code></pre>
-</section>
-<section id="two-corrections-this-depends-on" class="level2">
-<h2 class="anchored" data-anchor-id="two-corrections-this-depends-on">Two corrections this depends on</h2>
-<p><strong>Three rates, not one.</strong> Simulation stays at <code>ZONE_TICK_HZ</code> 64. State sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in <code>modules/speech</code>. <code>rfd/0096</code> through <code>rfd/0099</code> assume one rate, which overstates the bandwidth a client needs.</p>
-<p><strong>An entity is a bone.</strong> VRM 1.0 gives 55 humanoid bones plus 1 root, so 56 per avatar, and only the root and hips translate. <code>rfd/0002</code>’s 200 entities is 3.6 avatars, not 200 objects.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>Interest management is required. 8 avatars fits 256 kbps, and a populated zone holds more than 8, so a client sees 8 of them at full rate.</p>
-<p><code>modules/speech</code> sets <code>OPUS_APPLICATION_AUDIO</code> and never calls <code>OPUS_SET_BITRATE</code>, so it takes the default near 64 kbps, which is 25 percent of the cap. Set the bitrate, and evaluate <code>OPUS_APPLICATION_VOIP</code>.</p>
-<p>Server-side voice mixing is unbuilt. Without it, voice grows with speaker count and the cap breaks.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li>Fly pricing, for 0.02 USD per GB and 2.02 USD per machine</li>
-<li><a href="https://www.gamedevs.org/uploads/networking-for-physics-programmers.pdf">Networking for Physics Programmers, GDC 2010</a>, Sony Bandwidth Probe</li>
-<li><a href="https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/humanoid.md">VRM 1.0 humanoid</a>, 55 bones</li>
-<li><code>rfd/0096</code> for the 6PN measurement, <code>rfd/0101</code> for the zstd rate</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0100-tick-rate-send-rate-and-the-bone-budget/</guid>
-  <pubDate>Sun, 16 Aug 2026 14:32:08 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
 </item>
 </channel>
 </rss>
