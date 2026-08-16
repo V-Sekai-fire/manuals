@@ -86,3 +86,35 @@ simple, and hands the treasury to whoever writes a client.
 
 Deterministic lockstep across all clients. This gives exactness without a ledger, and requires a deterministic physics
 engine the stack does not have.
+
+## TL;DR
+
+```
+gyre X networked physics in vr X pragmata
+```
+
+The Gyre supplies an economy a database can prove. Networked physics in VR supplies hands that pass an object between
+two people across a network. PRAGMATA supplies the shape of playing both at once.
+
+## Consequences
+
+The 100-byte entity packet and the interest filter in `transport-fanout` become the physics transport, which is what
+they were built for. `interactor-authority`'s single writer keeps the ledger and holds no opinion about where a
+crate is.
+
+Two representations of one object exist while it is loose, and exactly one exists once it is claimed. A bug in the
+conversion surfaces as a violated invariant on the next cycle rather than as a visual glitch, which is the failure
+mode to want.
+
+The second layer runs against the board the Queen already plays, so it costs content rather than architecture.
+
+## Open questions
+
+Whether the host-arbiter topology survives a dedicated ward process. Fiedler's host is a player; `queen serve` is not,
+and it already terminates WebTransport in its own process.
+
+What a claim costs in latency, given it is a parallel commit across two databases while the player is holding the
+object.
+
+Whether a drive's physical shell can be thrown at all while its custody stays transactional, or whether the shell has
+to be inert to keep the two from disagreeing.
