@@ -37,6 +37,16 @@ The database is free here, because `rfd/0102` already runs
 inside `Repo.transactional/2`. That is 4.8 and 1.9 times PostgreSQL,
 in the same order rather than a different one.
 
+Provenance: `run_id = ci-container` in `data/measurements/`. All four
+rows are stored rows, and the two ratios are arithmetic over them. The
+PostgreSQL row has `samples = 1`, so it carries no distribution.
+
+```sql
+SELECT subject, median_ns / 1e6 AS median_ms, samples
+FROM read_parquet('latency.parquet')
+WHERE operation LIKE 'point_%' ORDER BY median_ns;
+```
+
 ## What this gives up
 
 `ecto_foundationdb` is a layer over a key-value store. Its own

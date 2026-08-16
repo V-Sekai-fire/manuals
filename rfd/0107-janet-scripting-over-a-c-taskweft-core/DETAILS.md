@@ -43,9 +43,8 @@ holds throughput and latency parquet for a FoundationDB probe and the
 libh2o host, and nothing for Janet or for a C taskweft core.
 
 A record that states this tier's ceiling needs a measurement of this
-tier. `rfd/0104` shows the failure mode to avoid, where a number
-extrapolated from a 32-worker probe reads as a measurement of 1000
-concurrent users.
+tier. A number extrapolated from a 32-worker probe is not a measurement
+of 1000 concurrent users, and this project keeps no such extrapolation.
 
 ## Why Rust is out
 

@@ -1,5 +1,5 @@
 ---
-title: "RFD 0100: 256 kbps per client, one machine, 47 concurrent"
+title: "RFD 0100: 256 kbps per client, one machine, and three send rates"
 rfd: "0100"
 state: discussion
 scope: zone-server-h2o, zone-guest-godot
@@ -7,8 +7,7 @@ scope: zone-server-h2o, zone-guest-godot
 
 ## Decision
 
-**256 kbps per client. One Fly machine plus a 1 GB volume. 46
-concurrent at peak.**
+**256 kbps per client. One Fly machine plus a 1 GB volume.**
 
 The budget is 15 USD per month. Bandwidth is the only binding
 constraint, so spend the budget on bandwidth and not on machines.
@@ -28,24 +27,17 @@ One process serves one zone. To add zones, add machines and join them
 over 6PN, where `<app>.internal` resolves every machine. `rfd/0096`
 measured that path at 880 us median between two machines in `iad`.
 
-## Machine cost against concurrency
+## Machine cost against bandwidth
 
-A `shared-cpu-1x` 256 MB machine is 2.02 USD per month. Egress is 0.02
-USD per GB in North America and Europe. At 256 kbps a client uses
-0.1152 GB per hour.
-
-| Machines | Machines USD | Egress USD | GB  | Client-hours | 24/7 | 4 h/day peak |
-| -------- | ------------ | ---------- | --- | ------------ | ---- | ------------ |
-| **1**    | 2.02         | 12.98      | 649 | 5634         | 7.8  | **46.9**     |
-| 2        | 4.04         | 10.96      | 548 | 4757         | 6.6  | 39.6         |
-| 3        | 6.06         | 8.94       | 447 | 3880         | 5.4  | 32.3         |
-| 4        | 8.08         | 6.92       | 346 | 3003         | 4.2  | 25.0         |
-
-Every added machine costs about 7 concurrent users at peak. So run one
-machine until a second zone is genuinely needed.
+A `shared-cpu-1x` 256 MB machine is 2.02 USD per month, and egress is
+0.02 USD per GB in North America and Europe. Both come from Fly's
+published price list. Every machine added spends budget that would
+otherwise buy egress, so run one machine until a second zone is
+genuinely needed.
 
 Asia Pacific doubles the egress price, and Africa and India multiply it
-by six.
+by six. How many concurrent clients the budget buys is unmeasured,
+because no deployment runs.
 
 ## Durability: three layers, each doing one job
 
@@ -94,22 +86,21 @@ small, because live entity state is 20 KB per zone and the guest
 key-value quota is 8 MB per zone.
 
 RAM redundancy is not on this list. It answers availability, not
-durability, and at this budget it costs 14 concurrent users.
+durability, and it costs a second machine that the budget spends on
+egress instead.
 
 ## What binds, and what does not
 
-| Resource                     | At 47 clients         | Ceiling     |
-| ---------------------------- | --------------------- | ----------- |
-| Egress                       | 649 GB per month      | **binding** |
-| CPU, zstd compression        | 3.2 percent of a core | not binding |
-| Memory, per-client baselines | 2.1 MB                | not binding |
+Egress binds. CPU and memory do not.
 
-`rfd/0101` measured compression at 68 us per client per tick. At 10 Hz
-that is 0.068 percent of a core per client.
+`rfd/0101` measures compression at 68 us per client per tick,
+`run_id = ci-container`. At 10 Hz that is 0.068 percent of a core per
+client, so compression stays far from a core at any client count this
+budget reaches.
 
 Reuse one `ZSTD_CCtx` across clients rather than holding one each.
-Compression runs sequentially inside the tick, and a per-client context
-would cost roughly 1.3 MB each, which is 61 MB at 47 clients.
+Compression runs sequentially inside the tick, so one context serves
+every client, and a context per client spends memory for nothing.
 
 ## How 256 kbps is met
 
@@ -121,8 +112,8 @@ would cost roughly 1.3 MB each, which is 61 MB at 47 clients.
 
 **Three rates, not one.** Simulation stays at `ZONE_TICK_HZ` 64. State
 sends at 10 Hz. Voice sends at 50 Hz, from the 20 ms Opus packets in
-`modules/speech`. `rfd/0096` through `rfd/0099` assumed one rate and
-produced 10.2 Mbit per second.
+`modules/speech`. `rfd/0096` through `rfd/0099` assume one rate, which
+overstates the bandwidth a client needs.
 
 **An entity is a bone.** VRM 1.0 gives 55 humanoid bones plus 1 root,
 so 56 per avatar, and only the root and hips translate. `rfd/0002`'s
@@ -130,8 +121,9 @@ so 56 per avatar, and only the root and hips translate. `rfd/0002`'s
 
 ## Consequences
 
-Interest management is required. 8 avatars fits 256 kbps. 47 does not,
-so a client sees 8 of the 47 at full rate.
+Interest management is required. 8 avatars fits 256 kbps, and a
+populated zone holds more than 8, so a client sees 8 of them at full
+rate.
 
 `modules/speech` sets `OPUS_APPLICATION_AUDIO` and never calls
 `OPUS_SET_BITRATE`, so it takes the default near 64 kbps, which is 25

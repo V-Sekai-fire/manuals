@@ -1,35 +1,20 @@
-## The cost floor, derived
+## Egress is the cost, and the store is not
 
-Every figure comes from `rfd/0100` and `rfd/0104`.
-
-| Quantity                              | Value       |
-| ------------------------------------- | ----------- |
-| Bandwidth per client, `rfd/0100`      | 256 kbps    |
-| Volume per client-hour                | 0.1152 GB   |
-| Sustained upstream at 1000 concurrent | 256 Mbps    |
-| Monthly egress, 1000 at 4 h/day       | 13824 GB    |
-| Monthly egress, as binary units       | 13.5 TiB    |
-| Cost at 0.02 USD per GB               | 276.48 USD  |
-| Cost at 1000 concurrent, 24/7         | 1658.88 USD |
-
-The earlier 15 USD budget of `rfd/0102` bought 642 GB. Spread across
-1000 users that is 0.19 hours per day each, so it never reached the
-target.
-
-The 256 Mbps figure is the one to shop bandwidth on. Metered cloud
-egress at 13.5 TiB per month is the expensive way to buy it. Unmetered
-capacity is worth pricing against the 276.48 USD.
+Bandwidth per client sets the bill. `rfd/0100` caps a client at 256
+kbps, and egress scales with concurrent clients and hours played. No
+deployment runs, so no monthly figure exists.
 
 ## The database is not what the money buys
 
-| Case                       | Ops/s needed |
-| -------------------------- | ------------ |
-| 1000 players at 10 req/min | 166.7        |
-| 1000 players at 60 req/min | 1000.0       |
+Measured ceilings, `run_id = fly-shared-1x-1g` and `local-16core` in
+`data/measurements/`: 2159.1 ops/s on one Fly `shared-cpu-1x`, and
+6086.5 ops/s on a 16 vcpu workstation. Both are the concurrency 32 row,
+which is the highest the probe ran.
 
-Measured ceilings, from `throughput.parquet`: 2159.1 ops/s on one Fly
-`shared-cpu-1x`, and 6086.5 ops/s on a 16 vcpu workstation. One node
-serves the target.
+```sql
+SELECT run_id, ops / seconds AS ops_per_sec
+FROM read_parquet('throughput.parquet') WHERE concurrency = 32;
+```
 
 Presence never reaches the store. A pose is transient, and the next
 tick supersedes it. Persistent writes are login, avatar change, and
@@ -127,12 +112,12 @@ rather than a different one.
 
 **Player-hosted zones, or server-hosted.** A client that hosts its zone
 brings its own upstream, so capacity grows with players rather than
-with the bill. Accepting the 276.48 USD floor makes server-hosting
-affordable at 1000 concurrent. It does not make it the better choice.
+with the bill. This record picks server-hosted and does not price the
+alternative.
 
 **Interest management.** `lean-interest-mgmt` exists, and it is the
 lever that moves the 256 kbps figure. Nothing in this record changes
-that number, and a crowd of 1000 is where it pays most.
+that number.
 
 **Server authority.** A relay is not server-authoritative, so a client
 can assert a false pose. `rfd/0046` does not hold for presence. That is

@@ -55,6 +55,18 @@ Capability results on Fly:
 | `memfd_create`                    | OK                       |
 | `fly-global-services`             | 172.19.15.243, `AF_INET` |
 
+Provenance: `run_id = fly-shared-1x-256` for the Fly column and the
+capability table, and `run_id = local-16core` for the local column.
+Every row above is a stored row in `data/measurements/`. The two
+columns are not the same hardware, which is why the ring result
+inverts between them.
+
+```sql
+SELECT run_id, subject, operation, median_ns
+FROM read_parquet('latency.parquet')
+WHERE subject IN ('af_unix', 'shm_ring');
+```
+
 ## Decisions
 
 ### 1. `AF_UNIX` `SOCK_SEQPACKET` is the guest transport

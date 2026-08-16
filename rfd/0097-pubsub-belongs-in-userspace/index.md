@@ -33,12 +33,12 @@ The comparison figure is `rfd/0096`'s measured `AF_UNIX`
 
 ## Data
 
-| Operation                             | Median     | p99        | Fraction of one tick |
-| ------------------------------------- | ---------- | ---------- | -------------------- |
-| FDB commit, one publish               | 3552.9 us  | 5112.5 us  | 23 percent           |
-| FDB watch fire, publish to subscriber | 12214.3 us | 12579.5 us | **78 percent**       |
-| FDB versionstamp log append           | 2509.5 us  | 3691.2 us  | 16 percent           |
-| `AF_UNIX` round trip, from `rfd/0096` | 8.9 us     | --         | 0.06 percent         |
+| Operation                             | Median     | p99        |
+| ------------------------------------- | ---------- | ---------- |
+| FDB commit, one publish               | 2975.3 us  | 3872.0 us  |
+| FDB watch fire, publish to subscriber | 12115.1 us | 13873.7 us |
+| FDB versionstamp log append           | 2521.9 us  | 3635.1 us  |
+| `AF_UNIX` round trip, from `rfd/0096` | 8.9 us     | --         |
 
 Concurrent watches, measured to the failure point:
 
@@ -47,17 +47,31 @@ FDBPUB concurrent watches held = 10000,
        stopped at error 1032 (Too many watches currently set)
 ```
 
+Provenance: `run_id = ci-container`, `subject = fdb_memory_engine` in
+`data/measurements/`, which matches the memory storage engine the
+Method names. An earlier revision of this table carried three medians
+that no stored row holds, and the store is the record.
+
+Watch fire is the figure that decides this record. At 12115.1 us it
+takes most of one 15.6 ms tick.
+
+```sql
+SELECT subject, operation, median_ns / 1000.0 AS median_us, samples
+FROM read_parquet('latency.parquet')
+WHERE subject LIKE 'fdb_%engine' ORDER BY operation, subject;
+```
+
 ## Decisions
 
 ### 1. Real-time pubsub runs in userspace
 
-A watch fires 12214 us after the publish. That is 78 percent of a
-15.6 ms tick, on the fastest possible FoundationDB configuration.
+A watch fires 12115.1 us after the publish. That is most of a 15.6 ms
+tick, on the fastest possible FoundationDB configuration.
 
-An `AF_UNIX` round trip is 8.9 us. The watch path is approximately 1371
-times slower.
+An `AF_UNIX` round trip is 8.9 us, so the watch path is three orders of
+magnitude slower.
 
-A tick cannot spend 78 percent of itself on notification. The zone
+A tick cannot spend most of itself on notification. The zone
 server already holds every subscriber connection through picoquic and
 WebTransport. Fan-out belongs there.
 
