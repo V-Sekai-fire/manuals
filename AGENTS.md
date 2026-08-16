@@ -12,39 +12,15 @@ quarto preview    # local preview
 
 ## Adding a decision
 
-Create a Markdown file in `decisions/` named `YYYYMMDD-short-title.md` following the
-[MADR](https://adr.github.io/madr/) template:
+Decisions go in `rfd/`, one folder per record, as `rfd/NNNN-kebab-title/index.md`.
+See `rfd/0000-conventions/` for the format, the states, and the `index.md` and
+`DETAILS.md` split.
 
-```markdown
----
-title: Short title representative of the problem and solution
-date: YYYY-MM-DD
-status: proposed | accepted | rejected | deprecated | superseded by YYYYMMDD-...
----
-
-## Context and Problem Statement
-
-## Decision Drivers
-
-## Considered Options
-
-## Decision Outcome
-
-Chosen option: "...", because ...
-
-### Consequences
-
-### Confirmation
-```
-
-Optional MADR sections (`Pros and Cons of the Options`, `More Information`) may follow.
-To supersede an earlier decision, set the old file's `status` to `superseded by <new filename>`
-and link back from the new one.
-
-A decision that records a product feature also carries a `tier` in its frontmatter —
-`proof of concept`, `baseline`, or `stretch` — per the feature classification decision.
-Process and infrastructure decisions carry no tier. The decisions index shows the
-`tier` and `status` columns.
+The `decisions/` directory held MADR records before the migration into `rfd/`.
+The migration is complete, and what stays there is `madr-proposal-template.md`,
+which RFD 0106 keeps as the live template. Git history holds the migrated records
+and their old paths, so a link to `decisions/YYYYMMDD-*.md` in an older changelog
+entry or RFD points at history rather than at a live file.
 
 ## Adding a changelog entry
 
@@ -73,10 +49,10 @@ bash scripts/check_tropes.sh
 
 ## Assets
 
-Commit images under `decisions/attachments/` using the archival naming convention
-`YYYYMMDD_project_description_NNNN.ext` (lowercase, no spaces, ISO date, zero-padded
-sequence), and add a matching entry under `references:` in `CITATION.cff`. See the
-naming-convention decision.
+Commit images beside the RFD that cites them, in `rfd/NNNN-kebab-title/`, using the
+archival naming convention `YYYYMMDD_project_description_NNNN.ext` (lowercase, no
+spaces, ISO date, zero-padded sequence), and add a matching entry under `references:`
+in `CITATION.cff`. See `rfd/0013-archival-file-naming-convention/`.
 
 ## Key files
 
@@ -84,7 +60,8 @@ naming-convention decision.
 | ------------------------------------ | ----------------------------------------------------------------- |
 | `_quarto.yml`                        | Site config                                                       |
 | `index.md`                           | Landing page                                                      |
-| `decisions/`                         | Architecture Decision Records not yet migrated to an RFD          |
+| `rfd/`                               | Request-for-Discussion records, one folder each                   |
+| `data/measurements/`                 | Quantitative record behind the RFDs, Parquet, off the site        |
 | `changelog/`                         | Changelog entries by year                                         |
 | `pages/`                             | Site listing pages (`changelog.qmd`, `rfd.qmd`, `references.qmd`) |
 | `pages/changelog.qmd`                | Changelog index                                                   |
@@ -93,10 +70,9 @@ naming-convention decision.
 
 ## Conventions
 
-- Decision filenames: `YYYYMMDD-kebab-title.md`
-- Feature decisions carry a `tier:` (`proof of concept` / `baseline` / `stretch`)
+- RFD folders: `rfd/NNNN-kebab-title/`, with `index.md` and an optional `DETAILS.md`
 - Changelog filenames: `YYYYMMDD-deck-log.md` inside `changelog/YYYY/`
-- Asset filenames: `YYYYMMDD_project_description_NNNN.ext` in `decisions/attachments/`, with a `CITATION.cff` entry
+- Asset filenames: `YYYYMMDD_project_description_NNNN.ext` beside the citing RFD, with a `CITATION.cff` entry
 - Prose follows tropes.fyi style by hand; `prek run --all-files` must pass before pushing
 - No hardcoded absolute filesystem paths; use env vars or placeholders (e.g. `$GODOT_SRC`)
 - Do not commit `_site/` — it is build output
