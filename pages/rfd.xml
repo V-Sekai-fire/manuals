@@ -10,7 +10,120 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 15:25:59 GMT</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2026 15:29:55 GMT</lastBuildDate>
+<item>
+  <title>RFD 0122: The client is native, from entities-godot’s gyre branch</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><strong>State:</strong> published · <strong>Scope:</strong> the Queen of the Gyre, and what a player runs to reach her</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>RFD 0112 put the Queen’s client in a browser and chose Lexical for the slash command field, which was the hard half and was built. The field was the wrong thing to optimise for.</p>
+<p>A browser client is a second implementation of everything below that field. <code>client/src/cbor.js</code> decodes what the ward publishes in a language sharing nothing with the decoder the rest of the fabric uses; it reaches the ward over a WebTransport stack merely compatible with the ward’s; it carries npm, esbuild, and Playwright, which nothing else here needs; and it cannot enter XR, the point of the setting.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>The client is a Godot build from <code>entities-godot</code>, branch <code>gyre</code> — one of five entries in the <code>fabric</code> manifest’s <code>default.xml</code> that track something other than <code>main</code>.</p>
+<p>The branch carries the parts already: <code>modules/http3</code> gives <code>WebTransportPeer</code> over the same picoquic backend <code>queen</code>’s <code>src/wt.c</code> terminates and <code>transport-gateway</code> vendors, <code>modules/xr_grid</code> gives the 100-byte <code>XRGridEntityPacket</code> that <code>lean-entity-packet</code> specifies, and <code>modules/multiplayer_fabric</code> gives <code>FabricMultiplayerPeer</code>. This adds no engine code; it decides which client is the client. <code>DETAILS.md</code> has the module mapping.</p>
+<p>The slash command field becomes a <code>Control</code>, so RFD 0112’s hard half stops being hard: a caret in a <code>contenteditable</code> is a browser problem, and there is no browser. The ward does not change — <code>queen serve</code> already speaks WebTransport. What changes is who connects.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0112 chose the browser client and is abandoned; RFD 0085 holds the setting; RFD 0111 sets the words transport layer and service; RFD 0047 is why the Queen terminates QUIC herself</li>
+<li><code>lean-entity-packet</code> specifies the 100-byte packet both ends now share</li>
+<li>The module mapping, the transport path, and what happens to the web client: <code>DETAILS.md</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
+<p>RFD 0112 read the problem as a text field. <code>service-store/src/queen.c</code> had no client at all when it was written, and the visible gap was that a player had nowhere to type. So the document spent its length on the field: a decorator node is one block to the caret, an atom node in ProseMirror can hold the caret and needs a plugin to correct it, and Meta tests the mobile and IME paths at scale. Lexical was the right answer to that question.</p>
+<p>The question aged badly. <code>queen</code> now has <code>serve</code>, <code>src/wt.c</code>, and <code>src/transport_tcp.c</code>; the ward is entities with places, and a subscriber’s slice is decided by an interest filter. The field is the smallest part of a client for that. What matters is who decodes the packet, which QUIC implementation carries it, and whether a player can stand in the zone rather than look at it.</p>
+</section>
+<section id="what-the-browser-client-costs" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-browser-client-costs">What the browser client costs</h2>
+<p>Three costs, none of which is the field.</p>
+<p>A second decoder. <code>client/src/cbor.js</code> is a JavaScript implementation of what the ward publishes. Every wire change is now two changes that must agree, and nothing checks that they do. <code>lean-entity-packet</code> models the packet in Lean with a <code>packet_golden.csv</code> of canonical bytes, and the JavaScript is not held to those vectors.</p>
+<p>A second transport. The browser’s WebTransport is whatever the browser ships. <code>queen</code> terminates QUIC with picoquic and picotls, and <code>transport-gateway</code> vendors both precisely so that one implementation and one TLS library run on both ends. A browser client gives that up and replaces it with compatibility, which is a thing you find out about in the field.</p>
+<p>No XR. RFD 0085’s setting is a ring station a player is inside. A browser field can show a slash command and cannot put anybody anywhere.</p>
+</section>
+<section id="the-parts-already-on-the-branch" class="level2">
+<h2 class="anchored" data-anchor-id="the-parts-already-on-the-branch">The parts already on the branch</h2>
+<p><code>entities-godot</code> at <code>gyre</code> carries the client’s whole stack as engine modules. This decision adds no engine code; it selects.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 47%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>What it provides</th>
+<th>What it replaces</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>modules/http3</code></td>
+<td><code>WebTransportPeer</code>, <code>quic_picoquic_backend.cpp</code></td>
+<td>the browser’s WebTransport</td>
+</tr>
+<tr class="even">
+<td><code>modules/xr_grid</code></td>
+<td><code>XRGridEntityPacket</code></td>
+<td><code>client/src/cbor.js</code></td>
+</tr>
+<tr class="odd">
+<td><code>modules/multiplayer_fabric</code></td>
+<td><code>FabricMultiplayerPeer</code>, zone, snapshot, journal</td>
+<td><code>client/src/main.js</code> state</td>
+</tr>
+<tr class="even">
+<td><code>modules/sqlite</code></td>
+<td>a local store for what the client caches</td>
+<td>nothing; new</td>
+</tr>
+</tbody>
+</table>
+<p><code>FabricMultiplayerPeer</code> documents WebTransport as its example backend and notes that a peer must open independent streams per packet, which WebTransport does. That is the same property <code>service-store/CLAUDE.md</code> states from the server side: a datagram is one message and a stream FIN is the boundary, so no framing layer exists on either end.</p>
+</section>
+<section id="the-transport-path" class="level2">
+<h2 class="anchored" data-anchor-id="the-transport-path">The transport path</h2>
+<p>A player’s client opens <code>WebTransportPeer.create_client(host, port, "/wt")</code> against the port <code>queen serve</code> binds. <code>src/wt.c</code> terminates the session in the Queen’s own process — no <code>webtransportd</code>, per RFD 0047 and the rule in <code>CLAUDE.md</code>. Entity state arrives as <code>XRGridEntityPacket</code>, 100 bytes, delta coded, filtered by interest before it is sent.</p>
+<p>The client is therefore a subscriber and nothing more privileged. <code>Weft.Authority</code> decides which controller drives an avatar, the ward checks a command’s rebac relations on receipt, and a native client has no more standing than a browser one did.</p>
+</section>
+<section id="what-happens-to-the-web-client" class="level2">
+<h2 class="anchored" data-anchor-id="what-happens-to-the-web-client">What happens to the web client</h2>
+<p><code>service-store/client</code> is not deleted by this document. It is four source files, two Playwright specs, and three npm dependencies, and none of it is on the CI path — <code>ci/inside.sh</code> runs <code>queen</code> and never runs npm. It can be removed in a change of its own, which is where the argument about whether to keep a browser build as a fallback belongs.</p>
+<p>What this document settles is that it is not the client. Nothing new is written against it, and the slash command surface is built as a Godot <code>Control</code> against the modules above.</p>
+</section>
+<section id="hazards" class="level2">
+<h2 class="anchored" data-anchor-id="hazards">Hazards</h2>
+<p>The build is the cost. A native client is compiled per platform from an engine fork, and a browser client is served. <code>fabric-godot-assembly</code> and <code>godot-images</code> exist for exactly this, so the cost is known rather than new, but it is real and it is paid on every platform.</p>
+<p>The branch is a fork of a fork. <code>gyre</code> sits on top of <code>multiplayer-fabric</code>, which merges fourteen feature branches on top of Godot’s <code>master</code>. A client pinned there inherits that merge surface. The manifest states the branch, which is the minimum; nothing here pins a commit.</p>
+<p>The field regresses before it improves. RFD 0112’s field works today. A <code>Control</code> that shows a parameter as an inline block has to be written, and the first version of it will be worse than the Lexical one. That is accepted for the same reason as the build cost: the field was never the part that determined whether this client was right.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>RFD 0112 is abandoned. <code>service-store/client</code> — Lexical, esbuild, the Playwright specs and the JavaScript decoder — stops being the client. Removing it is its own change in its own repository and is not assumed by this document.</p>
+<p>The cost is a build. A browser client is served; a native client is compiled per platform from an engine fork, which is slower to produce and heavier to distribute. That is accepted, because the alternative was paying for a second decoder and a second transport forever to avoid paying for a build once.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</guid>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
@@ -511,7 +624,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0120: The Gyre became a settlement game</title>
@@ -690,7 +803,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0119: Salvage you can hold</title>
@@ -830,7 +943,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0118: A baker replaces the Godot editor</title>
@@ -940,7 +1053,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -1285,7 +1398,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -1409,7 +1522,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1478,7 +1591,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1565,7 +1678,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -1735,7 +1848,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -2074,7 +2187,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2566,7 +2679,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -2880,7 +2993,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -3061,7 +3174,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -3198,7 +3311,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -3370,7 +3483,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -3536,7 +3649,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -3736,7 +3849,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -3920,7 +4033,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
@@ -4074,198 +4187,7 @@ Tigris object storage                             0 USD
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0101: zstd delta on the wire, and the packet stays as it is</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0101: zstd delta on the wire, and the packet stays as it is</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-guest-godot</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0100</code> found that a rotation-only bone carries 24 bytes of unused position in <code>xr_grid_entity_packet_t</code>. Only the root and the hips use translation, so 54 of 56 entities per avatar pay for a field they never set.</p>
-<p>It left the fix open, as either a second packet type or a flag on the existing one. Both are format changes, and a format change costs <code>lean-entity-packet</code>’s generated codec and its golden vectors.</p>
-<p>There is a third option that <code>rfd/0100</code> did not consider. Compress the frame, and use earlier state as a dictionary. Unused position bytes are identical on every tick, so a delta should remove them without any format change at all.</p>
-<p>This RFD measures that option.</p>
-</section>
-<section id="prior-art-in-this-project" class="level2">
-<h2 class="anchored" data-anchor-id="prior-art-in-this-project">Prior art in this project</h2>
-<p>Godot took the same decision, and the comparison is already recorded.</p>
-<p><code>godotengine/godot-proposals#13404</code> proposed delta encoding for patch PCK files, first with bsdiff plus zstd. The author then compared it against zstd’s own <code>--patch-from</code>, which is dictionary delta.</p>
-<p>zstd won, and <code>godotengine/godot#112011</code> shipped it in Godot 4.6. The stated reasons were 2 to 3 percent better size, far lower compression memory, and no vendored bsdiff fork to maintain.</p>
-<p>One detail in that thread is worth repeating. The first measurement showed zstd was slower, and it was wrong. <code>CryptoCore::md5</code> checksumming dominated the timing and ran through the whole file again, which also hurt the cache. Switching to zstd’s own checksum reversed the result.</p>
-<p>The project already runs zstd for casync chunk compression, so this adds no dependency.</p>
-</section>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>A probe built one tick of realistic state and compressed it.</p>
-<ul>
-<li>8 avatars, 56 entities each, 100 bytes per <code>XR_PACKET_SIZE</code>, so 44800 bytes raw per tick.</li>
-<li>Root and hips translate, walking forward with a vertical bob.</li>
-<li>The other 54 bones rotate only, and their position never changes.</li>
-<li>400 ticks, sent at 20 Hz.</li>
-</ul>
-<p>Three dictionary strategies were compared: none, the previous tick, and a baseline that lags by 2, 4 or 8 ticks. The lagging baseline models delta against the last ACKED tick, which is what an unreliable datagram transport requires.</p>
-</section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Strategy</th>
-<th>Bytes per tick</th>
-<th>Compress CPU</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Raw, no compression</td>
-<td>44800</td>
-<td>none</td>
-</tr>
-<tr class="even">
-<td>zstd level 1, no dictionary</td>
-<td>3727</td>
-<td>42.4 us</td>
-</tr>
-<tr class="odd">
-<td>zstd level 3, no dictionary</td>
-<td>3239</td>
-<td>44.8 us</td>
-</tr>
-<tr class="even">
-<td>zstd L1, prefix is previous tick</td>
-<td>2980</td>
-<td>63.3 us</td>
-</tr>
-<tr class="odd">
-<td>zstd L3, prefix is previous tick</td>
-<td>2774</td>
-<td>66.5 us</td>
-</tr>
-<tr class="even">
-<td>zstd L1, prefix is acked minus 2</td>
-<td>3014</td>
-<td>68.0 us</td>
-</tr>
-<tr class="odd">
-<td>zstd L1, prefix is acked minus 4</td>
-<td>3015</td>
-<td>68.2 us</td>
-</tr>
-<tr class="even">
-<td>zstd L1, prefix is acked minus 8</td>
-<td>3006</td>
-<td>63.9 us</td>
-</tr>
-</tbody>
-</table>
-<p>Client-side decompression is 17.3 us, and the result verifies as exact.</p>
-<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. Every cell above is a stored row.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">SELECT</span> s.subject, s.bytes, l.median_ns <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1000.0</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">AS</span> compress_us</span>
-<span id="cb1-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'size.parquet'</span>) s</span>
-<span id="cb1-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">LEFT</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">JOIN</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'latency.parquet'</span>) l <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">USING</span> (run_id, subject)</span>
-<span id="cb1-4"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">WHERE</span> s.subject <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'zstd%'</span>;</span></code></pre></div></div>
-</section>
-<section id="decisions" class="level2">
-<h2 class="anchored" data-anchor-id="decisions">Decisions</h2>
-<section id="do-not-change-the-packet" class="level3">
-<h3 class="anchored" data-anchor-id="do-not-change-the-packet">1. Do not change the packet</h3>
-<p>zstd at level 3 with a previous-tick prefix takes 44800 bytes to 2774, which is 16.1 times smaller.</p>
-<p>Compare that against <code>rfd/0100</code>’s hand-packed alternative. That design sends 384 bytes per avatar, so 8 avatars at 20 Hz cost 491.5 kbps. Compressing the unmodified 100-byte packets costs 443.9 kbps.</p>
-<p>So compression beats hand-packing, and it needs no format change. The second packet type and the flag are both unnecessary.</p>
-<p><code>lean-entity-packet</code>’s generated codec and its golden vectors stay untouched. That is the point.</p>
-</section>
-<section id="delta-against-the-last-acked-tick-not-the-previous-tick" class="level3">
-<h3 class="anchored" data-anchor-id="delta-against-the-last-acked-tick-not-the-previous-tick">2. Delta against the last acked tick, not the previous tick</h3>
-<p>An unreliable datagram can be lost. A delta against the previous tick cannot be decoded when the previous tick never arrived.</p>
-<p>The standard answer is to delta against a baseline that the client acknowledges. The concern is that an older baseline produces a bigger delta.</p>
-<p>Measurement says the concern is small. A baseline lagging 2, 4 or 8 ticks costs 3014, 3015 and 3006 bytes, against 2980 bytes for the previous tick. That is approximately 1 percent.</p>
-<p>So loss tolerance is close to free. Use the acked baseline.</p>
-<p>The lag does not grow the delta because the redundancy this exploits is mostly WITHIN a frame, not between frames. 54 bones times 24 zero bytes repeat inside one tick, and they repeat whether the baseline is 1 tick old or 8.</p>
-</section>
-<section id="level-1-for-the-send-path" class="level3">
-<h3 class="anchored" data-anchor-id="level-1-for-the-send-path">3. Level 1 for the send path</h3>
-<p>Level 3 saves 206 bytes per tick against level 1, which is 33 kbps, and costs 3.2 us more.</p>
-<p>Take level 1 for now. Revisit it only with a CPU measurement on <code>shared-cpu-1x</code>, because <code>rfd/0096</code> showed that machine shape punishes CPU-bound choices in ways a workstation does not show.</p>
-</section>
-<section id="the-cpu-cost-fits-and-it-is-per-client" class="level3">
-<h3 class="anchored" data-anchor-id="the-cpu-cost-fits-and-it-is-per-client">4. The CPU cost fits, and it is per client</h3>
-<p>Each client acknowledges different ticks, so each client needs its own delta. The cost is per client, not per zone.</p>
-<p>At 68 us per tick and 20 Hz, one client costs 1.36 ms of CPU per second, which is 0.14 percent of a core. Thirteen concurrent clients cost 1.8 percent.</p>
-<p>That fits on <code>shared-cpu-1x</code>. Confirm it there before relying on it, since every number in this RFD came from a development machine.</p>
-</section>
-</section>
-<section id="what-this-does-not-fix" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-does-not-fix">What this does not fix</h2>
-<p>Compression does not solve the cost cap in <code>rfd/0100</code>.</p>
-<p>At 443.9 kbps a client uses 0.1997 GB per hour. A 548 GB monthly budget then buys 2744 client-hours, which is 3.8 concurrent users running continuously.</p>
-<p><code>rfd/0100</code> measured 2.6 concurrent users at 648.6 kbps. Compression moves that to 3.8. It does not reach 40.</p>
-<p>So interest management, the send rate, and the voice bitrate all remain load-bearing. zstd is a large constant-factor win, and the cost problem needs an order of magnitude.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p><code>rfd/0100</code>’s open question is closed. The wire format does not change.</p>
-<p>The send path gains a compression step with a per-client baseline, and the acknowledgement of that baseline becomes part of the protocol.</p>
-<p>The server holds one baseline frame per client. At 44800 bytes per frame and 13 clients that is 582400 bytes, which is small against <code>rfd/0096</code>’s measured 212188 kB of usable memory.</p>
-<p>Compression runs per client, so its cost grows with client count rather than with zone size.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<p>Probe source is <code>wire.c</code> beside this RFD.</p>
-<ul>
-<li><a href="https://github.com/godotengine/godot-proposals/issues/13404">godotengine/godot-proposals#13404</a>, the bsdiff against zstd comparison</li>
-<li><a href="https://github.com/godotengine/godot/pull/112011">godotengine/godot#112011</a>, which shipped zstd delta in Godot 4.6</li>
-<li><code>src/gen/xr_grid_entity_packet.h</code>, for <code>XR_PACKET_SIZE</code> and the field layout</li>
-<li><code>rfd/0100</code>, for the 56-entity avatar and the cost cap</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0101-zstd-delta-on-the-wire/</guid>
-  <pubDate>Sun, 16 Aug 2026 15:25:59 GMT</pubDate>
+  <pubDate>Sun, 16 Aug 2026 15:29:55 GMT</pubDate>
 </item>
 </channel>
 </rss>
