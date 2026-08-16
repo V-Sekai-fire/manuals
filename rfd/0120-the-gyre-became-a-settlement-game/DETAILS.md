@@ -1,6 +1,6 @@
 ## What changed, line by line
 
-|            | RFD 0085                          | `fabric-store-domain`                           |
+|            | RFD 0085                          | `service-store`                                 |
 | ---------- | --------------------------------- | ----------------------------------------------- |
 | The player | A Spark taking contracts          | The Queen, commissioning venues                 |
 | The loop   | Hub, field, return                | Commission, then wait a cycle                   |
@@ -52,7 +52,7 @@ nothing in the critical path to draw, which makes it the one game shape genuinel
 engine. The Queen commissions and waits, so a cycle is a transaction and the whole of the visible state is a query.
 
 The MUD shape needed a room, a description, and a player standing in it, none of which a store plane exercises. The
-settlement shape gave `fabric-store-domain` a workload that is exactly the thing the store plane claims to be good at:
+settlement shape gave `service-store` a workload that is exactly the thing the store plane claims to be good at:
 N Sparks is N databases committing every cycle, and paying one is a transfer between two of them under the parallel
 commit protocol.
 
@@ -66,3 +66,21 @@ one object whose duplication is unsurvivable in the fiction.
 
 Whether the absent zones come back as places, given that venues, Sparks and contracts already carry coordinates in
 micrometres for the interest filter.
+
+## What has not been built
+
+The Reclamation Wards, the Tangle, the Sub-Net and the Underhull have no representation in the ward. Splicer Jax,
+Overseer Q-11 and Rook are absent, though the Splicer's Den carries Jax's role as a venue. Memory Drives, and the
+looting and ransoming of them, are unimplemented, which matters because they are the setting's one adversarial
+interaction and RFD 0119 turns on them.
+
+These stay in 0085 as setting. This RFD narrows what `service-store` claims to simulate rather than retiring
+the fiction around it.
+
+## Consequences
+
+0085 remains the setting record and stops being the design record for the ward. A reader who wants to know what the
+simulation does reads this one.
+
+The salvage and interaction model in RFD 0119 sits on the cycle boundary rather than on a Hub and Field loop, because
+the loop it was written against is not the loop that exists.
