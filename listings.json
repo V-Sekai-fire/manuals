@@ -1,7 +1,24 @@
 [
   {
+    "listing": "/pages/changelog.html",
+    "items": [
+      "/changelog/2026/20260817-deck-log.html",
+      "/changelog/2026/20260807-deck-log.html",
+      "/changelog/2026/20260630-deck-log.html",
+      "/changelog/2026/20260629-deck-log.html",
+      "/changelog/2026/20260622-deck-log.html",
+      "/changelog/2026/20260612-deck-log.html",
+      "/changelog/2026/20260606-deck-log.html",
+      "/changelog/2026/20260507-deck-log.html",
+      "/changelog/2026/20260506-deck-log.html",
+      "/changelog/2026/20260425-deck-log.html",
+      "/changelog/2026/20260421-deck-log.html"
+    ]
+  },
+  {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0123-a-second-webtransport-implementation/index.html",
       "/rfd/0122-the-client-is-native/index.html",
       "/rfd/0121-amend-rfd-0111-against-the-tree/index.html",
       "/rfd/0120-the-gyre-became-a-settlement-game/index.html",
@@ -122,21 +139,6 @@
       "/rfd/0002-taskweft-value-narrowing-primitives-and-refs/index.html",
       "/rfd/0001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.html",
       "/rfd/0000-conventions/index.html"
-    ]
-  },
-  {
-    "listing": "/pages/changelog.html",
-    "items": [
-      "/changelog/2026/20260807-deck-log.html",
-      "/changelog/2026/20260630-deck-log.html",
-      "/changelog/2026/20260629-deck-log.html",
-      "/changelog/2026/20260622-deck-log.html",
-      "/changelog/2026/20260612-deck-log.html",
-      "/changelog/2026/20260606-deck-log.html",
-      "/changelog/2026/20260507-deck-log.html",
-      "/changelog/2026/20260506-deck-log.html",
-      "/changelog/2026/20260425-deck-log.html",
-      "/changelog/2026/20260421-deck-log.html"
     ]
   }
 ]

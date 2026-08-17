@@ -10,7 +10,59 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 17:40:59 GMT</lastBuildDate>
+<lastBuildDate>Mon, 17 Aug 2026 22:48:36 GMT</lastBuildDate>
+<item>
+  <title></title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260817-deck-log.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="v-sekai-multiplayer-fabric-deck-log-2026-08-17-monday" class="level1">
+<h1>V-Sekai Multiplayer Fabric Deck Log — 2026-08-17 (Monday)</h1>
+<p>Date: 2026-08-17</p>
+<p>The WebTransport contract has a second implementation, and it contradicted one claim the fabric makes about its own wire before carrying a byte of real traffic. <code>transport-fanout</code> caps a subscriber’s slice at 64 records and calls 6400 bytes “comfortably inside one message”; two stacks that share no code both put the limit at 11 records, and <code>datasource-queen</code>’s own <code>WT_MTU_MAX</code> agrees with them rather than with the comment.</p>
+<p>That is one finding rather than a pile, and the count is worth keeping honest. Building the pair also cost three library defects — an EC key <code>pywebtransport</code> would not load, an iceoryx2 subscriber buffer that drops the oldest of three sends, and an aioquic datagram queue that wedges on an oversized send. Those are real and none of them says anything about the contract.</p>
+<section id="added" class="level2">
+<h2 class="anchored" data-anchor-id="added">Added</h2>
+<ul>
+<li><a href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/">RFD 0123</a>, which puts a second implementation of the WebTransport contract on a stack sharing no code with the first. RFD 0088 chose one QUIC stack on both ends, which buys interoperability by construction and gives up the check: a wire implemented once describes the program that implements it. Khronos ratifies against two independent implementations for the same reason.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/transport-gateway-python">transport-gateway-python</a>, the reliable half on <code>aioquic</code> 1.3.0, and <a href="https://github.com/v-sekai-multiplayer-fabric/transport-ingest-python">transport-ingest-python</a>, the datagram half. Both hand off over the iceoryx2 ring through the prebuilt wheel, and both carry no player traffic. <code>aioquic</code> implements QUIC and TLS 1.3 in Python from the RFCs, so it shares no code with the picoquic the C pair vendors. Binding picoquic from Python was rejected because both ends would then run the same QUIC and the same TLS, and h2o because its WebTransport is an unmerged pull request against an HTTP/3 stack h2o calls experimental.</li>
+<li>A Python emitter in <code>contract-entity-packet</code>, so <code>lake exe packet_emit</code> writes the C header, the Python codec and the 64 golden vectors from one run. A second implementation that retyped the layout would test whether two people can copy a table. Regenerating the header and the vectors produced byte-identical output, so the change perturbs nothing.</li>
+<li>A conformance gate in both new repositories: 64 vectors decoded, re-encoded and compared byte for byte, with a <code>--self-test</code> that corrupts one vector and must fail. CI runs both on every pull request and in the merge group.</li>
+</ul>
+</section>
+<section id="changed" class="level2">
+<h2 class="anchored" data-anchor-id="changed">Changed</h2>
+<ul>
+<li><code>transport-gateway</code> is <code>transport-gateway-c</code> and <code>transport-ingest</code> is <code>transport-ingest-c</code>. Two implementations of one contract are distinguished only by how they are built, so RFD 0111’s preference for names that say what a thing does cannot separate them. Naming the language rather than the library survives a change of library, which this day already exercised: the Python pair moved from <code>pywebtransport</code> to <code>aioquic</code> before it merged and neither name moved. Neither pair keeps the unqualified name, because the unqualified name implies the other is a variant. <code>transport-picoquic</code> is the precedent.</li>
+<li>The GitHub descriptions on both C repositories. Each read “hands the result to a <strong>plane</strong> over iceoryx2”, a word RFD 0111 retired in favour of interactor. The READMEs were converted and the descriptions were missed.</li>
+<li>The <code>rfd/0062</code> inventory gains a transport-layers section, which it had none of, and its counts move from 73 repositories and 49 active to 75 and 51.</li>
+<li>The manifest count in <code>fabric</code>’s README moves from 45 projects to 47. That count is gated, and the gate’s own negative control hard-codes the number, so the control had to move with it or it would certify nothing.</li>
+</ul>
+</section>
+<section id="fixed" class="level2">
+<h2 class="anchored" data-anchor-id="fixed">Fixed</h2>
+<ul>
+<li>Eight stale repository references in six files across five repositories, each in its own pull request: <code>transport-fanout</code>, <code>transport-gateway-c</code>, <code>transport-ingest-c</code>, <code>interactor-ward</code>, <code>entities-gyre</code> and <code>datasource-queen</code>. <code>check_docs.py</code>’s moved-repository check found every one of them; GitHub’s redirects meant nothing was broken, and a name that no longer says which of two implementations it means is the problem.</li>
+<li>A burst of ring publishes lost its oldest sample. <code>iceoryx2</code> defaults a subscriber’s buffer to 2 with safe overflow on, so three records published back to back arrived as two. Both repositories now set the buffer explicitly and keep safe overflow, because <code>rfd/0108</code> requires that a lagging reader never stall the writer.</li>
+</ul>
+</section>
+<section id="what-the-second-implementation-cannot-yet-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-second-implementation-cannot-yet-do">What the second implementation cannot yet do</h2>
+<p>The live cross-test against the C pair is not written, and there is nothing to write it against. <code>transport-gateway-c</code> and <code>transport-ingest-c</code> have no <code>main</code> and no <code>CMakeLists.txt</code>, and both READMEs say “State: not started”. <code>transport-ingest-c</code>’s copy of the transport code is a stale fork of <code>transport-gateway-c</code>’s, passing an <code>h3zero_callback_ctx_t</code> where <code>h3zero_callback</code> casts to <code>picohttp_server_parameters_t</code> and missing the <code>h3zero_declare_stream_prefix</code> call. That divergence is why both Python repositories consume one emitted codec instead of two copies, and it is recorded in both <code>OPEN_GAPS.md</code> files that the shared conformance gate is itself duplicated with nothing checking that the copies agree.</p>
+<p>A dropped ring sample stays undetectable. <code>HeaderPublishSubscribe</code> carries a node id, a publisher id and an element count, and no sequence number. <code>rfd/0108</code> says a subscriber whose cursor falls out of the ring receives a resync signal rather than a gap; no such signal exists, and defining one is a wire decision rather than a transport one.</p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260817-deck-log.html</guid>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
+</item>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</link>
@@ -101,7 +153,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -149,7 +201,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -191,7 +243,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -230,7 +282,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -306,7 +358,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -366,7 +418,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -430,7 +482,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -481,7 +533,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -569,7 +621,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -600,7 +652,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sun, 16 Aug 2026 17:40:59 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:36 GMT</pubDate>
 </item>
 </channel>
 </rss>

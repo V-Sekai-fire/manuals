@@ -10,7 +10,206 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 16 Aug 2026 17:41:05 GMT</lastBuildDate>
+<lastBuildDate>Mon, 17 Aug 2026 22:48:41 GMT</lastBuildDate>
+<item>
+  <title>RFD 0123: A second WebTransport implementation, and the names that make room for it</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0123: A second WebTransport implementation, and the names that make room for it</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> the WebTransport contract, who implements it, and what the transport repositories are called</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The fabric states its wire in <code>contract-wt</code>, <code>contract-entity-packet</code>, <code>contract-connection-fsm</code> and <code>contract-http3-queue</code>, and implements it once. RFD 0088 chose that: “Client and server share one proven QUIC stack instead of two different, independently verified ones.” <code>transport-gateway</code>, <code>transport-ingest</code> and the engine’s <code>modules/http3</code> all vendor picoquic and picotls, so both ends of every session run the same code.</p>
+<p>That buys interoperability by construction and gives up the check. A wire implemented once describes the program that implements it, and nothing establishes that the specification is implementable from the specification. Every assumption both ends share passes every test the pair can run. <code>contract-wt</code> already makes this argument for the engine’s H3 stack and acts on it in aioquic; nothing makes it for the transport layer.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>A second implementation, on a stack that shares no code with the first.</strong> <code>transport-gateway-python</code> and <code>transport-ingest-python</code> terminate the same contract on <code>aioquic</code>, which implements QUIC and TLS 1.3 in Python from the RFCs, and hand off over the iceoryx2 ring. Khronos ratifies against two independent implementations for this reason.</p>
+<p>Three stacks were considered and the choice turns on what each shares with the first. Binding picoquic from Python was rejected because both ends would then run the same QUIC and the same TLS, so the second implementation would test the binding rather than the contract. h2o was rejected because its WebTransport is an unmerged pull request stacked on another unmerged pull request, with tests unchecked, against an HTTP/3 stack h2o calls experimental; its QUIC is quicly and would have qualified otherwise. <code>pywebtransport</code> shipped first here and was replaced: it refuses an EC private key, and <code>contract-wt</code> records the Godot demo server generating a fresh P-256 certificate on every run. <code>DETAILS.md</code> has the measurements.</p>
+<p><strong>It carries no player traffic.</strong> <code>transport-gateway-c</code>’s <code>PACKET_PATH.md</code> measures a scripting runtime at 5.70 M/s against a 15 M/s bar, and 117.8 ns per runtime crossing against a 66.7 ns per-packet budget. Those numbers stand and they are why policy lives in an interactor rather than in the packet path. The Python pair produces agreement or disagreement, and no throughput claim goes in a record without a measurement in <code>data/measurements/</code>.</p>
+<p><strong>The language is what tells the four repositories apart.</strong> <code>transport-gateway</code> becomes <code>transport-gateway-c</code> and <code>transport-ingest</code> becomes <code>transport-ingest-c</code>. Two implementations of one contract are distinguished only by how they are built, so RFD 0111’s preference for names that say what a thing does cannot separate them, and <code>transport-picoquic</code> is the precedent for naming a transport repository after its stack. Naming the language rather than the library also survives a change of library, which this record has already exercised: the Python pair moved from <code>pywebtransport</code> to <code>aioquic</code> before it merged and neither name moved. Neither pair keeps the unqualified name, because the unqualified name implies the other is a variant.</p>
+<p><strong>The codec is emitted, never retyped.</strong> <code>contract-entity-packet</code> gains a Python emitter beside <code>EntityPacket/EmitC.lean</code>, so <code>lake exe packet_emit</code> writes the C header, the Python module and the 64 golden vectors from one run. A second implementation that reads the layout off the first tests whether two people can copy a table.</p>
+<p><strong>The ring is reached through the <code>iceoryx2</code> wheel.</strong> The C repositories dlopen iceoryx2 through a dispatch table generated from <code>iceoryx2.sigs</code>, so that “the harness builds on a machine that has never seen iceoryx2” and because “iceoryx2 is Rust, and weft writes no Rust.” A prebuilt wheel is a runtime artifact rather than a build-graph edge and adds no second <code>.sigs</code> file. Bus access stays behind one module in each repository so the choice is reversible.</p>
+<p><strong><code>contract-wt</code> stays where it is.</strong> It runs the same <code>aioquic</code> this pair now runs, and it checks a different subject: the engine’s <code>modules/http3</code> as a client, where these check the transport layer as a server. One Python stack in two places is less to keep current than two, and its roster client is what caught <code>WebTransportPeer</code> tracking clients in one bool. What it does not give is a third opinion, so a fault inside <code>aioquic</code> itself would go unseen by both.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The implementation contradicted one claim the fabric makes about its own wire before it carried a byte of real traffic, which is the argument for it stated as evidence rather than as principle. <code>transport-fanout</code> caps a slice at 64 records and calls 6400 bytes “comfortably inside one message”; two stacks sharing no code put the limit at 11 records, and <code>datasource-queen</code>’s own <code>WT_MTU_MAX</code> agrees with them rather than with the comment.</p>
+<p>That is one finding, not a pile of them, and the count is worth keeping honest. Building the pair also surfaced three defects in the libraries it uses — an EC key a stack would not load, a subscriber buffer that drops the oldest of three sends, a datagram queue that wedges on an oversized send. Those are real and cost real time, and a third implementation on a fourth stack would not have found any of them. <code>DETAILS.md</code> keeps them apart for that reason.</p>
+<p>The cost is a fourth transport repository and a second wire reader to keep in step. RFD 0122 named that cost exactly — “every wire change is now two changes that must agree, and nothing checks that they do” — and rejected a second implementation carrying player traffic for it. Checking that they agree is what these two produce, so the cost lands where the benefit is.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0088 chose one QUIC stack on both ends; RFD 0122 rejected a second implementation on the player path and is not contradicted; RFD 0047 abandoned <code>webtransportd</code> and still governs the production path; RFD 0111 sets the name shape this amends for four repositories</li>
+<li>RFD 0049 for the reliability classes the two repositories split on, RFD 0096 for the measurement discipline, RFD 0108 for the rule that a lagging reader never stalls the writer</li>
+<li><code>contract-entity-packet</code> for the layout, the emitter and the golden vectors; <code>contract-wt</code> for the same argument one stack earlier</li>
+<li>The measurements, the method, and the rename list: <code>DETAILS.md</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-the-second-implementation-found" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-second-implementation-found">What the second implementation found</h2>
+<p>One disagreement about the contract, and three integration defects found while building. The distinction matters, because only the first is the thing a second implementation exists to produce: it is a claim the fabric makes about its own wire, contradicted by two stacks that share no code. The other three are properties of the libraries this pair happens to use, and a third implementation on a fourth stack would not have found them.</p>
+<p>All measured on 2026-08-17, macOS arm64, over a loopback session. Each is recorded in the <code>OPEN_GAPS.md</code> of the repository that found it.</p>
+<section id="a-64-entity-slice-does-not-fit-in-one-datagram" class="level3">
+<h3 class="anchored" data-anchor-id="a-64-entity-slice-does-not-fit-in-one-datagram">A 64-entity slice does not fit in one datagram</h3>
+<p><code>transport-fanout/src/fanout.h:39</code> caps a subscriber’s slice and states the reason: “Cap one subscriber’s slice so a single write stays inside a datagram-sized batch. 64 entities * 100 bytes = 6400 bytes, comfortably inside one message.”</p>
+<p>Two implementations sharing no code disagree with that comment and agree with each other, one fresh connection per size:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>stack</th>
+<th>largest datagram</th>
+<th>whole records</th>
+<th>failure above the limit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>aioquic</code> 1.3.0</td>
+<td>1169 bytes</td>
+<td>11</td>
+<td>queues the frame and jams</td>
+</tr>
+<tr class="even">
+<td><code>pywebtransport</code> 0.20.1</td>
+<td>1161 bytes</td>
+<td>11</td>
+<td>refuses at the API</td>
+</tr>
+</tbody>
+</table>
+<p>The eight-byte difference is header overhead and both land on 11 records. The cause is structural rather than a library limit: a DATAGRAM frame has to fit inside one QUIC packet, and <code>aioquic</code> reports <code>_max_datagram_size = 1200</code> against a negotiated <code>_remote_max_datagram_frame_size = 65536</code>, so the packet size binds and the frame limit never does. 6400 bytes is five QUIC packets.</p>
+<p><code>datasource-queen/src/wt.c:32</code> sets <code>WT_MTU_MAX</code> to 1300, which is 13 records, so the C side’s configuration contradicts the C side’s comment before either Python implementation is considered. <code>transport-fanout</code> has never run and <code>transport-ingest-c</code> has no <code>main</code>, so nothing had exercised the claim.</p>
+<p><code>transport-ingest-python</code> splits a slice at 11 records so it runs. What stays open is whether <code>MAX_SLICE_ENTITIES</code> is wrong, whether slices belong on streams, or whether <code>fanout_one</code>’s silent truncation at 64 was always the real cap.</p>
+</section>
+<section id="a-library-defect-one-oversized-datagram-jams-every-datagram-after-it" class="level3">
+<h3 class="anchored" data-anchor-id="a-library-defect-one-oversized-datagram-jams-every-datagram-after-it">A library defect: one oversized datagram jams every datagram after it</h3>
+<p><code>aioquic</code>’s <code>_write_datagram_frame</code> asks the packet builder for room, and when the frame cannot fit, the caller breaks out of the send loop without popping the queue, so the oversized datagram stays at the head forever.</p>
+<p>Measured: after one 6400-byte send, three subsequent 100-byte datagrams never arrived and the pending queue grew from one entry to three. One bad send does not lose one message, it ends that session’s datagram path.</p>
+<p><code>transport-ingest-python</code> fragments against the connection and refuses anything over the cap, so it cannot trigger this. Reporting it upstream was considered and dropped: the trigger is an application sending a datagram larger than a packet, which RFC 9221 already forbids, so it is misuse handling rather than a protocol defect and it is not reachable from peer input. quiche exposes <code>dgram_max_writable_len</code> and quic-go returns a too-large error carrying the size, while aioquic documents no size contract and exposes no way to query one, which is why <code>datagram_capacity</code> reads private attributes.</p>
+<p>This also contaminated a measurement. A binary search over delivery first returned 1050 bytes, because one oversized probe jammed the connection and every later size read as lost. Datagrams are unreliable, so a threshold cannot be probed on one connection at all, which is why the table above uses a fresh connection per size.</p>
+</section>
+<section id="a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack" class="level3">
+<h3 class="anchored" data-anchor-id="a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack">A library limit: pywebtransport rejects EC server keys, and that decided the stack</h3>
+<p><code>contract-wt/README.md</code> records the Godot demo server building “a fresh self-signed P-256 certificate on every run”. <code>pywebtransport</code> refuses to open a listener with one, failing with “failed to parse private key as RSA, ECDSA, or EdDSA”. PKCS#8 keys from LibreSSL 3.3.6:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>key</th>
+<th><code>pywebtransport</code> 0.20.1</th>
+<th><code>aioquic</code> 1.3.0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>EC prime256v1 (P-256)</td>
+<td>rejected</td>
+<td>accepted</td>
+</tr>
+<tr class="even">
+<td>EC secp384r1 (P-384)</td>
+<td>rejected</td>
+<td>accepted</td>
+</tr>
+<tr class="odd">
+<td>RSA 2048</td>
+<td>accepted</td>
+<td>accepted</td>
+</tr>
+<tr class="even">
+<td>Ed25519</td>
+<td>untested</td>
+<td>untested</td>
+</tr>
+</tbody>
+</table>
+<p>Ed25519 is untested on both because LibreSSL 3.3.6 answers <code>Unknown algorithm ed25519</code> and no key was produced to try.</p>
+<p>Each end’s key is its own, so this never stopped the two talking. It stopped the Python pair serving a role the Godot side serves today, which is why the pair moved to <code>aioquic</code>. A live session with a P-256 server key answers CONNECT with <code>:status 200</code>.</p>
+</section>
+<section id="a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends" class="level3">
+<h3 class="anchored" data-anchor-id="a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends">A configuration defect: a default iceoryx2 subscriber drops the oldest of three sends</h3>
+<p><code>iceoryx2</code> defaults a subscriber’s buffer to <strong>2</strong> samples with safe overflow on. Three records published in a burst arrived as two, and the missing one was the oldest, before any reader was slow. Both repositories now set the buffer explicitly and keep safe overflow, because RFD 0108 requires that a lagging reader never stall the writer.</p>
+<p>The drop stays undetectable. <code>HeaderPublishSubscribe</code> carries a node id, a publisher id and an element count, and no sequence number, so nothing distinguishes a dropped sample from one never sent. RFD 0108 says a subscriber whose cursor falls out of the ring “receives a resync signal rather than a gap”; no such signal exists, and defining one is a wire decision.</p>
+</section>
+</section>
+<section id="the-renames" class="level2">
+<h2 class="anchored" data-anchor-id="the-renames">The renames</h2>
+<p>Two repositories renamed, two created. GitHub redirects the old names.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 35%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>before</th>
+<th>after</th>
+<th>path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>transport-gateway</code></td>
+<td><code>transport-gateway-c</code></td>
+<td><code>1-transport/gateway-c</code></td>
+</tr>
+<tr class="even">
+<td><code>transport-ingest</code></td>
+<td><code>transport-ingest-c</code></td>
+<td><code>1-transport/ingest-c</code></td>
+</tr>
+<tr class="odd">
+<td>—</td>
+<td><code>transport-gateway-python</code></td>
+<td><code>1-transport/gateway-python</code></td>
+</tr>
+<tr class="even">
+<td>—</td>
+<td><code>transport-ingest-python</code></td>
+<td><code>1-transport/ingest-python</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>check_path_recomposes</code> in <code>check_docs.py</code> requires the directory and its child to rebuild the repository name, and all four do. The manifest count moves from 45 to 47.</p>
+<p>Both C repositories carried a description using a word RFD 0111 retired — “hands the result to a <strong>plane</strong> over iceoryx2” — because the READMEs were converted and the GitHub descriptions were missed. Both now say interactor.</p>
+<p><code>check_docs.py</code>’s moved-repository check found eight stale references in six files across five repositories, each fixed in its own pull request: <code>transport-fanout</code>, <code>transport-gateway-c</code>, <code>transport-ingest-c</code>, <code>interactor-ward</code>, <code>entities-gyre</code> and <code>datasource-queen</code>.</p>
+</section>
+<section id="why-the-language-and-not-the-library" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-language-and-not-the-library">Why the language and not the library</h2>
+<p>RFD 0111 retires names that say how a thing was built, and <code>-c</code> and <code>-python</code> are exactly that. The rule targets directories that collect whatever nobody classified: <code>service/</code>, <code>lean/</code>, <code>engine/</code>, <code>vendor/</code>. Two repositories implementing one contract are a different case, because the build is the only thing that separates them and the role word is already taken by both.</p>
+<p><code>transport-picoquic</code>, which RFD 0111 renamed from <code>fabric-edge</code>, is the precedent for naming a transport repository after its stack, taken for the same reason: “Bare <code>transport</code> would read as a name that went missing.”</p>
+<p>The language outlives the library. Swapping picoquic for another C QUIC stack, or <code>pywebtransport</code> for aioquic, leaves both names true, where <code>-picoquic</code> and <code>-pywebtransport</code> would strand.</p>
+</section>
+<section id="what-is-built" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-built">What is built</h2>
+<p>Both repositories carry the conformance gate and the terminator, on <code>aioquic</code> 1.3.0 and <code>iceoryx2</code> 0.9.3, and neither carries a cross-test.</p>
+<p><code>conformance.py</code> decodes all 64 golden vectors, checks the fields the CSV names, and re-encodes to compare byte for byte. <code>--self-test</code> corrupts one vector and the gate is wrong if that passes. CI runs both, on every pull request and in the merge group.</p>
+<p><code>transport-ingest-python</code> was driven end to end on a live session with an EC P-256 server key: CONNECT answered <code>:status 200</code>, three records in one datagram reached the ring byte-identical to the wire, and a 250-byte datagram was dropped whole rather than trimmed to two records.</p>
+<p>The live cross-test against the C pair is not written, and there is nothing yet to write it against. <code>transport-gateway-c</code> and <code>transport-ingest-c</code> have no <code>main</code> and no <code>CMakeLists.txt</code>, and both READMEs say “State: not started”. <code>transport-ingest-c</code>’s copy of the transport code is a stale fork of <code>transport-gateway-c</code>’s: it passes an <code>h3zero_callback_ctx_t</code> where <code>h3zero_callback</code> casts to <code>picohttp_server_parameters_t</code>, and it lacks the <code>h3zero_declare_stream_prefix</code> call. That divergence is the reason both Python repositories consume one emitted codec rather than two copies.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</guid>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0122: The client is native, from entities-godot’s gyre branch</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</link>
@@ -122,7 +321,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
@@ -624,7 +823,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0120: The Gyre became a settlement game</title>
@@ -803,7 +1002,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0119: Salvage you can hold</title>
@@ -943,7 +1142,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0118: A baker replaces the Godot editor</title>
@@ -1053,7 +1252,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -1398,7 +1597,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -1522,7 +1721,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1591,7 +1790,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1678,7 +1877,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -1848,7 +2047,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -2187,7 +2386,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2675,7 +2874,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -2989,7 +3188,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -3170,7 +3369,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -3307,7 +3506,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -3479,7 +3678,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -3645,7 +3844,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -3845,7 +4044,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -4029,161 +4228,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0102: The whole deployment on 15 USD, including the parts rfd/0100 omitted</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-server-h2o, zone-backend, aria-storage</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0100</code> gives a topology of one machine, a volume, and a zone server, then prices it as if that were the deployment.</p>
-<p>It is not. That machine cannot serve a game. There is no way to upload an avatar or a map, no content delivery, and no relational store. The server cannot even load a default map, because nothing puts one where it can reach it.</p>
-<p><code>rfd/0062</code> already owns the capability inventory, and <code>rfd/0100</code> did not consult it.</p>
-</section>
-<section id="the-parts-that-were-missing" class="level2">
-<h2 class="anchored" data-anchor-id="the-parts-that-were-missing">The parts that were missing</h2>
-<p><code>zone-backend</code>, which is Uro, is a Phoenix and Elixir service for identity, the zone directory, and the planner. It runs on <strong>CockroachDB</strong>, with separate DML and DDL roles over mTLS client certificates, per <code>rfd/0006</code>.</p>
-<p><code>aria-storage</code> is the Elixir casync and desync library that <code>zone-backend</code> already uses.</p>
-<p>Neither appears in <code>rfd/0100</code>. Nor does any relational store, and <code>rfd/0095</code> depends on Uro for <code>/acl/check</code>, <code>/auth/script_key</code> and <code>/storage/manifest</code>.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<pre><code>Fly machine 1, shared-cpu-1x 256 MB, iad          2.02 USD
-  |- 1 GB volume, ssd engine                      0.15 USD
-  |- fdbserver, single process
-  |- zone-server-h2o, one zone, ZONE_TICK_HZ 64
-  |- default map baked into the container image   0 USD
-  +- UDP 7443 on fly-global-services -&gt; clients
-
-Fly machine 2, shared-cpu-1x 256 MB, iad          2.02 USD
-  |- zone-backend (Uro): identity, zone directory,
-  |    planner, /acl/check, /storage/manifest
-  +- aria-storage: casync chunking on publish
-
-  +- PostgreSQL, WAL to Tigris (see rfd/0103)   +1.45 USD
-
-Tigris object storage                             0 USD
-  |- casync chunks and .caibx indexes             5 GB free
-  |- fdbbackup target (disaster recovery)
-  +- auto-replicated to Fly edge: this IS the CDN</code></pre>
-<p>FoundationDB holds zone state. CockroachDB holds identity and the directory. <code>rfd/0075</code> chose FoundationDB over CockroachDB <strong>for zone state</strong>, and that scope never removed Uro’s own relational store.</p>
-<p>CockroachDB does not run on Fly here. Fly charges about 5 USD per GB of RAM per month. A <code>shared-cpu-1x</code> at 2 GB is therefore 11.11 USD, which is 74 percent of the budget for the database alone. That leaves nothing.</p>
-<p>CockroachDB Cloud Basic is on the blocklist, so the managed free tier is not available either. <code>rfd/0103</code> moves Uro to PostgreSQL for that reason, and it carries the measurements.</p>
-</section>
-<section id="assets-never-pass-through-the-zone-server" class="level2">
-<h2 class="anchored" data-anchor-id="assets-never-pass-through-the-zone-server">Assets never pass through the zone server</h2>
-<p>Tigris charges 0.02 USD per GB stored and <strong>0 USD egress</strong>, and it replicates to Fly edge regions automatically. That replication is the CDN.</p>
-<p>So a client fetches avatars and maps straight from Tigris. Those bytes never cross the zone server, and they never count against <code>rfd/0100</code>’s 256 kbps cap.</p>
-<p>Routing assets through the zone server puts them on Fly egress at 0.02 USD per GB, and Tigris egress is free. Asset bytes are large next to a pose stream, so the zone server carries none of them.</p>
-</section>
-<section id="cost" class="level2">
-<h2 class="anchored" data-anchor-id="cost">Cost</h2>
-<p>The machine and volume prices above come from Fly’s published price list. What they buy in concurrent users is unmeasured, because no deployment runs and <code>data/measurements/</code> holds no row for one.</p>
-<p>Take the colocated form. Phoenix and PostgreSQL share one 256 MB machine, which costs one machine rather than two. Measure the memory before committing, because <code>run_id = fly-shared-1x-256</code> in the store records 212188 kB usable on that machine class.</p>
-<p>Uro and <code>aria-storage</code> are the services a game needs, and adding them spends budget that the zone-only topology does not.</p>
-</section>
-<section id="the-default-map-ships-in-the-image" class="level2">
-<h2 class="anchored" data-anchor-id="the-default-map-ships-in-the-image">The default map ships in the image</h2>
-<p>A zone cannot bootstrap from an empty object store. The default map goes into the container image at build time.</p>
-<p>That costs nothing and needs no upload path. It also removes a circular dependency, where the server needs content to start and content needs a running server to upload.</p>
-<p>User-generated content uses the object store. The default map does not.</p>
-</section>
-<section id="upload-path" class="level2">
-<h2 class="anchored" data-anchor-id="upload-path">Upload path</h2>
-<p>A client uploads through Uro, never through the zone server.</p>
-<ol type="1">
-<li>Client asks Uro to publish, and Uro checks ReBAC at <code>/acl/check</code>.</li>
-<li><code>aria-storage</code> chunks the asset and writes only chunks Tigris lacks.</li>
-<li>Uro returns the <code>.caibx</code> index id.</li>
-<li><code>ZONE_OBJ_PUT</code> records that id, gated on a delegation edge per <code>rfd/0095</code>.</li>
-</ol>
-<p>The zone server records an identifier. It never carries the bytes.</p>
-</section>
-<section id="what-is-unbuilt" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-unbuilt">What is unbuilt</h2>
-<p><code>ZONE_OBJ_GET</code> and <code>ZONE_OBJ_PUT</code> return <code>-ENOSYS</code>. See <code>zone-server-h2o</code> issues 32, 33 and 34.</p>
-<p><code>modules/multiplayer_fabric_asset</code> holds the C++ casync client and is not extracted from the Godot build.</p>
-<p><code>zone-backend</code> is not deployed on Fly, so its 2.02 USD line is an estimate rather than a measurement.</p>
-<p>Uro’s move from CockroachDB to PostgreSQL is not done. <code>rfd/0103</code> decides it, and Uro’s migrations are not yet audited for CockroachDB-specific SQL.</p>
-</section>
-<section id="which-record-owns-which-fact" class="level2">
-<h2 class="anchored" data-anchor-id="which-record-owns-which-fact">Which record owns which fact</h2>
-<p>This RFD owns the deployment topology and its cost. It restates nothing else, because restating is what caused the error above.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Fact</th>
-<th>Owner</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Repository and capability inventory</td>
-<td><code>rfd/0062</code></td>
-</tr>
-<tr class="even">
-<td>CockroachDB and mTLS role separation</td>
-<td><code>rfd/0006</code></td>
-</tr>
-<tr class="odd">
-<td>FoundationDB for zone state</td>
-<td><code>rfd/0075</code></td>
-</tr>
-<tr class="even">
-<td>Fly as the deployment target</td>
-<td><code>rfd/0089</code></td>
-</tr>
-<tr class="odd">
-<td>Uro packaging</td>
-<td><code>rfd/0090</code></td>
-</tr>
-<tr class="even">
-<td>Guest classes and the two stores</td>
-<td><code>rfd/0095</code></td>
-</tr>
-<tr class="odd">
-<td>Per-client bandwidth cap</td>
-<td><code>rfd/0100</code></td>
-</tr>
-<tr class="even">
-<td>Wire format and compression</td>
-<td><code>rfd/0101</code></td>
-</tr>
-<tr class="odd">
-<td>Deployment topology and cost</td>
-<td>this record</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="a-correction" class="level2">
-<h2 class="anchored" data-anchor-id="a-correction">A correction</h2>
-<p>An earlier revision of this RFD said Uro runs on PostgreSQL. It does not. It runs on CockroachDB.</p>
-<p>The error came from reading <code>config/runtime.exs</code>, seeing <code>adapter: Ecto.Adapters.Postgres</code>, and concluding the server from the adapter. CockroachDB speaks the PostgreSQL wire protocol, so that adapter is what an Elixir application uses to reach it.</p>
-<p>The same file names <code>CRDB_SNI</code>, <code>CRDB_CA_CERT</code>, <code>CRDB_CLIENT_CERT</code> and <code>CRDB_ADMIN_CERT</code>, which <code>rfd/0006</code> already documents. The evidence was present and was not read.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li><a href="https://fly.io/docs/about/pricing/">Fly pricing</a>, about 5 USD per GB of RAM per month</li>
-<li><a href="https://www.tigrisdata.com/pricing/">Tigris pricing</a>, 0.02 USD per GB, 0 egress, 5 GB free</li>
-<li><code>zone-backend</code> <code>config/runtime.exs</code>, for the <code>CRDB_*</code> variables</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0102-the-whole-deployment-on-15-usd/</guid>
-  <pubDate>Sun, 16 Aug 2026 17:41:05 GMT</pubDate>
+  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
 </item>
 </channel>
 </rss>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>RFD 0123: A second WebTransport implementation, and the names that make room for it – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../pages/changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/rfd.html"> 
+    <a class="nav-link" href="../../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/references.html"> 
+    <a class="nav-link" href="../../pages/references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,28 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#detail" id="toc-detail" class="nav-link" data-scroll-target="#detail">Detail</a></li>
+  <li><a href="#what-the-second-implementation-found" id="toc-what-the-second-implementation-found" class="nav-link" data-scroll-target="#what-the-second-implementation-found">What the second implementation found</a>
+  <ul class="collapse">
+  <li><a href="#a-64-entity-slice-does-not-fit-in-one-datagram" id="toc-a-64-entity-slice-does-not-fit-in-one-datagram" class="nav-link" data-scroll-target="#a-64-entity-slice-does-not-fit-in-one-datagram">A 64-entity slice does not fit in one datagram</a></li>
+  <li><a href="#a-library-defect-one-oversized-datagram-jams-every-datagram-after-it" id="toc-a-library-defect-one-oversized-datagram-jams-every-datagram-after-it" class="nav-link" data-scroll-target="#a-library-defect-one-oversized-datagram-jams-every-datagram-after-it">A library defect: one oversized datagram jams every datagram after it</a></li>
+  <li><a href="#a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack" id="toc-a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack" class="nav-link" data-scroll-target="#a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack">A library limit: pywebtransport rejects EC server keys, and that decided the stack</a></li>
+  <li><a href="#a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends" id="toc-a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends" class="nav-link" data-scroll-target="#a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends">A configuration defect: a default iceoryx2 subscriber drops the oldest of three sends</a></li>
+  </ul></li>
+  <li><a href="#the-renames" id="toc-the-renames" class="nav-link" data-scroll-target="#the-renames">The renames</a></li>
+  <li><a href="#why-the-language-and-not-the-library" id="toc-why-the-language-and-not-the-library" class="nav-link" data-scroll-target="#why-the-language-and-not-the-library">Why the language and not the library</a></li>
+  <li><a href="#what-is-built" id="toc-what-is-built" class="nav-link" data-scroll-target="#what-is-built">What is built</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0123-a-second-webtransport-implementation/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +313,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">RFD 0123: A second WebTransport implementation, and the names that make room for it</h1>
 </div>
 
 
@@ -370,123 +330,193 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0123: A second WebTransport implementation, and the names that make room for it</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> the WebTransport contract, who implements it, and what the transport repositories are called</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>The fabric states its wire in <code>contract-wt</code>, <code>contract-entity-packet</code>, <code>contract-connection-fsm</code> and <code>contract-http3-queue</code>, and implements it once. RFD 0088 chose that: “Client and server share one proven QUIC stack instead of two different, independently verified ones.” <code>transport-gateway</code>, <code>transport-ingest</code> and the engine’s <code>modules/http3</code> all vendor picoquic and picotls, so both ends of every session run the same code.</p>
+<p>That buys interoperability by construction and gives up the check. A wire implemented once describes the program that implements it, and nothing establishes that the specification is implementable from the specification. Every assumption both ends share passes every test the pair can run. <code>contract-wt</code> already makes this argument for the engine’s H3 stack and acts on it in aioquic; nothing makes it for the transport layer.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>A second implementation, on a stack that shares no code with the first.</strong> <code>transport-gateway-python</code> and <code>transport-ingest-python</code> terminate the same contract on <code>aioquic</code>, which implements QUIC and TLS 1.3 in Python from the RFCs, and hand off over the iceoryx2 ring. Khronos ratifies against two independent implementations for this reason.</p>
+<p>Three stacks were considered and the choice turns on what each shares with the first. Binding picoquic from Python was rejected because both ends would then run the same QUIC and the same TLS, so the second implementation would test the binding rather than the contract. h2o was rejected because its WebTransport is an unmerged pull request stacked on another unmerged pull request, with tests unchecked, against an HTTP/3 stack h2o calls experimental; its QUIC is quicly and would have qualified otherwise. <code>pywebtransport</code> shipped first here and was replaced: it refuses an EC private key, and <code>contract-wt</code> records the Godot demo server generating a fresh P-256 certificate on every run. <code>DETAILS.md</code> has the measurements.</p>
+<p><strong>It carries no player traffic.</strong> <code>transport-gateway-c</code>’s <code>PACKET_PATH.md</code> measures a scripting runtime at 5.70 M/s against a 15 M/s bar, and 117.8 ns per runtime crossing against a 66.7 ns per-packet budget. Those numbers stand and they are why policy lives in an interactor rather than in the packet path. The Python pair produces agreement or disagreement, and no throughput claim goes in a record without a measurement in <code>data/measurements/</code>.</p>
+<p><strong>The language is what tells the four repositories apart.</strong> <code>transport-gateway</code> becomes <code>transport-gateway-c</code> and <code>transport-ingest</code> becomes <code>transport-ingest-c</code>. Two implementations of one contract are distinguished only by how they are built, so RFD 0111’s preference for names that say what a thing does cannot separate them, and <code>transport-picoquic</code> is the precedent for naming a transport repository after its stack. Naming the language rather than the library also survives a change of library, which this record has already exercised: the Python pair moved from <code>pywebtransport</code> to <code>aioquic</code> before it merged and neither name moved. Neither pair keeps the unqualified name, because the unqualified name implies the other is a variant.</p>
+<p><strong>The codec is emitted, never retyped.</strong> <code>contract-entity-packet</code> gains a Python emitter beside <code>EntityPacket/EmitC.lean</code>, so <code>lake exe packet_emit</code> writes the C header, the Python module and the 64 golden vectors from one run. A second implementation that reads the layout off the first tests whether two people can copy a table.</p>
+<p><strong>The ring is reached through the <code>iceoryx2</code> wheel.</strong> The C repositories dlopen iceoryx2 through a dispatch table generated from <code>iceoryx2.sigs</code>, so that “the harness builds on a machine that has never seen iceoryx2” and because “iceoryx2 is Rust, and weft writes no Rust.” A prebuilt wheel is a runtime artifact rather than a build-graph edge and adds no second <code>.sigs</code> file. Bus access stays behind one module in each repository so the choice is reversible.</p>
+<p><strong><code>contract-wt</code> stays where it is.</strong> It runs the same <code>aioquic</code> this pair now runs, and it checks a different subject: the engine’s <code>modules/http3</code> as a client, where these check the transport layer as a server. One Python stack in two places is less to keep current than two, and its roster client is what caught <code>WebTransportPeer</code> tracking clients in one bool. What it does not give is a third opinion, so a fault inside <code>aioquic</code> itself would go unseen by both.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>The implementation contradicted one claim the fabric makes about its own wire before it carried a byte of real traffic, which is the argument for it stated as evidence rather than as principle. <code>transport-fanout</code> caps a slice at 64 records and calls 6400 bytes “comfortably inside one message”; two stacks sharing no code put the limit at 11 records, and <code>datasource-queen</code>’s own <code>WT_MTU_MAX</code> agrees with them rather than with the comment.</p>
+<p>That is one finding, not a pile of them, and the count is worth keeping honest. Building the pair also surfaced three defects in the libraries it uses — an EC key a stack would not load, a subscriber buffer that drops the oldest of three sends, a datagram queue that wedges on an oversized send. Those are real and cost real time, and a third implementation on a fourth stack would not have found any of them. <code>DETAILS.md</code> keeps them apart for that reason.</p>
+<p>The cost is a fourth transport repository and a second wire reader to keep in step. RFD 0122 named that cost exactly — “every wire change is now two changes that must agree, and nothing checks that they do” — and rejected a second implementation carrying player traffic for it. Checking that they agree is what these two produce, so the cost lands where the benefit is.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0088 chose one QUIC stack on both ends; RFD 0122 rejected a second implementation on the player path and is not contradicted; RFD 0047 abandoned <code>webtransportd</code> and still governs the production path; RFD 0111 sets the name shape this amends for four repositories</li>
+<li>RFD 0049 for the reliability classes the two repositories split on, RFD 0096 for the measurement discipline, RFD 0108 for the rule that a lagging reader never stalls the writer</li>
+<li><code>contract-entity-packet</code> for the layout, the emitter and the golden vectors; <code>contract-wt</code> for the same argument one stack earlier</li>
+<li>The measurements, the method, and the rename list: <code>DETAILS.md</code></li>
+</ul>
+</section>
+<section id="detail" class="level2">
+<h2 class="anchored" data-anchor-id="detail">Detail</h2>
+</section>
+<section id="what-the-second-implementation-found" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-second-implementation-found">What the second implementation found</h2>
+<p>One disagreement about the contract, and three integration defects found while building. The distinction matters, because only the first is the thing a second implementation exists to produce: it is a claim the fabric makes about its own wire, contradicted by two stacks that share no code. The other three are properties of the libraries this pair happens to use, and a third implementation on a fourth stack would not have found them.</p>
+<p>All measured on 2026-08-17, macOS arm64, over a loopback session. Each is recorded in the <code>OPEN_GAPS.md</code> of the repository that found it.</p>
+<section id="a-64-entity-slice-does-not-fit-in-one-datagram" class="level3">
+<h3 class="anchored" data-anchor-id="a-64-entity-slice-does-not-fit-in-one-datagram">A 64-entity slice does not fit in one datagram</h3>
+<p><code>transport-fanout/src/fanout.h:39</code> caps a subscriber’s slice and states the reason: “Cap one subscriber’s slice so a single write stays inside a datagram-sized batch. 64 entities * 100 bytes = 6400 bytes, comfortably inside one message.”</p>
+<p>Two implementations sharing no code disagree with that comment and agree with each other, one fresh connection per size:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 32%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
+<tr class="header">
+<th>stack</th>
+<th>largest datagram</th>
+<th>whole records</th>
+<th>failure above the limit</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="5" data-listing-word-count-sort="836" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-08-17 (Monday)" data-listing-filename-sort="20260817-deck-log.md">
-<td>
-<a href="../changelog/2026/20260817-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-08-17 (Monday)</a>
-</td>
-
+<tbody>
+<tr class="odd">
+<td><code>aioquic</code> 1.3.0</td>
+<td>1169 bytes</td>
+<td>11</td>
+<td>queues the frame and jams</td>
 </tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="10" data-listing-word-count-sort="1809" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)" data-listing-filename-sort="20260807-deck-log.md">
-<td>
-<a href="../changelog/2026/20260807-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)</a>
-</td>
-
+<tr class="even">
+<td><code>pywebtransport</code> 0.20.1</td>
+<td>1161 bytes</td>
+<td>11</td>
+<td>refuses at the API</td>
 </tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="../changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="../changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="../changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="../changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
-</tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="../changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="../changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
-</tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="../changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="9" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="../changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="10" data-listing-file-modified-sort="1787006851744" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="../changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<p>The eight-byte difference is header overhead and both land on 11 records. The cause is structural rather than a library limit: a DATAGRAM frame has to fit inside one QUIC packet, and <code>aioquic</code> reports <code>_max_datagram_size = 1200</code> against a negotiated <code>_remote_max_datagram_frame_size = 65536</code>, so the packet size binds and the frame limit never does. 6400 bytes is five QUIC packets.</p>
+<p><code>datasource-queen/src/wt.c:32</code> sets <code>WT_MTU_MAX</code> to 1300, which is 13 records, so the C side’s configuration contradicts the C side’s comment before either Python implementation is considered. <code>transport-fanout</code> has never run and <code>transport-ingest-c</code> has no <code>main</code>, so nothing had exercised the claim.</p>
+<p><code>transport-ingest-python</code> splits a slice at 11 records so it runs. What stays open is whether <code>MAX_SLICE_ENTITIES</code> is wrong, whether slices belong on streams, or whether <code>fanout_one</code>’s silent truncation at 64 was always the real cap.</p>
+</section>
+<section id="a-library-defect-one-oversized-datagram-jams-every-datagram-after-it" class="level3">
+<h3 class="anchored" data-anchor-id="a-library-defect-one-oversized-datagram-jams-every-datagram-after-it">A library defect: one oversized datagram jams every datagram after it</h3>
+<p><code>aioquic</code>’s <code>_write_datagram_frame</code> asks the packet builder for room, and when the frame cannot fit, the caller breaks out of the send loop without popping the queue, so the oversized datagram stays at the head forever.</p>
+<p>Measured: after one 6400-byte send, three subsequent 100-byte datagrams never arrived and the pending queue grew from one entry to three. One bad send does not lose one message, it ends that session’s datagram path.</p>
+<p><code>transport-ingest-python</code> fragments against the connection and refuses anything over the cap, so it cannot trigger this. Reporting it upstream was considered and dropped: the trigger is an application sending a datagram larger than a packet, which RFC 9221 already forbids, so it is misuse handling rather than a protocol defect and it is not reachable from peer input. quiche exposes <code>dgram_max_writable_len</code> and quic-go returns a too-large error carrying the size, while aioquic documents no size contract and exposes no way to query one, which is why <code>datagram_capacity</code> reads private attributes.</p>
+<p>This also contaminated a measurement. A binary search over delivery first returned 1050 bytes, because one oversized probe jammed the connection and every later size read as lost. Datagrams are unreliable, so a threshold cannot be probed on one connection at all, which is why the table above uses a fresh connection per size.</p>
+</section>
+<section id="a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack" class="level3">
+<h3 class="anchored" data-anchor-id="a-library-limit-pywebtransport-rejects-ec-server-keys-and-that-decided-the-stack">A library limit: pywebtransport rejects EC server keys, and that decided the stack</h3>
+<p><code>contract-wt/README.md</code> records the Godot demo server building “a fresh self-signed P-256 certificate on every run”. <code>pywebtransport</code> refuses to open a listener with one, failing with “failed to parse private key as RSA, ECDSA, or EdDSA”. PKCS#8 keys from LibreSSL 3.3.6:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>key</th>
+<th><code>pywebtransport</code> 0.20.1</th>
+<th><code>aioquic</code> 1.3.0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>EC prime256v1 (P-256)</td>
+<td>rejected</td>
+<td>accepted</td>
+</tr>
+<tr class="even">
+<td>EC secp384r1 (P-384)</td>
+<td>rejected</td>
+<td>accepted</td>
+</tr>
+<tr class="odd">
+<td>RSA 2048</td>
+<td>accepted</td>
+<td>accepted</td>
+</tr>
+<tr class="even">
+<td>Ed25519</td>
+<td>untested</td>
+<td>untested</td>
+</tr>
+</tbody>
+</table>
+<p>Ed25519 is untested on both because LibreSSL 3.3.6 answers <code>Unknown algorithm ed25519</code> and no key was produced to try.</p>
+<p>Each end’s key is its own, so this never stopped the two talking. It stopped the Python pair serving a role the Godot side serves today, which is why the pair moved to <code>aioquic</code>. A live session with a P-256 server key answers CONNECT with <code>:status 200</code>.</p>
+</section>
+<section id="a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends" class="level3">
+<h3 class="anchored" data-anchor-id="a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends">A configuration defect: a default iceoryx2 subscriber drops the oldest of three sends</h3>
+<p><code>iceoryx2</code> defaults a subscriber’s buffer to <strong>2</strong> samples with safe overflow on. Three records published in a burst arrived as two, and the missing one was the oldest, before any reader was slow. Both repositories now set the buffer explicitly and keep safe overflow, because RFD 0108 requires that a lagging reader never stall the writer.</p>
+<p>The drop stays undetectable. <code>HeaderPublishSubscribe</code> carries a node id, a publisher id and an element count, and no sequence number, so nothing distinguishes a dropped sample from one never sent. RFD 0108 says a subscriber whose cursor falls out of the ring “receives a resync signal rather than a gap”; no such signal exists, and defining one is a wire decision.</p>
+</section>
+</section>
+<section id="the-renames" class="level2">
+<h2 class="anchored" data-anchor-id="the-renames">The renames</h2>
+<p>Two repositories renamed, two created. GitHub redirects the old names.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 35%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>before</th>
+<th>after</th>
+<th>path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>transport-gateway</code></td>
+<td><code>transport-gateway-c</code></td>
+<td><code>1-transport/gateway-c</code></td>
+</tr>
+<tr class="even">
+<td><code>transport-ingest</code></td>
+<td><code>transport-ingest-c</code></td>
+<td><code>1-transport/ingest-c</code></td>
+</tr>
+<tr class="odd">
+<td>—</td>
+<td><code>transport-gateway-python</code></td>
+<td><code>1-transport/gateway-python</code></td>
+</tr>
+<tr class="even">
+<td>—</td>
+<td><code>transport-ingest-python</code></td>
+<td><code>1-transport/ingest-python</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>check_path_recomposes</code> in <code>check_docs.py</code> requires the directory and its child to rebuild the repository name, and all four do. The manifest count moves from 45 to 47.</p>
+<p>Both C repositories carried a description using a word RFD 0111 retired — “hands the result to a <strong>plane</strong> over iceoryx2” — because the READMEs were converted and the GitHub descriptions were missed. Both now say interactor.</p>
+<p><code>check_docs.py</code>’s moved-repository check found eight stale references in six files across five repositories, each fixed in its own pull request: <code>transport-fanout</code>, <code>transport-gateway-c</code>, <code>transport-ingest-c</code>, <code>interactor-ward</code>, <code>entities-gyre</code> and <code>datasource-queen</code>.</p>
+</section>
+<section id="why-the-language-and-not-the-library" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-language-and-not-the-library">Why the language and not the library</h2>
+<p>RFD 0111 retires names that say how a thing was built, and <code>-c</code> and <code>-python</code> are exactly that. The rule targets directories that collect whatever nobody classified: <code>service/</code>, <code>lean/</code>, <code>engine/</code>, <code>vendor/</code>. Two repositories implementing one contract are a different case, because the build is the only thing that separates them and the role word is already taken by both.</p>
+<p><code>transport-picoquic</code>, which RFD 0111 renamed from <code>fabric-edge</code>, is the precedent for naming a transport repository after its stack, taken for the same reason: “Bare <code>transport</code> would read as a name that went missing.”</p>
+<p>The language outlives the library. Swapping picoquic for another C QUIC stack, or <code>pywebtransport</code> for aioquic, leaves both names true, where <code>-picoquic</code> and <code>-pywebtransport</code> would strand.</p>
+</section>
+<section id="what-is-built" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-built">What is built</h2>
+<p>Both repositories carry the conformance gate and the terminator, on <code>aioquic</code> 1.3.0 and <code>iceoryx2</code> 0.9.3, and neither carries a cross-test.</p>
+<p><code>conformance.py</code> decodes all 64 golden vectors, checks the fields the CSV names, and re-encodes to compare byte for byte. <code>--self-test</code> corrupts one vector and the gate is wrong if that passes. CI runs both, on every pull request and in the merge group.</p>
+<p><code>transport-ingest-python</code> was driven end to end on a live session with an EC P-256 server key: CONNECT answered <code>:status 200</code>, three records in one datagram reached the ring byte-identical to the wire, and a 250-byte datagram was dropped whole rather than trimmed to two records.</p>
+<p>The live cross-test against the C pair is not written, and there is nothing yet to write it against. <code>transport-gateway-c</code> and <code>transport-ingest-c</code> have no <code>main</code> and no <code>CMakeLists.txt</code>, and both READMEs say “State: not started”. <code>transport-ingest-c</code>’s copy of the transport code is a stale fork of <code>transport-gateway-c</code>’s: it passes an <code>h3zero_callback_ctx_t</code> where <code>h3zero_callback</code> casts to <code>picohttp_server_parameters_t</code>, and it lacks the <code>h3zero_declare_stream_prefix</code> call. That divergence is the reason both Python repositories consume one emitted codec rather than two copies.</p>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -908,7 +938,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/pages/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0123-a-second-webtransport-implementation/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

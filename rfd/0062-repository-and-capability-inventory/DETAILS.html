@@ -330,11 +330,11 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td>Repos in <code>v-sekai-multiplayer-fabric</code></td>
-<td>73</td>
+<td>75</td>
 </tr>
 <tr class="even">
 <td>Active</td>
-<td>49</td>
+<td>51</td>
 </tr>
 <tr class="odd">
 <td>Archived</td>
@@ -454,6 +454,45 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</section>
+<section id="transport-layers" class="level4">
+<h4 class="anchored" data-anchor-id="transport-layers">Transport layers</h4>
+<p><code>rfd/0111</code> puts the input that triggers an interactor on side 1. <code>rfd/0123</code> adds a second implementation of the WebTransport contract, so the role word no longer identifies one repository and the language qualifies each name.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/transport-gateway-c">transport-gateway-c</a></td>
+<td>Control streams over picoquic. Carries player traffic. Renamed from <code>transport-gateway</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/transport-ingest-c">transport-ingest-c</a></td>
+<td>Player input datagrams over picoquic. Carries player traffic. Renamed from <code>transport-ingest</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/transport-gateway-python">transport-gateway-python</a></td>
+<td>The same control streams on <code>pywebtransport</code>, for interoperability. Carries no player traffic.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/transport-ingest-python">transport-ingest-python</a></td>
+<td>The same datagrams on <code>pywebtransport</code>, for interoperability. Carries no player traffic.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/transport-fanout">transport-fanout</a></td>
+<td>Egress: interest-filtered fan-out, driven by the zone tick rather than an arriving packet.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/transport-asset">transport-asset</a></td>
+<td>Content-addressed chunks, served to whoever is allowed to ask.</td>
+</tr>
+</tbody>
+</table>
+<p>The Python pair produces agreement or disagreement with the C pair rather than traffic. <code>rfd/0123</code> has the three disagreements it found before it carried a byte.</p>
 </section>
 <section id="zone-host-and-its-guests" class="level4">
 <h4 class="anchored" data-anchor-id="zone-host-and-its-guests">Zone host and its guests</h4>
