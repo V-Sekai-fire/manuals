@@ -1,0 +1,82 @@
+---
+title: "RFD 0123: A second WebTransport implementation, and the names that make room for it"
+rfd: "0123"
+state: discussion
+scope: the WebTransport contract, who implements it, and what the transport repositories are called
+---
+
+## Problem
+
+The fabric states its wire in `contract-wt`, `contract-entity-packet`, `contract-connection-fsm`
+and `contract-http3-queue`, and implements it once. RFD 0088 chose that: "Client and server share
+one proven QUIC stack instead of two different, independently verified ones." `transport-gateway`,
+`transport-ingest` and the engine's `modules/http3` all vendor picoquic and picotls, so both ends
+of every session run the same code.
+
+That buys interoperability by construction and gives up the check. A wire implemented once
+describes the program that implements it, and nothing establishes that the specification is
+implementable from the specification. Every assumption both ends share passes every test the pair
+can run. `contract-wt` already makes this argument for the engine's H3 stack and acts on it in
+aioquic; nothing makes it for the transport layer.
+
+## Decision
+
+**A second implementation, on a stack that shares no code with the first.**
+`transport-gateway-python` and `transport-ingest-python` terminate the same contract on
+`pywebtransport`, whose QUIC core is Rust rather than picoquic's C, and hand off over the iceoryx2
+ring. Khronos ratifies against two independent implementations for this reason.
+
+**It carries no player traffic.** `transport-gateway-c`'s `PACKET_PATH.md` measures a scripting
+runtime at 5.70 M/s against a 15 M/s bar, and 117.8 ns per runtime crossing against a 66.7 ns
+per-packet budget. Those numbers stand and they are why policy lives in an interactor rather than
+in the packet path. The Python pair produces agreement or disagreement, and no throughput claim
+goes in a record without a measurement in `data/measurements/`.
+
+**The language is what tells the four repositories apart.** `transport-gateway` becomes
+`transport-gateway-c` and `transport-ingest` becomes `transport-ingest-c`. Two implementations of
+one contract are distinguished only by how they are built, so RFD 0111's preference for names that
+say what a thing does cannot separate them, and `transport-picoquic` is the precedent for naming a
+transport repository after its stack. Naming the language rather than the library also survives
+swapping picoquic or `pywebtransport`. Neither pair keeps the unqualified name, because the
+unqualified name implies the other is a variant.
+
+**The codec is emitted, never retyped.** `contract-entity-packet` gains a Python emitter beside
+`EntityPacket/EmitC.lean`, so `lake exe packet_emit` writes the C header, the Python module and the
+64 golden vectors from one run. A second implementation that reads the layout off the first tests
+whether two people can copy a table.
+
+**The ring is reached through the `iceoryx2` wheel.** The C repositories dlopen iceoryx2 through a
+dispatch table generated from `iceoryx2.sigs`, so that "the harness builds on a machine that has
+never seen iceoryx2" and because "iceoryx2 is Rust, and weft writes no Rust." A prebuilt wheel is a
+runtime artifact rather than a build-graph edge and adds no second `.sigs` file. Bus access stays
+behind one module in each repository so the choice is reversible.
+
+**`contract-wt` stays where it is, on aioquic.** Two Python stacks checking the C one is more
+coverage, and its roster client is what caught `WebTransportPeer` tracking clients in one bool.
+
+## Consequences
+
+The implementation found three disagreements before it carried a byte of real traffic, which is the
+argument for it stated as evidence rather than as principle. `DETAILS.md` has the measurements: a
+64-entity slice does not fit in one datagram, `pywebtransport` rejects the EC keys the Godot demo
+server generates, and a default iceoryx2 subscriber buffer of 2 drops the oldest of three sends.
+
+The cost is a fourth transport repository and a second wire reader to keep in step. RFD 0122 named
+that cost exactly — "every wire change is now two changes that must agree, and nothing checks that
+they do" — and rejected a second implementation carrying player traffic for it. Checking that they
+agree is what these two produce, so the cost lands where the benefit is.
+
+## References
+
+- RFD 0088 chose one QUIC stack on both ends; RFD 0122 rejected a second implementation on the
+  player path and is not contradicted; RFD 0047 abandoned `webtransportd` and still governs the
+  production path; RFD 0111 sets the name shape this amends for four repositories
+- RFD 0049 for the reliability classes the two repositories split on, RFD 0096 for the measurement
+  discipline, RFD 0108 for the rule that a lagging reader never stalls the writer
+- `contract-entity-packet` for the layout, the emitter and the golden vectors; `contract-wt` for
+  the same argument one stack earlier
+- The measurements, the method, and the rename list: `DETAILS.md`
+
+## Detail
+
+{{< include DETAILS.md >}}
