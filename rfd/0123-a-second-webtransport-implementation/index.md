@@ -22,9 +22,18 @@ aioquic; nothing makes it for the transport layer.
 ## Decision
 
 **A second implementation, on a stack that shares no code with the first.**
-`transport-gateway-python` and `transport-ingest-python` terminate the same contract on
-`pywebtransport`, whose QUIC core is Rust rather than picoquic's C, and hand off over the iceoryx2
-ring. Khronos ratifies against two independent implementations for this reason.
+`transport-gateway-python` and `transport-ingest-python` terminate the same contract on `aioquic`,
+which implements QUIC and TLS 1.3 in Python from the RFCs, and hand off over the iceoryx2 ring.
+Khronos ratifies against two independent implementations for this reason.
+
+Three stacks were considered and the choice turns on what each shares with the first. Binding
+picoquic from Python was rejected because both ends would then run the same QUIC and the same TLS,
+so the second implementation would test the binding rather than the contract. h2o was rejected
+because its WebTransport is an unmerged pull request stacked on another unmerged pull request,
+with tests unchecked, against an HTTP/3 stack h2o calls experimental; its QUIC is quicly and would
+have qualified otherwise. `pywebtransport` shipped first here and was replaced: it refuses an EC
+private key, and `contract-wt` records the Godot demo server generating a fresh P-256 certificate
+on every run. `DETAILS.md` has the measurements.
 
 **It carries no player traffic.** `transport-gateway-c`'s `PACKET_PATH.md` measures a scripting
 runtime at 5.70 M/s against a 15 M/s bar, and 117.8 ns per runtime crossing against a 66.7 ns
@@ -36,9 +45,10 @@ goes in a record without a measurement in `data/measurements/`.
 `transport-gateway-c` and `transport-ingest` becomes `transport-ingest-c`. Two implementations of
 one contract are distinguished only by how they are built, so RFD 0111's preference for names that
 say what a thing does cannot separate them, and `transport-picoquic` is the precedent for naming a
-transport repository after its stack. Naming the language rather than the library also survives
-swapping picoquic or `pywebtransport`. Neither pair keeps the unqualified name, because the
-unqualified name implies the other is a variant.
+transport repository after its stack. Naming the language rather than the library also survives a
+change of library, which this record has already exercised: the Python pair moved from
+`pywebtransport` to `aioquic` before it merged and neither name moved. Neither pair keeps the
+unqualified name, because the unqualified name implies the other is a variant.
 
 **The codec is emitted, never retyped.** `contract-entity-packet` gains a Python emitter beside
 `EntityPacket/EmitC.lean`, so `lake exe packet_emit` writes the C header, the Python module and the
@@ -51,15 +61,20 @@ never seen iceoryx2" and because "iceoryx2 is Rust, and weft writes no Rust." A 
 runtime artifact rather than a build-graph edge and adds no second `.sigs` file. Bus access stays
 behind one module in each repository so the choice is reversible.
 
-**`contract-wt` stays where it is, on aioquic.** Two Python stacks checking the C one is more
-coverage, and its roster client is what caught `WebTransportPeer` tracking clients in one bool.
+**`contract-wt` stays where it is.** It runs the same `aioquic` this pair now runs, and it checks a
+different subject: the engine's `modules/http3` as a client, where these check the transport layer
+as a server. One Python stack in two places is less to keep current than two, and its roster client
+is what caught `WebTransportPeer` tracking clients in one bool. What it does not give is a third
+opinion, so a fault inside `aioquic` itself would go unseen by both.
 
 ## Consequences
 
-The implementation found three disagreements before it carried a byte of real traffic, which is the
+The implementation found four disagreements before it carried a byte of real traffic, which is the
 argument for it stated as evidence rather than as principle. `DETAILS.md` has the measurements: a
-64-entity slice does not fit in one datagram, `pywebtransport` rejects the EC keys the Godot demo
-server generates, and a default iceoryx2 subscriber buffer of 2 drops the oldest of three sends.
+64-entity slice does not fit in one datagram and two stacks sharing no code agree on the number, a
+default iceoryx2 subscriber buffer of 2 drops the oldest of three sends, one oversized datagram
+jams every datagram after it on `aioquic`, and `pywebtransport` rejects the EC keys the Godot demo
+server generates, which is what decided the stack.
 
 The cost is a fourth transport repository and a second wire reader to keep in step. RFD 0122 named
 that cost exactly — "every wire change is now two changes that must agree, and nothing checks that

@@ -1,8 +1,9 @@
 ## What the second implementation found
 
-Three disagreements, each measured on 2026-08-17, macOS arm64, against `pywebtransport` 0.20.1 and
-`iceoryx2` 0.9.3 over a loopback session. None is fixed, and each is recorded in the `OPEN_GAPS.md`
-of the repository that found it.
+Four disagreements, each measured on 2026-08-17, macOS arm64, over a loopback session against
+`iceoryx2` 0.9.3 and both WebTransport stacks the pair has run. Each is recorded in the
+`OPEN_GAPS.md` of the repository that found it. The EC-key one is closed, by changing stack; the
+rest stand.
 
 ### A 64-entity slice does not fit in one datagram
 
@@ -10,42 +11,65 @@ of the repository that found it.
 subscriber's slice so a single write stays inside a datagram-sized batch. 64 entities \* 100 bytes
 = 6400 bytes, comfortably inside one message."
 
-A binary search over `send_datagram` on a live session puts the largest accepted datagram at
-**1161 bytes**, which is **11** whole 100-byte records.
+Two implementations sharing no code disagree with that comment and agree with each other, one
+fresh connection per size:
 
-| payload    | records | result                             |
-| ---------- | ------- | ---------------------------------- |
-| 100 bytes  | 1       | delivered                          |
-| 1161 bytes | 11      | delivered, and the largest that is |
-| 1162 bytes | 11      | refused                            |
-| 6400 bytes | 64      | refused                            |
+| stack                   | largest datagram | whole records | failure above the limit   |
+| ----------------------- | ---------------- | ------------- | ------------------------- |
+| `aioquic` 1.3.0         | 1169 bytes       | 11            | queues the frame and jams |
+| `pywebtransport` 0.20.1 | 1161 bytes       | 11            | refuses at the API        |
 
-6400 bytes is 5.5 times the measured limit. `datasource-queen/src/wt.c:32` sets `WT_MTU_MAX` to
-1300, which is 13 records, so the C side's own configuration contradicts the C side's comment
-before this implementation is considered. `transport-fanout` has never run and
-`transport-ingest-c` has no `main`, so nothing had exercised the claim.
+The eight-byte difference is header overhead and both land on 11 records. The cause is structural
+rather than a library limit: a DATAGRAM frame has to fit inside one QUIC packet, and `aioquic`
+reports `_max_datagram_size = 1200` against a negotiated `_remote_max_datagram_frame_size = 65536`,
+so the packet size binds and the frame limit never does. 6400 bytes is five QUIC packets.
 
-The limit is a negotiated QUIC value rather than a `pywebtransport` constant, so another path may
-differ, and no measurement on another path exists. What stays open is whether
+`datasource-queen/src/wt.c:32` sets `WT_MTU_MAX` to 1300, which is 13 records, so the C side's
+configuration contradicts the C side's comment before either Python implementation is considered.
+`transport-fanout` has never run and `transport-ingest-c` has no `main`, so nothing had exercised
+the claim.
+
+`transport-ingest-python` splits a slice at 11 records so it runs. What stays open is whether
 `MAX_SLICE_ENTITIES` is wrong, whether slices belong on streams, or whether `fanout_one`'s silent
-truncation at 64 was always the real cap. `transport-ingest-python` splits a slice at 11 records so
-that it runs, which is a decision the record does not yet justify.
+truncation at 64 was always the real cap.
 
-### pywebtransport rejects EC server keys
+### One oversized datagram jams every datagram after it
+
+`aioquic`'s `_write_datagram_frame` asks the packet builder for room, and when the frame cannot
+fit, the caller breaks out of the send loop without popping the queue, so the oversized datagram
+stays at the head forever.
+
+Measured: after one 6400-byte send, three subsequent 100-byte datagrams never arrived and the
+pending queue grew from one entry to three. One bad send does not lose one message, it ends that
+session's datagram path.
+
+`transport-ingest-python` refuses anything over the cap rather than queueing it, so it cannot
+trigger this. Nothing upstream stops another caller reaching `H3Connection.send_datagram` directly.
+
+This also contaminated a measurement. A binary search over delivery first returned 1050 bytes,
+because one oversized probe jammed the connection and every later size read as lost. Datagrams are
+unreliable, so a threshold cannot be probed on one connection at all, which is why the table above
+uses a fresh connection per size.
+
+### pywebtransport rejects EC server keys, and that decided the stack
 
 `contract-wt/README.md` records the Godot demo server building "a fresh self-signed P-256
 certificate on every run". `pywebtransport` refuses to open a listener with one, failing with
 "failed to parse private key as RSA, ECDSA, or EdDSA". PKCS#8 keys from LibreSSL 3.3.6:
 
-| key                   | result                                       |
-| --------------------- | -------------------------------------------- |
-| EC prime256v1 (P-256) | rejected                                     |
-| EC secp384r1 (P-384)  | rejected                                     |
-| RSA 2048              | accepted                                     |
-| Ed25519               | untested; LibreSSL 3.3.6 cannot generate one |
+| key                   | `pywebtransport` 0.20.1 | `aioquic` 1.3.0 |
+| --------------------- | ----------------------- | --------------- |
+| EC prime256v1 (P-256) | rejected                | accepted        |
+| EC secp384r1 (P-384)  | rejected                | accepted        |
+| RSA 2048              | accepted                | accepted        |
+| Ed25519               | untested                | untested        |
 
-Each end's key is its own, so this does not stop the two talking. It does stop the Python pair
-serving a role the Godot side serves today, and which end is wrong is unresolved.
+Ed25519 is untested on both because LibreSSL 3.3.6 answers `Unknown algorithm ed25519` and no key
+was produced to try.
+
+Each end's key is its own, so this never stopped the two talking. It stopped the Python pair
+serving a role the Godot side serves today, which is why the pair moved to `aioquic`. A live
+session with a P-256 server key answers CONNECT with `:status 200`.
 
 ### A default iceoryx2 subscriber drops the oldest of three sends
 
@@ -97,15 +121,16 @@ for aioquic, leaves both names true, where `-picoquic` and `-pywebtransport` wou
 
 ## What is built
 
-Both repositories carry the conformance gate and the terminator, and neither carries a cross-test.
+Both repositories carry the conformance gate and the terminator, on `aioquic` 1.3.0 and
+`iceoryx2` 0.9.3, and neither carries a cross-test.
 
 `conformance.py` decodes all 64 golden vectors, checks the fields the CSV names, and re-encodes to
 compare byte for byte. `--self-test` corrupts one vector and the gate is wrong if that passes. CI
 runs both, on every pull request and in the merge group.
 
-`transport-ingest-python` was driven end to end on a live session: three records in one datagram
-reached the ring byte-identical to the wire, and a 250-byte datagram was dropped whole rather than
-trimmed to two records.
+`transport-ingest-python` was driven end to end on a live session with an EC P-256 server key:
+CONNECT answered `:status 200`, three records in one datagram reached the ring byte-identical to
+the wire, and a 250-byte datagram was dropped whole rather than trimmed to two records.
 
 The live cross-test against the C pair is not written, and there is nothing yet to write it
 against. `transport-gateway-c` and `transport-ingest-c` have no `main` and no `CMakeLists.txt`, and
