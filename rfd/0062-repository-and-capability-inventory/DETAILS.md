@@ -35,8 +35,8 @@ these.
 
 | Set                                   | Count |
 | ------------------------------------- | ----- |
-| Repos in `v-sekai-multiplayer-fabric` | 73    |
-| Active                                | 49    |
+| Repos in `v-sekai-multiplayer-fabric` | 75    |
+| Active                                | 51    |
 | Archived                              | 24    |
 
 ### Capabilities and where they live
@@ -65,6 +65,25 @@ these.
 | [godot-sandbox-gdscript-compiler](https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler) | GDScript-to-sandbox compiler for the engine's `module_sandbox`.                                     |
 | [godot-sandbox-programs](https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-programs)                   | RISC-V programs run inside `module_sandbox` (fork).                                                 |
 | [native-media-test](https://github.com/v-sekai-multiplayer-fabric/native-media-test)                             | Godot project exercising the engine's native media backend (private).                               |
+
+#### Transport layers
+
+`rfd/0111` puts the input that triggers an interactor on side 1. `rfd/0123`
+adds a second implementation of the WebTransport contract, so the role word
+no longer identifies one repository and the language qualifies each name.
+
+| Repo                                                                                               | Purpose                                                                                        |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [transport-gateway-c](https://github.com/v-sekai-multiplayer-fabric/transport-gateway-c)           | Control streams over picoquic. Carries player traffic. Renamed from `transport-gateway`.       |
+| [transport-ingest-c](https://github.com/v-sekai-multiplayer-fabric/transport-ingest-c)             | Player input datagrams over picoquic. Carries player traffic. Renamed from `transport-ingest`. |
+| [transport-gateway-python](https://github.com/v-sekai-multiplayer-fabric/transport-gateway-python) | The same control streams on `pywebtransport`, for interoperability. Carries no player traffic. |
+| [transport-ingest-python](https://github.com/v-sekai-multiplayer-fabric/transport-ingest-python)   | The same datagrams on `pywebtransport`, for interoperability. Carries no player traffic.       |
+| [transport-fanout](https://github.com/v-sekai-multiplayer-fabric/transport-fanout)                 | Egress: interest-filtered fan-out, driven by the zone tick rather than an arriving packet.     |
+| [transport-asset](https://github.com/v-sekai-multiplayer-fabric/transport-asset)                   | Content-addressed chunks, served to whoever is allowed to ask.                                 |
+
+The Python pair produces agreement or disagreement with the C pair rather
+than traffic. `rfd/0123` has the three disagreements it found before it
+carried a byte.
 
 #### Zone host and its guests
 
