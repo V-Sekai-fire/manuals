@@ -1,9 +1,13 @@
 ## What the second implementation found
 
-Four disagreements, each measured on 2026-08-17, macOS arm64, over a loopback session against
-`iceoryx2` 0.9.3 and both WebTransport stacks the pair has run. Each is recorded in the
-`OPEN_GAPS.md` of the repository that found it. The EC-key one is closed, by changing stack; the
-rest stand.
+One disagreement about the contract, and three integration defects found while building. The
+distinction matters, because only the first is the thing a second implementation exists to
+produce: it is a claim the fabric makes about its own wire, contradicted by two stacks that share
+no code. The other three are properties of the libraries this pair happens to use, and a third
+implementation on a fourth stack would not have found them.
+
+All measured on 2026-08-17, macOS arm64, over a loopback session. Each is recorded in the
+`OPEN_GAPS.md` of the repository that found it.
 
 ### A 64-entity slice does not fit in one datagram
 
@@ -33,7 +37,7 @@ the claim.
 `MAX_SLICE_ENTITIES` is wrong, whether slices belong on streams, or whether `fanout_one`'s silent
 truncation at 64 was always the real cap.
 
-### One oversized datagram jams every datagram after it
+### A library defect: one oversized datagram jams every datagram after it
 
 `aioquic`'s `_write_datagram_frame` asks the packet builder for room, and when the frame cannot
 fit, the caller breaks out of the send loop without popping the queue, so the oversized datagram
@@ -43,15 +47,20 @@ Measured: after one 6400-byte send, three subsequent 100-byte datagrams never ar
 pending queue grew from one entry to three. One bad send does not lose one message, it ends that
 session's datagram path.
 
-`transport-ingest-python` refuses anything over the cap rather than queueing it, so it cannot
-trigger this. Nothing upstream stops another caller reaching `H3Connection.send_datagram` directly.
+`transport-ingest-python` fragments against the connection and refuses anything over the cap, so
+it cannot trigger this. Reporting it upstream was considered and dropped: the trigger is an
+application sending a datagram larger than a packet, which RFC 9221 already forbids, so it is
+misuse handling rather than a protocol defect and it is not reachable from peer input. quiche
+exposes `dgram_max_writable_len` and quic-go returns a too-large error carrying the size, while
+aioquic documents no size contract and exposes no way to query one, which is why
+`datagram_capacity` reads private attributes.
 
 This also contaminated a measurement. A binary search over delivery first returned 1050 bytes,
 because one oversized probe jammed the connection and every later size read as lost. Datagrams are
 unreliable, so a threshold cannot be probed on one connection at all, which is why the table above
 uses a fresh connection per size.
 
-### pywebtransport rejects EC server keys, and that decided the stack
+### A library limit: pywebtransport rejects EC server keys, and that decided the stack
 
 `contract-wt/README.md` records the Godot demo server building "a fresh self-signed P-256
 certificate on every run". `pywebtransport` refuses to open a listener with one, failing with
@@ -71,7 +80,7 @@ Each end's key is its own, so this never stopped the two talking. It stopped the
 serving a role the Godot side serves today, which is why the pair moved to `aioquic`. A live
 session with a P-256 server key answers CONNECT with `:status 200`.
 
-### A default iceoryx2 subscriber drops the oldest of three sends
+### A configuration defect: a default iceoryx2 subscriber drops the oldest of three sends
 
 `iceoryx2` defaults a subscriber's buffer to **2** samples with safe overflow on. Three records
 published in a burst arrived as two, and the missing one was the oldest, before any reader was

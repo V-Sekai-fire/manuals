@@ -69,12 +69,17 @@ opinion, so a fault inside `aioquic` itself would go unseen by both.
 
 ## Consequences
 
-The implementation found four disagreements before it carried a byte of real traffic, which is the
-argument for it stated as evidence rather than as principle. `DETAILS.md` has the measurements: a
-64-entity slice does not fit in one datagram and two stacks sharing no code agree on the number, a
-default iceoryx2 subscriber buffer of 2 drops the oldest of three sends, one oversized datagram
-jams every datagram after it on `aioquic`, and `pywebtransport` rejects the EC keys the Godot demo
-server generates, which is what decided the stack.
+The implementation contradicted one claim the fabric makes about its own wire before it carried a
+byte of real traffic, which is the argument for it stated as evidence rather than as principle.
+`transport-fanout` caps a slice at 64 records and calls 6400 bytes "comfortably inside one
+message"; two stacks sharing no code put the limit at 11 records, and `datasource-queen`'s own
+`WT_MTU_MAX` agrees with them rather than with the comment.
+
+That is one finding, not a pile of them, and the count is worth keeping honest. Building the pair
+also surfaced three defects in the libraries it uses — an EC key a stack would not load, a
+subscriber buffer that drops the oldest of three sends, a datagram queue that wedges on an
+oversized send. Those are real and cost real time, and a third implementation on a fourth stack
+would not have found any of them. `DETAILS.md` keeps them apart for that reason.
 
 The cost is a fourth transport repository and a second wire reader to keep in step. RFD 0122 named
 that cost exactly — "every wire change is now two changes that must agree, and nothing checks that
