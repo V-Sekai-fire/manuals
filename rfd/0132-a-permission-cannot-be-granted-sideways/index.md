@@ -56,7 +56,7 @@ are not a verified one.
 **It is not distrust, and agents should not write to each other as though it were.** Every other
 kind of request across this seam is ordinary teamwork: hand me that repository, review this
 patch, here is a gate I wrote for your tree. The rule is narrow on purpose, and it covers
-exactly the class of request whose whole content is *what you are allowed to do*.
+exactly the class of request whose whole content is _what you are allowed to do_.
 
 **It does not make a relay useless.** Relaying the principal's intent is how two agents stay
 pointed the same way. What a relay cannot carry is authority.
