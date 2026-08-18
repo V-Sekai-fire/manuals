@@ -10,7 +10,503 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 18 Aug 2026 01:10:59 GMT</lastBuildDate>
+<lastBuildDate>Tue, 18 Aug 2026 03:53:43 GMT</lastBuildDate>
+<item>
+  <title>RFD 0130: Every repository we have authority over states what it is made of</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0130-state-what-a-repository-is-made-of/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0130: Every repository we have authority over states what it is made of</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> the CITATION.cff gate, and the three categories of authority it rests on</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>CLAUDE.md</code> has required a <code>CITATION.cff</code> in every repository since the conversion off <code>meta</code>, and nothing enforced it. Fourteen repositories had one and the rest did not, which made the file read as a habit of the Lean workspaces rather than as a rule. This project already calls that shape of rule a suggestion: a claim no command can falsify does not defend itself.</p>
+<p>The reason to want it is provenance. A repository’s dependency file cannot hold a journal article, a vendored subtree, or the design somebody else published. <code>interactor-ward</code> is the case that shows it: a clone of one repository, vendoring a second and a third, implementing a published design, against numbers proved in four Lean workspaces, none of it visible in a manifest.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>A gate.</strong> <code>mix check authority</code> fails when a repository this organisation has authority over carries no <code>CITATION.cff</code>. It asks two things, because presence is the weaker half: the file must have a <code>title:</code>, and it must have a <code>references:</code> key. Provenance is why the file exists, and one with no references reads as current while saying nothing. A repository genuinely built on nothing states <code>references: []</code> and means it.</p>
+<p><strong>Authority and authorship are different questions, and one list had been answering both.</strong> There are three categories, not two:</p>
+<ul>
+<li><strong>Ours outright.</strong> Every gate applies.</li>
+<li><strong>A fork we maintain.</strong> It sits on our own remote, so it is ours to push to and ours to add files to: the licence, <code>CITATION.cff</code> and <code>.DS_Store</code> gates all reach it. Its README does not, because editing that forks a document upstream owns and this project would carry the diff forever.</li>
+<li><strong>Another organisation’s.</strong> Membership is not authority, so nothing here writes to one at all — not a README and not a <code>CITATION.cff</code>.</li>
+</ul>
+<p>Only the third is out of reach. The middle category is the correction: excusing a fork from the licence and citation gates confused “we did not write the prose” with “we may not add a file”, and left the repositories whose provenance most needs stating as the only ones never asked for it. A fork is upstream’s code plus a branch nobody upstream has, and nothing else in the tree says which is which.</p>
+</section>
+<section id="what-it-found" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-found">What it found</h2>
+<p>Twenty-one repositories, including <code>datasource-foundationdb</code>, <code>idtx-flow</code> and <code>entities-godot</code>, which are exactly the three the old boundary excused.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>CLAUDE.md</code>, “Citation”: the rule this gate enforces</li>
+<li>RFD 0124: the Fine gate, added under the same argument</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0130-state-what-a-repository-is-made-of/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0129: Cost and latency are two budgets in seconds, ratcheted against variance</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0129-cost-and-latency-are-two-budgets/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0129: Cost and latency are two budgets in seconds, ratcheted against variance</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> how a service records what it costs and how long it takes</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>Cost is reduced by batching. Latency is reduced by not batching. The two pull in opposite directions, so a single number that claims to measure “performance” hides which one was spent. A change that batches and is reported as faster is reporting the wrong axis, and a latency win bought by shrinking a batch is a cost regression nobody priced.</p>
+<p>A worse failure is available, and this project committed it. Budgets were recorded for the see-through service before any engine existed: 1.195 seconds of latency and 0.184 seconds of cost, measured on a live endpoint where every job was answered by the settings gate or by a missing-weights error. Those were floors on a path that decomposed nothing. The gate was green, the numbers were precise, and they measured the absence of the work. <code>CLAUDE.md</code> already names this failure: a check that reports is worse than no check, because it reads as coverage.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Two budgets, in SI seconds, never netted against each other.</strong> <code>seconds/seconds.json</code> holds <code>latency_seconds</code> and <code>cost_seconds</code>. <code>seconds/ratchet.py</code> refuses to trade one for the other: a halved cost does not license a slower job. Seconds because the ledger’s unit is the SI second and a git timestamp is in seconds, so nothing is a conversion anybody has to trust.</p>
+<p><strong>A floor may go down or hold. It may never go up.</strong></p>
+<p><strong>The comparison is against variance, not against a point.</strong> A single measurement fluctuates, so a floor set from one run fails on noise and then gets switched off, which is worse than having no gate. Each floor keeps its sample. The comparison is in log space, because a duration is positive and right-skewed, and the floor moves only when the difference clears two standard errors of the difference. The same threshold applies in both directions, so the gate is no easier to please than to trip, and a run inside the noise leaves the floor exactly where it was.</p>
+<p><strong>A floor is set by the first measurement of a system that works, and not before.</strong> This is the correction to the failure above, and it is Gall’s law read the right way round: a ratchet starts from a simple system that works. Until one exists there is nothing to ratchet, and an empty floor is the honest record. Both budgets are empty today, and <code>working</code> records what they will be measured against: upstream’s pipeline, its weights on the network volume, one 1280-pixel image in, a layered PSD with nine named layers out, 171.26 seconds on an RTX 4090 by the program’s own clock.</p>
+<p><strong>A timing comes from the program that did the work.</strong> Never from a clock kept elsewhere. This project has read a normally-progressing run as hung, killed it twice, and reported a super-linear blow-up that did not exist.</p>
+<p><strong>A floor is replaced when what it measures changes, not added to.</strong> When an engine lands, the numbers above are deleted rather than kept beside the new ones. A gate carried across a replacement is a test that only passes for the thing that was removed.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>CLAUDE.md</code>, “Checks”: a check that reports is worse than no check</li>
+<li>Gall’s law: a complex system that works evolved from a simple system that worked</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0129-cost-and-latency-are-two-budgets/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0128: The release ladder is gated and not automated</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0128-the-release-ladder-is-not-automated/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0128: The release ladder is gated and not automated</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> how a service is released, and what a machine may not decide</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>A service packs several repositories into one deployable thing, so it is where a release is cut. Nothing said what a version number means here, and a version number that means nothing is read as though it means something. A tag called <code>rc</code> implies somebody ran the thing and looked at the result; if it was cut because a build went green, it implies something nobody did.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Four rungs, in order: <code>dev</code>, <code>beta</code>, <code>rc</code>, <code>release</code>. No rung is skipped.</strong> A tag is <code>vX.Y.Z-&lt;rung&gt;.N</code>, or <code>vX.Y.Z</code> for the last rung. A version reaches <code>rc</code> only if it has stood on <code>beta</code>, and <code>beta</code> only if it has stood on <code>dev</code>.</p>
+<p><code>ladder/ladder.py</code> decides whether a proposed tag is a legal step, from the tags that already exist. It refuses a skipped rung, a hole in a rung’s numbering, a tag cut twice, a prerelease numbered from zero, and a rung that is not one of the four. <code>proof/test_ladder.py</code> holds fifteen cases, and each is a step somebody would want to take in a hurry, which is the only time the rule matters.</p>
+<p><strong>Nothing automates a promotion, and that is the design rather than an omission.</strong> Each rung is a claim about evidence a machine cannot supply. <code>beta</code> says somebody installed it somewhere real. <code>rc</code> says somebody ran the production settings and looked at the layers. <code>release</code> says somebody decided. A workflow promoting on a green build would assert all three on nobody’s authority, and the value of the ladder is exactly that the claims are true.</p>
+<p>So CI refuses an illegal tag and never creates a legal one. The gate is on a person’s decision, not a substitute for it.</p>
+</section>
+<section id="what-this-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
+<p><strong>What evidence each rung requires.</strong> The ladder checks the order of the rungs, not what was done on them. A service may state its own evidence for <code>rc</code>; this states that a machine cannot be the one to assert it.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0127: what a service is</li>
+<li>RFD 0129: the budgets a release is measured against</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0128-the-release-ladder-is-not-automated/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0127: A service is not a side, and sits past the ring at 7</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0127-a-service-is-not-a-side/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0127: A service is not a side, and sits past the ring at 7</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> where a packing of sides is checked out, and what the numbers mean</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>RFD 0111 gives this stack six words that name a position in the code, and the workspace is a hexagon with six numbered sides. It also says plainly that “service” names a deployment set rather than a position, and it removes <code>service/</code> from the checkout along with seven other directories that named how a thing was built rather than what it does.</p>
+<p>That decision left a real thing with nowhere to live. <code>service-zone</code> and <code>service-behaviour</code> exist, and each holds no code: a membership, why the membership is what it is, and the manifest that runs its members together. Neither is in <code>default.xml</code>, so neither is ever checked out, and the RunPod work needed a third one. A container image that packs a transport layer and an interactor is exactly that thing, and it had been put in the interactor’s repository for want of anywhere better.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>A service is checked out at <code>7-service/</code>.</strong> Past the ring rather than on it. The ring is 1 to 6 and a service packs sides rather than being one, so it sorts after the sides it packs and a reader cannot mistake it for a seventh position.</p>
+<p><strong><code>0-</code> is not free for it.</strong> That number is reserved for metadata about the fabric itself, which is a third kind of thing: not a position in the code, and not a packing of positions. <code>0-infrastructure/logbook</code> holds it.</p>
+<p><strong><code>service/</code> unnumbered is still refused</strong>, for the reason RFD 0111 refused it. An unnumbered directory is where whatever nobody classified collects, and that is the drift the six words exist to stop. The number is what stops <code>7-service/</code> from becoming that.</p>
+<p><strong>The recomposition rule needs no change.</strong> <code>Check.Manifest.path_recomposes</code> drops a leading digit and joins with the child, so <code>7-service/see-through</code> rebuilds <code>service-see-through</code> exactly as <code>1-transport/runpod</code> rebuilds <code>transport-runpod</code>. This was checked rather than assumed: the gate passes over 52 projects with the new side in place.</p>
+<p><strong>What a service holds.</strong> The composition and nothing else: which images run together, why the membership is what it is, the endpoint it runs on, and the release ladder. <code>service-zone</code> already writes it this way — “Nothing here is a copy. Each member is its own repository and its own image.”</p>
+</section>
+<section id="what-this-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
+<p><strong><code>service-zone</code> and <code>service-behaviour</code> are not yet in the manifest.</strong> Both belong at <code>7-service/</code>. Both READMEs still say “edge plane”, a compound RFD 0111 retired, so adding them turns <code>mix check words</code> red until they are rewritten. That is a small change and a separate one.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0111: the six words, and the eight directories it removed</li>
+<li>RFD 0121: the earlier amendment of RFD 0111 against the tree</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0127-a-service-is-not-a-side/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0126: Two see-through interactors, and the check that keeps the A/B one question</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0126-two-see-through-interactors/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0126: Two see-through interactors, and the check that keeps the A/B one question</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> the see-through interactor pair, and what holds them to the same command</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>See-through decomposes one anime illustration into semantic layers. The reference implementation is PyTorch; a port to ggml exists for machines where CUDA does not. Both are worth running, and the interesting question is which is faster and whether they agree.</p>
+<p>A comparison between two implementations is only a comparison if both answer the same question. Nothing enforces that. Two programs drift apart in the settings they accept, the errors they refuse, and the shape of what they return, and every one of those differences turns a timing comparison into a comparison of two different jobs. RFD 0123 makes this argument for a second WebTransport implementation and gets the benefit from the disagreement; the same benefit needs the same discipline here.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>Two interactors, and neither takes the unqualified name.</strong> <code>interactor-see-through-cpp</code> and <code>interactor-see-through-python</code>, for the reason RFD 0123 takes the unqualified names from the gateway pair: a name that says which of two it is beats a name that implies the other is a variant.</p>
+<p><strong>They share the wire and nothing else.</strong> The C++ half reaches the bus through the harness’s dlsym table over the iceoryx2 C ABI. The Python half reaches it through iceoryx2’s own Python binding. Each parses the command itself and encodes its own reply. An implementation that shared a parser could not disagree with the other about a command, and disagreeing is the job.</p>
+<p><strong>A check reads one half’s constants out of the other’s source.</strong> The production settings are two numbers, and if the pair ever disagree about them the comparison is void. <code>proof/test_agreement.py</code> reads <code>ST_MIN_RES</code>, <code>ST_MIN_STEPS</code> and the weight path out of the C++ header and fails when they differ from the Python values. It prints how many comparisons it made, because a check that found nothing because the other half was not checked out reads exactly like agreement.</p>
+<p><strong>A run below the production settings is refused, not served.</strong> 1280 pixels and 30 steps. Low step counts produce degenerate layers that look plausible in a viewer and say nothing about quality, and MADR 0009 in the see-through project records a 512-pixel artefact that vanished at full settings. An interactor that answered a cheap request with a cheap result would invite exactly that comparison. The refusal names the number it saw, because a refusal that does not is one the caller retries unchanged.</p>
+<p><strong>The engine is a seam, and the absent one fails.</strong> It does not return a plausible layer set. This pipeline is judged by compositing its layers and looking at them, so a fabricated result is not caught by checking that a result arrived, and a missing model must stay distinguishable from a bad one.</p>
+</section>
+<section id="what-this-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
+<p><strong>Which is faster.</strong> Nothing here has measured a decomposition through either interactor. RFD 0129 holds the budgets and they are empty on purpose.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>RFD 0123: the same argument for a second WebTransport implementation</li>
+<li>See-through: <a href="https://doi.org/10.1145/3799902.3811209" class="uri">https://doi.org/10.1145/3799902.3811209</a></li>
+<li>Upstream implementation: <a href="https://github.com/shitagaki-lab/see-through" class="uri">https://github.com/shitagaki-lab/see-through</a>, Apache-2.0</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0126-two-see-through-interactors/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0125: An interactor in another process, and the transport layer that reaches it</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0125-an-interactor-in-another-process/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0125: An interactor in another process, and the transport layer that reaches it</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> how a RunPod Serverless worker reaches an interactor that holds a model</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>contract-command</code> says an interactor is a command in and reply bytes out, and <code>transport-runpod</code> supplies one to <code>rp_worker_run</code> as a <code>weft_interactor_t</code>. The interactor is therefore linked into the worker binary and called on the job thread.</p>
+<p>That is right when an interactor is a function. It is wrong when it holds a model. The see-through pipeline loads about 14 GB of weights, and linking it into the worker puts three costs in the wrong place. The load happens inside the process that answers HTTP, so scale-from-zero pays for it before the first job-take. A job that kills the pipeline takes the worker’s job loop with it, and RunPod records a dead worker rather than a failed job. And two model processes cannot share one endpoint, because there is one worker binary.</p>
+<p><code>contract-bus</code> already has the shape that fixes this. <code>weft/loop.hpp</code> is a command loop over iceoryx2: an interactor subscribes, answers, and publishes on a reply service. What it does not have is a caller. The only code that ever sent it a command was its own proof program.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>The transport layer supplies a bus round trip where it used to supply a function.</strong> <code>include/runpod/bus_ask.h</code> publishes the command, waits for the reply carrying its own request id, and returns those bytes. It has the signature of <code>weft_interactor_t::ask</code>, so <code>rp_worker_run</code> is unchanged above it and there is one job loop rather than two.</p>
+<p>The interactor is then an operating-system process, and the three costs move. Weights load once at start, before any job is taken. A pipeline that dies leaves the worker alive to answer the job with an error. And the two are separately replaceable, which is what makes an A/B possible at all.</p>
+<p><strong>Correlation is by request id, and a reply that does not match is dropped.</strong> A bus is asynchronous, so a reply to a job the worker already gave up on can arrive while it holds the next one. Answering with it would be a wrong answer rather than a missing one, which is worse. The id is the 8 bytes <code>weft/command.hpp</code> already puts in front of every message, and it is seeded from the clock so a restarted worker does not reuse ids the interactor is still answering.</p>
+<p><strong>A dead bus and a slow interactor are different, and the worker treats them differently.</strong> A send that fails means the interactor is unreachable, so the worker answers the job and asks to wind down: a worker that cannot reach its interactor is useless and should be replaced. A deadline that passes means the interactor may still be working, so the worker answers that job and takes the next one.</p>
+<p><strong>Neither is answered with silence.</strong> <code>rp_worker_run</code> posts whatever comes back as the job’s output, so an empty reply would tell a caller nothing about which failure happened. Both are answered with a reply that names the failure.</p>
+</section>
+<section id="what-this-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
+<p><strong>One interactor per machine.</strong> <code>weft/command.hpp</code> names one command service, so two interactors on one host would both receive every command and race to answer. Two interactors therefore mean two containers, which is what <code>service-see-through</code> records.</p>
+<p><strong>The bus is unproven on Linux.</strong> <code>contract-bus</code>’s command loop has run on Windows against iceoryx2 v0.9.3 and nowhere else, and <code>src/port_iox2.cpp</code> has not run at all. <code>proof/</code> covers the correlation, the deadline and the malformed shapes against canned messages, which is everything except the bus.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>contract-bus</code>, <code>weft/loop.hpp</code>: the server half this is the caller for</li>
+<li><code>contract-command</code>, <code>weft/interactor.h</code>: the shape <code>bus_ask</code> wears</li>
+<li>RFD 0126: the two interactors this was built to compare</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0125-an-interactor-in-another-process/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
+<item>
+  <title>RFD 0124: Elixir error tuples in every reply</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0124-elixir-error-tuples-in-every-reply/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0124: Elixir error tuples in every reply</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> what an interactor replies, and how a caller on the BEAM reads it</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p>An interactor replies with CBOR. <code>contract-command</code> chose that, and <code>weft/cbor.h</code> writes it. Today every failure is a CBOR map with one text value:</p>
+<pre><code>{"error": "--res 512 is below the production setting 1280; a smaller run is not evidence"}</code></pre>
+<p>A person can read that sentence. A program cannot act on it. To tell one failure from another, a caller must match the text, and the text changes when somebody improves the wording.</p>
+<p>This matters because the callers are Elixir. <code>interactor-weft</code>, <code>entities-assembly</code>, <code>fabric-platform-central</code> and <code>zone-backend</code> run on the BEAM. Elixir code selects a branch with a pattern, and the pattern it wants is <code>{:error, :some_reason}</code>. CBOR has no atom type and no tuple type, so a CBOR reply cannot be that pattern. It arrives as a map with binary keys, and the caller writes string comparisons instead of clauses.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>A reply is an Erlang term, encoded in the External Term Format.</strong> Three shapes only:</p>
+<ul>
+<li><code>:ok</code> when there is nothing to report.</li>
+<li><code>{:ok, value}</code> when there is.</li>
+<li><code>{:error, reason}</code> when the command failed.</li>
+</ul>
+<p>A <code>reason</code> is an atom, or a tuple of an atom and a map: <code>{:error, :no_engine}</code> or <code>{:error, {:res_below_minimum, %{got: 512, minimum: 1280}}}</code>. The atom says what went wrong and the map carries the numbers. Prose does not appear in the reason. Where a message helps a person, it goes in the map under <code>:detail</code>, and no program reads it.</p>
+<p><strong>The encoding is CBOR, and the mapping is closed.</strong> An atom is CBOR tag 39, which IANA registers as “identifier” and which Ruby symbols and Erlang atoms already travel under. A tuple is an array. A map is a map, a binary is a text string, an integer is an integer. A reply carries no lists, so an array is always a tuple and the mapping needs no second rule.</p>
+<p>The External Term Format was written first and measured against this. Both reach the identical term on the BEAM; <code>DETAILS.md</code> has both runs. ETF is exact and needs no adapter, which is a real advantage, and three things outweigh it:</p>
+<ul>
+<li>This stack already writes CBOR. <code>weft/cbor.h</code> exists, the fan-out path uses it, and <code>transport-bus-cli</code> reads it. Adding ETF puts two encodings in one tree, and the second copy of a decision is the one that drifts.</li>
+<li>Not every caller is a BEAM process. The command-line transport layer, the RunPod job output, and anything reading the volume decode CBOR with a library they already have. ETF would need an ETF reader written into each.</li>
+<li>The C++ interactor already has a CBOR writer. Under ETF it would have needed a hand-rolled term encoder; under CBOR it needs one tag.</li>
+</ul>
+<p><strong>The adapter is written once, in the contract.</strong> The objection to CBOR is that it needs a decoder that knows the mapping. It does, and there is one: <code>Weft.Reply.decode!/1</code>. The objection is to <em>every caller</em> writing one, and shipping it answers that rather than dismissing it.</p>
+<p><strong>An atom is decoded with <code>String.to_existing_atom/1</code>.</strong> That refuses an atom the virtual machine does not already have, so a reply cannot grow the atom table of the process that reads it. It is the same guarantee <code>:erlang.binary_to_term/2</code>’s <code>[:safe]</code> gives, written down instead of relied upon.</p>
+<p>The rule that makes it work is worth stating, because it looks like a problem and is not. An atom exists in the receiving virtual machine when some module names it. A caller that matches <code>{:error, :res_below_minimum}</code> has that atom compiled into it. So the set of reasons a caller can decode is exactly the set it has a clause for, and the guarantee is supplied by the caller’s own source. <code>DETAILS.md</code> records the test that established this, including the reading of <code>[:safe]</code> that was wrong.</p>
+<p><strong>The reason set is closed and shared.</strong> <code>contract-command</code> lists every atom an interactor may send. A new reason is a change to that list, in the same commit that first sends it. Three implementations already write replies: <code>interactor-see-through-cpp</code> in C, <code>interactor-see-through-python</code> in Python, and <code>transport-runpod</code> for its own transport failures. One list keeps them in agreement, and the A/B between the two interactors depends on it: two implementations that report different reasons for the same refusal are not answering the same question.</p>
+<p><strong>A transport layer’s own failures use the same shape.</strong> A worker that cannot reach the bus replies <code>{:error, :bus_unavailable}</code>, and one whose deadline passes replies <code>{:error, {:timeout, %{waited_ms: 900000}}}</code>. The caller cannot tell, and does not need to tell, whether the interactor or the transport layer produced a failure. Both are failures of the command it sent.</p>
+<p><strong>C++ that writes a term uses Fine.</strong> <a href="https://github.com/elixir-nx/fine">Fine</a> (Apache-2.0) is already the answer in this organisation: <code>taskweft/nif</code> vendors it, and <code>interactor-ward</code> and <code>datasource-queen</code> carry it as <code>thirdparty/taskweft/fine.hpp</code>. Erlang’s C API is large, and every project that touches it grows the same set of helpers copied from the last project. Fine is that set, written once.</p>
+<p>Two of its properties decide this rather than taste. It encodes and decodes from the function signature, so the shape of a reply is stated in the type and not in a sequence of <code>enif_make_*</code> calls that no compiler checks against each other. And it creates all static atoms at load time, which is the same closed set this decision needs: an atom that exists at load cannot be created later by a message, and a reason the module does not name is a reason it cannot emit.</p>
+<p>A gate holds this. A repository that handles Erlang terms in C++ and shows no Fine fails, and so does a first-party source that calls <code>enif_make_*</code> or <code>enif_get_*</code> directly. Vendored trees are skipped, or Fine itself would be reported as the defect. It is green today over 39 children, which is the reason to add it now: a convention is cheapest to hold before a second way of doing the same thing exists.</p>
+<p><strong>Fine does not reach a worker that is not a NIF.</strong> This is the limit worth stating. Fine operates on <code>ERL_NIF_TERM</code> inside an <code>ErlNifEnv</code>, and a standalone worker has neither: it is an operating-system process that writes bytes to shared memory, not a library the virtual machine loaded. So an interactor that answers over the bus writes the External Term Format itself, and Fine governs the NIF boundary where the BEAM calls into C++ directly. Both produce the same term. Only one of them has a virtual machine to produce it in.</p>
+</section>
+<section id="what-this-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
+<p><strong>The bus payload stays bytes.</strong> <code>weft/command.hpp</code> sends a request id and a body. ETF is what the body holds, and the envelope does not change.</p>
+<p><strong>The entity path is untouched.</strong> <code>weft/cbor.h</code> still writes the fixed entity rows the fan-out path carries, where no BEAM process reads them and the receiver is C. This decides the reply to a command, which is the surface an Elixir caller touches. Both are CBOR, which is the point: one encoding.</p>
+<p><strong>A RunPod job result is still JSON.</strong> The queue carries JSON, so the reply bytes stay base64 in <code>{"output": {"cbor": "..."}}</code>. The field name does not change, because the encoding did not.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>contract-command</code>, <code>weft/interactor.h</code>: a command in, reply bytes out</li>
+<li><code>weftspun/logbook</code> holds no entry for this yet</li>
+<li>Erlang External Term Format: https://www.erlang.org/doc/apps/erts/erl_ext_dist.html</li>
+<li><code>:erlang.binary_to_term/2</code>: https://www.erlang.org/doc/apps/erts/erlang#binary_to_term/2</li>
+<li><code>DETAILS.md</code> in this folder: the encoder subset, and the test against a real virtual machine</li>
+</ul>
+</section>
+<section id="both-encodings-were-built-and-measured" class="level2">
+<h2 class="anchored" data-anchor-id="both-encodings-were-built-and-measured">Both encodings were built and measured</h2>
+<p>ETF was written first. The decision moved to CBOR after both were shown to reach the same term, so this records what each cost rather than an argument from taste.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 29%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ETF</th>
+<th>CBOR, tag 39</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>bytes for the same reply</td>
+<td>60</td>
+<td>53</td>
+</tr>
+<tr class="even">
+<td>decoder on the BEAM</td>
+<td><code>:erlang.binary_to_term/2</code></td>
+<td><code>Weft.Reply.decode!/1</code>, about 60 lines</td>
+</tr>
+<tr class="odd">
+<td>atom safety</td>
+<td><code>[:safe]</code></td>
+<td><code>String.to_existing_atom/1</code></td>
+</tr>
+<tr class="even">
+<td>writer in C++</td>
+<td>a hand-rolled term encoder</td>
+<td>the existing CBOR writer plus one tag</td>
+</tr>
+<tr class="odd">
+<td>readers off the BEAM</td>
+<td>an ETF reader in each</td>
+<td>the CBOR library each already has</td>
+</tr>
+<tr class="even">
+<td>encodings in the tree</td>
+<td>two</td>
+<td>one</td>
+</tr>
+</tbody>
+</table>
+<p>Both decoded to <code>{:error, {:res_below_minimum, %{got: 512, minimum: 1280}}}</code> on OTP 29. The term is identical; only the cost of getting there differs.</p>
+</section>
+<section id="the-etf-subset-that-was-written" class="level2">
+<h2 class="anchored" data-anchor-id="the-etf-subset-that-was-written">The ETF subset that was written</h2>
+<p>The writer emits eight tags. Nothing else is needed for <code>:ok</code>, <code>{:ok, map}</code> and <code>{:error, reason}</code>, and a smaller writer is a smaller thing to get wrong.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 8%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>tag</th>
+<th>number</th>
+<th>use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>VERSION_MAGIC</code></td>
+<td>131</td>
+<td>the first byte of every term</td>
+</tr>
+<tr class="even">
+<td><code>SMALL_ATOM_UTF8_EXT</code></td>
+<td>119</td>
+<td>an atom under 256 bytes</td>
+</tr>
+<tr class="odd">
+<td><code>ATOM_UTF8_EXT</code></td>
+<td>118</td>
+<td>a longer atom</td>
+</tr>
+<tr class="even">
+<td><code>SMALL_INTEGER_EXT</code></td>
+<td>97</td>
+<td>0 to 255</td>
+</tr>
+<tr class="odd">
+<td><code>INTEGER_EXT</code></td>
+<td>98</td>
+<td>a signed 32-bit integer</td>
+</tr>
+<tr class="even">
+<td><code>BINARY_EXT</code></td>
+<td>109</td>
+<td>an Elixir binary, which is what a string is</td>
+</tr>
+<tr class="odd">
+<td><code>SMALL_TUPLE_EXT</code></td>
+<td>104</td>
+<td>a tuple with fewer than 256 elements</td>
+</tr>
+<tr class="even">
+<td><code>MAP_EXT</code></td>
+<td>116</td>
+<td>a map</td>
+</tr>
+</tbody>
+</table>
+<p>A reply that needs a larger integer, a float, a list or a reference is refused by the writer rather than encoded. The refusal is the check: a reply shape nobody agreed on does not reach a caller in a form that decodes.</p>
+</section>
+<section id="the-test-against-a-real-virtual-machine" class="level2">
+<h2 class="anchored" data-anchor-id="the-test-against-a-real-virtual-machine">The test against a real virtual machine</h2>
+<p>Run on Erlang/OTP 29, 2026-08-17. The bytes came from the Python writer and went to <code>elixir</code> with no intermediate step.</p>
+<pre><code>decoded: {:error, {:res_below_minimum, %{got: 512, minimum: 1280}}}
+MATCHED {:error, {:res_below_minimum, %{got: 512, minimum: 1280}}}
+is_tuple: true  elem0_is_atom: true</code></pre>
+<p>The term is a tuple, its first element is an atom, and it matches the clause a caller writes.</p>
+</section>
+<section id="what-safe-does-measured-rather-than-assumed" class="level2">
+<h2 class="anchored" data-anchor-id="what-safe-does-measured-rather-than-assumed">What <code>[:safe]</code> does, measured rather than assumed</h2>
+<p>The first run above decoded under <code>[:safe]</code> although <code>:res_below_minimum</code> is not an atom any release ships. That looked like evidence that <code>[:safe]</code> permits new atoms. It is not. The test script names the atom in its own <code>case</code> clause, so compiling the script created the atom before the decode ran.</p>
+<p>A second test used an atom that no module names:</p>
+<pre><code>safe REFUSED it (ArgumentError) =&gt; :safe blocks novel atoms
+atom_count before=18541 after=18914
+without :safe: {:error, :zz_never_seen_atom_9f3a2b}</code></pre>
+<p>So <code>[:safe]</code> refuses an atom the virtual machine does not have, and a decode without it creates one. Both halves are necessary to the decision: <code>[:safe]</code> is what stops a reply from growing the atom table, and the caller’s own clauses are what make the reasons it expects decodable.</p>
+<p>This is recorded because the first reading was wrong and the wrong reading was the comfortable one. A claim about a safety option that nobody runs is a claim that stays wrong.</p>
+</section>
+<section id="where-each-writer-applies" class="level2">
+<h2 class="anchored" data-anchor-id="where-each-writer-applies">Where each writer applies</h2>
+<p>Two boundaries, and they are not the same boundary. Confusing them is how a project ends up with an ETF writer inside a NIF, or Fine linked into a process with no virtual machine.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 23%">
+<col style="width: 49%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>boundary</th>
+<th>who writes the term</th>
+<th>why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>the BEAM calls into C++</td>
+<td>Fine</td>
+<td>there is an <code>ErlNifEnv</code>, and the term never becomes bytes</td>
+</tr>
+<tr class="even">
+<td>a worker replies over the bus</td>
+<td>the ETF writer</td>
+<td>there is no virtual machine in the process</td>
+</tr>
+<tr class="odd">
+<td>a worker replies to a RunPod job</td>
+<td>the ETF writer, then base64</td>
+<td>the queue carries JSON</td>
+</tr>
+</tbody>
+</table>
+<p>The ETF writer’s subset is above. It is small because the second and third rows carry replies and nothing else; a NIF that passes a resource, a reference or a port is the first row, and that is Fine’s.</p>
+</section>
+<section id="the-gate-and-what-it-found" class="level2">
+<h2 class="anchored" data-anchor-id="the-gate-and-what-it-found">The gate, and what it found</h2>
+<p><code>mix check nifs</code>, over 39 children: green. <code>interactor-ward</code> and <code>datasource-queen</code> carry <code>thirdparty/taskweft/fine.hpp</code>, and no first-party source calls <code>enif_make_*</code> or <code>enif_get_*</code>.</p>
+<p>The controls inject a finding, which proves the report and not the scan. The scan was proved separately by writing a real NIF file into a real project in the manifest:</p>
+<pre><code>FAIL  interactor-see-through-cpp handles Erlang terms in src/nif_probe.cpp and shows no Fine
+FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ directly</code></pre>
+<p>The file was then removed and the gate went green again.</p>
+<p>One defect was found in the harness while registering it. A concern named in <code>@concerns</code> but absent from <code>@order</code> is filtered out of every run, so <code>mix check nifs</code> executed no checks and printed <code>0 failing check(s)</code>. A pass over an empty set reads exactly like a pass, which is the failure <code>check.ex</code>’s own documentation warns about.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0124-elixir-error-tuples-in-every-reply/</guid>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
+</item>
 <item>
   <title>RFD 0123: A second WebTransport implementation, and the names that make room for it</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</link>
@@ -208,7 +704,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0122: The client is native, from entities-godot’s gyre branch</title>
@@ -321,7 +817,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
@@ -823,7 +1319,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0120: The Gyre became a settlement game</title>
@@ -1002,7 +1498,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0119: Salvage you can hold</title>
@@ -1142,7 +1638,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0118: A baker replaces the Godot editor</title>
@@ -1252,7 +1748,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -1597,7 +2093,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -1721,7 +2217,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1790,7 +2286,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1877,7 +2373,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -2047,7 +2543,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -2386,7 +2882,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2874,1361 +3370,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0110: One pinned Godot build, hosted as a Rivet actor</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone server implementation, orchestration, guest delivery</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0109</code> makes the server tier an Elixir presence relay. A relay is not server-authoritative, and it runs every room in one BEAM node, so one fault reaches every room.</p>
-<p>The h2o and libriscv work in <code>zone-server-h2o</code> already exists. <code>rfd/0083</code> built the host, and <code>rfd/0094</code> keeps <code>thirdparty/libriscv</code> and <code>thirdparty/QCBOR</code> vendored so they do not rot. What that host lacked was orchestration. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> exist only because one process had to hold many zones.</p>
-<p>No record asks whether something else can supply the orchestration.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>A zone is a child process under Rivet’s <code>container-runner</code>, one process per room. The child is headless Godot, which the runner documentation names directly.</p>
-<p>The engine is pinned to one tag, <code>v2026.06.27.1907-multiplayer-fabric</code>, which resolves to commit <code>2cecde75</code> and reports Godot 4.7.0 beta. That tag’s <code>modules/</code> already carries <code>sandbox</code> for libriscv guests, <code>http3</code> for WebTransport, <code>multiplayer_fabric</code> and <code>multiplayer_fabric_asset</code> for the zone, <code>xr_grid</code> for presence, and <code>openxr</code> with <code>webxr</code> for XR.</p>
-<p>So one engine build is the client, the zone server, and the guest host. No C host is needed to load an <code>.elf</code>, because <code>sandbox</code> does it, and <code>rfd/0037</code> already makes generated behavior sandboxed RISC-V.</p>
-<p>The tag carries no release artifacts, because the repository publishes no GitHub releases. <code>godot-images</code> builds it and publishes the container image, which is what <code>container-runner</code> needs. <code>rfd/0009</code> puts that build in the consuming repository.</p>
-<p>Rivet supplies what the old host hand-rolled. It cold-starts the container, injects <code>PORT</code>, spawns the binary as a child, and proxies gateway traffic to <code>127.0.0.1:&lt;child port&gt;</code>. The engine owns placement, routing, and lifecycle. Rivet is Apache 2.0 and self-hosted.</p>
-<p>The child contract is small. Listen on <code>PORT</code>. Open it within the readiness timeout, 30 seconds by default. Handle <code>SIGTERM</code> and exit within the grace period, 25 seconds by default. Raw HTTP arrives under a <code>/request/*</code> prefix that the runner strips. WebSocket clients use the <code>rivet</code> subprotocol.</p>
-<p>One process per room removes the multi-zone problem. The binary hosts one room, so it needs no zone routing and no cross-zone authority. <code>rfd/0072</code>, <code>rfd/0082</code>, and <code>rfd/0086</code> become unnecessary, and <code>rfd/0080</code> narrows to one room’s entities.</p>
-<p>The CBOR actor input names the child command, its args, and its env, and it names the scene or guest the room loads. That is <code>rfd/0094</code>’s guest delivery, moved to the actor boundary.</p>
-<p>A C child, h2o with libriscv, stays possible and is not built. Its only advantage is memory per process, and that advantage is unmeasured. Build it when a measurement forces it.</p>
-<p>FoundationDB backs both the Rivet engine and the zone state, so <code>rfd/0109</code>’s store selection stands. This record amends only <code>rfd/0109</code>’s server tier.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>The contract, what it deletes, and the transport question: <code>DETAILS.md</code></li>
-<li><code>https://rivet.dev/docs/deploy/container-runner/</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the decision this reverses, because the zone returns to Godot.</li>
-<li><code>rfd/0037-generated-behavior-sandboxed-riscv</code>: the libriscv path inside the engine.</li>
-<li><code>rfd/0020-pin-engine-to-frozen-godot-4-7</code>: the pinning practice this applies to one named tag.</li>
-<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: the store and the relay this replaces.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="the-child-contract" class="level2">
-<h2 class="anchored" data-anchor-id="the-child-contract">The child contract</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 21%">
-<col style="width: 78%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Item</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Port</td>
-<td>The <code>PORT</code> environment variable</td>
-</tr>
-<tr class="even">
-<td>Readiness</td>
-<td>The port must open within 30 seconds, by default</td>
-</tr>
-<tr class="odd">
-<td>Shutdown</td>
-<td><code>SIGTERM</code>, then 25 seconds grace, then <code>SIGKILL</code>, by default</td>
-</tr>
-<tr class="even">
-<td>Raw HTTP</td>
-<td>Arrives under <code>/request/*</code>, which the runner strips</td>
-</tr>
-<tr class="odd">
-<td>WebSocket</td>
-<td>Clients use the <code>rivet</code> subprotocol</td>
-</tr>
-<tr class="even">
-<td>Per-actor config</td>
-<td>CBOR <code>input</code>, with <code>command</code>, <code>args</code>, and <code>env</code></td>
-</tr>
-</tbody>
-</table>
-<p>The engine calls <code>POST /api/rivet/start</code> on <code>RIVET_PORT</code>. That is the runner’s interface, not the child’s. The child sees a plain port.</p>
-<p>The <code>rivet</code> subprotocol is the one non-obvious requirement. h2o’s WebSocket upgrade path must accept it.</p>
-</section>
-<section id="what-one-process-per-room-deletes" class="level2">
-<h2 class="anchored" data-anchor-id="what-one-process-per-room-deletes">What one process per room deletes</h2>
-<p>The old host held many zones in one process. Rivet holds one room per process, so the machinery for the first case has no subject.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 85%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Record</th>
-<th>Status under this decision</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>rfd/0072</code></td>
-<td>Unnecessary. Worker dispatch across zones in one process</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0082</code></td>
-<td>Unnecessary. Keyspace design for many zones in one server</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0086</code></td>
-<td>Unnecessary. The engine owns placement, so gossip has no job</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0080</code></td>
-<td>Narrows. Slotmap storage for one room’s entities</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0094</code></td>
-<td>Applies. The CBOR input names the guest, as this record uses</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0092</code></td>
-<td>Applies. ReBAC still gates which principal loads which guest</td>
-</tr>
-</tbody>
-</table>
-<p>Fault isolation improves as a side effect. A guest fault kills one room’s process, not every room. <code>rfd/0095</code> wanted that from Bubblewrap, and process-per-actor supplies it.</p>
-</section>
-<section id="the-actor-input-from-container-runnersrcinput.rs" class="level2">
-<h2 class="anchored" data-anchor-id="the-actor-input-from-container-runnersrcinput.rs">The actor input, from <code>container-runner/src/input.rs</code></h2>
-<p>Four optional fields, CBOR-encoded per the RivetKit convention:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 11%">
-<col style="width: 30%">
-<col style="width: 58%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Field</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>command</code></td>
-<td><code>Option&lt;Vec&lt;String&gt;&gt;</code></td>
-<td>Replaces the CLI command template entirely</td>
-</tr>
-<tr class="even">
-<td><code>args</code></td>
-<td><code>Vec&lt;String&gt;</code></td>
-<td>Appended after the command template</td>
-</tr>
-<tr class="odd">
-<td><code>env</code></td>
-<td><code>HashMap&lt;String,String&gt;</code></td>
-<td>Extra environment variables for the child</td>
-</tr>
-<tr class="even">
-<td><code>port</code></td>
-<td><code>Option&lt;u16&gt;</code></td>
-<td>The child’s local port, also exported as <code>PORT</code></td>
-</tr>
-</tbody>
-</table>
-<p>Anything omitted falls back to the CLI template, which is <code>rivet-container-runner -- &lt;command...&gt;</code>. An omitted <code>port</code> falls back to the runner’s <code>--child-port</code>.</p>
-<p>Two properties matter for a zone. The decoded input is also the actor’s persisted state, so a woken actor restores the same launch spec. Unknown fields are ignored rather than rejected, so adding a field does not break actors that wake on an older binary.</p>
-<p>So a room’s scene, its guest, and its tuning all travel in the actor input. No zone-side registry is needed.</p>
-</section>
-<section id="packaging" class="level2">
-<h2 class="anchored" data-anchor-id="packaging">Packaging</h2>
-<p><code>container-runner/Dockerfile.release</code> builds a standalone linux/amd64 <code>rivet-container-runner</code> binary, described in its own comments as the artifact users curl into their Dockerfile. Extract it with a build targeting <code>artifact</code>, and the output is one x86_64 ELF.</p>
-<p>The zone image is therefore the engine build plus that binary as the entrypoint, with the engine command after <code>--</code>. <code>godot-images</code> already publishes engine images to GHCR, so this adds an entrypoint rather than a pipeline.</p>
-</section>
-<section id="the-pinned-engine-verified" class="level2">
-<h2 class="anchored" data-anchor-id="the-pinned-engine-verified">The pinned engine, verified</h2>
-<p>The tag <code>v2026.06.27.1907-multiplayer-fabric</code> is annotated, and it resolves to commit <code>2cecde75</code>. Its <code>version.py</code> reports major 4, minor 7, patch 0, status beta.</p>
-<p><code>fabric-godot-core</code> publishes no GitHub releases, so the tag page offers source archives only. A build step is required, and <code>godot-images</code> already publishes engine images to GHCR. <code>rfd/0009</code> puts that build in the consuming repository.</p>
-<p>Modules present at that tag, checked against the tree:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 61%">
-<col style="width: 38%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Module</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>sandbox</code></td>
-<td>libriscv guest execution</td>
-</tr>
-<tr class="even">
-<td><code>http3</code></td>
-<td>WebTransport over QUIC</td>
-</tr>
-<tr class="odd">
-<td><code>multiplayer_fabric</code>, <code>multiplayer_fabric_asset</code></td>
-<td>The zone and its assets</td>
-</tr>
-<tr class="even">
-<td><code>xr_grid</code></td>
-<td>Presence, head and hand orbs</td>
-</tr>
-<tr class="odd">
-<td><code>openxr</code>, <code>webxr</code></td>
-<td>XR on desktop and on web</td>
-</tr>
-<tr class="even">
-<td><code>cassie</code>, <code>speech</code>, <code>tinyexr</code></td>
-<td>Authoring, voice, HDR textures</td>
-</tr>
-</tbody>
-</table>
-<p>One build therefore serves three roles: the client, the zone server, and the guest host. No h2o, no Janet, and no separate guest runtime.</p>
-<p>No <code>resonance</code> module appears at this tag. <code>rfd/0022</code> describes spatial audio through a patched Resonance Audio, and whether that arrives as core changes rather than a module is unverified. Check it before you rely on spatial audio.</p>
-</section>
-<section id="a-second-child-kind-kept-in-reserve" class="level2">
-<h2 class="anchored" data-anchor-id="a-second-child-kind-kept-in-reserve">A second child kind, kept in reserve</h2>
-<p><code>container-runner</code> hosts any process that listens on <code>PORT</code>, and the CBOR <code>command</code> field selects the binary. So a second child kind costs no architecture, only a build.</p>
-<p>The candidate is h2o with libriscv in C. Its one advantage is memory per process, because a headless Godot process is larger than a small C binary. With one process per room, that difference multiplies by the room count.</p>
-<p>Neither figure is measured here. Measure the resident size of the headless build, divide the machine’s memory by it, and compare the result to the expected room count. Build the C child only if that comparison fails.</p>
-<p><code>rfd/0095</code> found one runtime serving two unlike guest classes, and it split them with a domain ABI and Bubblewrap. Process-per-actor splits them without either mechanism.</p>
-</section>
-<section id="the-transport-settled-by-the-runners-source" class="level2">
-<h2 class="anchored" data-anchor-id="the-transport-settled-by-the-runners-source">The transport, settled by the runner’s source</h2>
-<p><code>container-runner</code> is TCP-only. Forcing HTTP/3 through it is not possible, and four facts in its source say so.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 83%">
-<col style="width: 16%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Fact</th>
-<th>File</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Forwards to <code>http://127.0.0.1:{child_port}</code> and the <code>ws://</code> form</td>
-<td><code>src/proxy.rs</code></td>
-</tr>
-<tr class="even">
-<td>Readiness is <code>TcpStream::connect((Ipv4Addr::LOCALHOST, child_port))</code></td>
-<td><code>src/child.rs</code></td>
-</tr>
-<tr class="odd">
-<td>“HTTP/WebSocket (arriving over Rivet’s tunnel) to the child’s local port”</td>
-<td><code>src/main.rs</code></td>
-</tr>
-<tr class="even">
-<td>No <code>udp</code>, <code>quic</code>, <code>http3</code>, or <code>h2</code> appears in the runner source</td>
-<td>all four files</td>
-</tr>
-</tbody>
-</table>
-<p>A UDP-only child never reports ready, because readiness is a TCP connect. <code>TCP_NODELAY</code> also does not appear in the runner source, so Nagle is unmitigated there.</p>
-<p>Rivet’s own gateway has no QUIC yet, and WebTransport is planned rather than shipped.</p>
-<section id="two-sockets-in-one-child" class="level3">
-<h3 class="anchored" data-anchor-id="two-sockets-in-one-child">Two sockets in one child</h3>
-<p>The zone process listens twice.</p>
-<ul>
-<li>A TCP port satisfies Rivet’s contract and carries the control plane. Rivet proxies it, readiness passes, and the actor lifecycle works.</li>
-<li>A UDP port carries game traffic outside Rivet’s tunnel, with the engine’s <code>http3</code> picoquic module on it. The host maps that port.</li>
-</ul>
-<p>One process, one actor, two sockets. Rivet never touches the pose stream, so <code>rfd/0008</code>, <code>rfd/0023</code>, <code>rfd/0049</code>, <code>rfd/0058</code>, and <code>rfd/0088</code> all stand.</p>
-</section>
-<section id="what-that-shape-costs" class="level3">
-<h3 class="anchored" data-anchor-id="what-that-shape-costs">What that shape costs</h3>
-<p>Rivet’s gateway does not route the UDP port, so a client needs the host address and port. Something must publish it, and that is a zone directory. <code>rfd/0109</code> left the Uro role optional, and this design requires it.</p>
-</section>
-<section id="if-the-pose-stream-runs-on-websocket-instead" class="level3">
-<h3 class="anchored" data-anchor-id="if-the-pose-stream-runs-on-websocket-instead">If the pose stream runs on WebSocket instead</h3>
-<p>That is workable and worse. Three mitigations are mandatory: set <code>TCP_NODELAY</code> on the child socket, send one latest-pose frame per tick, and keep the frame at the 100 bytes of <code>rfd/0053</code>.</p>
-<p>It stays wrong under loss. Head-of-line blocking costs about one round trip, which at a 50 ms RTT delays roughly three ticks and then delivers stale poses. WebSocket also gives no way to discard queued frames, so <code>rfd/0049</code>’s unreliable state channel has no transport.</p>
-</section>
-<section id="measure-before-building" class="level3">
-<h3 class="anchored" data-anchor-id="measure-before-building">Measure before building</h3>
-<p><code>container-runner/examples/e2e-test/load-test.mjs</code> opens WebSockets through the gateway, pings, and reports <code>p50</code>, <code>p95</code>, <code>p99</code>, and <code>max</code> in milliseconds. Run it against a Godot child and compare <code>p95</code> to the 15.6 ms tick.</p>
-<p><code>rfd/0096</code> states the rule this follows. Ranking transports from documentation produces wrong answers.</p>
-</section>
-</section>
-<section id="cost-and-risk" class="level2">
-<h2 class="anchored" data-anchor-id="cost-and-risk">Cost and risk</h2>
-<p>One OS process per room is heavier than one BEAM process per room. The room count decides whether that matters, and this record does not know it.</p>
-<p>Rivet adds a Rust engine to operate. That is a dependency to run, not a language to write in, because the zone is C.</p>
-<p><code>pegboard-gateway</code> and <code>pegboard-gateway2</code> both exist in the repository, so that layer changes actively. Pin a version.</p>
-</section>
-<section id="what-stays-open-from-rfd-0109" class="level2">
-<h2 class="anchored" data-anchor-id="what-stays-open-from-rfd-0109">What stays open from RFD 0109</h2>
-<p><strong>Where Elixir and Uro sit.</strong> Identity and the room directory still need a home. Rivet has namespaces and its own API, and neither replaces an identity service. <code>rfd/0090</code> is Uro’s live release shape.</p>
-<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> is still the only lever on the 256 kbps figure of <code>rfd/0100</code>.</p>
-<p><strong>Server authority.</strong> A zone process that runs the simulation can be authoritative, unlike the relay of <code>rfd/0109</code>. So <code>rfd/0046</code> returns as reachable rather than ruled out.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0109: Two tiers, with FoundationDB as the store</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> tier count, store selection</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0107</code> describes four runtimes: h2o, Janet, a C core, and Godot. <code>rfd/0108</code> adds local C ABI guests to that host. One person cannot carry four runtimes, and neither record is built.</p>
-<p>The tier count moved three times in one day, and the store moved five times, with no record of either. The database is not the constraint. Bandwidth is.</p>
-<p>No record names the tier count or the store. Without one, each session re-derives a different answer.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>Egress dominates the bill, and the store does not.</strong> Bandwidth per client sets the cost, and one node serves the database load. No probe measures a running deployment, so this record carries no cost figure.</p>
-<p><strong>Two tiers.</strong></p>
-<ul>
-<li>Zone client: Godot. Rendering, XR, IK, and local physics.</li>
-<li>Server: Elixir and Phoenix. Identity, room directory, and the presence relay.</li>
-</ul>
-<p>The server relays presence rather than simulating it. Phoenix supplies identity, sessions, and migrations, which a Godot server would need written in GDScript.</p>
-<p><strong>The store is FoundationDB</strong>, through <code>ecto_foundationdb</code>. <code>rfd/0075</code> stands, and it is Apache 2.0, C++, write-optimized, and linearly scalable by process. <code>rfd/0103</code>’s limits are accepted, so no joins, no <code>or</code>, and no aggregates in the database.</p>
-<p>That trade holds because the relational need is analytical, and the analytical half does not use this store. Event logs and measurements stay zstd Parquet in essential tuple normal form, read by DuckDB. OLTP access is point lookups by player and room identity.</p>
-<p><strong>taskweft stays an Elixir NIF.</strong> <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> already has that shape. Janet and the C <code>libtaskweft</code> are dropped.</p>
-<p>This supersedes <code>rfd/0107</code> and <code>rfd/0108</code>.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>The stores considered, Rivet examined, and the open questions: <code>DETAILS.md</code></li>
-<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0103-uro-on-ecto-foundationdb</code>: the adapter and its limits.</li>
-<li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: the authority model a relay does not provide.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="egress-is-the-cost-and-the-store-is-not" class="level2">
-<h2 class="anchored" data-anchor-id="egress-is-the-cost-and-the-store-is-not">Egress is the cost, and the store is not</h2>
-<p>Bandwidth per client sets the bill. <code>rfd/0100</code> caps a client at 256 kbps, and egress scales with concurrent clients and hours played. No deployment runs, so no monthly figure exists.</p>
-</section>
-<section id="the-database-is-not-what-the-money-buys" class="level2">
-<h2 class="anchored" data-anchor-id="the-database-is-not-what-the-money-buys">The database is not what the money buys</h2>
-<p>Measured ceilings, <code>run_id = fly-shared-1x-1g</code> and <code>local-16core</code> in <code>data/measurements/</code>: 2159.1 ops/s on one Fly <code>shared-cpu-1x</code>, and 6086.5 ops/s on a 16 vcpu workstation. Both are the concurrency 32 row, which is the highest the probe ran.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">SELECT</span> run_id, ops <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> seconds <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">AS</span> ops_per_sec</span>
-<span id="cb1-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'throughput.parquet'</span>) <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">WHERE</span> concurrency <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">32</span>;</span></code></pre></div></div>
-<p>Presence never reaches the store. A pose is transient, and the next tick supersedes it. Persistent writes are login, avatar change, and room join.</p>
-</section>
-<section id="stores-considered" class="level2">
-<h2 class="anchored" data-anchor-id="stores-considered">Stores considered</h2>
-<p>The search ran under four rules: FOSS, non-viral license, relational form, and linear scaling. Rust was banned and then unbanned during the search, which returned TiDB to the list.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 80%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Store</th>
-<th>Outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>FoundationDB</td>
-<td>Chosen. Apache 2.0, C++, linear, write-optimized</td>
-</tr>
-<tr class="even">
-<td>TiDB</td>
-<td>Viable, not chosen. Apache 2.0, MySQL wire, so <code>myxql</code> connects</td>
-</tr>
-<tr class="odd">
-<td>YDB</td>
-<td>Viable, not chosen. Apache 2.0, C++, and no Ecto adapter exists</td>
-</tr>
-<tr class="even">
-<td>Apache Ignite</td>
-<td>Viable, not chosen. Apache 2.0, Java, and no Ecto adapter exists</td>
-</tr>
-<tr class="odd">
-<td>YugabyteDB</td>
-<td>Vetoed</td>
-</tr>
-<tr class="even">
-<td>Stock PostgreSQL</td>
-<td>Blocklisted for operational reasons, which are vacuum and heap bloat</td>
-</tr>
-<tr class="odd">
-<td>SQLite</td>
-<td>Rejected. Weaker constraint enforcement than the requirement</td>
-</tr>
-<tr class="even">
-<td>CockroachDB</td>
-<td>Source-available since 2019, so it fails the FOSS rule</td>
-</tr>
-<tr class="odd">
-<td>Citus</td>
-<td>AGPL, so it fails the non-viral rule</td>
-</tr>
-<tr class="even">
-<td>MariaDB, MySQL</td>
-<td>GPL, so they fail the non-viral rule</td>
-</tr>
-<tr class="odd">
-<td>ScyllaDB, MongoDB</td>
-<td>AGPL or SSPL, so they fail the non-viral rule</td>
-</tr>
-<tr class="even">
-<td>DuckDB, for OLTP</td>
-<td>0.919 ms point read, the slowest of four measured in <code>rfd/0103</code></td>
-</tr>
-<tr class="odd">
-<td>Rivet 2.0</td>
-<td>Apache 2.0. Actor logic is TypeScript. See the section below</td>
-</tr>
-</tbody>
-</table>
-<p>TiDB is the option that keeps relational form with no adapter work. It costs more processes, because a cluster wants PD, TiDB servers, and three TiKV nodes. It also carries MySQL’s weaker constraint set, with no EXCLUDE constraints and no DOMAIN types.</p>
-</section>
-<section id="rivet-2.0-examined" class="level2">
-<h2 class="anchored" data-anchor-id="rivet-2.0-examined">Rivet 2.0, examined</h2>
-<p>An earlier draft of this record excluded Rivet because its SDK is TypeScript and it has no Elixir or Godot client. That reason is not accurate, and this section replaces it.</p>
-<p>Rivet reaches an actor without an SDK. Raw HTTP goes to <code>https://api.rivet.dev/gateway/{actorId}/request/{...path}</code>, and a raw WebSocket goes to <code>wss://api.rivet.dev/gateway/{actorId}@{token}/websocket/{...path}</code>. So a Godot client can connect. The repository’s own <code>Vanilla HTTP API</code> documentation page is a <code>TODO</code> stub, so that path is real and undocumented.</p>
-<p>What Rivet is, verified from the repository: Apache 2.0, 60.7 percent Rust, and pushed on 2026-08-07. The engine has four parts. Pegboard orchestrates actors, Gasoline runs durable execution, Guard routes traffic, and Epoxy is a multi-region key-value store over EPaxos. Self hosting is one binary or <code>docker run -p 6420:6420 rivetdev/engine</code>. Storage is SQLite for local development, FoundationDB for self-hosted deployments, or Postgres.</p>
-<p>The fit is genuine on one point. An actor per room with the <code>onWebSocket</code> handler is a presence relay, and <code>options: { canHibernateWebSocket: true }</code> makes an empty room cost nothing.</p>
-<p>The reason to decline is the comparison Rivet draws. Its published figures measure against Kubernetes: about 20 ms cold start against 6 s for a pod, and 0.6 KB per actor against 50 MB. This project’s alternative is a BEAM process, not a pod. Phoenix already supplies a process per connection, a process per topic, PubSub fan-out, and supervision. A BEAM process spawns in microseconds and sits in the same size order as 0.6 KB.</p>
-<p>Adopting Rivet moves room logic into TypeScript and adds a Rust engine. That is two runtimes replacing one, against this record’s two-tier decision.</p>
-<p>Three Rivet features have no Elixir equivalent to hand: Guard’s multi-region routing, Epoxy’s multi-region consensus, and Gasoline’s durable execution. A global player base is the case that would justify revisiting this.</p>
-</section>
-<section id="the-trade-this-record-accepts" class="level2">
-<h2 class="anchored" data-anchor-id="the-trade-this-record-accepts">The trade this record accepts</h2>
-<p><code>rfd/0103</code> states the FoundationDB limits directly. A query is valid only when one Get or one GetRange satisfies it. No joins. No <code>or</code>. No aggregates in the database, so filtering and grouping run in Elixir. One Between clause per query, on an indexed field.</p>
-<p>Those limits bite reporting, and reporting does not use this store. <code>data/measurements/</code> already holds the analytical record as zstd Parquet, and <code>lean-duckdb</code> already reads it. DuckDB supplies the joins and the aggregates.</p>
-<p>Point-read latency from <code>rfd/0103</code>: 0.405 ms for a new transaction per read, and 0.157 ms inside one transaction. PostgreSQL 16 measured 0.084 ms, so FoundationDB is 4.8 and 1.9 times that, in the same order rather than a different one.</p>
-</section>
-<section id="open-questions" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
-<p><strong>Player-hosted zones, or server-hosted.</strong> A client that hosts its zone brings its own upstream, so capacity grows with players rather than with the bill. This record picks server-hosted and does not price the alternative.</p>
-<p><strong>Interest management.</strong> <code>lean-interest-mgmt</code> exists, and it is the lever that moves the 256 kbps figure. Nothing in this record changes that number.</p>
-<p><strong>Server authority.</strong> A relay is not server-authoritative, so a client can assert a false pose. <code>rfd/0046</code> does not hold for presence. That is tolerable for social VR and wrong for the loot-action combat loop.</p>
-<p><strong>WebTransport interoperation.</strong> Whether the Godot client of <code>rfd/0023</code> speaks to a Phoenix endpoint is untested here. WebSocket is the fallback, at a cost in latency.</p>
-<p><strong>How many FoundationDB processes, and where.</strong> One machine hosting every process is one failure domain. Real availability needs separate machines, and this record does not fund them.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0108: Local C ABI zone guests, with fan-out inside the tick</em></p>
-<p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone guest boundary, pubsub fan-out, h2o routing</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0107</code> makes h2o the ingress and the reverse proxy, and it leaves the guest boundary open. <code>rfd/0094</code> has guests arrive as CDN-delivered riscv64 ELFs under libriscv. That model carries a runtime, a sandbox, and a delivery path, and simulation code inside the zone needs none of the three.</p>
-<p><code>rfd/0097</code> decided that real-time pubsub runs in userspace, and it measured why. It did not say how a guest subscribes, or which event loop owns a subscriber. A fan-out that copies once per subscriber, or that wakes a thread once per message, does not hold at h2o’s rate.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>A simulation guest is a local shared object, <code>.so</code> or <code>.dylib</code>, loaded over the plain C ABI. This is local mode. h2o routes to it, and the call carries no network hop, because the guest shares the zone process.</p>
-<p>The CDN keeps one job, which is bulk asset delivery. It no longer delivers guest programs for simulation.</p>
-<p>Fan-out runs inside the tick:</p>
-<ul>
-<li>One publish ring per zone. One writer, which is the tick. Many readers, each with its own cursor and sequence number.</li>
-<li>Serialize once into the 100-byte packet of <code>rfd/0053</code>, then fan out a pointer and a refcount. Never serialize per subscriber.</li>
-<li>Bind a subscriber to the event loop that owns its connection. Deliver across loops with one batched wakeup per tick, not one per message.</li>
-<li>A local guest registers a callback and receives the fan-out as a call, with no copy and no syscall.</li>
-<li>Gate a guest once at subscribe time, with the ReBAC actions of <code>rfd/0092</code>. Do not gate per message.</li>
-</ul>
-<p>FoundationDB stays off the fan-out path. The tick owns the <code>libfdb_c</code> callback chain of <code>rfd/0073</code>, and it appends the durable log off-tick. Watches are not used.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>The measurements, the back-pressure rule, and the sandbox trade: <code>DETAILS.md</code></li>
-<li><code>rfd/0097-pubsub-belongs-in-userspace</code>, <code>fdbpub.c</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0107-janet-scripting-over-a-c-taskweft-core</code>: the tier this fills in.</li>
-<li><code>rfd/0049-fabric-channels-as-reliability-classes</code>: the vocabulary the back-pressure rule uses.</li>
-<li><code>rfd/0094-minimum-ugc-game-loop-guest-composition</code>: the UGC loop this record does not serve.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="the-measurements-this-rests-on" class="level2">
-<h2 class="anchored" data-anchor-id="the-measurements-this-rests-on">The measurements this rests on</h2>
-<p>Every number comes from <code>rfd/0097</code> and <code>rfd/0096</code>. One ZoneTick at 64 Hz is 15.6 ms.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 14%">
-<col style="width: 29%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Path</th>
-<th>Median</th>
-<th>Fraction of one tick</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>FDB watch fire, publish to subscriber</td>
-<td>12214.3 us</td>
-<td>78 percent</td>
-</tr>
-<tr class="even">
-<td>FDB commit, one publish</td>
-<td>3552.9 us</td>
-<td>23 percent</td>
-</tr>
-<tr class="odd">
-<td>FDB versionstamp log append</td>
-<td>2509.5 us</td>
-<td>16 percent</td>
-</tr>
-<tr class="even">
-<td><code>AF_UNIX</code> round trip, from <code>rfd/0096</code></td>
-<td>8.9 us</td>
-<td>0.06 percent</td>
-</tr>
-</tbody>
-</table>
-<p>A local C ABI call removes the 8.9 us hop as well, because the guest shares the address space.</p>
-</section>
-<section id="why-watches-stay-unused" class="level2">
-<h2 class="anchored" data-anchor-id="why-watches-stay-unused">Why watches stay unused</h2>
-<p>Three facts from <code>rfd/0097</code> rule them out, and each one is enough:</p>
-<ul>
-<li>The watch path is about 1371 times slower than an <code>AF_UNIX</code> round trip.</li>
-<li>The probe held exactly 10000 concurrent watches, then failed with error 1032, <code>Too many watches currently set</code>. That cap belongs to the database, and a fabric of many zones shares it.</li>
-<li>A watch is edge-triggered. It reports that a key changed, not what the value became. A subscriber re-reads the key, and values that change between the fire and the re-read are lost.</li>
-</ul>
-<p>The third fact is the one that disqualifies a watch as an event stream, independent of speed.</p>
-</section>
-<section id="the-ring-and-why-one-writer" class="level2">
-<h2 class="anchored" data-anchor-id="the-ring-and-why-one-writer">The ring, and why one writer</h2>
-<p>The tick is the only writer, so the write side needs no lock. A reader holds a cursor, and it advances at its own rate.</p>
-<p>Serializing once is the point. Fan-out to N subscribers costs one serialization and N pointer writes, rather than N serializations. The packet is 100 bytes and integral, per <code>rfd/0053</code>, so a subscriber reads the same bytes the wire carries.</p>
-</section>
-<section id="wakeup-batching" class="level2">
-<h2 class="anchored" data-anchor-id="wakeup-batching">Wakeup batching</h2>
-<p>A cross-loop delivery needs a wakeup, and a wakeup is a syscall. One wakeup per message does not hold at this rate.</p>
-<p>Signal a loop once per tick instead, after the ring advances. At 64 Hz that caps a loop near 64 wakeups per second, whatever the message count.</p>
-</section>
-<section id="back-pressure-which-needs-a-rule-per-channel" class="level2">
-<h2 class="anchored" data-anchor-id="back-pressure-which-needs-a-rule-per-channel">Back-pressure, which needs a rule per channel</h2>
-<p>A lagging reader must never stall the writer. A cursor that falls out of the ring gets dropped, and the subscriber receives a resync signal rather than a gap.</p>
-<p><code>rfd/0049</code> makes fabric channels reliability classes, and that gives the rule its vocabulary. A state channel may drop, because the next tick supersedes the last one. A control channel may not drop, so it needs its own path rather than the ring.</p>
-</section>
-<section id="the-sandbox-this-removes" class="level2">
-<h2 class="anchored" data-anchor-id="the-sandbox-this-removes">The sandbox this removes</h2>
-<p>A local <code>.so</code> shares the zone’s address space. A guest fault takes the zone down, and a guest reads any memory the zone holds.</p>
-<p><code>rfd/0083</code> chose Fil-C for memory safety against untrusted client input. <code>rfd/0095</code> built two guest classes for the same reason. Local mode has neither property.</p>
-<p>That is correct for first-party simulation code, which the project writes and builds. It is wrong for user-generated code. <code>rfd/0094</code>’s UGC loop therefore needs a mechanism this record does not supply.</p>
-</section>
-<section id="what-this-resolves-in-rfd-0107" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-resolves-in-rfd-0107">What this resolves in RFD 0107</h2>
-<p>Two of the four open questions close.</p>
-<p>The tick drives the <code>libfdb_c</code> callbacks, and h2o’s ingress loop does not. The callback chain of <code>rfd/0073</code> moves with the tick, and the durable append runs off-tick.</p>
-<p>The guest boundary sits in-process, over the C ABI, for simulation guests.</p>
-<p>Two questions stay open, and one arrives.</p>
-<p>Where Elixir and <code>zone-backend</code> sit is unchanged by this record.</p>
-<p>Which part terminates a WebTransport session stays open, and it now matters more. This record binds a subscriber to the loop that owns its connection. <code>rfd/0097</code> states that the zone server holds subscriber connections through picoquic and WebTransport, and <code>rfd/0088</code> chose picoquic over h2o’s own QUIC. So the owning loop is h2o’s thread for HTTP and picoquic’s loop for WebTransport. Whether those unify decides how many cross-loop wakeups a tick needs.</p>
-<p>How a UGC guest runs is the new question. Local mode does not sandbox, so the UGC loop needs its own record.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0107: Janet scripting over a C taskweft core, behind h2o</em></p>
-<p><strong>State:</strong> abandoned · <strong>Scope:</strong> zone server tier, taskweft implementation language</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0083</code> built the zone server as native libh2o with FoundationDB. The tier held. Its cost was questioned, and <code>zone-server-h2o</code> was archived on 2026-08-08 on the argument that a fourth runtime was more than the project could carry.</p>
-<p>The archive removed the host and left no answer to what serves a zone. Candidate answers came and went inside one session: an Elixir epoll server, then h2o with a taskweft NIF, then a CockroachDB variant of this record. None reached the site.</p>
-<p>A tier needs one record. Without it, each session re-derives the stack from memory, and the inventory in <code>rfd/0062</code> describes a host that is gone.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Four parts, each with one job:</p>
-<ul>
-<li>h2o is the frontend HTTP ingress and the reverse proxy. It terminates the connection. It does not hold game logic.</li>
-<li>Janet is the dynamic layer: routing glue, configuration parsing, and scripting.</li>
-<li><code>libtaskweft</code> is a C library carrying the heavy work: HTN state-space search, graph traversal, and game state. It exposes C bindings, and Janet loads it as a native module, <code>.so</code> or <code>.dylib</code>.</li>
-<li>Godot is the client and the visualization frontend, over GDExtension and the C++ API.</li>
-</ul>
-<p>FoundationDB stays the database, reached through the <code>libfdb_c</code> C API. <code>rfd/0075</code> stands, and CockroachDB is not the store. <code>rfd/0073</code>’s async callback chain is the integration pattern, because <code>libfdb_c</code> is callback-based and needs an event loop to drive it.</p>
-<p>Rust is out. The core is C. <code>zone-server-h2o</code> is unarchived and is the host repository again.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>The claims this rests on, what is not measured, and the open questions: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/zone-server-h2o</code>, <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-flow-adapters">fabric-flow-adapters</a></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code>: the host this amends rather than replaces.</li>
-<li><code>rfd/0075-fdb-over-cockroachdb-for-zone-state</code>: the database choice this keeps.</li>
-<li><code>rfd/0093-compile-taskweft-to-linear-automata</code>: the taskweft evaluation model the C core implements.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="role-split" class="level2">
-<h2 class="anchored" data-anchor-id="role-split">Role split</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 17%">
-<col style="width: 72%">
-<col style="width: 10%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Part</th>
-<th>Job</th>
-<th>Language</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>h2o</td>
-<td>HTTP ingress and reverse proxy. Connection termination.</td>
-<td>C</td>
-</tr>
-<tr class="even">
-<td>Janet</td>
-<td>Routing glue, configuration parsing, dynamic scripting.</td>
-<td>Janet</td>
-</tr>
-<tr class="odd">
-<td><code>libtaskweft</code></td>
-<td>HTN state-space search, graph traversal, game state.</td>
-<td>C</td>
-</tr>
-<tr class="even">
-<td>Godot</td>
-<td>Client and visualization frontend, GDExtension and C++.</td>
-<td>C++</td>
-</tr>
-<tr class="odd">
-<td>FoundationDB</td>
-<td>State, reached through <code>libfdb_c</code>.</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p>The boundary that matters is between Janet and <code>libtaskweft</code>. Janet holds what changes often and runs rarely. The C core holds what runs on every tick.</p>
-</section>
-<section id="the-database-keeps-its-record-set" class="level2">
-<h2 class="anchored" data-anchor-id="the-database-keeps-its-record-set">The database keeps its record set</h2>
-<p>FoundationDB stays, so the records that describe it stay in force:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Record</th>
-<th>What it holds</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>rfd/0075</code></td>
-<td>FoundationDB over CockroachDB, for a write-heavy load</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0073</code></td>
-<td>The async callback chain <code>libfdb_c</code> requires</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0074</code></td>
-<td>Binary value encoding for FDB values</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0084</code></td>
-<td>zstd compression for batched zone-state values</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0097</code></td>
-<td>Pubsub in userspace, with FDB as the durable log</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0103</code></td>
-<td>Uro on <code>ecto_foundationdb</code></td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0002</code></td>
-<td>taskweft value narrowing in the FDB value encoding</td>
-</tr>
-</tbody>
-</table>
-<p><code>ecto_foundationdb</code> and <code>ecto-bench-tpcc</code> therefore keep a live consumer, and <code>rfd/0006</code>’s CockroachDB with mTLS does not describe this tier’s store.</p>
-</section>
-<section id="claims-and-what-is-not-measured" class="level2">
-<h2 class="anchored" data-anchor-id="claims-and-what-is-not-measured">Claims, and what is not measured</h2>
-<p>Three claims come with this tier:</p>
-<ul>
-<li>Startup is fast.</li>
-<li>Memory stays under 10 MB.</li>
-<li>Execution speed is near native.</li>
-</ul>
-<p>None of the three is measured in this project. <code>data/measurements/</code> holds throughput and latency parquet for a FoundationDB probe and the libh2o host, and nothing for Janet or for a C taskweft core.</p>
-<p>A record that states this tier’s ceiling needs a measurement of this tier. A number extrapolated from a 32-worker probe is not a measurement of 1000 concurrent users, and this project keeps no such extrapolation.</p>
-</section>
-<section id="why-rust-is-out" class="level2">
-<h2 class="anchored" data-anchor-id="why-rust-is-out">Why Rust is out</h2>
-<p>Rust is blocklisted for this project. The core is C, and the C bindings Janet loads are the native-module boundary. This removes the option of a Rust core with C bindings, which is otherwise the common shape for this pattern.</p>
-</section>
-<section id="what-this-replaces" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-replaces">What this replaces</h2>
-<p><code>libtaskweft</code> in C replaces the Elixir NIF form of taskweft. <code>V-Sekai-fire/multiplayer-fabric-taskweft</code> is the re-entrant temporal HTN planner and ReBAC engine today, and it is an Elixir NIF. A C library with Janet bindings is a different artifact, and whether it is a rewrite in that repository or a new repository is open.</p>
-<p><code>rfd/0093</code> compiles taskweft relation expressions to linear automata. That evaluation model is what the C core implements, and the record survives the language change.</p>
-</section>
-<section id="open-questions-this-record-does-not-settle" class="level2">
-<h2 class="anchored" data-anchor-id="open-questions-this-record-does-not-settle">Open questions this record does not settle</h2>
-<p>This record is abandoned, so none of the four questions below stay open in the form they take here. Each one asks where a part goes in a four-part stack that the project does not build. The records that carry the same subject forward are these.</p>
-<p><code>rfd/0109</code> places Elixir and the store. The tier is Elixir plus FoundationDB, and <code>rfd/0103</code> puts Uro on <code>ecto_foundationdb</code>, so the Elixir tier drives the database path. <code>rfd/0110</code> places the guest runtime and the transport. One pinned Godot build hosts libriscv guests through its <code>sandbox</code> module and terminates WebTransport through its <code>http3</code> module, and no Janet layer exists to compete with either. <code>rfd/0108</code> closed the first and third questions before it was abandoned in turn.</p>
-<p>The four questions stay written below as the record left them.</p>
-<p><strong>Which part talks to FoundationDB.</strong> <code>rfd/0073</code> drove <code>libfdb_c</code> callbacks from the libh2o event loop, when h2o was the whole server. If h2o is ingress and reverse proxy only, the loop that drives the callbacks may belong to <code>libtaskweft</code> instead. Janet has no <code>libfdb_c</code> binding in this project today.</p>
-<p><strong>Where Elixir goes.</strong> The four parts name no Elixir. <code>zone-backend</code> is Uro, a Phoenix and Elixir application, and it is the live identity, zone-directory, and planner service with a push on 2026-08-08. <code>rfd/0090</code> is its production release shape, and <code>rfd/0103</code> puts it on <code>ecto_foundationdb</code>. Nothing here retires it, and nothing here places it.</p>
-<p><strong>Whether Janet replaces the libriscv guests.</strong> <code>rfd/0094</code> keeps a UGC game loop where guests arrive as CDN-delivered riscv64 ELFs, run under libriscv, and are gated by ReBAC per <code>rfd/0092</code>. Janet is also a dynamic layer loaded at runtime. Two runtimes for user code is one more than the tier argument allows.</p>
-<p><strong>Where the game transport lives.</strong> <code>rfd/0008</code> and <code>rfd/0023</code> put game traffic on WebTransport over HTTP/3, and <code>rfd/0088</code> chose picoquic and picotls over h2o’s own QUIC. If h2o terminates HTTP as ingress, the record that says which part terminates a WebTransport session does not exist.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0106: Split the archive into its own repository</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0106: Split the archive into its own repository</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> manuals repository layout, archived records</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The manuals repository holds live design records and dead ones in the same tree. <code>_archive/decisions/</code> holds 26 MADR records that are rejected or superseded. A leading underscore keeps Quarto from rendering them, so the site hides them, and the repository still carries them.</p>
-<p>Two RFDs are superseded and still render as current. <code>rfd/0089</code> supersedes <code>rfd/0061</code> on the deployment target. <code>rfd/0011</code> is superseded on the observability stack. A reader who opens either one reads a dead design with no marking on the page.</p>
-<p>Hiding a record from the site is not the same as retiring it. The repository needs one place for retired records.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Create <code>multiplayer-fabric-archive</code>, a public repository in this organization. It is the standing home for retired records. It holds plain Markdown, with no Quarto site, no build, and no checks, because archived content does not change.</p>
-<p>Move <code>_archive/</code>, its attachments, <code>rfd/0011</code>, and <code>rfd/0061</code> there. Delete them here. Keep no pointer stub, per <code>rfd/0000-conventions</code>.</p>
-<p>The archive repository carries the manuals history up to the split, so each moved file keeps every commit that touched it at its original path.</p>
-<p><code>rfd/0011</code> and <code>rfd/0061</code> keep their numbers. This repository does not reuse a number after a move.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>The link repairs a move forces, and the record of what moved: <code>DETAILS.md</code></li>
-<li><code>v-sekai-multiplayer-fabric/multiplayer-fabric-archive</code></li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0000-conventions</code>: the no-pointer-stub rule this follows.</li>
-<li><code>rfd/0071-yagni-times-structure-to-need</code>: the rule that sends a superseded record to the archive.</li>
-<li><code>rfd/0062-repository-and-capability-inventory</code>: lists the new repository.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="what-moved" class="level2">
-<h2 class="anchored" data-anchor-id="what-moved">What moved</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Path</th>
-<th>Records</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>_archive/decisions/</code></td>
-<td>26</td>
-</tr>
-<tr class="even">
-<td><code>_archive/decisions/attachments/</code></td>
-<td>1 image</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0011-observability-stack-victoriatraces/</code></td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0061-quadlets-on-fedora-44-instead-of-harvester/</code></td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-<p><code>_archive/README.md</code> moves with the directory. Its text now states that the leading underscore does no work in a repository that builds no site, and that the path stays as it was so older links keep their shape.</p>
-</section>
-<section id="link-repair-which-a-move-forces" class="level2">
-<h2 class="anchored" data-anchor-id="link-repair-which-a-move-forces">Link repair, which a move forces</h2>
-<p>A deleted file leaves no stub. A live Markdown link to that file leaves a 404 on the published site. So a move repairs every inbound link, and that is not a stub.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 46%">
-<col style="width: 53%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>File</th>
-<th>Repair</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>changelog/2026/20260606-deck-log.md</code></td>
-<td>Four relative links into <code>_archive/decisions/</code> now point at the archive repository.</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0071-yagni-times-structure-to-need/index.md</code></td>
-<td>Two pointers to <code>_archive</code> now name the archive repository.</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0089-flyio-over-podman-quadlets/index.md</code></td>
-<td>The <code>rfd/0061</code> reference now links to the archive.</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0060-org-scoped-github-app-token-for-gh-access/index.md</code></td>
-<td>The <code>rfd/0061</code> reference now links to the archive.</td>
-</tr>
-<tr class="odd">
-<td><code>rfd/0070-loop-slice-telemetry-to-the-observability-collector/index.md</code></td>
-<td>The <code>rfd/0011</code> reference now links to the archive.</td>
-</tr>
-<tr class="even">
-<td><code>rfd/0062-repository-and-capability-inventory/DETAILS.md</code></td>
-<td>The two-org split decision path now links to the archive.</td>
-</tr>
-<tr class="odd">
-<td><code>_quarto.yml</code></td>
-<td>Drops the <code>decisions/attachments</code> resource, which no longer exists.</td>
-</tr>
-</tbody>
-</table>
-<p>Inline prose in <code>rfd/0089</code>’s <code>DETAILS.md</code> still names <code>rfd/0061</code> in code spans, without links. Those read as citations of a numbered record, so they stay.</p>
-</section>
-<section id="a-broken-link-the-move-exposed" class="level2">
-<h2 class="anchored" data-anchor-id="a-broken-link-the-move-exposed">A broken link the move exposed</h2>
-<p>Two archived records cite the debug-orb image as <code>attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, relative to <code>_archive/decisions/</code>. The image sat in <code>decisions/attachments/</code>, two directories away, so the link never resolved. No rendered page exercised it, because Quarto skips <code>_archive</code>.</p>
-<p>The archive repository puts the image at <code>_archive/decisions/attachments/</code>, where the existing links resolve.</p>
-</section>
-<section id="two-archive-destinations-now-exist" class="level2">
-<h2 class="anchored" data-anchor-id="two-archive-destinations-now-exist">Two archive destinations now exist</h2>
-<p><code>V-Sekai-archive</code> is a separate organization that already holds three archived repositories: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>. <code>multiplayer-fabric-archive</code> is a repository for archived records inside this organization.</p>
-<p>A whole repository goes to the <code>V-Sekai-archive</code> organization. A record inside the manuals goes to <code>multiplayer-fabric-archive</code>. A future record that consolidates the two supersedes this one.</p>
-</section>
-<section id="counts-after-the-split" class="level2">
-<h2 class="anchored" data-anchor-id="counts-after-the-split">Counts after the split</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Set</th>
-<th>Count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Repos in <code>v-sekai-multiplayer-fabric</code></td>
-<td>73</td>
-</tr>
-<tr class="even">
-<td>Active</td>
-<td>49</td>
-</tr>
-<tr class="odd">
-<td>Archived</td>
-<td>24</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="what-stays" class="level2">
-<h2 class="anchored" data-anchor-id="what-stays">What stays</h2>
-<p><code>decisions/</code> keeps <code>madr-proposal-template.md</code>, the live template. The directory holds no records, because <code>rfd/0000-conventions</code> migrates each MADR into an RFD and deletes the MADR file.</p>
-<p><code>AGENTS.md</code> still directs a new image to <code>decisions/attachments/</code>, and that directory returns when the next asset arrives.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0105: Archive the self-host-era support repos and the empty stubs</em></p>
-<p><strong>State:</strong> published · <strong>Scope:</strong> org-wide repository lifecycle</p>
-<section id="problem" class="level2">
-<h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p><code>rfd/0089</code> moved the deployment target to Fly.io and archived the seven quadlet repos and <code>infra</code>. It did not reach the repos that supported those quadlets from one step away. A verification queue that targets quadlets, a casync CDN, a scoop bucket, and a Burrito packaging repo all stayed active with no live consumer.</p>
-<p>Two repos also carry no content at all. <code>vulkan-video-godot</code> holds 0 KB. <code>steamdeck</code> holds 1 KB. Both appear in the inventory as if they hold work.</p>
-<p>An active repo with no consumer costs a reader time. The reader cannot tell a parked repo from a live one.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Archive six repos. Each one is tombstoned, not deleted, so the history stays reachable.</p>
-<ul>
-<li><code>fabric-container-verify</code>: the <code>rfd/0056</code> quadlet verification queue. Every quadlet it targets is archived by <code>rfd/0089</code>.</li>
-<li><code>fabric-casync-central</code>: 0 KB. No content was ever pushed.</li>
-<li><code>fabric-scoop-central</code>: the scoop bucket for the Windows demo of <code>godot-loop-slice</code>, which is archived.</li>
-<li><code>fabric-platform-central</code>: the <code>rfd/0065</code> Burrito and casync packaging path.</li>
-<li><code>vulkan-video-godot</code>: 0 KB.</li>
-<li><code>steamdeck</code>: 1 KB.</li>
-</ul>
-<p><code>fabric-godot-assembly</code> is archived and then restored on the same day. It stays active. The <code>gitassembly</code> recipe of <code>rfd/0019</code> still composes the engine.</p>
-<p>The dormant Lean cores stay active. <code>rfd/0057</code> makes them the canonical proven reference, and a reference repo needs no recent push.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li>Per-repo record, the open inconsistency, and the counts: <code>DETAILS.md</code></li>
-<li><code>rfd/0062-repository-and-capability-inventory</code>: the inventory this decision updates.</li>
-</ul>
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><code>rfd/0089-flyio-over-podman-quadlets</code>: archives the quadlets that these repos support.</li>
-<li><code>rfd/0065-fabric-platform-central-elixir-burrito-casync</code>: the decision that <code>fabric-platform-central</code> carries.</li>
-</ul>
-</section>
-<section id="detail" class="level2">
-<h2 class="anchored" data-anchor-id="detail">Detail</h2>
-</section>
-<section id="what-each-repo-carried" class="level2">
-<h2 class="anchored" data-anchor-id="what-each-repo-carried">What each repo carried</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 22%">
-<col style="width: 3%">
-<col style="width: 9%">
-<col style="width: 64%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Repo</th>
-<th>Size</th>
-<th>Last push</th>
-<th>Basis for the archive</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>fabric-container-verify</code></td>
-<td>0 KB</td>
-<td>2026-06-20</td>
-<td><code>rfd/0056</code> quadlet queue. <code>rfd/0089</code> archives every quadlet it targets.</td>
-</tr>
-<tr class="even">
-<td><code>fabric-casync-central</code></td>
-<td>0 KB</td>
-<td>2026-06-24</td>
-<td>Empty. No content was ever pushed.</td>
-</tr>
-<tr class="odd">
-<td><code>fabric-scoop-central</code></td>
-<td>8 KB</td>
-<td>2026-06-30</td>
-<td>Scoop bucket for the Windows demo of the archived <code>godot-loop-slice</code>.</td>
-</tr>
-<tr class="even">
-<td><code>fabric-platform-central</code></td>
-<td>—</td>
-<td>2026-06-25</td>
-<td><code>rfd/0065</code> Burrito and casync packaging.</td>
-</tr>
-<tr class="odd">
-<td><code>vulkan-video-godot</code></td>
-<td>0 KB</td>
-<td>2026-05-28</td>
-<td>Empty placeholder.</td>
-</tr>
-<tr class="even">
-<td><code>steamdeck</code></td>
-<td>1 KB</td>
-<td>2026-06-14</td>
-<td>Empty placeholder.</td>
-</tr>
-</tbody>
-</table>
-<p><code>fabric-container-verify</code> reports 0 KB for its packed size. Its GDScript content is present in history.</p>
-</section>
-<section id="the-fabric-platform-central-risk" class="level2">
-<h2 class="anchored" data-anchor-id="the-fabric-platform-central-risk">The <code>fabric-platform-central</code> risk</h2>
-<p><code>rfd/0090</code> describes a live Burrito release of <code>uro</code> on Fly.io. <code>rfd/0065</code> puts the Burrito and casync packaging in <code>fabric-platform-central</code>. An archive makes the repo read-only. If the current <code>zone-backend</code> deploy still reads from this repo, its pushes and its Actions stop.</p>
-<p>The archive is reversible with one API call. This record states the risk so a later failure has a written cause.</p>
-</section>
-<section id="counts-after-the-sweep" class="level2">
-<h2 class="anchored" data-anchor-id="counts-after-the-sweep">Counts after the sweep</h2>
-<p>These counts predate the archive split of <code>rfd/0106</code>, which adds one repository.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Set</th>
-<th>Count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Total repos</td>
-<td>72</td>
-</tr>
-<tr class="even">
-<td>Archived</td>
-<td>24</td>
-</tr>
-<tr class="odd">
-<td>Active</td>
-<td>48</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="open-inconsistency-not-resolved-here" class="level2">
-<h2 class="anchored" data-anchor-id="open-inconsistency-not-resolved-here">Open inconsistency, not resolved here</h2>
-<p><code>zone-server-h2o</code> is archived. <code>rfd/0094</code> names it the host of the minimum UGC game loop, and <code>rfd/0095</code> carries it in scope. Its last push is 2026-08-07. An archived repo accepts no push.</p>
-<p>This record does not resolve the state of <code>zone-server-h2o</code>. Either the archive is an error, or a decision that supersedes <code>rfd/0094</code> is missing from <code>rfd/</code>. One of the two needs a record.</p>
-</section>
-<section id="stale-names-found-in-the-inventory" class="level2">
-<h2 class="anchored" data-anchor-id="stale-names-found-in-the-inventory">Stale names found in the inventory</h2>
-<p>Every repository name in <code>rfd/0062</code>’s inventory still resolves, because GitHub keeps a redirect after a rename. A redirect hides the rename from a reader. <code>rfd/0064</code> sets kebab-case repository names, and these renames follow it.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name in the old inventory</th>
-<th>Current name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>godot</code></td>
-<td><code>fabric-godot-core</code></td>
-</tr>
-<tr class="even">
-<td><code>merge</code></td>
-<td><code>fabric-godot-assembly</code></td>
-</tr>
-<tr class="odd">
-<td><code>observability</code></td>
-<td><code>fabric-game-observability</code></td>
-</tr>
-<tr class="even">
-<td><code>zone-server-image</code></td>
-<td><code>zone-server-quadlet</code></td>
-</tr>
-<tr class="odd">
-<td><code>zone-baker-image</code></td>
-<td><code>zone-baker-quadlet</code></td>
-</tr>
-<tr class="even">
-<td><code>zone-backend-image</code></td>
-<td><code>zone-backend-quadlet</code></td>
-</tr>
-<tr class="odd">
-<td><code>gha-runner-image</code></td>
-<td><code>gha-runner-quadlet</code></td>
-</tr>
-<tr class="even">
-<td><code>sccache-cache-image</code></td>
-<td><code>sccache-cache-quadlet</code></td>
-</tr>
-<tr class="odd">
-<td><code>manuals</code></td>
-<td><code>multiplayer-fabric-manuals</code></td>
-</tr>
-</tbody>
-</table>
-<p>Three repos moved to a third organization, <code>V-Sekai-archive</code>, and are archived there: <code>lean-predictive-bvh</code>, <code>viser</code>, and <code>usd-converter-for-vrchat</code>.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
-</item>
-<item>
-  <title>RFD 0103: Uro on ecto_foundationdb</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0103: Uro on ecto_foundationdb</em></p>
-<p><strong>State:</strong> discussion · <strong>Scope:</strong> zone-backend, aria-storage</p>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Uro stores its data through <strong><code>ecto_foundationdb</code></strong>, in the FoundationDB cluster <code>rfd/0102</code> already deploys. No second datastore, and no machine for a database.</p>
-</section>
-<section id="cost" class="level2">
-<h2 class="anchored" data-anchor-id="cost">Cost</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 59%">
-<col style="width: 12%">
-<col style="width: 28%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Option</th>
-<th>Fixed USD</th>
-<th>Concurrent at 4 h/day</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong><code>ecto_foundationdb</code>, no database machine</strong></td>
-<td><strong>4.19</strong></td>
-<td><strong>39.1</strong></td>
-</tr>
-<tr class="even">
-<td>PostgreSQL colocated at 512 MB</td>
-<td>5.64</td>
-<td>33.9</td>
-</tr>
-<tr class="odd">
-<td>PostgreSQL on its own machine</td>
-<td>6.36</td>
-<td>31.2</td>
-</tr>
-<tr class="even">
-<td>Self-hosted CockroachDB, 1 GB</td>
-<td>10.26</td>
-<td>17.1</td>
-</tr>
-<tr class="odd">
-<td>Neon, paid, always on at 1 CU</td>
-<td>81.59</td>
-<td>over budget</td>
-</tr>
-</tbody>
-</table>
-<p>The database is free here, because <code>rfd/0102</code> already runs <code>fdbserver</code> for zone state.</p>
-</section>
-<section id="latency-measured" class="level2">
-<h2 class="anchored" data-anchor-id="latency-measured">Latency, measured</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Engine</th>
-<th>Point read</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>PostgreSQL 16</td>
-<td>0.084 ms</td>
-</tr>
-<tr class="even">
-<td><strong>FoundationDB, new transaction per read</strong></td>
-<td><strong>0.405 ms</strong></td>
-</tr>
-<tr class="odd">
-<td><strong>FoundationDB, inside one transaction</strong></td>
-<td><strong>0.157 ms</strong></td>
-</tr>
-<tr class="even">
-<td>DuckDB</td>
-<td>0.919 ms</td>
-</tr>
-</tbody>
-</table>
-<p>0.405 ms is the floor for a <code>Repo.get</code>, and 0.157 ms is the floor inside <code>Repo.transactional/2</code>. That is 4.8 and 1.9 times PostgreSQL, in the same order rather than a different one.</p>
-<p>Provenance: <code>run_id = ci-container</code> in <code>data/measurements/</code>. All four rows are stored rows, and the two ratios are arithmetic over them. The PostgreSQL row has <code>samples = 1</code>, so it carries no distribution.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">SELECT</span> subject, median_ns <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1e6</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">AS</span> median_ms, samples</span>
-<span id="cb1-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">FROM</span> read_parquet(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'latency.parquet'</span>)</span>
-<span id="cb1-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">WHERE</span> operation <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">LIKE</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'point_%'</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">ORDER</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
-</section>
-<section id="what-this-gives-up" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-gives-up">What this gives up</h2>
-<p><code>ecto_foundationdb</code> is a layer over a key-value store. Its own documentation states the limit directly. A query is valid only when one Get or one GetRange satisfies it.</p>
-<ul>
-<li>No joins.</li>
-<li>No <code>or</code>. “A query with an <code>or</code> condition is not possible.”</li>
-<li>No aggregates in the database. Filtering, aggregation and grouping “must be done by your Elixir code”.</li>
-<li>One Between clause per query, on an indexed field, and index field order decides which ranges work.</li>
-<li>Migrations cannot rename tables or fields, delete fields, drop indexes, or roll back. The standard <code>mix ecto.migrate</code> tasks do not apply.</li>
-<li>Tenants are mandatory. Omitting one raises at run time.</li>
-<li>Transactions run under FoundationDB’s 5 second limit, may re-execute on conflict, and must have no side effects. So no PubSub publish inside one.</li>
-</ul>
-</section>
-<section id="the-gate" class="level2">
-<h2 class="anchored" data-anchor-id="the-gate">The gate</h2>
-<p>This decision depends on Uro’s queries fitting one Get or one GetRange. That is not audited, and it is the one thing that can overturn this RFD.</p>
-<p>Audit <code>zone-backend</code>’s queries first. A join or an <code>or</code> in a hot path means restructuring the schema, not configuring an adapter.</p>
-<p>The migration constraints matter as much. Uro has existing Ecto migrations, and this adapter cannot roll back or drop an index.</p>
-</section>
-<section id="why-not-the-others" class="level2">
-<h2 class="anchored" data-anchor-id="why-not-the-others">Why not the others</h2>
-<p><strong>FRL.</strong> Its own ADR 0003 accepts costs this avoids entirely:</p>
-<ul>
-<li>No crash isolation, permanently</li>
-<li>A JDK and a Rust toolchain required to <code>mix compile</code></li>
-<li>Every call on Rustler’s <code>DirtyIo</code></li>
-<li>No per-call timeout</li>
-</ul>
-<p><code>ecto_foundationdb</code> uses <code>erlfdb</code>, so there is no JVM.</p>
-<p>A separate measurement of FRL at 45.259 ms per point read is withdrawn. It went through JDBC, and ADR 0003 removed that transport in v0.2. FRL is not ruled out on speed here.</p>
-<p><strong>PostgreSQL.</strong> Faster per point read at 0.084 ms, and it costs a machine and a second datastore. It stays the fallback if the query audit fails.</p>
-<p><strong>DuckDB.</strong> 0.919 ms, one writing process, and a rewrite off Ecto. It stays for analytics and telemetry writing ETNF Parquet.</p>
-<p><strong>Neon.</strong> Its free plan forces scale-to-zero, suspending after 5 minutes idle. A login cannot cold start. Paid compute at 0.106 USD per CU-hour is about 77 USD for one CU held for a month.</p>
-<p><strong>CockroachDB.</strong> <code>rfd/0006</code> chose it, Cloud Basic is on the blocklist, and self-hosting at 2 GB is 15.45 USD before any bandwidth.</p>
-</section>
-<section id="recovery" class="level2">
-<h2 class="anchored" data-anchor-id="recovery">Recovery</h2>
-<p><code>rfd/0100</code> already sends <code>fdbbackup</code> to Tigris for disaster recovery, and the volume carries live data. Uro’s data joins that path rather than adding one.</p>
-</section>
-<section id="open" class="level2">
-<h2 class="anchored" data-anchor-id="open">Open</h2>
-<p>Uro’s queries are not audited against the one-Get-or-GetRange rule.</p>
-<p><code>ecto_foundationdb</code>’s tenant model is not mapped onto Uro’s schema.</p>
-<p>Latency above is raw FoundationDB through the C client. The adapter adds Elixir and <code>erlfdb</code> on top, and that overhead is unmeasured.</p>
-</section>
-<section id="sources" class="level2">
-<h2 class="anchored" data-anchor-id="sources">Sources</h2>
-<ul>
-<li><a href="https://github.com/foundationdb-beam/ecto_foundationdb">ecto_foundationdb</a>, v0.7.6, Apache-2.0</li>
-<li><a href="https://ecto-foundationdb.hexdocs.pm/">Ecto.Adapters.FoundationDB docs</a>, for the query and migration limits</li>
-<li>Measurements above, <code>pointget.c</code> and the PostgreSQL and DuckDB probes</li>
-<li><code>rfd/0102</code> for the deployment budget, <code>rfd/0006</code> for CockroachDB</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 03:53:43 GMT</pubDate>
 </item>
 </channel>
 </rss>

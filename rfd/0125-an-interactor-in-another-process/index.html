@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>RFD 0125: An interactor in another process, and the transport layer that reaches it – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,29 +29,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,67 +77,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -310,7 +250,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -321,15 +261,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../pages/changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../pages/changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/rfd.html"> 
+    <a class="nav-link" href="../../pages/rfd.html"> 
 <span class="menu-text">RFDs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../pages/references.html"> 
+    <a class="nav-link" href="../../pages/references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -344,8 +284,17 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a></li>
+  <li><a href="#what-this-does-not-decide" id="toc-what-this-does-not-decide" class="nav-link" data-scroll-target="#what-this-does-not-decide">What this does not decide</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0125-an-interactor-in-another-process/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +302,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Changelog</h1>
+<h1 class="title">RFD 0125: An interactor in another process, and the transport layer that reaches it</h1>
 </div>
 
 
@@ -370,123 +319,39 @@ window.Quarto = {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › Changelog</em></p>
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0125: An interactor in another process, and the transport layer that reaches it</em></p>
+<p><strong>State:</strong> discussion · <strong>Scope:</strong> how a RunPod Serverless worker reaches an interactor that holds a model</p>
+<section id="problem" class="level2">
+<h2 class="anchored" data-anchor-id="problem">Problem</h2>
+<p><code>contract-command</code> says an interactor is a command in and reply bytes out, and <code>transport-runpod</code> supplies one to <code>rp_worker_run</code> as a <code>weft_interactor_t</code>. The interactor is therefore linked into the worker binary and called on the job thread.</p>
+<p>That is right when an interactor is a function. It is wrong when it holds a model. The see-through pipeline loads about 14 GB of weights, and linking it into the worker puts three costs in the wrong place. The load happens inside the process that answers HTTP, so scale-from-zero pays for it before the first job-take. A job that kills the pipeline takes the worker’s job loop with it, and RunPod records a dead worker rather than a failed job. And two model processes cannot share one endpoint, because there is one worker binary.</p>
+<p><code>contract-bus</code> already has the shape that fixes this. <code>weft/loop.hpp</code> is a command loop over iceoryx2: an interactor subscribes, answers, and publishes on a reply service. What it does not have is a caller. The only code that ever sent it a command was its own proof program.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p><strong>The transport layer supplies a bus round trip where it used to supply a function.</strong> <code>include/runpod/bus_ask.h</code> publishes the command, waits for the reply carrying its own request id, and returns those bytes. It has the signature of <code>weft_interactor_t::ask</code>, so <code>rp_worker_run</code> is unchanged above it and there is one job loop rather than two.</p>
+<p>The interactor is then an operating-system process, and the three costs move. Weights load once at start, before any job is taken. A pipeline that dies leaves the worker alive to answer the job with an error. And the two are separately replaceable, which is what makes an A/B possible at all.</p>
+<p><strong>Correlation is by request id, and a reply that does not match is dropped.</strong> A bus is asynchronous, so a reply to a job the worker already gave up on can arrive while it holds the next one. Answering with it would be a wrong answer rather than a missing one, which is worse. The id is the 8 bytes <code>weft/command.hpp</code> already puts in front of every message, and it is seeded from the clock so a restarted worker does not reuse ids the interactor is still answering.</p>
+<p><strong>A dead bus and a slow interactor are different, and the worker treats them differently.</strong> A send that fails means the interactor is unreachable, so the worker answers the job and asks to wind down: a worker that cannot reach its interactor is useless and should be replaced. A deadline that passes means the interactor may still be working, so the worker answers that job and takes the next one.</p>
+<p><strong>Neither is answered with silence.</strong> <code>rp_worker_run</code> posts whatever comes back as the job’s output, so an empty reply would tell a caller nothing about which failure happened. Both are answered with a reply that names the failure.</p>
+</section>
+<section id="what-this-does-not-decide" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
+<p><strong>One interactor per machine.</strong> <code>weft/command.hpp</code> names one command service, so two interactors on one host would both receive every command and race to answer. Two interactors therefore mean two containers, which is what <code>service-see-through</code> records.</p>
+<p><strong>The bus is unproven on Linux.</strong> <code>contract-bus</code>’s command loop has run on Windows against iceoryx2 v0.9.3 and nowhere else, and <code>src/port_iox2.cpp</code> has not run at all. <code>proof/</code> covers the correlation, the deadline and the malformed shapes against canned messages, which is everything except the bus.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li><code>contract-bus</code>, <code>weft/loop.hpp</code>: the server half this is the caller for</li>
+<li><code>contract-command</code>, <code>weft/interactor.h</code>: the shape <code>bus_ask</code> wears</li>
+<li>RFD 0126: the two interactors this was built to compare</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
-</tr>
-</thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="5" data-listing-word-count-sort="836" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-08-17 (Monday)" data-listing-filename-sort="20260817-deck-log.md">
-<td>
-<a href="../changelog/2026/20260817-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-08-17 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="10" data-listing-word-count-sort="1809" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)" data-listing-filename-sort="20260807-deck-log.md">
-<td>
-<a href="../changelog/2026/20260807-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-08-07 (Friday)</a>
-</td>
-
-</tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)" data-listing-filename-sort="20260630-deck-log.md">
-<td>
-<a href="../changelog/2026/20260630-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-30 (Tuesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="2" data-listing-word-count-sort="314" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)" data-listing-filename-sort="20260629-deck-log.md">
-<td>
-<a href="../changelog/2026/20260629-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="2" data-listing-word-count-sort="230" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)" data-listing-filename-sort="20260622-deck-log.md">
-<td>
-<a href="../changelog/2026/20260622-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="4" data-listing-word-count-sort="799" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)" data-listing-filename-sort="20260612-deck-log.md">
-<td>
-<a href="../changelog/2026/20260612-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-</td>
-
-</tr>
-
-<tr data-index="6" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="3" data-listing-word-count-sort="447" data-listing-title-sort="V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)" data-listing-filename-sort="20260606-deck-log.md">
-<td>
-<a href="../changelog/2026/20260606-deck-log.html" class="title listing-title">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="../changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
-
-</tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="../changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="9" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="../changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="10" data-listing-file-modified-sort="1787025148841" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="../changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -908,7 +773,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/pages/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/rfd/0125-an-interactor-in-another-process/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

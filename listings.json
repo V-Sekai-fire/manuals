@@ -18,6 +18,13 @@
   {
     "listing": "/pages/rfd.html",
     "items": [
+      "/rfd/0130-state-what-a-repository-is-made-of/index.html",
+      "/rfd/0129-cost-and-latency-are-two-budgets/index.html",
+      "/rfd/0128-the-release-ladder-is-not-automated/index.html",
+      "/rfd/0127-a-service-is-not-a-side/index.html",
+      "/rfd/0126-two-see-through-interactors/index.html",
+      "/rfd/0125-an-interactor-in-another-process/index.html",
+      "/rfd/0124-elixir-error-tuples-in-every-reply/index.html",
       "/rfd/0123-a-second-webtransport-implementation/index.html",
       "/rfd/0122-the-client-is-native/index.html",
       "/rfd/0121-amend-rfd-0111-against-the-tree/index.html",
