@@ -1,4 +1,21 @@
-## The subset that is written
+## Both encodings were built and measured
+
+ETF was written first. The decision moved to CBOR after both were shown to reach the same term,
+so this records what each cost rather than an argument from taste.
+
+| | ETF | CBOR, tag 39 |
+| --- | --- | --- |
+| bytes for the same reply | 60 | 53 |
+| decoder on the BEAM | `:erlang.binary_to_term/2` | `Weft.Reply.decode!/1`, about 60 lines |
+| atom safety | `[:safe]` | `String.to_existing_atom/1` |
+| writer in C++ | a hand-rolled term encoder | the existing CBOR writer plus one tag |
+| readers off the BEAM | an ETF reader in each | the CBOR library each already has |
+| encodings in the tree | two | one |
+
+Both decoded to `{:error, {:res_below_minimum, %{got: 512, minimum: 1280}}}` on OTP 29. The
+term is identical; only the cost of getting there differs.
+
+## The ETF subset that was written
 
 The writer emits eight tags. Nothing else is needed for `:ok`, `{:ok, map}` and
 `{:error, reason}`, and a smaller writer is a smaller thing to get wrong.

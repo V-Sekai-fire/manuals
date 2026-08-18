@@ -34,20 +34,39 @@ A `reason` is an atom, or a tuple of an atom and a map: `{:error, :no_engine}` o
 the map carries the numbers. Prose does not appear in the reason. Where a message helps a
 person, it goes in the map under `:detail`, and no program reads it.
 
-**The format is ETF, not CBOR.** `:erlang.binary_to_term/2` returns a real tuple with real
-atoms, so a caller writes the clause it would write for a local `GenServer.call`. Any other
-encoding needs a translation step in the caller, and a translation step is a second place for
-the contract to be wrong.
+**The encoding is CBOR, and the mapping is closed.** An atom is CBOR tag 39, which IANA
+registers as "identifier" and which Ruby symbols and Erlang atoms already travel under. A tuple
+is an array. A map is a map, a binary is a text string, an integer is an integer. A reply
+carries no lists, so an array is always a tuple and the mapping needs no second rule.
 
-**A caller decodes with `[:safe]`.** That option refuses to create an atom the virtual machine
-does not already have. So a reply cannot grow the atom table of the process that reads it, and
-an unknown reason fails at the decode instead of reaching a `case` with no clause for it.
+The External Term Format was written first and measured against this. Both reach the identical
+term on the BEAM; `DETAILS.md` has both runs. ETF is exact and needs no adapter, which is a real
+advantage, and three things outweigh it:
 
-The rule that makes `[:safe]` work is worth stating, because it looks like a problem and is not.
-An atom exists in the receiving virtual machine when some module names it. A caller that
-matches `{:error, :res_below_minimum}` has that atom compiled into it. So the set of reasons a
-caller can decode is exactly the set it has a clause for, and the guarantee is supplied by the
-caller's own source. `DETAILS.md` records the test that established this.
+- This stack already writes CBOR. `weft/cbor.h` exists, the fan-out path uses it, and
+  `transport-bus-cli` reads it. Adding ETF puts two encodings in one tree, and the second copy
+  of a decision is the one that drifts.
+- Not every caller is a BEAM process. The command-line transport layer, the RunPod job output,
+  and anything reading the volume decode CBOR with a library they already have. ETF would need
+  an ETF reader written into each.
+- The C++ interactor already has a CBOR writer. Under ETF it would have needed a hand-rolled
+  term encoder; under CBOR it needs one tag.
+
+**The adapter is written once, in the contract.** The objection to CBOR is that it needs a
+decoder that knows the mapping. It does, and there is one: `Weft.Reply.decode!/1`. The objection
+is to *every caller* writing one, and shipping it answers that rather than dismissing it.
+
+**An atom is decoded with `String.to_existing_atom/1`.** That refuses an atom the virtual
+machine does not already have, so a reply cannot grow the atom table of the process that reads
+it. It is the same guarantee `:erlang.binary_to_term/2`'s `[:safe]` gives, written down instead
+of relied upon.
+
+The rule that makes it work is worth stating, because it looks like a problem and is not. An
+atom exists in the receiving virtual machine when some module names it. A caller that matches
+`{:error, :res_below_minimum}` has that atom compiled into it. So the set of reasons a caller
+can decode is exactly the set it has a clause for, and the guarantee is supplied by the caller's
+own source. `DETAILS.md` records the test that established this, including the reading of
+`[:safe]` that was wrong.
 
 **The reason set is closed and shared.** `contract-command` lists every atom an interactor may
 send. A new reason is a change to that list, in the same commit that first sends it. Three
@@ -94,14 +113,13 @@ term. Only one of them has a virtual machine to produce it in.
 **The bus payload stays bytes.** `weft/command.hpp` sends a request id and a body. ETF is what
 the body holds, and the envelope does not change.
 
-**CBOR does not leave the tree.** `weft/cbor.h` still writes the entity rows the fan-out path
-carries, where no BEAM process reads them and the receiver is C. This decides the reply to a
-command, which is the surface an Elixir caller touches.
+**The entity path is untouched.** `weft/cbor.h` still writes the fixed entity rows the fan-out
+path carries, where no BEAM process reads them and the receiver is C. This decides the reply to
+a command, which is the surface an Elixir caller touches. Both are CBOR, which is the point:
+one encoding.
 
-**A RunPod job result is still JSON.** The queue carries JSON, so the ETF bytes are base64 in
-`{"output": {"etf": "..."}}`. A caller that is a BEAM process decodes that field. The field name
-changes from `cbor` to `etf` because the bytes changed, and a name that lies about its contents
-is worse than a rename.
+**A RunPod job result is still JSON.** The queue carries JSON, so the reply bytes stay base64 in
+`{"output": {"cbor": "..."}}`. The field name does not change, because the encoding did not.
 
 ## References
 
