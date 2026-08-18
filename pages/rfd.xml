@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Mon, 17 Aug 2026 22:48:41 GMT</lastBuildDate>
+<lastBuildDate>Tue, 18 Aug 2026 01:10:59 GMT</lastBuildDate>
 <item>
   <title>RFD 0123: A second WebTransport implementation, and the names that make room for it</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</link>
@@ -208,7 +208,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0122: The client is native, from entities-godot’s gyre branch</title>
@@ -321,7 +321,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0121: Amend RFD 0111 against the tree</title>
@@ -823,7 +823,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0120: The Gyre became a settlement game</title>
@@ -1002,7 +1002,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0119: Salvage you can hold</title>
@@ -1142,7 +1142,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0118: A baker replaces the Godot editor</title>
@@ -1252,7 +1252,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
@@ -1597,7 +1597,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -1721,7 +1721,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
@@ -1790,7 +1790,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0114: Prove the store by breaking it</title>
@@ -1877,7 +1877,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0113: FoundationDB on Windows, built from source</title>
@@ -2047,7 +2047,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0112: Lexical for the slash command interface</title>
@@ -2386,7 +2386,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0111: Convert the deployment words to the hexagon vocabulary</title>
@@ -2874,7 +2874,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0111-convert-the-deployment-words/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0110: One pinned Godot build, hosted as a Rivet actor</title>
@@ -3188,7 +3188,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0110-h2o-libriscv-as-a-rivet-actor/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0109: Two tiers, with FoundationDB as the store</title>
@@ -3369,7 +3369,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0109-two-tiers-with-foundationdb-as-the-store/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0108: Local C ABI zone guests, with fan-out inside the tick</title>
@@ -3506,7 +3506,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0108-local-cabi-guests-and-in-tick-fanout/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0107: Janet scripting over a C taskweft core, behind h2o</title>
@@ -3678,7 +3678,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0107-janet-scripting-over-a-c-taskweft-core/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0106: Split the archive into its own repository</title>
@@ -3844,7 +3844,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0106-split-the-archive-into-its-own-repo/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0105: Archive the self-host-era support repos and the empty stubs</title>
@@ -4044,7 +4044,7 @@ font-style: inherit;">32</span>;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0105-archive-self-host-era-support-repos/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 <item>
   <title>RFD 0103: Uro on ecto_foundationdb</title>
@@ -4228,7 +4228,7 @@ font-style: inherit;">BY</span> median_ns;</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0103-uro-on-ecto-foundationdb/</guid>
-  <pubDate>Mon, 17 Aug 2026 22:48:41 GMT</pubDate>
+  <pubDate>Tue, 18 Aug 2026 01:10:59 GMT</pubDate>
 </item>
 </channel>
 </rss>
