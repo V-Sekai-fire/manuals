@@ -46,6 +46,44 @@ The ruleset targets the default branch with these rules:
 Alongside the ruleset, the repository sets `delete_branch_on_merge`, so
 a merged PR's source branch is removed automatically.
 
+### The merge method
+
+`allow_squash_merge` and `allow_rebase_merge` are both `false`, leaving
+`allow_merge_commit` as the only way a pull request can land. Auto-merge
+stays enabled; with the other two off it can only produce a merge commit.
+
+This is not a preference for more commits. A split costs CI linearly:
+every commit must pass on its own, so a branch of `n` commits is `n`
+verifications and not one, paid again on every push while the branch
+lives. Against that a split buys understandability — review reads one
+idea at a time, and `git bisect` lands on a change small enough to read
+rather than on a whole feature.
+
+The trade is real in both directions and it is decided per branch. Most
+branches are one idea and should be squashed locally before the pull
+request is final; the doc-gate port in `fabric#52` was collapsed from
+four commits to one for exactly that reason. A split earns its keep only
+when the concerns are independent, as in `fabric#54`, where a new gate
+and a documentation correction had nothing to do with each other and
+each passed alone.
+
+So the question the setting answers is not how many commits a branch
+should have. It is who decides, and when:
+
+- Squashing at merge time decides for every branch, after review, and
+  collapses the series that was deliberately kept along with the ones
+  that were not. The author already had the cheaper option — `git rebase
+-i` before marking the PR ready — and it costs the same CI either way,
+  because the squashed branch is verified once as one commit.
+- A squash or a rebase also gives the merge a new SHA, so the branch tip
+  is not an ancestor of the default branch afterwards. The documented
+  post-merge check reads exactly that, and reported three complete merges
+  as unmerged in a single day.
+
+The second could be answered by comparing trees instead of commits, and
+that change is worth making anyway because history already holds squashed
+merges. It does not answer the first.
+
 ### Why not a merge queue
 
 The earlier form of this decision required a `merge_queue` rule. The
