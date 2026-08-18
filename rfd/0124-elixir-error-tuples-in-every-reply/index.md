@@ -54,7 +54,7 @@ advantage, and three things outweigh it:
 
 **The adapter is written once, in the contract.** The objection to CBOR is that it needs a
 decoder that knows the mapping. It does, and there is one: `Weft.Reply.decode!/1`. The objection
-is to *every caller* writing one, and shipping it answers that rather than dismissing it.
+is to _every caller_ writing one, and shipping it answers that rather than dismissing it.
 
 **An atom is decoded with `String.to_existing_atom/1`.** That refuses an atom the virtual
 machine does not already have, so a reply cannot grow the atom table of the process that reads

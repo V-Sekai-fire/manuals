@@ -3,14 +3,14 @@
 ETF was written first. The decision moved to CBOR after both were shown to reach the same term,
 so this records what each cost rather than an argument from taste.
 
-| | ETF | CBOR, tag 39 |
-| --- | --- | --- |
-| bytes for the same reply | 60 | 53 |
-| decoder on the BEAM | `:erlang.binary_to_term/2` | `Weft.Reply.decode!/1`, about 60 lines |
-| atom safety | `[:safe]` | `String.to_existing_atom/1` |
-| writer in C++ | a hand-rolled term encoder | the existing CBOR writer plus one tag |
-| readers off the BEAM | an ETF reader in each | the CBOR library each already has |
-| encodings in the tree | two | one |
+|                          | ETF                        | CBOR, tag 39                           |
+| ------------------------ | -------------------------- | -------------------------------------- |
+| bytes for the same reply | 60                         | 53                                     |
+| decoder on the BEAM      | `:erlang.binary_to_term/2` | `Weft.Reply.decode!/1`, about 60 lines |
+| atom safety              | `[:safe]`                  | `String.to_existing_atom/1`            |
+| writer in C++            | a hand-rolled term encoder | the existing CBOR writer plus one tag  |
+| readers off the BEAM     | an ETF reader in each      | the CBOR library each already has      |
+| encodings in the tree    | two                        | one                                    |
 
 Both decoded to `{:error, {:res_below_minimum, %{got: 512, minimum: 1280}}}` on OTP 29. The
 term is identical; only the cost of getting there differs.
@@ -20,16 +20,16 @@ term is identical; only the cost of getting there differs.
 The writer emits eight tags. Nothing else is needed for `:ok`, `{:ok, map}` and
 `{:error, reason}`, and a smaller writer is a smaller thing to get wrong.
 
-| tag | number | use |
-| --- | --- | --- |
-| `VERSION_MAGIC` | 131 | the first byte of every term |
-| `SMALL_ATOM_UTF8_EXT` | 119 | an atom under 256 bytes |
-| `ATOM_UTF8_EXT` | 118 | a longer atom |
-| `SMALL_INTEGER_EXT` | 97 | 0 to 255 |
-| `INTEGER_EXT` | 98 | a signed 32-bit integer |
-| `BINARY_EXT` | 109 | an Elixir binary, which is what a string is |
-| `SMALL_TUPLE_EXT` | 104 | a tuple with fewer than 256 elements |
-| `MAP_EXT` | 116 | a map |
+| tag                   | number | use                                         |
+| --------------------- | ------ | ------------------------------------------- |
+| `VERSION_MAGIC`       | 131    | the first byte of every term                |
+| `SMALL_ATOM_UTF8_EXT` | 119    | an atom under 256 bytes                     |
+| `ATOM_UTF8_EXT`       | 118    | a longer atom                               |
+| `SMALL_INTEGER_EXT`   | 97     | 0 to 255                                    |
+| `INTEGER_EXT`         | 98     | a signed 32-bit integer                     |
+| `BINARY_EXT`          | 109    | an Elixir binary, which is what a string is |
+| `SMALL_TUPLE_EXT`     | 104    | a tuple with fewer than 256 elements        |
+| `MAP_EXT`             | 116    | a map                                       |
 
 A reply that needs a larger integer, a float, a list or a reference is refused by the writer
 rather than encoded. The refusal is the check: a reply shape nobody agreed on does not reach a
@@ -71,11 +71,11 @@ one. A claim about a safety option that nobody runs is a claim that stays wrong.
 Two boundaries, and they are not the same boundary. Confusing them is how a project ends up
 with an ETF writer inside a NIF, or Fine linked into a process with no virtual machine.
 
-| boundary | who writes the term | why |
-| --- | --- | --- |
-| the BEAM calls into C++ | Fine | there is an `ErlNifEnv`, and the term never becomes bytes |
-| a worker replies over the bus | the ETF writer | there is no virtual machine in the process |
-| a worker replies to a RunPod job | the ETF writer, then base64 | the queue carries JSON |
+| boundary                         | who writes the term         | why                                                       |
+| -------------------------------- | --------------------------- | --------------------------------------------------------- |
+| the BEAM calls into C++          | Fine                        | there is an `ErlNifEnv`, and the term never becomes bytes |
+| a worker replies over the bus    | the ETF writer              | there is no virtual machine in the process                |
+| a worker replies to a RunPod job | the ETF writer, then base64 | the queue carries JSON                                    |
 
 The ETF writer's subset is above. It is small because the second and third rows carry replies
 and nothing else; a NIF that passes a resource, a reference or a port is the first row, and
