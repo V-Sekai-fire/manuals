@@ -48,3 +48,36 @@ atom table, and the caller's own clauses are what make the reasons it expects de
 
 This is recorded because the first reading was wrong and the wrong reading was the comfortable
 one. A claim about a safety option that nobody runs is a claim that stays wrong.
+
+## Where each writer applies
+
+Two boundaries, and they are not the same boundary. Confusing them is how a project ends up
+with an ETF writer inside a NIF, or Fine linked into a process with no virtual machine.
+
+| boundary | who writes the term | why |
+| --- | --- | --- |
+| the BEAM calls into C++ | Fine | there is an `ErlNifEnv`, and the term never becomes bytes |
+| a worker replies over the bus | the ETF writer | there is no virtual machine in the process |
+| a worker replies to a RunPod job | the ETF writer, then base64 | the queue carries JSON |
+
+The ETF writer's subset is above. It is small because the second and third rows carry replies
+and nothing else; a NIF that passes a resource, a reference or a port is the first row, and
+that is Fine's.
+
+## The gate, and what it found
+
+`mix check nifs`, over 39 children: green. `interactor-ward` and `datasource-queen` carry
+`thirdparty/taskweft/fine.hpp`, and no first-party source calls `enif_make_*` or `enif_get_*`.
+
+The controls inject a finding, which proves the report and not the scan. The scan was proved
+separately by writing a real NIF file into a real project in the manifest:
+
+    FAIL  interactor-see-through-cpp handles Erlang terms in src/nif_probe.cpp and shows no Fine
+    FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ directly
+
+The file was then removed and the gate went green again.
+
+One defect was found in the harness while registering it. A concern named in `@concerns` but
+absent from `@order` is filtered out of every run, so `mix check nifs` executed no checks and
+printed `0 failing check(s)`. A pass over an empty set reads exactly like a pass, which is the
+failure `check.ex`'s own documentation warns about.

@@ -63,6 +63,32 @@ replies `{:error, :bus_unavailable}`, and one whose deadline passes replies
 whether the interactor or the transport layer produced a failure. Both are failures of the
 command it sent.
 
+**C++ that writes a term uses Fine.** [Fine](https://github.com/elixir-nx/fine) (Apache-2.0) is
+already the answer in this organisation: `taskweft/nif` vendors it, and `interactor-ward` and
+`datasource-queen` carry it as `thirdparty/taskweft/fine.hpp`. Erlang's C API is large, and
+every project that touches it grows the same set of helpers copied from the last project. Fine
+is that set, written once.
+
+Two of its properties decide this rather than taste. It encodes and decodes from the function
+signature, so the shape of a reply is stated in the type and not in a sequence of
+`enif_make_*` calls that no compiler checks against each other. And it creates all static atoms
+at load time, which is the same closed set this decision needs: an atom that exists at load
+cannot be created later by a message, and a reason the module does not name is a reason it
+cannot emit.
+
+A gate holds this. A repository that handles Erlang terms in C++ and shows no Fine fails, and
+so does a first-party source that calls `enif_make_*` or `enif_get_*` directly. Vendored trees
+are skipped, or Fine itself would be reported as the defect. It is green today over 39
+children, which is the reason to add it now: a convention is cheapest to hold before a second
+way of doing the same thing exists.
+
+**Fine does not reach a worker that is not a NIF.** This is the limit worth stating. Fine
+operates on `ERL_NIF_TERM` inside an `ErlNifEnv`, and a standalone worker has neither: it is an
+operating-system process that writes bytes to shared memory, not a library the virtual machine
+loaded. So an interactor that answers over the bus writes the External Term Format itself, and
+Fine governs the NIF boundary where the BEAM calls into C++ directly. Both produce the same
+term. Only one of them has a virtual machine to produce it in.
+
 ## What this does not decide
 
 **The bus payload stays bytes.** `weft/command.hpp` sends a request id and a body. ETF is what
