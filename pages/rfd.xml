@@ -6,14 +6,14 @@
       version="2.0">
 <channel>
 <title>V-Sekai Fire — Manuals</title>
-<link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.html</link>
-<atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
+<link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.html</link>
+<atom:link href="https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 21 Aug 2026 06:12:02 GMT</lastBuildDate>
+<lastBuildDate>Fri, 21 Aug 2026 06:40:00 GMT</lastBuildDate>
 <item>
   <title>RFD 2084: A permission cannot be granted sideways</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-a-permission-cannot-be-granted-sideways/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-a-permission-cannot-be-granted-sideways/</link>
   <description><![CDATA[ 
 
 
@@ -63,12 +63,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-a-permission-cannot-be-granted-sideways/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-a-permission-cannot-be-granted-sideways/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2082: Every repository we have authority over states what it is made of</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-state-what-a-repository-is-made-of/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-state-what-a-repository-is-made-of/</link>
   <description><![CDATA[ 
 
 
@@ -108,12 +108,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-state-what-a-repository-is-made-of/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-state-what-a-repository-is-made-of/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2081: Cost and latency are two budgets in seconds, ratcheted against variance</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-cost-and-latency-are-two-budgets/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-cost-and-latency-are-two-budgets/</link>
   <description><![CDATA[ 
 
 
@@ -147,12 +147,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-cost-and-latency-are-two-budgets/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-cost-and-latency-are-two-budgets/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2080: The release ladder is gated and not automated</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-the-release-ladder-is-not-automated/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-the-release-ladder-is-not-automated/</link>
   <description><![CDATA[ 
 
 
@@ -187,12 +187,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-the-release-ladder-is-not-automated/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-the-release-ladder-is-not-automated/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 207f: A service is not a side, and sits past the ring at 7</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207f-a-service-is-not-a-side/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207f-a-service-is-not-a-side/</link>
   <description><![CDATA[ 
 
 
@@ -229,12 +229,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207f-a-service-is-not-a-side/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207f-a-service-is-not-a-side/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 207e: Two see-through interactors, and the check that keeps the A/B one question</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207e-two-see-through-interactors/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207e-two-see-through-interactors/</link>
   <description><![CDATA[ 
 
 
@@ -272,12 +272,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207e-two-see-through-interactors/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207e-two-see-through-interactors/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 207d: An interactor in another process, and the transport layer that reaches it</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207d-an-interactor-in-another-process/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207d-an-interactor-in-another-process/</link>
   <description><![CDATA[ 
 
 
@@ -317,12 +317,12 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207d-an-interactor-in-another-process/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207d-an-interactor-in-another-process/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 207c: Elixir error tuples in every reply</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207c-elixir-error-tuples-in-every-reply/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207c-elixir-error-tuples-in-every-reply/</link>
   <description><![CDATA[ 
 
 
@@ -559,12 +559,12 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207c-elixir-error-tuples-in-every-reply/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207c-elixir-error-tuples-in-every-reply/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 207b: A second WebTransport implementation, and the names that make room for it</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207b-a-second-webtransport-implementation/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207b-a-second-webtransport-implementation/</link>
   <description><![CDATA[ 
 
 
@@ -758,12 +758,12 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207b-a-second-webtransport-implementation/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207b-a-second-webtransport-implementation/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 207a: The client is native, from entities-godot’s gyre branch</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207a-the-client-is-native/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207a-the-client-is-native/</link>
   <description><![CDATA[ 
 
 
@@ -871,12 +871,12 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207a-the-client-is-native/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/207a-the-client-is-native/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2079: Amend RFD 206f against the tree</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-amend-rfd-206f-against-the-tree/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-amend-rfd-206f-against-the-tree/</link>
   <description><![CDATA[ 
 
 
@@ -1373,12 +1373,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-amend-rfd-206f-against-the-tree/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-amend-rfd-206f-against-the-tree/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2078: The Gyre became a settlement game</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-the-gyre-became-a-settlement-game/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-the-gyre-became-a-settlement-game/</link>
   <description><![CDATA[ 
 
 
@@ -1552,12 +1552,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-the-gyre-became-a-settlement-game/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2077: Salvage you can hold</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-salvage-you-can-hold/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-salvage-you-can-hold/</link>
   <description><![CDATA[ 
 
 
@@ -1692,12 +1692,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-salvage-you-can-hold/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-salvage-you-can-hold/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2076: A baker replaces the Godot editor</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-a-baker-replaces-the-godot-editor/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-a-baker-replaces-the-godot-editor/</link>
   <description><![CDATA[ 
 
 
@@ -1802,12 +1802,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-a-baker-replaces-the-godot-editor/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2075: Retire the h2o tier record set under YAGNI</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-retire-the-h2o-tier-record-set/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-retire-the-h2o-tier-record-set/</link>
   <description><![CDATA[ 
 
 
@@ -2147,12 +2147,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-retire-the-h2o-tier-record-set/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2074: The zone server is Elixir with epoll, in the h2o style</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-elixir-epoll-zone-server-in-the-h2o-style/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-elixir-epoll-zone-server-in-the-h2o-style/</link>
   <description><![CDATA[ 
 
 
@@ -2271,12 +2271,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-elixir-epoll-zone-server-in-the-h2o-style/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2073: A planner domain document is a cheap-layer surface</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-a-planner-domain-document-is-a-cheap-layer-surface/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-a-planner-domain-document-is-a-cheap-layer-surface/</link>
   <description><![CDATA[ 
 
 
@@ -2340,12 +2340,12 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2072: Prove the store by breaking it</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-prove-the-store-by-breaking-it/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-prove-the-store-by-breaking-it/</link>
   <description><![CDATA[ 
 
 
@@ -2427,12 +2427,12 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-prove-the-store-by-breaking-it/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2071: FoundationDB on Windows, built from source</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-foundationdb-on-windows-built-from-source/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-foundationdb-on-windows-built-from-source/</link>
   <description><![CDATA[ 
 
 
@@ -2597,12 +2597,12 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-foundationdb-on-windows-built-from-source/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2070: Lexical for the slash command interface</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-lexical-for-the-slash-command-interface/</link>
+  <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-lexical-for-the-slash-command-interface/</link>
   <description><![CDATA[ 
 
 
@@ -2936,8 +2936,8 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
+  <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-lexical-for-the-slash-command-interface/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:40:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
