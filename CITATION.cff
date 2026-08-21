@@ -790,7 +790,7 @@ references:
     year: 2026
     url: "https://github.com/v-sekai-multiplayer-fabric/godot-riscv-spike"
 
-  # ── Guest sandboxing, determinism, and measured transport (rfd/0095-0098) ─
+  # ── Guest sandboxing, determinism, and measured transport (rfd/205f-0098) ─
 
   - type: software
     title: "libriscv: A Fast and Compact RISC-V Sandbox for Games and Embedded Use"
