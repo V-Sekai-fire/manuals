@@ -10,17 +10,17 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 18 Aug 2026 19:55:10 GMT</lastBuildDate>
+<lastBuildDate>Fri, 21 Aug 2026 06:12:02 GMT</lastBuildDate>
 <item>
-  <title>RFD 0132: A permission cannot be granted sideways</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0132-a-permission-cannot-be-granted-sideways/</link>
+  <title>RFD 2084: A permission cannot be granted sideways</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-a-permission-cannot-be-granted-sideways/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0132: A permission cannot be granted sideways</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2084: A permission cannot be granted sideways</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> what one agent may ask another to do, and who may widen a permission</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -56,26 +56,26 @@
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li><code>CLAUDE.md</code>, “Two agents in one workspace”: the protocol this belongs to</li>
-<li>RFD 0127: <code>7-service/</code>, decided in the same session by the same pair</li>
+<li>RFD 207f: <code>7-service/</code>, decided in the same session by the same pair</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0132-a-permission-cannot-be-granted-sideways/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-a-permission-cannot-be-granted-sideways/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0130: Every repository we have authority over states what it is made of</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0130-state-what-a-repository-is-made-of/</link>
+  <title>RFD 2082: Every repository we have authority over states what it is made of</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-state-what-a-repository-is-made-of/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0130: Every repository we have authority over states what it is made of</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2082: Every repository we have authority over states what it is made of</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> the CITATION.cff gate, and the three categories of authority it rests on</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -101,26 +101,26 @@
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li><code>CLAUDE.md</code>, “Citation”: the rule this gate enforces</li>
-<li>RFD 0124: the Fine gate, added under the same argument</li>
+<li>RFD 207c: the Fine gate, added under the same argument</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0130-state-what-a-repository-is-made-of/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-state-what-a-repository-is-made-of/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0129: Cost and latency are two budgets in seconds, ratcheted against variance</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0129-cost-and-latency-are-two-budgets/</link>
+  <title>RFD 2081: Cost and latency are two budgets in seconds, ratcheted against variance</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-cost-and-latency-are-two-budgets/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0129: Cost and latency are two budgets in seconds, ratcheted against variance</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2081: Cost and latency are two budgets in seconds, ratcheted against variance</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> how a service records what it costs and how long it takes</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -147,19 +147,19 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0129-cost-and-latency-are-two-budgets/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-cost-and-latency-are-two-budgets/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0128: The release ladder is gated and not automated</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0128-the-release-ladder-is-not-automated/</link>
+  <title>RFD 2080: The release ladder is gated and not automated</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-the-release-ladder-is-not-automated/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0128: The release ladder is gated and not automated</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2080: The release ladder is gated and not automated</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> how a service is released, and what a machine may not decide</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -179,78 +179,78 @@
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0127: what a service is</li>
-<li>RFD 0129: the budgets a release is measured against</li>
+<li>RFD 207f: what a service is</li>
+<li>RFD 2081: the budgets a release is measured against</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0128-the-release-ladder-is-not-automated/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-the-release-ladder-is-not-automated/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0127: A service is not a side, and sits past the ring at 7</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0127-a-service-is-not-a-side/</link>
+  <title>RFD 207f: A service is not a side, and sits past the ring at 7</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207f-a-service-is-not-a-side/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0127: A service is not a side, and sits past the ring at 7</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 207f: A service is not a side, and sits past the ring at 7</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> where a packing of sides is checked out, and what the numbers mean</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>RFD 0111 gives this stack six words that name a position in the code, and the workspace is a hexagon with six numbered sides. It also says plainly that “service” names a deployment set rather than a position, and it removes <code>service/</code> from the checkout along with seven other directories that named how a thing was built rather than what it does.</p>
+<p>RFD 206f gives this stack six words that name a position in the code, and the workspace is a hexagon with six numbered sides. It also says plainly that “service” names a deployment set rather than a position, and it removes <code>service/</code> from the checkout along with seven other directories that named how a thing was built rather than what it does.</p>
 <p>That decision left a real thing with nowhere to live. <code>service-zone</code> and <code>service-behaviour</code> exist, and each holds no code: a membership, why the membership is what it is, and the manifest that runs its members together. Neither is in <code>default.xml</code>, so neither is ever checked out, and the RunPod work needed a third one. A container image that packs a transport layer and an interactor is exactly that thing, and it had been put in the interactor’s repository for want of anywhere better.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p><strong>A service is checked out at <code>7-service/</code>.</strong> Past the ring rather than on it. The ring is 1 to 6 and a service packs sides rather than being one, so it sorts after the sides it packs and a reader cannot mistake it for a seventh position.</p>
 <p><strong><code>0-</code> is not free for it.</strong> That number is reserved for metadata about the fabric itself, which is a third kind of thing: not a position in the code, and not a packing of positions. <code>0-infrastructure/logbook</code> holds it.</p>
-<p><strong><code>service/</code> unnumbered is still refused</strong>, for the reason RFD 0111 refused it. An unnumbered directory is where whatever nobody classified collects, and that is the drift the six words exist to stop. The number is what stops <code>7-service/</code> from becoming that.</p>
+<p><strong><code>service/</code> unnumbered is still refused</strong>, for the reason RFD 206f refused it. An unnumbered directory is where whatever nobody classified collects, and that is the drift the six words exist to stop. The number is what stops <code>7-service/</code> from becoming that.</p>
 <p><strong>The recomposition rule needs no change.</strong> <code>Check.Manifest.path_recomposes</code> drops a leading digit and joins with the child, so <code>7-service/see-through</code> rebuilds <code>service-see-through</code> exactly as <code>1-transport/runpod</code> rebuilds <code>transport-runpod</code>. This was checked rather than assumed: the gate passes over 52 projects with the new side in place.</p>
 <p><strong>What a service holds.</strong> The composition and nothing else: which images run together, why the membership is what it is, the endpoint it runs on, and the release ladder. <code>service-zone</code> already writes it this way — “Nothing here is a copy. Each member is its own repository and its own image.”</p>
 </section>
 <section id="what-this-does-not-decide" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-does-not-decide">What this does not decide</h2>
-<p><strong><code>service-zone</code> and <code>service-behaviour</code> are not yet in the manifest.</strong> Both belong at <code>7-service/</code>. Both READMEs still say “edge plane”, a compound RFD 0111 retired, so adding them turns <code>mix check words</code> red until they are rewritten. That is a small change and a separate one.</p>
+<p><strong><code>service-zone</code> and <code>service-behaviour</code> are not yet in the manifest.</strong> Both belong at <code>7-service/</code>. Both READMEs still say “edge plane”, a compound RFD 206f retired, so adding them turns <code>mix check words</code> red until they are rewritten. That is a small change and a separate one.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0111: the six words, and the eight directories it removed</li>
-<li>RFD 0121: the earlier amendment of RFD 0111 against the tree</li>
+<li>RFD 206f: the six words, and the eight directories it removed</li>
+<li>RFD 2079: the earlier amendment of RFD 206f against the tree</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0127-a-service-is-not-a-side/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207f-a-service-is-not-a-side/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0126: Two see-through interactors, and the check that keeps the A/B one question</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0126-two-see-through-interactors/</link>
+  <title>RFD 207e: Two see-through interactors, and the check that keeps the A/B one question</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207e-two-see-through-interactors/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0126: Two see-through interactors, and the check that keeps the A/B one question</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 207e: Two see-through interactors, and the check that keeps the A/B one question</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> the see-through interactor pair, and what holds them to the same command</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p>See-through decomposes one anime illustration into semantic layers. The reference implementation is PyTorch; a port to ggml exists for machines where CUDA does not. Both are worth running, and the interesting question is which is faster and whether they agree.</p>
-<p>A comparison between two implementations is only a comparison if both answer the same question. Nothing enforces that. Two programs drift apart in the settings they accept, the errors they refuse, and the shape of what they return, and every one of those differences turns a timing comparison into a comparison of two different jobs. RFD 0123 makes this argument for a second WebTransport implementation and gets the benefit from the disagreement; the same benefit needs the same discipline here.</p>
+<p>A comparison between two implementations is only a comparison if both answer the same question. Nothing enforces that. Two programs drift apart in the settings they accept, the errors they refuse, and the shape of what they return, and every one of those differences turns a timing comparison into a comparison of two different jobs. RFD 207b makes this argument for a second WebTransport implementation and gets the benefit from the disagreement; the same benefit needs the same discipline here.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>Two interactors, and neither takes the unqualified name.</strong> <code>interactor-see-through-cpp</code> and <code>interactor-see-through-python</code>, for the reason RFD 0123 takes the unqualified names from the gateway pair: a name that says which of two it is beats a name that implies the other is a variant.</p>
+<p><strong>Two interactors, and neither takes the unqualified name.</strong> <code>interactor-see-through-cpp</code> and <code>interactor-see-through-python</code>, for the reason RFD 207b takes the unqualified names from the gateway pair: a name that says which of two it is beats a name that implies the other is a variant.</p>
 <p><strong>They share the wire and nothing else.</strong> The C++ half reaches the bus through the harness’s dlsym table over the iceoryx2 C ABI. The Python half reaches it through iceoryx2’s own Python binding. Each parses the command itself and encodes its own reply. An implementation that shared a parser could not disagree with the other about a command, and disagreeing is the job.</p>
 <p><strong>A check reads one half’s constants out of the other’s source.</strong> The production settings are two numbers, and if the pair ever disagree about them the comparison is void. <code>proof/test_agreement.py</code> reads <code>ST_MIN_RES</code>, <code>ST_MIN_STEPS</code> and the weight path out of the C++ header and fails when they differ from the Python values. It prints how many comparisons it made, because a check that found nothing because the other half was not checked out reads exactly like agreement.</p>
 <p><strong>A run below the production settings is refused, not served.</strong> 1280 pixels and 30 steps. Low step counts produce degenerate layers that look plausible in a viewer and say nothing about quality, and MADR 0009 in the see-through project records a 512-pixel artefact that vanished at full settings. An interactor that answered a cheap request with a cheap result would invite exactly that comparison. The refusal names the number it saw, because a refusal that does not is one the caller retries unchanged.</p>
@@ -263,7 +263,7 @@
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0123: the same argument for a second WebTransport implementation</li>
+<li>RFD 207b: the same argument for a second WebTransport implementation</li>
 <li>See-through: <a href="https://doi.org/10.1145/3799902.3811209" class="uri">https://doi.org/10.1145/3799902.3811209</a></li>
 <li>Upstream implementation: <a href="https://github.com/shitagaki-lab/see-through" class="uri">https://github.com/shitagaki-lab/see-through</a>, Apache-2.0</li>
 </ul>
@@ -272,19 +272,19 @@
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0126-two-see-through-interactors/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207e-two-see-through-interactors/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0125: An interactor in another process, and the transport layer that reaches it</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0125-an-interactor-in-another-process/</link>
+  <title>RFD 207d: An interactor in another process, and the transport layer that reaches it</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207d-an-interactor-in-another-process/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0125: An interactor in another process, and the transport layer that reaches it</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 207d: An interactor in another process, and the transport layer that reaches it</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> how a RunPod Serverless worker reaches an interactor that holds a model</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -310,26 +310,26 @@
 <ul>
 <li><code>contract-bus</code>, <code>weft/loop.hpp</code>: the server half this is the caller for</li>
 <li><code>contract-command</code>, <code>weft/interactor.h</code>: the shape <code>bus_ask</code> wears</li>
-<li>RFD 0126: the two interactors this was built to compare</li>
+<li>RFD 207e: the two interactors this was built to compare</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0125-an-interactor-in-another-process/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207d-an-interactor-in-another-process/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0124: Elixir error tuples in every reply</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0124-elixir-error-tuples-in-every-reply/</link>
+  <title>RFD 207c: Elixir error tuples in every reply</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207c-elixir-error-tuples-in-every-reply/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0124: Elixir error tuples in every reply</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 207c: Elixir error tuples in every reply</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> what an interactor replies, and how a caller on the BEAM reads it</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -559,23 +559,23 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0124-elixir-error-tuples-in-every-reply/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207c-elixir-error-tuples-in-every-reply/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0123: A second WebTransport implementation, and the names that make room for it</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</link>
+  <title>RFD 207b: A second WebTransport implementation, and the names that make room for it</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207b-a-second-webtransport-implementation/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0123: A second WebTransport implementation, and the names that make room for it</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 207b: A second WebTransport implementation, and the names that make room for it</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> the WebTransport contract, who implements it, and what the transport repositories are called</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>The fabric states its wire in <code>contract-wt</code>, <code>contract-entity-packet</code>, <code>contract-connection-fsm</code> and <code>contract-http3-queue</code>, and implements it once. RFD 0088 chose that: “Client and server share one proven QUIC stack instead of two different, independently verified ones.” <code>transport-gateway</code>, <code>transport-ingest</code> and the engine’s <code>modules/http3</code> all vendor picoquic and picotls, so both ends of every session run the same code.</p>
+<p>The fabric states its wire in <code>contract-wt</code>, <code>contract-entity-packet</code>, <code>contract-connection-fsm</code> and <code>contract-http3-queue</code>, and implements it once. RFD 2058 chose that: “Client and server share one proven QUIC stack instead of two different, independently verified ones.” <code>transport-gateway</code>, <code>transport-ingest</code> and the engine’s <code>modules/http3</code> all vendor picoquic and picotls, so both ends of every session run the same code.</p>
 <p>That buys interoperability by construction and gives up the check. A wire implemented once describes the program that implements it, and nothing establishes that the specification is implementable from the specification. Every assumption both ends share passes every test the pair can run. <code>contract-wt</code> already makes this argument for the engine’s H3 stack and acts on it in aioquic; nothing makes it for the transport layer.</p>
 </section>
 <section id="decision" class="level2">
@@ -583,7 +583,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 <p><strong>A second implementation, on a stack that shares no code with the first.</strong> <code>transport-gateway-python</code> and <code>transport-ingest-python</code> terminate the same contract on <code>aioquic</code>, which implements QUIC and TLS 1.3 in Python from the RFCs, and hand off over the iceoryx2 ring. Khronos ratifies against two independent implementations for this reason.</p>
 <p>Three stacks were considered and the choice turns on what each shares with the first. Binding picoquic from Python was rejected because both ends would then run the same QUIC and the same TLS, so the second implementation would test the binding rather than the contract. h2o was rejected because its WebTransport is an unmerged pull request stacked on another unmerged pull request, with tests unchecked, against an HTTP/3 stack h2o calls experimental; its QUIC is quicly and would have qualified otherwise. <code>pywebtransport</code> shipped first here and was replaced: it refuses an EC private key, and <code>contract-wt</code> records the Godot demo server generating a fresh P-256 certificate on every run. <code>DETAILS.md</code> has the measurements.</p>
 <p><strong>It carries no player traffic.</strong> <code>transport-gateway-c</code>’s <code>PACKET_PATH.md</code> measures a scripting runtime at 5.70 M/s against a 15 M/s bar, and 117.8 ns per runtime crossing against a 66.7 ns per-packet budget. Those numbers stand and they are why policy lives in an interactor rather than in the packet path. The Python pair produces agreement or disagreement, and no throughput claim goes in a record without a measurement in <code>data/measurements/</code>.</p>
-<p><strong>The language is what tells the four repositories apart.</strong> <code>transport-gateway</code> becomes <code>transport-gateway-c</code> and <code>transport-ingest</code> becomes <code>transport-ingest-c</code>. Two implementations of one contract are distinguished only by how they are built, so RFD 0111’s preference for names that say what a thing does cannot separate them, and <code>transport-picoquic</code> is the precedent for naming a transport repository after its stack. Naming the language rather than the library also survives a change of library, which this record has already exercised: the Python pair moved from <code>pywebtransport</code> to <code>aioquic</code> before it merged and neither name moved. Neither pair keeps the unqualified name, because the unqualified name implies the other is a variant.</p>
+<p><strong>The language is what tells the four repositories apart.</strong> <code>transport-gateway</code> becomes <code>transport-gateway-c</code> and <code>transport-ingest</code> becomes <code>transport-ingest-c</code>. Two implementations of one contract are distinguished only by how they are built, so RFD 206f’s preference for names that say what a thing does cannot separate them, and <code>transport-picoquic</code> is the precedent for naming a transport repository after its stack. Naming the language rather than the library also survives a change of library, which this record has already exercised: the Python pair moved from <code>pywebtransport</code> to <code>aioquic</code> before it merged and neither name moved. Neither pair keeps the unqualified name, because the unqualified name implies the other is a variant.</p>
 <p><strong>The codec is emitted, never retyped.</strong> <code>contract-entity-packet</code> gains a Python emitter beside <code>EntityPacket/EmitC.lean</code>, so <code>lake exe packet_emit</code> writes the C header, the Python module and the 64 golden vectors from one run. A second implementation that reads the layout off the first tests whether two people can copy a table.</p>
 <p><strong>The ring is reached through the <code>iceoryx2</code> wheel.</strong> The C repositories dlopen iceoryx2 through a dispatch table generated from <code>iceoryx2.sigs</code>, so that “the harness builds on a machine that has never seen iceoryx2” and because “iceoryx2 is Rust, and weft writes no Rust.” A prebuilt wheel is a runtime artifact rather than a build-graph edge and adds no second <code>.sigs</code> file. Bus access stays behind one module in each repository so the choice is reversible.</p>
 <p><strong><code>contract-wt</code> stays where it is.</strong> It runs the same <code>aioquic</code> this pair now runs, and it checks a different subject: the engine’s <code>modules/http3</code> as a client, where these check the transport layer as a server. One Python stack in two places is less to keep current than two, and its roster client is what caught <code>WebTransportPeer</code> tracking clients in one bool. What it does not give is a third opinion, so a fault inside <code>aioquic</code> itself would go unseen by both.</p>
@@ -592,13 +592,13 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <p>The implementation contradicted one claim the fabric makes about its own wire before it carried a byte of real traffic, which is the argument for it stated as evidence rather than as principle. <code>transport-fanout</code> caps a slice at 64 records and calls 6400 bytes “comfortably inside one message”; two stacks sharing no code put the limit at 11 records, and <code>datasource-queen</code>’s own <code>WT_MTU_MAX</code> agrees with them rather than with the comment.</p>
 <p>That is one finding, not a pile of them, and the count is worth keeping honest. Building the pair also surfaced three defects in the libraries it uses — an EC key a stack would not load, a subscriber buffer that drops the oldest of three sends, a datagram queue that wedges on an oversized send. Those are real and cost real time, and a third implementation on a fourth stack would not have found any of them. <code>DETAILS.md</code> keeps them apart for that reason.</p>
-<p>The cost is a fourth transport repository and a second wire reader to keep in step. RFD 0122 named that cost exactly — “every wire change is now two changes that must agree, and nothing checks that they do” — and rejected a second implementation carrying player traffic for it. Checking that they agree is what these two produce, so the cost lands where the benefit is.</p>
+<p>The cost is a fourth transport repository and a second wire reader to keep in step. RFD 207a named that cost exactly — “every wire change is now two changes that must agree, and nothing checks that they do” — and rejected a second implementation carrying player traffic for it. Checking that they agree is what these two produce, so the cost lands where the benefit is.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0088 chose one QUIC stack on both ends; RFD 0122 rejected a second implementation on the player path and is not contradicted; RFD 0047 abandoned <code>webtransportd</code> and still governs the production path; RFD 0111 sets the name shape this amends for four repositories</li>
-<li>RFD 0049 for the reliability classes the two repositories split on, RFD 0096 for the measurement discipline, RFD 0108 for the rule that a lagging reader never stalls the writer</li>
+<li>RFD 2058 chose one QUIC stack on both ends; RFD 207a rejected a second implementation on the player path and is not contradicted; RFD 202f abandoned <code>webtransportd</code> and still governs the production path; RFD 206f sets the name shape this amends for four repositories</li>
+<li>RFD 2031 for the reliability classes the two repositories split on, RFD 2060 for the measurement discipline, RFD 206c for the rule that a lagging reader never stalls the writer</li>
 <li><code>contract-entity-packet</code> for the layout, the emitter and the golden vectors; <code>contract-wt</code> for the same argument one stack earlier</li>
 <li>The measurements, the method, and the rename list: <code>DETAILS.md</code></li>
 </ul>
@@ -694,8 +694,8 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 <section id="a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends" class="level3">
 <h3 class="anchored" data-anchor-id="a-configuration-defect-a-default-iceoryx2-subscriber-drops-the-oldest-of-three-sends">A configuration defect: a default iceoryx2 subscriber drops the oldest of three sends</h3>
-<p><code>iceoryx2</code> defaults a subscriber’s buffer to <strong>2</strong> samples with safe overflow on. Three records published in a burst arrived as two, and the missing one was the oldest, before any reader was slow. Both repositories now set the buffer explicitly and keep safe overflow, because RFD 0108 requires that a lagging reader never stall the writer.</p>
-<p>The drop stays undetectable. <code>HeaderPublishSubscribe</code> carries a node id, a publisher id and an element count, and no sequence number, so nothing distinguishes a dropped sample from one never sent. RFD 0108 says a subscriber whose cursor falls out of the ring “receives a resync signal rather than a gap”; no such signal exists, and defining one is a wire decision.</p>
+<p><code>iceoryx2</code> defaults a subscriber’s buffer to <strong>2</strong> samples with safe overflow on. Three records published in a burst arrived as two, and the missing one was the oldest, before any reader was slow. Both repositories now set the buffer explicitly and keep safe overflow, because RFD 206c requires that a lagging reader never stall the writer.</p>
+<p>The drop stays undetectable. <code>HeaderPublishSubscribe</code> carries a node id, a publisher id and an element count, and no sequence number, so nothing distinguishes a dropped sample from one never sent. RFD 206c says a subscriber whose cursor falls out of the ring “receives a resync signal rather than a gap”; no such signal exists, and defining one is a wire decision.</p>
 </section>
 </section>
 <section id="the-renames" class="level2">
@@ -738,13 +738,13 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </tbody>
 </table>
 <p><code>check_path_recomposes</code> in <code>check_docs.py</code> requires the directory and its child to rebuild the repository name, and all four do. The manifest count moves from 45 to 47.</p>
-<p>Both C repositories carried a description using a word RFD 0111 retired — “hands the result to a <strong>plane</strong> over iceoryx2” — because the READMEs were converted and the GitHub descriptions were missed. Both now say interactor.</p>
+<p>Both C repositories carried a description using a word RFD 206f retired — “hands the result to a <strong>plane</strong> over iceoryx2” — because the READMEs were converted and the GitHub descriptions were missed. Both now say interactor.</p>
 <p><code>check_docs.py</code>’s moved-repository check found eight stale references in six files across five repositories, each fixed in its own pull request: <code>transport-fanout</code>, <code>transport-gateway-c</code>, <code>transport-ingest-c</code>, <code>interactor-ward</code>, <code>entities-gyre</code> and <code>datasource-queen</code>.</p>
 </section>
 <section id="why-the-language-and-not-the-library" class="level2">
 <h2 class="anchored" data-anchor-id="why-the-language-and-not-the-library">Why the language and not the library</h2>
-<p>RFD 0111 retires names that say how a thing was built, and <code>-c</code> and <code>-python</code> are exactly that. The rule targets directories that collect whatever nobody classified: <code>service/</code>, <code>lean/</code>, <code>engine/</code>, <code>vendor/</code>. Two repositories implementing one contract are a different case, because the build is the only thing that separates them and the role word is already taken by both.</p>
-<p><code>transport-picoquic</code>, which RFD 0111 renamed from <code>fabric-edge</code>, is the precedent for naming a transport repository after its stack, taken for the same reason: “Bare <code>transport</code> would read as a name that went missing.”</p>
+<p>RFD 206f retires names that say how a thing was built, and <code>-c</code> and <code>-python</code> are exactly that. The rule targets directories that collect whatever nobody classified: <code>service/</code>, <code>lean/</code>, <code>engine/</code>, <code>vendor/</code>. Two repositories implementing one contract are a different case, because the build is the only thing that separates them and the role word is already taken by both.</p>
+<p><code>transport-picoquic</code>, which RFD 206f renamed from <code>fabric-edge</code>, is the precedent for naming a transport repository after its stack, taken for the same reason: “Bare <code>transport</code> would read as a name that went missing.”</p>
 <p>The language outlives the library. Swapping picoquic for another C QUIC stack, or <code>pywebtransport</code> for aioquic, leaves both names true, where <code>-picoquic</code> and <code>-pywebtransport</code> would strand.</p>
 </section>
 <section id="what-is-built" class="level2">
@@ -758,12 +758,12 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0123-a-second-webtransport-implementation/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207b-a-second-webtransport-implementation/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0122: The client is native, from entities-godot’s gyre branch</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</link>
+  <title>RFD 207a: The client is native, from entities-godot’s gyre branch</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207a-the-client-is-native/</link>
   <description><![CDATA[ 
 
 
@@ -773,19 +773,19 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 <p><strong>State:</strong> published · <strong>Scope:</strong> the Queen of the Gyre, and what a player runs to reach her</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>RFD 0112 put the Queen’s client in a browser and chose Lexical for the slash command field, which was the hard half and was built. The field was the wrong thing to optimise for.</p>
+<p>RFD 2070 put the Queen’s client in a browser and chose Lexical for the slash command field, which was the hard half and was built. The field was the wrong thing to optimise for.</p>
 <p>A browser client is a second implementation of everything below that field. <code>client/src/cbor.js</code> decodes what the ward publishes in a language sharing nothing with the decoder the rest of the fabric uses; it reaches the ward over a WebTransport stack merely compatible with the ward’s; it carries npm, esbuild, and Playwright, which nothing else here needs; and it cannot enter XR, the point of the setting.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
 <p>The client is a Godot build from <code>entities-godot</code>, branch <code>gyre</code> — one of five entries in the <code>fabric</code> manifest’s <code>default.xml</code> that track something other than <code>main</code>.</p>
 <p>The branch carries the parts already: <code>modules/http3</code> gives <code>WebTransportPeer</code> over the same picoquic backend <code>queen</code>’s <code>src/wt.c</code> terminates and <code>transport-gateway</code> vendors, <code>modules/xr_grid</code> gives the 100-byte <code>XRGridEntityPacket</code> that <code>lean-entity-packet</code> specifies, and <code>modules/multiplayer_fabric</code> gives <code>FabricMultiplayerPeer</code>. This adds no engine code; it decides which client is the client. <code>DETAILS.md</code> has the module mapping.</p>
-<p>The slash command field becomes a <code>Control</code>, so RFD 0112’s hard half stops being hard: a caret in a <code>contenteditable</code> is a browser problem, and there is no browser. The ward does not change — <code>queen serve</code> already speaks WebTransport. What changes is who connects.</p>
+<p>The slash command field becomes a <code>Control</code>, so RFD 2070’s hard half stops being hard: a caret in a <code>contenteditable</code> is a browser problem, and there is no browser. The ward does not change — <code>queen serve</code> already speaks WebTransport. What changes is who connects.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0112 chose the browser client and is abandoned; RFD 0085 holds the setting; RFD 0111 sets the words transport layer and service; RFD 0047 is why the Queen terminates QUIC herself</li>
+<li>RFD 2070 chose the browser client and is abandoned; RFD 2055 holds the setting; RFD 206f sets the words transport layer and service; RFD 202f is why the Queen terminates QUIC herself</li>
 <li><code>lean-entity-packet</code> specifies the 100-byte packet both ends now share</li>
 <li>The module mapping, the transport path, and what happens to the web client: <code>DETAILS.md</code></li>
 </ul>
@@ -795,7 +795,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and problem statement</h2>
-<p>RFD 0112 read the problem as a text field. <code>service-store/src/queen.c</code> had no client at all when it was written, and the visible gap was that a player had nowhere to type. So the document spent its length on the field: a decorator node is one block to the caret, an atom node in ProseMirror can hold the caret and needs a plugin to correct it, and Meta tests the mobile and IME paths at scale. Lexical was the right answer to that question.</p>
+<p>RFD 2070 read the problem as a text field. <code>service-store/src/queen.c</code> had no client at all when it was written, and the visible gap was that a player had nowhere to type. So the document spent its length on the field: a decorator node is one block to the caret, an atom node in ProseMirror can hold the caret and needs a plugin to correct it, and Meta tests the mobile and IME paths at scale. Lexical was the right answer to that question.</p>
 <p>The question aged badly. <code>queen</code> now has <code>serve</code>, <code>src/wt.c</code>, and <code>src/transport_tcp.c</code>; the ward is entities with places, and a subscriber’s slice is decided by an interest filter. The field is the smallest part of a client for that. What matters is who decodes the packet, which QUIC implementation carries it, and whether a player can stand in the zone rather than look at it.</p>
 </section>
 <section id="what-the-browser-client-costs" class="level2">
@@ -803,7 +803,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 <p>Three costs, none of which is the field.</p>
 <p>A second decoder. <code>client/src/cbor.js</code> is a JavaScript implementation of what the ward publishes. Every wire change is now two changes that must agree, and nothing checks that they do. <code>lean-entity-packet</code> models the packet in Lean with a <code>packet_golden.csv</code> of canonical bytes, and the JavaScript is not held to those vectors.</p>
 <p>A second transport. The browser’s WebTransport is whatever the browser ships. <code>queen</code> terminates QUIC with picoquic and picotls, and <code>transport-gateway</code> vendors both precisely so that one implementation and one TLS library run on both ends. A browser client gives that up and replaces it with compatibility, which is a thing you find out about in the field.</p>
-<p>No XR. RFD 0085’s setting is a ring station a player is inside. A browser field can show a slash command and cannot put anybody anywhere.</p>
+<p>No XR. RFD 2055’s setting is a ring station a player is inside. A browser field can show a slash command and cannot put anybody anywhere.</p>
 </section>
 <section id="the-parts-already-on-the-branch" class="level2">
 <h2 class="anchored" data-anchor-id="the-parts-already-on-the-branch">The parts already on the branch</h2>
@@ -848,7 +848,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </section>
 <section id="the-transport-path" class="level2">
 <h2 class="anchored" data-anchor-id="the-transport-path">The transport path</h2>
-<p>A player’s client opens <code>WebTransportPeer.create_client(host, port, "/wt")</code> against the port <code>queen serve</code> binds. <code>src/wt.c</code> terminates the session in the Queen’s own process — no <code>webtransportd</code>, per RFD 0047 and the rule in <code>CLAUDE.md</code>. Entity state arrives as <code>XRGridEntityPacket</code>, 100 bytes, delta coded, filtered by interest before it is sent.</p>
+<p>A player’s client opens <code>WebTransportPeer.create_client(host, port, "/wt")</code> against the port <code>queen serve</code> binds. <code>src/wt.c</code> terminates the session in the Queen’s own process — no <code>webtransportd</code>, per RFD 202f and the rule in <code>CLAUDE.md</code>. Entity state arrives as <code>XRGridEntityPacket</code>, 100 bytes, delta coded, filtered by interest before it is sent.</p>
 <p>The client is therefore a subscriber and nothing more privileged. <code>Weft.Authority</code> decides which controller drives an avatar, the ward checks a command’s rebac relations on receipt, and a native client has no more standing than a browser one did.</p>
 </section>
 <section id="what-happens-to-the-web-client" class="level2">
@@ -860,38 +860,38 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 <h2 class="anchored" data-anchor-id="hazards">Hazards</h2>
 <p>The build is the cost. A native client is compiled per platform from an engine fork, and a browser client is served. <code>fabric-godot-assembly</code> and <code>godot-images</code> exist for exactly this, so the cost is known rather than new, but it is real and it is paid on every platform.</p>
 <p>The branch is a fork of a fork. <code>gyre</code> sits on top of <code>multiplayer-fabric</code>, which merges fourteen feature branches on top of Godot’s <code>master</code>. A client pinned there inherits that merge surface. The manifest states the branch, which is the minimum; nothing here pins a commit.</p>
-<p>The field regresses before it improves. RFD 0112’s field works today. A <code>Control</code> that shows a parameter as an inline block has to be written, and the first version of it will be worse than the Lexical one. That is accepted for the same reason as the build cost: the field was never the part that determined whether this client was right.</p>
+<p>The field regresses before it improves. RFD 2070’s field works today. A <code>Control</code> that shows a parameter as an inline block has to be written, and the first version of it will be worse than the Lexical one. That is accepted for the same reason as the build cost: the field was never the part that determined whether this client was right.</p>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<p>RFD 0112 is abandoned. <code>service-store/client</code> — Lexical, esbuild, the Playwright specs and the JavaScript decoder — stops being the client. Removing it is its own change in its own repository and is not assumed by this document.</p>
+<p>RFD 2070 is abandoned. <code>service-store/client</code> — Lexical, esbuild, the Playwright specs and the JavaScript decoder — stops being the client. Removing it is its own change in its own repository and is not assumed by this document.</p>
 <p>The cost is a build. A browser client is served; a native client is compiled per platform from an engine fork, which is slower to produce and heavier to distribute. That is accepted, because the alternative was paying for a second decoder and a second transport forever to avoid paying for a build once.</p>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0122-the-client-is-native/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/207a-the-client-is-native/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0121: Amend RFD 0111 against the tree</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</link>
+  <title>RFD 2079: Amend RFD 206f against the tree</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-amend-rfd-206f-against-the-tree/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0121: Amend RFD 0111 against the tree</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2079: Amend RFD 206f against the tree</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> architecture vocabulary across all repositories</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>RFD 0111 is executed: the thirty renames landed, and GitHub redirects each old name. Four of its statements disagree with the organisation and the checkout today, and each reads as a survey, so a wrong one names a thing that is not there.</p>
+<p>RFD 206f is executed: the thirty renames landed, and GitHub redirects each old name. Four of its statements disagree with the organisation and the checkout today, and each reads as a survey, so a wrong one names a thing that is not there.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Amend RFD 0111 in four places. <code>DETAILS.md</code> holds the evidence for each, with the command that produces it and the date it was run.</p>
+<p>Amend RFD 206f in four places. <code>DETAILS.md</code> holds the evidence for each, with the command that produces it and the date it was run.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 24%">
@@ -918,7 +918,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </tr>
 <tr class="odd">
 <td><code>ports/</code> becomes <code>repositories/</code></td>
-<td><code>repository</code> is the one collision RFD 0111 creates</td>
+<td><code>repository</code> is the one collision RFD 206f creates</td>
 <td>rename to <code>repository/</code>, singular</td>
 </tr>
 <tr class="even">
@@ -928,14 +928,14 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 </tr>
 </tbody>
 </table>
-<p>A fifth claim was checked and withdrawn: repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> do hold the RFD 0028 triad, so that statement stands.</p>
+<p>A fifth claim was checked and withdrawn: repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> do hold the RFD 201c triad, so that statement stands.</p>
 <p>The conversion table, the retired deployment words, the type-first name shape, the thirty renames, and the case for “interactor” all hold, unchanged by this RFD.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0111, amended by this RFD. RFD 0028, for the triad this RFD keeps naming</li>
-<li>RFD 0000, for the rule that one fact has one source, and that it is not prose</li>
+<li>RFD 206f, amended by this RFD. RFD 201c, for the triad this RFD keeps naming</li>
+<li>RFD 2000, for the rule that one fact has one source, and that it is not prose</li>
 <li>The survey, the commands that produced it, and the counts: <code>DETAILS.md</code></li>
 </ul>
 </section>
@@ -945,7 +945,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 <section id="how-this-was-checked" class="level2">
 <h2 class="anchored" data-anchor-id="how-this-was-checked">How this was checked</h2>
 <p>Every count below comes from the GitHub API or from a checkout on disk, on 2026-08-16, against <code>repo</code> manifest revision <code>main</code>. Each claim states the command that produces it, so a later reader can re-run it rather than trust the number.</p>
-<p>The renames of RFD 0111 have landed. GitHub answers the old names with the new ones:</p>
+<p>The renames of RFD 206f have landed. GitHub answers the old names with the new ones:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gh</span> api repos/v-sekai-multiplayer-fabric/fabric-authority-plane <span class="at" style="color: #657422;
@@ -991,7 +991,7 @@ background-color: null;
 font-style: inherit;">grep</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'^fabric-'</span></span></code></pre></div></div>
-<p>Fifteen names carry the prefix. The bare <code>fabric</code> is the sixteenth match for <code>^fabric</code> and is the name RFD 0111 frees, so it is excluded here.</p>
+<p>Fifteen names carry the prefix. The bare <code>fabric</code> is the sixteenth match for <code>^fabric</code> and is the name RFD 206f frees, so it is excluded here.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 46%">
@@ -1100,7 +1100,7 @@ font-style: inherit;">'^fabric-'</span></span></code></pre></div></div>
 </tr>
 </tbody>
 </table>
-<p>Five archived and four forks leave six live and owned. RFD 0111 names <code>fabric-harness</code> and says it becomes <code>contract-bus</code> when that pass is taken, which leaves five the RFD does not mention at all.</p>
+<p>Five archived and four forks leave six live and owned. RFD 206f names <code>fabric-harness</code> and says it becomes <code>contract-bus</code> when that pass is taken, which leaves five the RFD does not mention at all.</p>
 <p>Two of the five sit in the <code>repo</code> manifest and check out on every <code>repo sync</code>: <code>fabric-godot-assembly</code> and <code>fabric-wt-harness</code>. A reader of the workspace root sees the retired prefix on the first listing.</p>
 </section>
 <section id="entities-godot-is-the-engine" class="level2">
@@ -1119,12 +1119,12 @@ SConstruct core doc drivers editor gles3_builders.py glsl_builders.py main
 methods.py misc modules platform platform_methods.py pyproject.toml scene
 scu_builders.py servers tests thirdparty version.py</code></pre>
 <p><code>SConstruct</code>, <code>editor/</code>, <code>drivers/</code>, <code>platform/</code>, <code>servers/</code>, <code>modules/</code>, and <code>thirdparty/</code> are the Godot engine tree, 1 708 369 KB of C++ by the API’s own size field. The Netflix definition of an entity is a domain object that has no knowledge of where it is stored. An engine that renders, builds, and ships an editor holds many things, and a set of such domain objects is a small part of none of the directories above.</p>
-<p>RFD 0111 defends this name in one paragraph, and the paragraph argues a different point: that the <code>core/</code> directory inside the repository comes from upstream and must keep its name. That reasoning is sound and this RFD keeps it. It says nothing about whether <code>entities-</code> describes the repository.</p>
-<p>The test RFD 0111 applies elsewhere is whether a name asserts something false. <code>fabric-service-meta</code> was rejected as <code>service-meta</code> because “<code>service-meta</code> would assert the thing that is false”. <code>contract-command</code> was chosen over <code>interactor-anything</code> because the latter “picks the side the git repository exists to avoid picking”. <code>entities-godot</code> fails the same test and is the seventh name the shape does not decide.</p>
+<p>RFD 206f defends this name in one paragraph, and the paragraph argues a different point: that the <code>core/</code> directory inside the repository comes from upstream and must keep its name. That reasoning is sound and this RFD keeps it. It says nothing about whether <code>entities-</code> describes the repository.</p>
+<p>The test RFD 206f applies elsewhere is whether a name asserts something false. <code>fabric-service-meta</code> was rejected as <code>service-meta</code> because “<code>service-meta</code> would assert the thing that is false”. <code>contract-command</code> was chosen over <code>interactor-anything</code> because the latter “picks the side the git repository exists to avoid picking”. <code>entities-godot</code> fails the same test and is the seventh name the shape does not decide.</p>
 </section>
 <section id="repositories-puts-the-created-collision-in-the-tree" class="level2">
 <h2 class="anchored" data-anchor-id="repositories-puts-the-created-collision-in-the-tree"><code>repositories/</code> puts the created collision in the tree</h2>
-<p>RFD 0111 renames the RFD 0028 triad in three git repositories. Those three exist and hold the triad, which the API confirms:</p>
+<p>RFD 206f renames the RFD 201c triad in three git repositories. Those three exist and hold the triad, which the API confirms:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1164,14 +1164,14 @@ font-style: inherit;"># combat:      adapters core ports</span></span>
 <span id="cb5-6"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># progression: adapters core ports</span></span></code></pre></div></div>
-<p>RFD 0111 states the resolution for the word it takes from Netflix: write “git repository” in full, and keep “repository” alone for the interface. It chooses that over keeping Cockburn’s “port” on the ground that “a collision in prose costs less than a collision in code”.</p>
+<p>RFD 206f states the resolution for the word it takes from Netflix: write “git repository” in full, and keep “repository” alone for the interface. It chooses that over keeping Cockburn’s “port” on the ground that “a collision in prose costs less than a collision in code”.</p>
 <p>A directory named <code>repositories/</code> sits in the tree of a git repository, which is the place the RFD ranks as the more expensive of the two. The plural reads as a collection of checkouts, which is the meaning the RFD spends the section pushing away. The singular <code>repository/</code> reads as the interface, matches <code>core/</code> and <code>ports/</code> in number, and costs nothing to adopt because the rename has not run yet.</p>
 <p>The other two renames in that triad stand. <code>core/</code> to <code>entities/</code> and <code>adapters/</code> to <code>datasources/</code> carry no collision.</p>
 <p>Three git repositories named <code>loot</code>, <code>combat</code>, and <code>progression</code> are also absent from the rename list and from the <code>repo</code> manifest, and their names state no type. Whether the type-first convention reaches them is a question this RFD raises and does not answer, because the answer decides three more names.</p>
 </section>
 <section id="the-gap-is-two-readmes-rather-than-five" class="level2">
 <h2 class="anchored" data-anchor-id="the-gap-is-two-readmes-rather-than-five">The gap is two READMEs rather than five</h2>
-<p>RFD 0111 says the <code>lean-*-core</code> READMEs state a hexagon layout of <code>core/</code>, <code>ports/</code>, and <code>adapters/</code>, that those directories do not exist, and that each of those git repositories holds one Lean namespace directory. The checkout disagrees in two of the five.</p>
+<p>RFD 206f says the <code>lean-*-core</code> READMEs state a hexagon layout of <code>core/</code>, <code>ports/</code>, and <code>adapters/</code>, that those directories do not exist, and that each of those git repositories holds one Lean namespace directory. The checkout disagrees in two of the five.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1361,35 +1361,35 @@ font-style: inherit;"># entities-lean-rebac        2</span></span>
 <span id="cb7-6"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># entities-lean-shared       1</span></span></code></pre></div></div>
-<p>So RFD 0111 describes five READMEs where two exist. <code>entities-lean-shared</code> is the one whose layout section is wholly false: it names the triad and the repository holds <code>Shared/Types.lean</code> and nothing else. <code>entities-lean-rebac</code> is the one that needs its paths qualified, in both its top-level README and the second one at <code>Rebac/README.md</code>, which names an <code>adapters/</code> that is absent.</p>
+<p>So RFD 206f describes five READMEs where two exist. <code>entities-lean-shared</code> is the one whose layout section is wholly false: it names the triad and the repository holds <code>Shared/Types.lean</code> and nothing else. <code>entities-lean-rebac</code> is the one that needs its paths qualified, in both its top-level README and the second one at <code>Rebac/README.md</code>, which names an <code>adapters/</code> that is absent.</p>
 <p>One README to correct and one to qualify. The count in that section, and the sentence “Those directories do not exist”, are the two claims to amend. Whether <code>combat</code>, <code>loot</code>, and <code>progression</code> should gain a README is a separate question this RFD does not answer.</p>
 </section>
 <section id="what-this-rfd-leaves-alone" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-rfd-leaves-alone">What this RFD leaves alone</h2>
 <p>The conversion table, the retirement of plane, edge plane, domain, and store plane, the type-first name shape, the thirty renames, and the reasoning for “interactor” over the alternatives all hold. Every one of them was checked against the organisation and matches.</p>
-<p>The <code>domain</code> field on the wire in RFD 0091 is still unrenamed, and still needs its own RFD, as RFD 0111 says.</p>
+<p>The <code>domain</code> field on the wire in RFD 205b is still unrenamed, and still needs its own RFD, as RFD 206f says.</p>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0121-amend-rfd-0111-against-the-tree/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-amend-rfd-206f-against-the-tree/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0120: The Gyre became a settlement game</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</link>
+  <title>RFD 2078: The Gyre became a settlement game</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-the-gyre-became-a-settlement-game/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0120: The Gyre became a settlement game</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2078: The Gyre became a settlement game</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> the Gyre’s shape, the player’s role, and what the ward simulates</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>RFD 0085 records the Gyre as a MUD on the loot and action shell: a Hub in the Under-Market and the Commons, bounded contracts out in the field, six zones, and a player who is a Spark taking work to pay down a debt. <code>service-store</code> built something else — the player is the Queen, the Sparks act on their own, and the loop is commissioning rather than travelling. The code has run this way since the first ward played while the record still describes the earlier design, so anyone reading 0085 to understand what <code>queen</code> does will be wrong about the player, the loop, and the map. This RFD records what was built, so the two stop disagreeing.</p>
+<p>RFD 2055 records the Gyre as a MUD on the loot and action shell: a Hub in the Under-Market and the Commons, bounded contracts out in the field, six zones, and a player who is a Spark taking work to pay down a debt. <code>service-store</code> built something else — the player is the Queen, the Sparks act on their own, and the loop is commissioning rather than travelling. The code has run this way since the first ward played while the record still describes the earlier design, so anyone reading 0085 to understand what <code>queen</code> does will be wrong about the player, the loop, and the map. This RFD records what was built, so the two stop disagreeing.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
@@ -1403,7 +1403,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li>RFD 0085: the setting, which this amends rather than replaces. RFD 0119: the interaction model that depends on which loop is real</li>
+<li>RFD 2055: the setting, which this amends rather than replaces. RFD 2077: the interaction model that depends on which loop is real</li>
 <li><code>service-store</code>: <code>src/queen.c</code>, the venues, the board, and the clock</li>
 </ul>
 </section>
@@ -1421,7 +1421,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <thead>
 <tr class="header">
 <th></th>
-<th>RFD 0085</th>
+<th>RFD 2055</th>
 <th><code>service-store</code></th>
 </tr>
 </thead>
@@ -1534,42 +1534,42 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 <section id="what-this-leaves-open" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-leaves-open">What this leaves open</h2>
-<p>Whether the Spark-facing game returns. Nothing here forecloses it, and RFD 0119 assumes it does, with hands and salvage in a headset. The ward would be the economy underneath it rather than the whole of it.</p>
+<p>Whether the Spark-facing game returns. Nothing here forecloses it, and RFD 2077 assumes it does, with hands and salvage in a headset. The ward would be the economy underneath it rather than the whole of it.</p>
 <p>Whether Memory Drives arrive with that, since they are the one adversarial interaction the setting describes and the one object whose duplication is unsurvivable in the fiction.</p>
 <p>Whether the absent zones come back as places, given that venues, Sparks and contracts already carry coordinates in micrometres for the interest filter.</p>
 </section>
 <section id="what-has-not-been-built" class="level2">
 <h2 class="anchored" data-anchor-id="what-has-not-been-built">What has not been built</h2>
-<p>The Reclamation Wards, the Tangle, the Sub-Net and the Underhull have no representation in the ward. Splicer Jax, Overseer Q-11 and Rook are absent, though the Splicer’s Den carries Jax’s role as a venue. Memory Drives, and the looting and ransoming of them, are unimplemented, which matters because they are the setting’s one adversarial interaction and RFD 0119 turns on them.</p>
+<p>The Reclamation Wards, the Tangle, the Sub-Net and the Underhull have no representation in the ward. Splicer Jax, Overseer Q-11 and Rook are absent, though the Splicer’s Den carries Jax’s role as a venue. Memory Drives, and the looting and ransoming of them, are unimplemented, which matters because they are the setting’s one adversarial interaction and RFD 2077 turns on them.</p>
 <p>These stay in 0085 as setting. This RFD narrows what <code>service-store</code> claims to simulate rather than retiring the fiction around it.</p>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <p>0085 remains the setting record and stops being the design record for the ward. A reader who wants to know what the simulation does reads this one.</p>
-<p>The salvage and interaction model in RFD 0119 sits on the cycle boundary rather than on a Hub and Field loop, because the loop it was written against is not the loop that exists.</p>
+<p>The salvage and interaction model in RFD 2077 sits on the cycle boundary rather than on a Hub and Field loop, because the loop it was written against is not the loop that exists.</p>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-the-gyre-became-a-settlement-game/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0119: Salvage you can hold</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</link>
+  <title>RFD 2077: Salvage you can hold</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-salvage-you-can-hold/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0119: Salvage you can hold</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2077: Salvage you can hold</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> client interaction model, authority, the boundary between physics and the ledger</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
 <p><code>service-store</code> holds an invariant: salvage is unique, and no item is in two Sparks’ hands. A transaction across two databases enforces it, and <code>honest()</code> checks it every cycle. Glenn Fiedler’s VR cubes hold the same invariant under another name — ownership stops two players holding one cube, and a sequence number per cube enforces it while a host arbitrates. His rule is exact: “Ownership sequence increments each time a player grabs a cube. Ownership is stronger than authority, such that an increase in ownership sequence wins over an increase in authority sequence number.”</p>
-<p>One invariant, two mechanisms, three orders of magnitude apart in cost: the transaction is exact and takes a round trip, the sequence number converges and takes nothing. RFD 0085 makes the question urgent by naming the object that carries it. Memory Drives house a Spark’s consciousness, drop on death, and can be looted or ransomed. A drive is holdable, contested, and the one item where duplication is unsurvivable in the fiction as well as in the ledger: two people holding one drive is two people holding one person.</p>
+<p>One invariant, two mechanisms, three orders of magnitude apart in cost: the transaction is exact and takes a round trip, the sequence number converges and takes nothing. RFD 2055 makes the question urgent by naming the object that carries it. Memory Drives house a Spark’s consciousness, drop on death, and can be looted or ransomed. A drive is holdable, contested, and the one item where duplication is unsurvivable in the fiction as well as in the ledger: two people holding one drive is two people holding one person.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
@@ -1584,7 +1584,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li><a href="https://gafferongames.com/post/networked_physics_in_virtual_reality/">Networked Physics in Virtual Reality</a>, Glenn Fiedler: the authority model, the priority accumulator, and the delta encoding; <a href="https://store.steampowered.com/app/3357650/PRAGMATA/">PRAGMATA</a>, CAPCOM: two characters played at once</li>
-<li>RFD 0085: the setting, the Hub and Field loop, and Memory Drives</li>
+<li>RFD 2055: the setting, the Hub and Field loop, and Memory Drives</li>
 <li><code>service-store</code> (the ward, the invariants, the parallel commit), <code>transport-fanout</code> (the interest filter and entity packet), <code>interactor-authority</code> (the single writer the ledger keeps)</li>
 </ul>
 </section>
@@ -1654,7 +1654,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 <section id="the-memory-drive-as-the-worked-case" class="level2">
 <h2 class="anchored" data-anchor-id="the-memory-drive-as-the-worked-case">The Memory Drive as the worked case</h2>
-<p>RFD 0085 has Memory Drives housing a Spark’s consciousness, dropping on death, and available to be looted or ransomed. Every property that makes an object hard here is present at once. It is holdable, so it wants distributed authority. It is contested between players who benefit from taking it, so it cannot have distributed authority. It is unique in the fiction as strongly as in the ledger, because duplicating a drive duplicates a person.</p>
+<p>RFD 2055 has Memory Drives housing a Spark’s consciousness, dropping on death, and available to be looted or ransomed. Every property that makes an object hard here is present at once. It is holdable, so it wants distributed authority. It is contested between players who benefit from taking it, so it cannot have distributed authority. It is unique in the fiction as strongly as in the ledger, because duplicating a drive duplicates a person.</p>
 <p>The split resolves it. The shell is a physics object under the ordinary rules, and custody is a row that moves only by transaction. A player can carry, drop and hand over the shell at frame rate while the question of who owns the drive is answered somewhere that cannot be raced.</p>
 </section>
 <section id="failure-modes-to-design-against" class="level2">
@@ -1692,19 +1692,19 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0119-salvage-you-can-hold/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-salvage-you-can-hold/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0118: A baker replaces the Godot editor</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</link>
+  <title>RFD 2076: A baker replaces the Godot editor</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-a-baker-replaces-the-godot-editor/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0118: A baker replaces the Godot editor</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2076: A baker replaces the Godot editor</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> client build pipeline, asset delivery, engine modules</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -1802,19 +1802,19 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0118-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-a-baker-replaces-the-godot-editor/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0117: Retire the h2o tier record set under YAGNI</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</link>
+  <title>RFD 2075: Retire the h2o tier record set under YAGNI</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-retire-the-h2o-tier-record-set/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0117: Retire the h2o tier record set under YAGNI</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2075: Retire the h2o tier record set under YAGNI</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> RFD lifecycle, records for the retired native tier</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -1823,7 +1823,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Move all 43 records to <code>multiplayer-fabric-archive</code>, per <code>rfd/0106</code>. Keep no pointer stub, per <code>rfd/0000-conventions</code>.</p>
+<p>Move all 43 records to <code>multiplayer-fabric-archive</code>, per <code>rfd/0106</code>. Keep no pointer stub, per <code>rfd/2000-conventions</code>.</p>
 <p><code>rfd/0071</code> supplies the rule. Structure arrives when a real near-term need arrives. A record whose subject the project does not build is structure ahead of need. Retiring it costs nothing, because the archive keeps it and the number stays reserved.</p>
 <p>The same rule settles the 18 records whose case cut both ways. Four have a live consumer today and stay. Fourteen do not, and go. A record comes back when a need arrives for it, rewritten against the tier that exists then, rather than restored on the guess that it still fits.</p>
 <p>Citations change in one way. A citation that names a full path, as <code>rfd/NNNN-slug</code>, becomes a link into the archive, because it names a location. A citation that names a bare number stays as it is, because it names a record.</p>
@@ -1832,7 +1832,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>The full list of 43, the four that stay, and the counts: <code>DETAILS.md</code></li>
-<li><code>rfd/0116-elixir-epoll-zone-server-in-the-h2o-style</code>: the decision that retires them.</li>
+<li><code>rfd/2074-elixir-epoll-zone-server-in-the-h2o-style</code>: the decision that retires them.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -2139,27 +2139,27 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0071-yagni-times-structure-to-need</code>: the rule this applies.</li>
-<li><code>rfd/0106-split-the-archive-into-its-own-repo</code>: the method and the destination.</li>
+<li><code>rfd/2047-yagni-times-structure-to-need</code>: the rule this applies.</li>
+<li><code>rfd/206a-split-the-archive-into-its-own-repo</code>: the method and the destination.</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-retire-the-h2o-tier-record-set/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0116: The zone server is Elixir with epoll, in the h2o style</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</link>
+  <title>RFD 2074: The zone server is Elixir with epoll, in the h2o style</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-elixir-epoll-zone-server-in-the-h2o-style/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0116: The zone server is Elixir with epoll, in the h2o style</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2074: The zone server is Elixir with epoll, in the h2o style</em></p>
 <p><strong>State:</strong> published · <strong>Scope:</strong> zone server implementation, deployment tier</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2183,7 +2183,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>The cost argument, what carries over, and what does not: <code>DETAILS.md</code></li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/0083-zone-server-h2o-replaces-godot-fabriczone"><code>rfd/0083-zone-server-h2o-replaces-godot-fabriczone</code></a>: the decision this supersedes.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-archive/tree/main/rfd/2053-zone-server-h2o-replaces-godot-fabriczone"><code>rfd/2053-zone-server-h2o-replaces-godot-fabriczone</code></a>: the decision this supersedes.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -2262,53 +2262,53 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0006-cockroachdb-with-mtls-role-separation</code>: the database this tier returns to.</li>
-<li><code>rfd/0046-server-authoritative-simulation-deferred-rollback</code>: the authority model the new server implements.</li>
-<li><code>rfd/0117-retire-the-h2o-tier-record-set</code>: retires the records that described the native tier.</li>
+<li><code>rfd/2006-cockroachdb-with-mtls-role-separation</code>: the database this tier returns to.</li>
+<li><code>rfd/202e-server-authoritative-simulation-deferred-rollback</code>: the authority model the new server implements.</li>
+<li><code>rfd/2075-retire-the-h2o-tier-record-set</code>: retires the records that described the native tier.</li>
 </ul>
 
 
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-elixir-epoll-zone-server-in-the-h2o-style/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0115: A planner domain document is a cheap-layer surface</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</link>
+  <title>RFD 2073: A planner domain document is a cheap-layer surface</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-a-planner-domain-document-is-a-cheap-layer-surface/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0115: A planner domain document is a cheap-layer surface</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2073: A planner domain document is a cheap-layer surface</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> planner domain encoding, CBOR-LD, taskweft, QCBOR</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>RFD 0003 settled the cheap layer: CBOR-LD, <code>QCBOR</code> over <code>zcbor</code>, RFC 8949 section 4.2 determinism, and an offline <code>jsonld-cpp</code> authoring role against a pure-C decode role. It scoped that to one artifact, the manifest inside a sandboxed <code>libriscv</code> package.</p>
+<p>RFD 2003 settled the cheap layer: CBOR-LD, <code>QCBOR</code> over <code>zcbor</code>, RFC 8949 section 4.2 determinism, and an offline <code>jsonld-cpp</code> authoring role against a pure-C decode role. It scoped that to one artifact, the manifest inside a sandboxed <code>libriscv</code> package.</p>
 <p>A planner domain document is a different artifact. <code>taskweft/nif</code> reads one as its input, <code>fabric-store-domain</code> carries one for the ward, and <code>fabric-behaviour-domain</code> wants one when its planner decides what a body does. Three repos, one artifact, and no recorded encoding, so each answers alone. One already has: <code>DETAILS.md</code> records the encoder it reached for.</p>
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p><strong>A planner domain document is a cheap-layer surface.</strong> RFD 0003’s decisions apply to it unchanged. This RFD adds no terms of its own and exists to widen that scope.</p>
+<p><strong>A planner domain document is a cheap-layer surface.</strong> RFD 2003’s decisions apply to it unchanged. This RFD adds no terms of its own and exists to widen that scope.</p>
 <p><strong>The store plane holds it, and an edge serves it.</strong> It is a row in SQLite over the FoundationDB VFS, in the same database as the world it describes, so it travels with that world at the speed of a page reference. <code>aria-storage</code> holds packages and assets.</p>
-<p><strong>Determinism holds for a local reason.</strong> RFD 0003 wanted it for <code>casync</code> deduplication, which these documents never reach. A ward replays from a seed and compares fingerprints, so a document that encoded two ways for one logical input would break the check that catches every other drift.</p>
+<p><strong>Determinism holds for a local reason.</strong> RFD 2003 wanted it for <code>casync</code> deduplication, which these documents never reach. A ward replays from a seed and compares fingerprints, so a document that encoded two ways for one logical input would break the check that catches every other drift.</p>
 <p><strong>The authoring tool lives wherever it is first needed.</strong> No seam in it for a second consumer that has not asked yet.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>The encoder that prompted this, and what it got wrong: <code>DETAILS.md</code></li>
-<li><code>rfd/0003-castspell-sandbox-package-and-manifest-encoding</code>: every term this RFD reuses, and the reasoning behind each.</li>
+<li><code>rfd/2003-castspell-sandbox-package-and-manifest-encoding</code>: every term this RFD reuses, and the reasoning behind each.</li>
 </ul>
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0093-compile-taskweft-to-linear-automata</code>: the planner this feeds.</li>
-<li><code>rfd/0107-janet-scripting-over-a-c-taskweft-core</code>: the other consumer of a taskweft core in pure C.</li>
+<li><code>rfd/205d-compile-taskweft-to-linear-automata</code>: the planner this feeds.</li>
+<li><code>rfd/206b-janet-scripting-over-a-c-taskweft-core</code>: the other consumer of a taskweft core in pure C.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -2319,7 +2319,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <p><code>fabric-store-domain</code> reached for a hand-written CBOR codec before this RFD existed. The encoder walked a <code>tsl::ordered_map</code> and wrote pairs in insertion order, carrying a comment that called the order correct.</p>
 <p>The comment was right about round-tripping. Encode a document, decode it, and the value that comes back matches the value that went in, every time. RFC 8949 section 4.2 wants map keys in lexicographic order, so one set of rules assembled by two paths becomes two byte strings, and nothing downstream can tell that apart from a genuine change.</p>
 <p>A test that encodes and then decodes never sees this. It measures whether a writer agrees with its own reader, and the two agreed. It would surface later as a ward whose fingerprint moved with nothing in the game having moved, which is the one signal the replay check exists to make trustworthy.</p>
-<p>That is the case for a library with production hours behind it. RFD 0003 picked <code>QCBOR</code> on exactly that basis, and the bug above is the kind other people already found in it.</p>
+<p>That is the case for a library with production hours behind it. RFD 2003 picked <code>QCBOR</code> on exactly that basis, and the bug above is the kind other people already found in it.</p>
 </section>
 <section id="the-three-consumers" class="level2">
 <h2 class="anchored" data-anchor-id="the-three-consumers">The three consumers</h2>
@@ -2330,7 +2330,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <section id="why-the-store-plane-rather-than-aria-storage" class="level2">
 <h2 class="anchored" data-anchor-id="why-the-store-plane-rather-than-aria-storage">Why the store plane rather than aria-storage</h2>
 <p>A domain document describes a world. Keeping it in the same SQLite database as that world means a ward that migrates between machines does not leave its rules behind, since a page reference moves rather than a copy. It also makes the rules readable the way everything else there is readable, which is the premise <code>fabric-store-domain</code> runs on: what you can see of the game is what you can <code>SELECT</code>.</p>
-<p><code>aria-storage</code> is content-addressed <code>casync</code> chunks for packages and assets. A domain document is neither, and RFD 0003’s determinism argument travels with <code>casync</code> rather than with the format.</p>
+<p><code>aria-storage</code> is content-addressed <code>casync</code> chunks for packages and assets. A domain document is neither, and RFD 2003’s determinism argument travels with <code>casync</code> rather than with the format.</p>
 </section>
 <section id="what-this-does-not-settle" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-does-not-settle">What this does not settle</h2>
@@ -2340,19 +2340,19 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0114: Prove the store by breaking it</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</link>
+  <title>RFD 2072: Prove the store by breaking it</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-prove-the-store-by-breaking-it/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0114: Prove the store by breaking it</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2072: Prove the store by breaking it</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> store verification, fault tolerance test, disaster recovery procedure</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2373,13 +2373,13 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>The two traps, and the negative control: <code>DETAILS.md</code></li>
-<li><code>rfd/0113-foundationdb-on-windows-built-from-source</code>: the store under test.</li>
+<li><code>rfd/2071-foundationdb-on-windows-built-from-source</code>: the store under test.</li>
 </ul>
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: why the store is FoundationDB.</li>
+<li><code>rfd/206d-two-tiers-with-foundationdb-as-the-store</code>: why the store is FoundationDB.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -2427,19 +2427,19 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-prove-the-store-by-breaking-it/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0113: FoundationDB on Windows, built from source</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</link>
+  <title>RFD 2071: FoundationDB on Windows, built from source</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-foundationdb-on-windows-built-from-source/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0113: FoundationDB on Windows, built from source</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2071: FoundationDB on Windows, built from source</em></p>
 <p><strong>State:</strong> discussion · <strong>Scope:</strong> store platform support, build toolchain, packaging</p>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
@@ -2460,13 +2460,13 @@ SnapshotBytes: 0</code></pre>
 <ul>
 <li>The nine stores, the evidence, and the measurements: <code>DETAILS.md</code></li>
 <li>Work in progress: <code>v-sekai-multiplayer-fabric/foundationdb</code>, branch <code>portability-consensus</code></li>
-<li><code>rfd/0109-two-tiers-with-foundationdb-as-the-store</code>: why the store is FoundationDB.</li>
+<li><code>rfd/206d-two-tiers-with-foundationdb-as-the-store</code>: why the store is FoundationDB.</li>
 </ul>
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><code>rfd/0114-prove-the-store-by-breaking-it</code>: how a built store is verified.</li>
+<li><code>rfd/2072-prove-the-store-by-breaking-it</code>: how a built store is verified.</li>
 </ul>
 </section>
 <section id="detail" class="level2">
@@ -2597,23 +2597,23 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-foundationdb-on-windows-built-from-source/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 <item>
-  <title>RFD 0112: Lexical for the slash command interface</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</link>
+  <title>RFD 2070: Lexical for the slash command interface</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-lexical-for-the-slash-command-interface/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 0112: Lexical for the slash command interface</em></p>
+<p><em><a href="../../index.html">Manuals</a> › <a href="../../pages/rfd.html">RFDs</a> › RFD 2070: Lexical for the slash command interface</em></p>
 <p><strong>State:</strong> abandoned · <strong>Scope:</strong> the Queen of the Gyre, and what serves her</p>
 <section id="status" class="level2">
 <h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>The slash command field is not being built. The client the Gyre is getting has hands in it rather than a caret: RFD 0119 puts salvage in a headset under distributed physics authority, and RFD 0118 takes the pipeline to a Godot release template driven by sandboxed guests. A Lexical editor serves neither.</p>
+<p>The slash command field is not being built. The client the Gyre is getting has hands in it rather than a caret: RFD 2077 puts salvage in a headset under distributed physics authority, and RFD 2076 takes the pipeline to a Godot release template driven by sandboxed guests. A Lexical editor serves neither.</p>
 <p>The argument that chose Lexical over ProseMirror was about the caret – that a parameter must be one thing to it, and that a decorator node crosses in one key press where an atom node can trap. That argument was correct and it no longer has a subject.</p>
 <p>What survives is the boundary the RFD drew rather than the widget it chose. Commands still arrive as a command in and reply bytes out, <code>thirdparty/interactor</code> still carries that contract, and the server still checks on receipt whatever a client chose to show, because a filtered menu is a convenience and never an authorization. The browser client in <code>fabric-store-domain/client/</code> reached a working editor and a passing caret suite, and it never opened a live session outside its own test.</p>
 </section>
@@ -2633,8 +2633,8 @@ SnapshotBytes: 0</code></pre>
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
 <li>Lexical: <a href="https://lexical.dev" class="uri">https://lexical.dev</a>. ProseMirror: <a href="https://prosemirror.net" class="uri">https://prosemirror.net</a></li>
-<li>RFD 0111 sets the words transport layer and service. RFD 0085 holds the setting.</li>
-<li>RFD 0049 holds the channel classes the ward scalars need. RFD 0050 sets the keepalive.</li>
+<li>RFD 206f sets the words transport layer and service. RFD 2055 holds the setting.</li>
+<li>RFD 2031 holds the channel classes the ward scalars need. RFD 2032 sets the keepalive.</li>
 <li>The comparison, the entity mapping, and three hazards: <code>DETAILS.md</code></li>
 </ul>
 </section>
@@ -2768,7 +2768,7 @@ SnapshotBytes: 0</code></pre>
 </section>
 <section id="how-a-local-command-becomes-a-global-one" class="level2">
 <h2 class="anchored" data-anchor-id="how-a-local-command-becomes-a-global-one">How a local command becomes a global one</h2>
-<p>The interest filter decides how many players see a change. RFD 0111 retires the word plane, and the filter lives in <code>fabric-fanout-edge</code>, which is a transport layer.</p>
+<p>The interest filter decides how many players see a change. RFD 206f retires the word plane, and the filter lives in <code>fabric-fanout-edge</code>, which is a transport layer.</p>
 <p><code>lean-interest-mgmt/core/AuthorityInterest.lean</code> separates authority from interest. Exactly one zone advances an entity each tick, and a neighbour holds a read-only ghost. An entity enters that neighbour’s interest when its k-tick kinematic expansion overlaps the neighbour’s volume, with <code>interestLookahead</code> of 6 ticks. Then <code>fabric-fanout-edge/src/fanout.cpp</code> filters per subscriber: <code>ghost_aabb_of</code> widens each entity by <code>ENTITY_EXT_UM</code> of 500000 and by <code>GHOST_TICKS</code> of 2 along its velocity, and <code>aabb_overlaps</code> tests that against <code>subscriber_t.interest</code>.</p>
 <p>So the reach of a command is the overlap between the entities it touches and the boxes the players hold. The Queen’s own verbs cover the whole range.</p>
 <table class="caption-top table">
@@ -2855,7 +2855,7 @@ SnapshotBytes: 0</code></pre>
 </table>
 <p>The fence is what makes promotion safe. <code>check_fence</code> reads the FENCE key on every write transaction and refuses the write with <code>SQLITE_READONLY</code> when the value has moved. Its comment records why it exists: the VFS locks are no-ops, so two writers both believed they held the write lock, both reported success, <code>PRAGMA integrity_check</code> passed, and one writer’s 300 rows were gone. The fence turns that into a refusal the caller can see. So an old primary that comes back after a promotion is refused rather than silently losing the ward.</p>
 <p><code>PRAGMA locking_mode=EXCLUSIVE</code> in <code>open_db</code> does not block a promotion. <code>fdb_lock</code>, <code>fdb_unlock</code>, and <code>fdb_check_lock</code> all return success without doing anything, and the pragma is there to stop SQLite re-reading page one, which over a network database is a round trip per query. A dead primary holds nothing that a new one must break.</p>
-<p>A tab that goes to the background stops being worth sending to. The browser throttles a hidden tab and reports the change through <code>visibilitychange</code>, so the client stops asking for slices and holds the session with a keepalive. The leaf keeps the <code>subscriber_t</code> and sends nothing. When the tab comes back the slices resume, with no reconnect and no second authorization. RFD 0050 already sets a five-second transaction limit, which is the natural place to start for the keepalive interval.</p>
+<p>A tab that goes to the background stops being worth sending to. The browser throttles a hidden tab and reports the change through <code>visibilitychange</code>, so the client stops asking for slices and holds the session with a keepalive. The leaf keeps the <code>subscriber_t</code> and sends nothing. When the tab comes back the slices resume, with no reconnect and no second authorization. RFD 2032 already sets a five-second transaction limit, which is the natural place to start for the keepalive interval.</p>
 <p>The keepalive is also what makes a fallback cheap. A player picks a second leaf while playing and holds it by keepalive alone, so it costs a seat and no egress until the primary goes and the fallback starts sending. A fallback that streamed continuously would double that player’s share of the cap in the next section.</p>
 <p>One thing is worth stating plainly. <code>queen</code> implements none of this today, and the fence lives in the VFS rather than in the game, so promotion is supported and unwritten.</p>
 </section>
@@ -2863,13 +2863,13 @@ SnapshotBytes: 0</code></pre>
 <h2 class="anchored" data-anchor-id="three-hazards-this-exposes">Three hazards this exposes</h2>
 <p><code>MAX_SPARKS</code> is 64 and <code>MAX_SLICE_ENTITIES</code> is 64. Those two constants were written in different repositories for different reasons, and they are equal. A ward at full size therefore fills one subscriber’s slice with Sparks alone, and <code>fanout_one</code> stops at the cap, so the six venues, the Queen, and every contract marker fall off the end. A full ward is 64 Sparks, 6 venues, the Queen, and up to 9 contracts, which is 80 entities against a cap of 64.</p>
 <p>The client cannot detect the loss. The receiver recovers the count as <code>len / 100</code>, so a truncated batch looks exactly like a small one.</p>
-<p><code>/commission</code> shows the second hazard. It changes two things at once: a venue, which has a place, and the treasury, which does not. An interest box can carry the first and can never carry the second. The ward scalars <code>treasury</code>, <code>debt</code>, <code>issued</code>, <code>retired</code>, and <code>spent</code> are not spatial, and no <code>Aabb</code> describes them. They need the reliable control stream, and RFD 0049 holds the channel classes for it.</p>
+<p><code>/commission</code> shows the second hazard. It changes two things at once: a venue, which has a place, and the treasury, which does not. An interest box can carry the first and can never carry the second. The ward scalars <code>treasury</code>, <code>debt</code>, <code>issued</code>, <code>retired</code>, and <code>spent</code> are not spatial, and no <code>Aabb</code> describes them. They need the reliable control stream, and RFD 2031 holds the channel classes for it.</p>
 <p>The third hazard follows from the second. <code>honest()</code> checks that <code>treasury + purses + retired + spent == issued</code> across the ward and every Spark database. That sum is global. A player holding one interest slice sees a few Sparks and cannot compute it, so the invariant stays a property the authority checks and the client takes on trust.</p>
 </section>
 <section id="what-serves-it-and-where" class="level2">
 <h2 class="anchored" data-anchor-id="what-serves-it-and-where">What serves it, and where</h2>
 <p><code>fabric-asset-edge</code> serves the built client on Fly. It is a transport layer, so it holds the listening socket. It shares nothing per tick, so it needs no ring, and it belongs to no service. That is the same reason its README already gives for standing alone.</p>
-<p><code>queen</code> gains a transport layer of its own for the live game, because it has none today. RFD 0111 renames these git repositories, and the names here are the names on disk.</p>
+<p><code>queen</code> gains a transport layer of its own for the live game, because it has none today. RFD 206f renames these git repositories, and the names here are the names on disk.</p>
 </section>
 <section id="findings-that-change-the-work" class="level2">
 <h2 class="anchored" data-anchor-id="findings-that-change-the-work">Findings that change the work</h2>
@@ -2936,8 +2936,8 @@ SnapshotBytes: 0</code></pre>
 </section>
 
  ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/0112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Tue, 18 Aug 2026 19:55:10 GMT</pubDate>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-lexical-for-the-slash-command-interface/</guid>
+  <pubDate>Fri, 21 Aug 2026 06:12:02 GMT</pubDate>
 </item>
 </channel>
 </rss>

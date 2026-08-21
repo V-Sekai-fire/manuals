@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>aliases – V-Sekai Fire — Manuals</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-e4fe97599cf5c017c2e0e74c71445a75.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-51694500075488c2d94a8f5687e63a2c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">V-Sekai Fire — Manuals</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./pages/changelog.html"> 
+<span class="menu-text">Changes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./pages/rfd.html"> 
+<span class="menu-text">RFDs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./pages/references.html"> 
+<span class="menu-text">References</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#old-numbers" id="toc-old-numbers" class="nav-link active" data-scroll-target="#old-numbers">Old numbers</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/ALIASES.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+
+<section id="old-numbers" class="level1">
+<h1>Old numbers</h1>
+<p>Every RFD in this repository changed number. The old number was decimal, and it named a document in <code>weftspun/request-for-discussion</code> as well — 113 numbers meant two different things at once. The new number carries the organization digit <strong>2</strong>. RFD 2000 gives the rule.</p>
+<p>Git history, pull request titles and the published page URLs keep the old numbers. This table is how a reader resolves them. It is a lookup, not a repair.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>old</th>
+<th>new</th>
+<th>slug</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RFD 0000</td>
+<td>RFD 2000</td>
+<td>conventions</td>
+</tr>
+<tr class="even">
+<td>RFD 0001</td>
+<td>RFD 2001</td>
+<td>zonefabric-roadmap-vs-mas-bandwidth-fps</td>
+</tr>
+<tr class="odd">
+<td>RFD 0002</td>
+<td>RFD 2002</td>
+<td>taskweft-value-narrowing-primitives-and-refs</td>
+</tr>
+<tr class="even">
+<td>RFD 0003</td>
+<td>RFD 2003</td>
+<td>castspell-sandbox-package-and-manifest-encoding</td>
+</tr>
+<tr class="odd">
+<td>RFD 0004</td>
+<td>RFD 2004</td>
+<td>castspell-libgodot-sandbox-runtime-scope</td>
+</tr>
+<tr class="even">
+<td>RFD 0005</td>
+<td>RFD 2005</td>
+<td>gltf-interactivity-value-type-taxonomy-correction</td>
+</tr>
+<tr class="odd">
+<td>RFD 0006</td>
+<td>RFD 2006</td>
+<td>cockroachdb-with-mtls-role-separation</td>
+</tr>
+<tr class="even">
+<td>RFD 0007</td>
+<td>RFD 2007</td>
+<td>godot-double-precision-template-release-for-zone</td>
+</tr>
+<tr class="odd">
+<td>RFD 0008</td>
+<td>RFD 2008</td>
+<td>webtransport-over-quic-for-game-traffic</td>
+</tr>
+<tr class="even">
+<td>RFD 0009</td>
+<td>RFD 2009</td>
+<td>ghcr-package-ownership-same-repo</td>
+</tr>
+<tr class="odd">
+<td>RFD 0010</td>
+<td>RFD 200a</td>
+<td>maglev-cycle-1-gateway-handshake</td>
+</tr>
+<tr class="even">
+<td>RFD 0012</td>
+<td>RFD 200c</td>
+<td>amend-pr-before-it-enters-the-queue</td>
+</tr>
+<tr class="odd">
+<td>RFD 0013</td>
+<td>RFD 200d</td>
+<td>archival-file-naming-convention</td>
+</tr>
+<tr class="even">
+<td>RFD 0014</td>
+<td>RFD 200e</td>
+<td>art-game-loop-steel-thread</td>
+</tr>
+<tr class="odd">
+<td>RFD 0015</td>
+<td>RFD 200f</td>
+<td>bounded-llm-steering-queue</td>
+</tr>
+<tr class="even">
+<td>RFD 0016</td>
+<td>RFD 2010</td>
+<td>checking-sccache</td>
+</tr>
+<tr class="odd">
+<td>RFD 0017</td>
+<td>RFD 2011</td>
+<td>compiling-godot-engine</td>
+</tr>
+<tr class="even">
+<td>RFD 0018</td>
+<td>RFD 2012</td>
+<td>feature-classification-poc-baseline-stretch</td>
+</tr>
+<tr class="odd">
+<td>RFD 0019</td>
+<td>RFD 2013</td>
+<td>gitassembly-tag-release</td>
+</tr>
+<tr class="even">
+<td>RFD 0020</td>
+<td>RFD 2014</td>
+<td>pin-engine-to-frozen-godot-4-7</td>
+</tr>
+<tr class="odd">
+<td>RFD 0021</td>
+<td>RFD 2015</td>
+<td>require-pr-and-merge-queue-on-main</td>
+</tr>
+<tr class="even">
+<td>RFD 0022</td>
+<td>RFD 2016</td>
+<td>spatial-audio-patched-resonance-audio</td>
+</tr>
+<tr class="odd">
+<td>RFD 0023</td>
+<td>RFD 2017</td>
+<td>webtransport-http3-transport</td>
+</tr>
+<tr class="even">
+<td>RFD 0024</td>
+<td>RFD 2018</td>
+<td>windows-background-services-nssm</td>
+</tr>
+<tr class="odd">
+<td>RFD 0025</td>
+<td>RFD 2019</td>
+<td>tenseless-continuous-present-voice</td>
+</tr>
+<tr class="even">
+<td>RFD 0026</td>
+<td>RFD 201a</td>
+<td>commit-messages-sentence-case</td>
+</tr>
+<tr class="odd">
+<td>RFD 0027</td>
+<td>RFD 201b</td>
+<td>umbrella-package-installs-all-components</td>
+</tr>
+<tr class="even">
+<td>RFD 0028</td>
+<td>RFD 201c</td>
+<td>hexagonal-core-ports-adapters</td>
+</tr>
+<tr class="odd">
+<td>RFD 0029</td>
+<td>RFD 201d</td>
+<td>cassie-desktop-curvenet-authoring</td>
+</tr>
+<tr class="even">
+<td>RFD 0030</td>
+<td>RFD 201e</td>
+<td>cicd-runners-as-queueing-system</td>
+</tr>
+<tr class="odd">
+<td>RFD 0031</td>
+<td>RFD 201f</td>
+<td>content-build-merged-double-precision-mcp</td>
+</tr>
+<tr class="even">
+<td>RFD 0032</td>
+<td>RFD 2020</td>
+<td>core-codegen-lean-slang</td>
+</tr>
+<tr class="odd">
+<td>RFD 0033</td>
+<td>RFD 2021</td>
+<td>core-contract-pure-reducer-byte-state</td>
+</tr>
+<tr class="even">
+<td>RFD 0034</td>
+<td>RFD 2022</td>
+<td>deterministic-cores-integer-seeded-rng</td>
+</tr>
+<tr class="odd">
+<td>RFD 0035</td>
+<td>RFD 2023</td>
+<td>first-party-curated-content-zone-baker-budgets</td>
+</tr>
+<tr class="even">
+<td>RFD 0036</td>
+<td>RFD 2024</td>
+<td>forward-renderer-baked-light</td>
+</tr>
+<tr class="odd">
+<td>RFD 0037</td>
+<td>RFD 2025</td>
+<td>generated-behavior-sandboxed-riscv</td>
+</tr>
+<tr class="even">
+<td>RFD 0038</td>
+<td>RFD 2026</td>
+<td>genre-generic-naming-no-trademarks</td>
+</tr>
+<tr class="odd">
+<td>RFD 0039</td>
+<td>RFD 2027</td>
+<td>hexagon-budgeter-core</td>
+</tr>
+<tr class="even">
+<td>RFD 0040</td>
+<td>RFD 2028</td>
+<td>hexagon-combat-core</td>
+</tr>
+<tr class="odd">
+<td>RFD 0041</td>
+<td>RFD 2029</td>
+<td>hexagon-loot-core</td>
+</tr>
+<tr class="even">
+<td>RFD 0042</td>
+<td>RFD 202a</td>
+<td>hexagon-presence-core</td>
+</tr>
+<tr class="odd">
+<td>RFD 0043</td>
+<td>RFD 202b</td>
+<td>hexagon-progression-core</td>
+</tr>
+<tr class="even">
+<td>RFD 0044</td>
+<td>RFD 202c</td>
+<td>lean4-kernel-cores-flat-c-host-adapters</td>
+</tr>
+<tr class="odd">
+<td>RFD 0045</td>
+<td>RFD 202d</td>
+<td>loot-action-core-loop-mvp-vertical-slice</td>
+</tr>
+<tr class="even">
+<td>RFD 0046</td>
+<td>RFD 202e</td>
+<td>server-authoritative-simulation-deferred-rollback</td>
+</tr>
+<tr class="odd">
+<td>RFD 0047</td>
+<td>RFD 202f</td>
+<td>webtransportd-core-transport-adapter</td>
+</tr>
+<tr class="even">
+<td>RFD 0048</td>
+<td>RFD 2030</td>
+<td>android-template-temurin-jdk21</td>
+</tr>
+<tr class="odd">
+<td>RFD 0049</td>
+<td>RFD 2031</td>
+<td>fabric-channels-as-reliability-classes</td>
+</tr>
+<tr class="even">
+<td>RFD 0050</td>
+<td>RFD 2032</td>
+<td>five-second-transaction-limit</td>
+</tr>
+<tr class="odd">
+<td>RFD 0051</td>
+<td>RFD 2033</td>
+<td>headless-openxr-testing-with-monado</td>
+</tr>
+<tr class="even">
+<td>RFD 0052</td>
+<td>RFD 2034</td>
+<td>http3-listener-session-findings</td>
+</tr>
+<tr class="odd">
+<td>RFD 0053</td>
+<td>RFD 2035</td>
+<td>integral-entity-transform-wire</td>
+</tr>
+<tr class="even">
+<td>RFD 0054</td>
+<td>RFD 2036</td>
+<td>mcp-runtime-bridge-deployed-builds</td>
+</tr>
+<tr class="odd">
+<td>RFD 0055</td>
+<td>RFD 2037</td>
+<td>r128-fixed-point-as-lean-library</td>
+</tr>
+<tr class="even">
+<td>RFD 0056</td>
+<td>RFD 2038</td>
+<td>systemd-quadlet-verification-queue</td>
+</tr>
+<tr class="odd">
+<td>RFD 0057</td>
+<td>RFD 2039</td>
+<td>vertical-slice-repository-map</td>
+</tr>
+<tr class="even">
+<td>RFD 0058</td>
+<td>RFD 203a</td>
+<td>webtransport-persistent-framed-stream</td>
+</tr>
+<tr class="odd">
+<td>RFD 0059</td>
+<td>RFD 203b</td>
+<td>bad-news-reports-lead-with-the-bottom-line</td>
+</tr>
+<tr class="even">
+<td>RFD 0060</td>
+<td>RFD 203c</td>
+<td>org-scoped-github-app-token-for-gh-access</td>
+</tr>
+<tr class="odd">
+<td>RFD 0062</td>
+<td>RFD 203e</td>
+<td>repository-and-capability-inventory</td>
+</tr>
+<tr class="even">
+<td>RFD 0063</td>
+<td>RFD 203f</td>
+<td>repo-markdown-single-source-of-truth-for-project-state</td>
+</tr>
+<tr class="odd">
+<td>RFD 0064</td>
+<td>RFD 2040</td>
+<td>kebab-case-repos-snake-case-local-checkouts</td>
+</tr>
+<tr class="even">
+<td>RFD 0065</td>
+<td>RFD 2041</td>
+<td>fabric-platform-central-elixir-burrito-casync</td>
+</tr>
+<tr class="odd">
+<td>RFD 0066</td>
+<td>RFD 2042</td>
+<td>game-loop-cluster-sequence</td>
+</tr>
+<tr class="even">
+<td>RFD 0067</td>
+<td>RFD 2043</td>
+<td>release-tag-progression-dev-beta-rc</td>
+</tr>
+<tr class="odd">
+<td>RFD 0068</td>
+<td>RFD 2044</td>
+<td>sccache-github-actions-cache-for-godot-builds</td>
+</tr>
+<tr class="even">
+<td>RFD 0069</td>
+<td>RFD 2045</td>
+<td>defer-loot-slice-hardening-until-needed</td>
+</tr>
+<tr class="odd">
+<td>RFD 0070</td>
+<td>RFD 2046</td>
+<td>loop-slice-telemetry-to-the-observability-collector</td>
+</tr>
+<tr class="even">
+<td>RFD 0071</td>
+<td>RFD 2047</td>
+<td>yagni-times-structure-to-need</td>
+</tr>
+<tr class="odd">
+<td>RFD 0072</td>
+<td>RFD 2048</td>
+<td>actor-lite-worker-pool</td>
+</tr>
+<tr class="even">
+<td>RFD 0073</td>
+<td>RFD 2049</td>
+<td>async-fdb-callback-chain</td>
+</tr>
+<tr class="odd">
+<td>RFD 0074</td>
+<td>RFD 204a</td>
+<td>binary-value-encoding-for-fdb</td>
+</tr>
+<tr class="even">
+<td>RFD 0075</td>
+<td>RFD 204b</td>
+<td>fdb-over-cockroachdb-for-zone-state</td>
+</tr>
+<tr class="odd">
+<td>RFD 0076</td>
+<td>RFD 204c</td>
+<td>macaroon-xdp-security</td>
+</tr>
+<tr class="even">
+<td>RFD 0077</td>
+<td>RFD 204d</td>
+<td>pert-critical-path-zonefabric</td>
+</tr>
+<tr class="odd">
+<td>RFD 0078</td>
+<td>RFD 204e</td>
+<td>plausible-witness-dag-feature-ablation</td>
+</tr>
+<tr class="even">
+<td>RFD 0079</td>
+<td>RFD 204f</td>
+<td>sandboxed-godot-in-zone-server-h2o-via-raw-libriscv</td>
+</tr>
+<tr class="odd">
+<td>RFD 0080</td>
+<td>RFD 2050</td>
+<td>slotmap-entity-storage</td>
+</tr>
+<tr class="even">
+<td>RFD 0081</td>
+<td>RFD 2051</td>
+<td>three-layer-verification-strategy</td>
+</tr>
+<tr class="odd">
+<td>RFD 0082</td>
+<td>RFD 2052</td>
+<td>zonefabric-scaling</td>
+</tr>
+<tr class="even">
+<td>RFD 0083</td>
+<td>RFD 2053</td>
+<td>zone-server-h2o-replaces-godot-fabriczone</td>
+</tr>
+<tr class="odd">
+<td>RFD 0084</td>
+<td>RFD 2054</td>
+<td>zstd-compression-for-zone-state</td>
+</tr>
+<tr class="even">
+<td>RFD 0085</td>
+<td>RFD 2055</td>
+<td>the-gyre-mud-setting-on-the-loot-action-shell</td>
+</tr>
+<tr class="odd">
+<td>RFD 0086</td>
+<td>RFD 2056</td>
+<td>defer-nogod-gossip-zone-authority</td>
+</tr>
+<tr class="even">
+<td>RFD 0087</td>
+<td>RFD 2057</td>
+<td>avatar-ik-sinew-mocap-align-over-mink</td>
+</tr>
+<tr class="odd">
+<td>RFD 0088</td>
+<td>RFD 2058</td>
+<td>picoquic-picotls-transport-for-zone-server-h2o</td>
+</tr>
+<tr class="even">
+<td>RFD 0089</td>
+<td>RFD 2059</td>
+<td>flyio-over-podman-quadlets</td>
+</tr>
+<tr class="odd">
+<td>RFD 0090</td>
+<td>RFD 205a</td>
+<td>uro-burrito-release</td>
+</tr>
+<tr class="even">
+<td>RFD 0091</td>
+<td>RFD 205b</td>
+<td>the-gyre-mud-domain-and-mode-selector</td>
+</tr>
+<tr class="odd">
+<td>RFD 0092</td>
+<td>RFD 205c</td>
+<td>rebac-gates-libriscv-guest-access</td>
+</tr>
+<tr class="even">
+<td>RFD 0093</td>
+<td>RFD 205d</td>
+<td>compile-taskweft-to-linear-automata</td>
+</tr>
+<tr class="odd">
+<td>RFD 0094</td>
+<td>RFD 205e</td>
+<td>minimum-ugc-game-loop-guest-composition</td>
+</tr>
+<tr class="even">
+<td>RFD 0095</td>
+<td>RFD 205f</td>
+<td>two-guest-classes-domain-abi-and-bubblewrap</td>
+</tr>
+<tr class="odd">
+<td>RFD 0096</td>
+<td>RFD 2060</td>
+<td>guest-transport-measured-on-fly</td>
+</tr>
+<tr class="even">
+<td>RFD 0097</td>
+<td>RFD 2061</td>
+<td>pubsub-belongs-in-userspace</td>
+</tr>
+<tr class="odd">
+<td>RFD 0098</td>
+<td>RFD 2062</td>
+<td>rollback-snapshot-budget</td>
+</tr>
+<tr class="even">
+<td>RFD 0099</td>
+<td>RFD 2063</td>
+<td>server-authority-on-fly</td>
+</tr>
+<tr class="odd">
+<td>RFD 0100</td>
+<td>RFD 2064</td>
+<td>tick-rate-send-rate-and-the-bone-budget</td>
+</tr>
+<tr class="even">
+<td>RFD 0101</td>
+<td>RFD 2065</td>
+<td>zstd-delta-on-the-wire</td>
+</tr>
+<tr class="odd">
+<td>RFD 0102</td>
+<td>RFD 2066</td>
+<td>the-whole-deployment-on-15-usd</td>
+</tr>
+<tr class="even">
+<td>RFD 0103</td>
+<td>RFD 2067</td>
+<td>uro-on-ecto-foundationdb</td>
+</tr>
+<tr class="odd">
+<td>RFD 0105</td>
+<td>RFD 2069</td>
+<td>archive-self-host-era-support-repos</td>
+</tr>
+<tr class="even">
+<td>RFD 0106</td>
+<td>RFD 206a</td>
+<td>split-the-archive-into-its-own-repo</td>
+</tr>
+<tr class="odd">
+<td>RFD 0107</td>
+<td>RFD 206b</td>
+<td>janet-scripting-over-a-c-taskweft-core</td>
+</tr>
+<tr class="even">
+<td>RFD 0108</td>
+<td>RFD 206c</td>
+<td>local-cabi-guests-and-in-tick-fanout</td>
+</tr>
+<tr class="odd">
+<td>RFD 0109</td>
+<td>RFD 206d</td>
+<td>two-tiers-with-foundationdb-as-the-store</td>
+</tr>
+<tr class="even">
+<td>RFD 0110</td>
+<td>RFD 206e</td>
+<td>h2o-libriscv-as-a-rivet-actor</td>
+</tr>
+<tr class="odd">
+<td>RFD 0111</td>
+<td>RFD 206f</td>
+<td>convert-the-deployment-words</td>
+</tr>
+<tr class="even">
+<td>RFD 0112</td>
+<td>RFD 2070</td>
+<td>lexical-for-the-slash-command-interface</td>
+</tr>
+<tr class="odd">
+<td>RFD 0113</td>
+<td>RFD 2071</td>
+<td>foundationdb-on-windows-built-from-source</td>
+</tr>
+<tr class="even">
+<td>RFD 0114</td>
+<td>RFD 2072</td>
+<td>prove-the-store-by-breaking-it</td>
+</tr>
+<tr class="odd">
+<td>RFD 0115</td>
+<td>RFD 2073</td>
+<td>a-planner-domain-document-is-a-cheap-layer-surface</td>
+</tr>
+<tr class="even">
+<td>RFD 0116</td>
+<td>RFD 2074</td>
+<td>elixir-epoll-zone-server-in-the-h2o-style</td>
+</tr>
+<tr class="odd">
+<td>RFD 0117</td>
+<td>RFD 2075</td>
+<td>retire-the-h2o-tier-record-set</td>
+</tr>
+<tr class="even">
+<td>RFD 0118</td>
+<td>RFD 2076</td>
+<td>a-baker-replaces-the-godot-editor</td>
+</tr>
+<tr class="odd">
+<td>RFD 0119</td>
+<td>RFD 2077</td>
+<td>salvage-you-can-hold</td>
+</tr>
+<tr class="even">
+<td>RFD 0120</td>
+<td>RFD 2078</td>
+<td>the-gyre-became-a-settlement-game</td>
+</tr>
+<tr class="odd">
+<td>RFD 0121</td>
+<td>RFD 2079</td>
+<td>amend-rfd-206f-against-the-tree</td>
+</tr>
+<tr class="even">
+<td>RFD 0122</td>
+<td>RFD 207a</td>
+<td>the-client-is-native</td>
+</tr>
+<tr class="odd">
+<td>RFD 0123</td>
+<td>RFD 207b</td>
+<td>a-second-webtransport-implementation</td>
+</tr>
+<tr class="even">
+<td>RFD 0124</td>
+<td>RFD 207c</td>
+<td>elixir-error-tuples-in-every-reply</td>
+</tr>
+<tr class="odd">
+<td>RFD 0125</td>
+<td>RFD 207d</td>
+<td>an-interactor-in-another-process</td>
+</tr>
+<tr class="even">
+<td>RFD 0126</td>
+<td>RFD 207e</td>
+<td>two-see-through-interactors</td>
+</tr>
+<tr class="odd">
+<td>RFD 0127</td>
+<td>RFD 207f</td>
+<td>a-service-is-not-a-side</td>
+</tr>
+<tr class="even">
+<td>RFD 0128</td>
+<td>RFD 2080</td>
+<td>the-release-ladder-is-not-automated</td>
+</tr>
+<tr class="odd">
+<td>RFD 0129</td>
+<td>RFD 2081</td>
+<td>cost-and-latency-are-two-budgets</td>
+</tr>
+<tr class="even">
+<td>RFD 0130</td>
+<td>RFD 2082</td>
+<td>state-what-a-repository-is-made-of</td>
+</tr>
+<tr class="odd">
+<td>RFD 0132</td>
+<td>RFD 2084</td>
+<td>a-permission-cannot-be-granted-sideways</td>
+</tr>
+</tbody>
+</table>
+<p>129 RFDs.</p>
+<p>Two entries need a note.</p>
+<ul>
+<li><strong>RFD 0011</strong> had no directory and never did, yet <code>2050-slotmap-entity-storage</code> and <code>2052-zonefabric-scaling</code> both cited it. Both citations describe <code>fdb_future_set_callback</code>, which is RFD 2049’s subject, so they were retargeted there rather than migrated to a number that resolves to nothing.</li>
+<li><strong>0061, 0104 and 0131</strong> were never allocated. They have no rows because they never named anything.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/v-sekai-multiplayer-fabric\.github\.io\/multiplayer-fabric-manuals");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals/edit/main/ALIASES.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
