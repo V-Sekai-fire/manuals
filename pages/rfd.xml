@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 25 Aug 2026 22:06:37 GMT</lastBuildDate>
+<lastBuildDate>Tue, 25 Aug 2026 22:28:12 GMT</lastBuildDate>
 <item>
   <title>RFD 2132: A permission cannot be granted sideways</title>
   <link>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2132-a-permission-cannot-be-granted-sideways/</link>
@@ -64,7 +64,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2132-a-permission-cannot-be-granted-sideways/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2130: Every repository we have authority over states what it is made of</title>
@@ -109,7 +109,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2130-state-what-a-repository-is-made-of/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2129: Cost and latency are two budgets in seconds, ratcheted against variance</title>
@@ -148,7 +148,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2129-cost-and-latency-are-two-budgets/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2128: The release ladder is gated and not automated</title>
@@ -188,7 +188,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2128-the-release-ladder-is-not-automated/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2127: A service is not a side, and sits past the ring at 7</title>
@@ -230,7 +230,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2127-a-service-is-not-a-side/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2126: Two see-through interactors, and the check that keeps the A/B one question</title>
@@ -273,7 +273,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2126-two-see-through-interactors/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2125: An interactor in another process, and the transport layer that reaches it</title>
@@ -318,7 +318,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2125-an-interactor-in-another-process/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2124: Elixir error tuples in every reply</title>
@@ -560,7 +560,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2124-elixir-error-tuples-in-every-reply/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2123: A second WebTransport implementation, and the names that make room for it</title>
@@ -759,7 +759,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2123-a-second-webtransport-implementation/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2122: The client is native, from entities-godot’s gyre branch</title>
@@ -872,7 +872,7 @@ FAIL  interactor-see-through-cpp/src/nif_probe.cpp calls enif_make_/enif_get_ di
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2122-the-client-is-native/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2121: Amend RFD 2111 against the tree</title>
@@ -1374,7 +1374,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2121-amend-rfd-2111-against-the-tree/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2120: The Gyre became a settlement game</title>
@@ -1553,7 +1553,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2120-the-gyre-became-a-settlement-game/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2119: Salvage you can hold</title>
@@ -1693,7 +1693,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2119-salvage-you-can-hold/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2118: A baker replaces the Godot editor</title>
@@ -1803,7 +1803,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2118-a-baker-replaces-the-godot-editor/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2117: Retire the h2o tier record set under YAGNI</title>
@@ -2148,7 +2148,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2117-retire-the-h2o-tier-record-set/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2116: The zone server is Elixir with epoll, in the h2o style</title>
@@ -2272,7 +2272,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2116-elixir-epoll-zone-server-in-the-h2o-style/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2115: A planner domain document is a cheap-layer surface</title>
@@ -2341,7 +2341,7 @@ font-style: inherit;"># entities-lean-shared       1</span></span></code></pre><
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2115-a-planner-domain-document-is-a-cheap-layer-surface/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2114: Prove the store by breaking it</title>
@@ -2428,7 +2428,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2114-prove-the-store-by-breaking-it/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2113: FoundationDB on Windows, built from source</title>
@@ -2598,7 +2598,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2113-foundationdb-on-windows-built-from-source/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 <item>
   <title>RFD 2112: Lexical for the slash command interface</title>
@@ -2937,7 +2937,7 @@ SnapshotBytes: 0</code></pre>
 
  ]]></description>
   <guid>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2112-lexical-for-the-slash-command-interface/</guid>
-  <pubDate>Tue, 25 Aug 2026 22:06:37 GMT</pubDate>
+  <pubDate>Tue, 25 Aug 2026 22:28:12 GMT</pubDate>
 </item>
 </channel>
 </rss>
