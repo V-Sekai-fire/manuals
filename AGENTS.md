@@ -18,7 +18,7 @@ See `rfd/2000-conventions/` for the format, the states, and the `index.md` and
 
 The `decisions/` directory held MADR records before the migration into `rfd/`.
 The migration is complete, and what stays there is `madr-proposal-template.md`,
-which RFD 206a keeps as the live template. Git history holds the migrated records
+which RFD 2106 keeps as the live template. Git history holds the migrated records
 and their old paths, so a link to `decisions/YYYYMMDD-*.md` in an older changelog
 entry or RFD points at history rather than at a live file.
 
@@ -52,7 +52,7 @@ bash scripts/check_tropes.sh
 Commit images beside the RFD that cites them, in `rfd/NNNN-kebab-title/`, using the
 archival naming convention `YYYYMMDD_project_description_NNNN.ext` (lowercase, no
 spaces, ISO date, zero-padded sequence), and add a matching entry under `references:`
-in `CITATION.cff`. See `rfd/200d-archival-file-naming-convention/`.
+in `CITATION.cff`. See `rfd/2013-archival-file-naming-convention/`.
 
 ## Key files
 

@@ -34,7 +34,7 @@ same repo as the deploy it triggers.
 
 ## Related
 
-`rfd/2011-compiling-godot-engine/index.md` covers the engine build this
+`rfd/2017-compiling-godot-engine/index.md` covers the engine build this
 packaging wraps.
 
 ## Detail

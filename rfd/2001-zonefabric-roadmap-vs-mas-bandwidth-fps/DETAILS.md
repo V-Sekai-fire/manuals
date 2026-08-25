@@ -9,7 +9,7 @@ as context, not an open question: how this architecture compares to
 Glenn Fiedler's `mas-bandwidth/fps` article-series code.
 
 It also records two encoding decisions for CastSpell's sandbox boundary.
-One is the same bitpacked struct format `RFD 200a` already chose for
+One is the same bitpacked struct format `RFD 2010` already chose for
 runtime data. The other is CBOR-LD for package manifests. It also records
 a licensing preference, Apache-licensed eBPF tooling, for later,
 currently-deferred work.
@@ -41,7 +41,7 @@ accepted.
 
 One decision driver runs through every item 4 choice explicitly: keep
 `zone-server-h2o` itself, the deployed process, down to the fewest
-components possible. This is why the CastSpell FFI reuses `RFD 200a`'s
+components possible. This is why the CastSpell FFI reuses `RFD 2010`'s
 existing bitpacked struct instead of adding FlatBuffers or protobuf. This
 is also why the manifest's JSON-LD processing runs in an offline
 authoring tool and never inside the deployed server. It is also why the
@@ -138,10 +138,10 @@ List these follow-ups in PERT order.
    `rfd/2003-castspell-sandbox-package-and-manifest-encoding/index.md` is the
    full design. It is a single `.elf` file per package, an embedded
    CBOR-LD manifest, and one runtime FFI boundary. That boundary is the
-   same bitpacked struct format `RFD 200a` already uses for the zone
+   same bitpacked struct format `RFD 2010` already uses for the zone
    tick.
 
-5. Type the CastSpell sandbox boundary, and extend `RFD 200a
+5. Type the CastSpell sandbox boundary, and extend `RFD 2010
 (binary-value-encoding)`, with a primitive-versus-reference split. Reuse
    the value-type vocabulary the `gltf_interactivity` specification, vendored
    under `taskweft/thirdparty/gltf_interactivity/`, already defines, rather
@@ -152,7 +152,7 @@ List these follow-ups in PERT order.
    third `custom` category the specification defers to extensions.
    `zone-server-h2o` implements only the first two.
 
-   Map `ref` onto the slotmap's generational entity handles from `RFD 2011
+   Map `ref` onto the slotmap's generational entity handles from `RFD 2017
 (slotmap-entity-storage)`, and map the primitive types onto plain
    numeric fields such as position, velocity, and health. Represent this
    split inside the bitpacked struct layout item 4 introduces. A

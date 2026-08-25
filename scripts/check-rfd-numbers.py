@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Check that every RFD number follows the org-qualified hex rule.
+"""Check that every RFD number follows the org-qualified decimal rule.
 
 RFD 2000 gives the rule. The number appears three times per RFD -- the
 directory name, the `rfd:` front-matter field, and the `title:` string -- and
 nothing checked that the three agreed until this script.
+
+The numbers were hexadecimal for five days and are decimal now. Two citation
+forms are therefore stale rather than one, and both are rejected by name. The
+ALIASES.md checks are gone with the table: the decimal serial equals the
+pre-hex number in every row it held, so an old number resolves by prepending
+the organization digit rather than by a lookup.
 
 Run --self-test to watch each check reject a known-bad tree. A gate that
 passes on broken input certifies the defect instead of catching it.
@@ -13,12 +19,15 @@ import re
 import sys
 
 ORG = "2"
-DIR_RE = re.compile(r"^([0-9a-f]{4})-[a-z0-9-]+$")
-FM_RE = re.compile(r'^rfd: "([0-9a-f]{4})"', re.M)
-TITLE_RE = re.compile(r'^title: "RFD ([0-9a-f]{4}):', re.M)
+DIR_RE = re.compile(r"^([0-9]{4})-[a-z0-9-]+$")
+FM_RE = re.compile(r'^rfd: "([0-9]{4})"', re.M)
+TITLE_RE = re.compile(r'^title: "RFD ([0-9]{4}):', re.M)
 # An old number always began with 0, and no organization digit is 0, so a
 # leading zero is what tells an unmigrated citation from a valid new one.
 OLD_CITE_RE = re.compile(r"\bRFD (0\d{3})\b")
+# The other withdrawn form. Only a hex serial carries a letter, and a number
+# that is four digits under an organization digit is current.
+HEX_CITE_RE = re.compile(r"\bRFD ([1-9][0-9a-f]{0,2}[a-f][0-9a-f]*)\b")
 
 
 def check(root):
@@ -70,9 +79,8 @@ def check(root):
             continue
         for f in files:
             p = os.path.join(cur, f)
-            # ALIASES.md holds old numbers on purpose; this script holds them
-            # in its own negative-control fixtures.
-            if f == "ALIASES.md" or os.path.abspath(p) == me:
+            # This script holds both withdrawn forms in its own fixtures.
+            if os.path.abspath(p) == me:
                 continue
             try:
                 with open(p, encoding="utf-8", errors="ignore") as fh:
@@ -80,7 +88,9 @@ def check(root):
             except OSError:
                 continue
             for m in OLD_CITE_RE.finditer(body):
-                problems.append(f"{p}: cites RFD {m.group(1)} in the old decimal form")
+                problems.append(f"{p}: cites RFD {m.group(1)} in the first decimal form")
+            for m in HEX_CITE_RE.finditer(body):
+                problems.append(f"{p}: cites RFD {m.group(1)} in the withdrawn hex form")
 
     # A relative link to a renamed folder is consumed by scripts/decision-meta.py,
     # which swallows errors, so a broken one is silent rather than fatal.
@@ -95,15 +105,6 @@ def check(root):
                 if not os.path.isdir(os.path.join(rfd_root, m.group(1))):
                     problems.append(f"{p}: links to ../{m.group(1)}/ which does not exist")
 
-    aliases = os.path.join(root, "ALIASES.md")
-    if not os.path.exists(aliases):
-        problems.append("ALIASES.md is missing, so old numbers do not resolve")
-    else:
-        with open(aliases, encoding="utf-8") as fh:
-            mapped = set(re.findall(r"RFD ([0-9a-f]{4})", fh.read()))
-        for num in sorted(seen):
-            if num not in mapped:
-                problems.append(f"ALIASES.md has no row for RFD {num}")
     return problems
 
 
@@ -111,14 +112,11 @@ def self_test():
     import shutil
     import tempfile
 
-    def build(tmp, dirname="2001-a-slug", fm="2001", title="2001", extra=None,
-              aliases="| RFD 0001 | RFD 2001 |\n", link=""):
+    def build(tmp, dirname="2001-a-slug", fm="2001", title="2001", extra=None, link=""):
         d = os.path.join(tmp, "rfd", dirname)
         os.makedirs(d)
         with open(os.path.join(d, "index.md"), "w", encoding="utf-8") as fh:
             fh.write(f'---\ntitle: "RFD {title}: A slug"\nrfd: "{fm}"\nstate: published\n---\n{link}')
-        with open(os.path.join(tmp, "ALIASES.md"), "w", encoding="utf-8") as fh:
-            fh.write(aliases)
         if extra:
             with open(os.path.join(tmp, "note.md"), "w", encoding="utf-8") as fh:
                 fh.write(extra)
@@ -126,12 +124,17 @@ def self_test():
     cases = [
         ("a clean tree passes", {}, False),
         ("wrong organization digit", {"dirname": "1001-a-slug"}, True),
-        ("decimal directory name", {"dirname": "0001-a-slug"}, True),
+        ("no organization digit", {"dirname": "0001-a-slug"}, True),
+        # The two withdrawn forms, each rejected by name rather than by the
+        # slug pattern happening to miss.
+        ("a hex directory name", {"dirname": "200a-a-slug"}, True),
+        ("a hex number in the front matter",
+         {"dirname": "2010-a-slug", "fm": "200a", "title": "2010"}, True),
         ("front matter disagrees with directory", {"fm": "2002"}, True),
         ("title disagrees with directory", {"title": "2002"}, True),
-        ("an unmigrated decimal citation", {"extra": "see RFD 0021\n"}, True),
+        ("a citation in the first decimal form", {"extra": "see RFD 0021\n"}, True),
+        ("a citation in the withdrawn hex form", {"extra": "see RFD 200a\n"}, True),
         ("a link to a folder that moved", {"link": "see [x](../2099-gone/index.md)\n"}, True),
-        ("ALIASES.md missing the row", {"aliases": "| RFD 9999 |\n"}, True),
     ]
     ok = True
     for name, kw, should_fail in cases:

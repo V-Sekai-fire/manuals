@@ -37,6 +37,22 @@ jobs:
       - run: python scripts/check-rfd-numbers.py --self-test
       - run: python scripts/check-rfd-numbers.py
 
+  rfd-serials:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The register is held against its own previous revision, so the base
+          # commit has to be in the checkout. A shallow clone has no previous
+          # revision and the comparison would silently do nothing.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install usd-core==26.8
+      - run: python scripts/check-rfd-serials.py --self-test
+      - run: python scripts/check-rfd-serials.py --base origin/${{ github.event.pull_request.base.ref || 'main' }}
+
   render:
     runs-on: ubuntu-latest
     steps:

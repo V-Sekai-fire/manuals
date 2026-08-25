@@ -4,7 +4,7 @@
 CastSpell's effect step to a sandboxed `libriscv` package. This RFD is
 the detail that item pointed to. It settles three things. The package
 stays a single `.elf` file. Its manifest is CBOR-LD. Its runtime FFI
-boundary is the same bitpacked struct format `RFD 200a` already uses
+boundary is the same bitpacked struct format `RFD 2010` already uses
 for the zone tick.
 
 ## Background
@@ -25,7 +25,7 @@ ever runs as code the host process links or interprets directly.
 ## Motivation
 
 Keep `zone-server-h2o` itself, the deployed process, down to the fewest
-components possible. This is why the CastSpell FFI reuses `RFD 200a`'s
+components possible. This is why the CastSpell FFI reuses `RFD 2010`'s
 existing bitpacked struct instead of adding FlatBuffers or protobuf.
 This is also why the manifest's JSON-LD processing runs in an offline
 authoring tool and never inside the deployed server. It is also why
@@ -93,7 +93,7 @@ Solve that with an explicit ABI version field inside the manifest
 (below), not with a self-describing runtime format. The host reads
 that field. It refuses to load a package whose declared ABI version
 does not match the struct layout the host itself uses.
-`RFD 200a` already accepted the matching tradeoff for the zone tick:
+`RFD 2010` already accepted the matching tradeoff for the zone tick:
 manual struct versioning instead of a self-describing format. This
 extends the same discipline to the CastSpell FFI. It avoids a second
 binary format and a `flatc` build dependency that would solve the
@@ -189,7 +189,7 @@ Resolve `QCBOR`'s earlier-noted determinism gap without waiting on
 does not sort map keys. The manifest comes from a fixed, hand-written
 schema, not a runtime-built, unordered map. The authoring tool always
 writes fields in the same fixed order in code. This is the
-same manual-discipline pattern `RFD 200a` already accepted for the
+same manual-discipline pattern `RFD 2010` already accepted for the
 zone tick's struct layout, instead of a self-describing format. Fixed
 field order in code gives deterministic bytes without needing
 `QCBOR`'s own generic map-key-sorting feature at all.
@@ -259,7 +259,7 @@ nasty layer. Neither earns a third format's added build dependency.
 ## Recommendation and next steps
 
 1. Implement the manifest's ELF section layout and its fixed field
-   order, matching `RFD 200a`'s own manual-struct-versioning
+   order, matching `RFD 2010`'s own manual-struct-versioning
    discipline.
 2. Build the offline authoring tool (`jsonld-cpp` plus `QCBOR`) as a
    separate CMake target, confirmed never linked into
