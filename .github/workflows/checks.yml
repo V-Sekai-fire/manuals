@@ -58,6 +58,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        run: pip install jupyter pandas itables plotly scipy panflute cffconvert
+        run: pip install jupyter pandas itables plotly scipy panflute cffconvert usd-core==26.8
       - uses: quarto-dev/quarto-actions/setup@v2
       - run: quarto render
