@@ -22,7 +22,7 @@ the last arc of an OID and an arc names one document for as long as it exists.
 
 `request-for-discussion`, allocating under `1.3.6.1.4.1.66606.1.1`.
 
-131 allocated.
+132 allocated.
 
 | identifier | serial | slug |
 | ---------- | ------ | ---- |
@@ -157,6 +157,7 @@ the last arc of an OID and an arc names one document for as long as it exists.
 | `urn:oid:1.3.6.1.4.1.66606.1.1.1137` | 1137 | encoding-a-frame-set |
 | `urn:oid:1.3.6.1.4.1.66606.1.1.1138` | 1138 | where-range-of-motion-comes-from |
 | `urn:oid:1.3.6.1.4.1.66606.1.1.1139` | 1139 | conventions-are-measured |
+| `urn:oid:1.3.6.1.4.1.66606.1.1.1140` | 1140 | rented-gpus-on-runpod |
 
 6 deleted. A deleted serial keeps its row, because
 deleting a document does not delete a citation to it.
