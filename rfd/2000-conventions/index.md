@@ -62,7 +62,7 @@ The organization digit is what makes the old instruction safe: another organizat
 cannot reach digit 2, so there is nothing to coordinate.
 
 The digit is a short name for an arc under an IANA Private Enterprise Number. PEN
-66606 is assigned to Kam Shing Ernest Lee (iFire), and RFC 9371's assignment is
+66606 is assigned to iFire, and RFC 9371's assignment is
 itself the delegation, so no arc below it is registered with anybody.
 
 One arc under the PEN names a namespace rather than a site: `66606.1` is documents,
