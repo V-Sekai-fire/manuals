@@ -6479,7 +6479,7 @@
     "href": "pages/serials.html",
     "title": "Serials",
     "section": "",
-    "text": "Manuals › Serials\nThis page is generated from pen-66606.usda, which sublayers each site’s own SERIALS.usda. No site stores another site’s serials, and this page stores none at all. Run scripts/serials_to_qmd.py to rebuild it.\nA serial is allocated once. It is never removed and never reused, because it is the last arc of an OID and an arc names one document for as long as it exists."
+    "text": "Manuals › Serials\nEach site authors its own serials and no other site’s. This page reads every register as published and stores none of them, so it cannot disagree with the record it comes from.\nA serial is allocated once. It is never removed and never reused, because it is the last arc of an OID and an arc names one document for as long as it exists."
   },
   {
     "objectID": "pages/serials.html#site-1-weftspun",
