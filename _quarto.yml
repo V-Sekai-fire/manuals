@@ -36,6 +36,8 @@ website:
         file: pages/changelog.qmd
       - text: "RFDs"
         file: pages/rfd.qmd
+      - text: "Serials"
+        file: pages/serials.qmd
       - text: "References"
         file: pages/references.qmd
   page-footer:
