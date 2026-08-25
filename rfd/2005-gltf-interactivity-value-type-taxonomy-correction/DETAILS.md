@@ -59,7 +59,7 @@ directly:
 CastSpell's bitpacked struct layout (`rfd/0001`, item 4's cross
 reference to `rfd/2003-castspell-sandbox-package-and-manifest-encoding/index.md`)
 gives a primitive field its value inline, and a `ref` field a slotmap
-handle from `RFD 2011 (slotmap-entity-storage)`. Nothing in the
+handle from `RFD 2017 (slotmap-entity-storage)`. Nothing in the
 current CastSpell design needs `custom`. Every value a CastSpell
 effect reads or writes today, position, velocity, health, and an
 entity handle, already fits a primitive or a `ref`.
