@@ -2,942 +2,946 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2132-a-permission-cannot-be-granted-sideways/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2129-cost-and-latency-are-two-budgets/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2127-a-service-is-not-a-side/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2125-an-interactor-in-another-process/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2124-elixir-error-tuples-in-every-reply/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2123-a-second-webtransport-implementation/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2122-the-client-is-native/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2121-amend-rfd-2111-against-the-tree/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2120-the-gyre-became-a-settlement-game/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2119-salvage-you-can-hold/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2118-a-baker-replaces-the-godot-editor/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2117-retire-the-h2o-tier-record-set/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2116-elixir-epoll-zone-server-in-the-h2o-style/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2115-a-planner-domain-document-is-a-cheap-layer-surface/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2114-prove-the-store-by-breaking-it/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2113-foundationdb-on-windows-built-from-source/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2112-lexical-for-the-slash-command-interface/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2111-convert-the-deployment-words/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2110-h2o-libriscv-as-a-rivet-actor/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2109-two-tiers-with-foundationdb-as-the-store/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2108-local-cabi-guests-and-in-tick-fanout/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2107-janet-scripting-over-a-c-taskweft-core/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2106-split-the-archive-into-its-own-repo/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2105-archive-self-host-era-support-repos/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2102-the-whole-deployment-on-15-usd/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2100-tick-rate-send-rate-and-the-bone-budget/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2098-rollback-snapshot-budget/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2096-guest-transport-measured-on-fly/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2094-minimum-ugc-game-loop-guest-composition/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2093-compile-taskweft-to-linear-automata/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2092-rebac-gates-libriscv-guest-access/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2091-the-gyre-mud-domain-and-mode-selector/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2090-uro-burrito-release/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2089-flyio-over-podman-quadlets/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2087-avatar-ik-sinew-mocap-align-over-mink/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2086-defer-nogod-gossip-zone-authority/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2085-the-gyre-mud-setting-on-the-loot-action-shell/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-zstd-compression-for-zone-state/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2083-zone-server-h2o-replaces-godot-fabriczone/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-zonefabric-scaling/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-three-layer-verification-strategy/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-slotmap-entity-storage/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-plausible-witness-dag-feature-ablation/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-pert-critical-path-zonefabric/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-macaroon-xdp-security/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-fdb-over-cockroachdb-for-zone-state/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-binary-value-encoding-for-fdb/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-async-fdb-callback-chain/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-actor-lite-worker-pool/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2071-yagni-times-structure-to-need/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-loop-slice-telemetry-to-the-observability-collector/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2069-defer-loot-slice-hardening-until-needed/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2068-sccache-github-actions-cache-for-godot-builds/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2067-release-tag-progression-dev-beta-rc/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2066-game-loop-cluster-sequence/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2065-fabric-platform-central-elixir-burrito-casync/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2064-kebab-case-repos-snake-case-local-checkouts/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2063-repo-markdown-single-source-of-truth-for-project-state/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2062-repository-and-capability-inventory/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2060-org-scoped-github-app-token-for-gh-access/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2059-bad-news-reports-lead-with-the-bottom-line/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2058-webtransport-persistent-framed-stream/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2057-vertical-slice-repository-map/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2055-r128-fixed-point-as-lean-library/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2053-integral-entity-transform-wire/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2052-http3-listener-session-findings/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2051-headless-openxr-testing-with-monado/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2050-five-second-transaction-limit/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2048-android-template-temurin-jdk21/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2046-server-authoritative-simulation-deferred-rollback/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2045-loot-action-core-loop-mvp-vertical-slice/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2044-lean4-kernel-cores-flat-c-host-adapters/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2042-hexagon-presence-core/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2040-hexagon-combat-core/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2039-hexagon-budgeter-core/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2037-generated-behavior-sandboxed-riscv/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2036-forward-renderer-baked-light/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2034-deterministic-cores-integer-seeded-rng/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2033-core-contract-pure-reducer-byte-state/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2032-core-codegen-lean-slang/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2030-cicd-runners-as-queueing-system/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2029-cassie-desktop-curvenet-authoring/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2028-hexagonal-core-ports-adapters/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2027-umbrella-package-installs-all-components/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2026-commit-messages-sentence-case/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2025-tenseless-continuous-present-voice/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2024-windows-background-services-nssm/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2023-webtransport-http3-transport/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2022-spatial-audio-patched-resonance-audio/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2021-require-pr-and-merge-queue-on-main/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2020-pin-engine-to-frozen-godot-4-7/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2019-gitassembly-tag-release/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2018-feature-classification-poc-baseline-stretch/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2017-compiling-godot-engine/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2016-checking-sccache/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2015-bounded-llm-steering-queue/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2014-art-game-loop-steel-thread/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2013-archival-file-naming-convention/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2012-amend-pr-before-it-enters-the-queue/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2010-maglev-cycle-1-gateway-handshake/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2009-ghcr-package-ownership-same-repo/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2008-webtransport-over-quic-for-game-traffic/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2006-cockroachdb-with-mtls-role-separation/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2005-gltf-interactivity-value-type-taxonomy-correction/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2004-castspell-libgodot-sandbox-runtime-scope/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2003-castspell-sandbox-package-and-manifest-encoding/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2002-taskweft-value-narrowing-primitives-and-refs/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2001-zonefabric-roadmap-vs-mas-bandwidth-fps/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2000-conventions/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/decisions/madr-proposal-template.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260807-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260629-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260612-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260507-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260425-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
-    <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
+    <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/serials.html</loc>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/references.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/changelog.html</loc>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/pages/rfd.html</loc>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260421-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260506-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260606-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260622-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260630-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/changelog/2026/20260817-deck-log.html</loc>
-    <lastmod>2026-08-25T19:52:02.220Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.464Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2001-zonefabric-roadmap-vs-mas-bandwidth-fps/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.221Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2002-taskweft-value-narrowing-primitives-and-refs/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2003-castspell-sandbox-package-and-manifest-encoding/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2004-castspell-libgodot-sandbox-runtime-scope/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2005-gltf-interactivity-value-type-taxonomy-correction/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.465Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2006-cockroachdb-with-mtls-role-separation/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2007-godot-double-precision-template-release-for-zone/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.222Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2008-webtransport-over-quic-for-game-traffic/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2009-ghcr-package-ownership-same-repo/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2010-maglev-cycle-1-gateway-handshake/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2012-amend-pr-before-it-enters-the-queue/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2013-archival-file-naming-convention/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2014-art-game-loop-steel-thread/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2015-bounded-llm-steering-queue/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2016-checking-sccache/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.223Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2017-compiling-godot-engine/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2018-feature-classification-poc-baseline-stretch/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2019-gitassembly-tag-release/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2020-pin-engine-to-frozen-godot-4-7/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.466Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2021-require-pr-and-merge-queue-on-main/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2022-spatial-audio-patched-resonance-audio/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2023-webtransport-http3-transport/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2024-windows-background-services-nssm/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.224Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2025-tenseless-continuous-present-voice/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2026-commit-messages-sentence-case/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2027-umbrella-package-installs-all-components/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2028-hexagonal-core-ports-adapters/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2030-cicd-runners-as-queueing-system/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2031-content-build-merged-double-precision-mcp/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2032-core-codegen-lean-slang/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2033-core-contract-pure-reducer-byte-state/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2035-first-party-curated-content-zone-baker-budgets/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.225Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2036-forward-renderer-baked-light/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2038-genre-generic-naming-no-trademarks/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2040-hexagon-combat-core/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.467Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2041-hexagon-loot-core/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2043-hexagon-progression-core/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2044-lean4-kernel-cores-flat-c-host-adapters/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.226Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2045-loot-action-core-loop-mvp-vertical-slice/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2047-webtransportd-core-transport-adapter/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2049-fabric-channels-as-reliability-classes/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2051-headless-openxr-testing-with-monado/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2052-http3-listener-session-findings/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2053-integral-entity-transform-wire/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2054-mcp-runtime-bridge-deployed-builds/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2056-systemd-quadlet-verification-queue/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.227Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2057-vertical-slice-repository-map/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2058-webtransport-persistent-framed-stream/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2059-bad-news-reports-lead-with-the-bottom-line/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2060-org-scoped-github-app-token-for-gh-access/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.468Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2062-repository-and-capability-inventory/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2063-repo-markdown-single-source-of-truth-for-project-state/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.228Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2064-kebab-case-repos-snake-case-local-checkouts/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2065-fabric-platform-central-elixir-burrito-casync/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2066-game-loop-cluster-sequence/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2067-release-tag-progression-dev-beta-rc/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2068-sccache-github-actions-cache-for-godot-builds/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2069-defer-loot-slice-hardening-until-needed/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2070-loop-slice-telemetry-to-the-observability-collector/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2072-actor-lite-worker-pool/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.229Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2073-async-fdb-callback-chain/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2074-binary-value-encoding-for-fdb/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2075-fdb-over-cockroachdb-for-zone-state/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2076-macaroon-xdp-security/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.469Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2077-pert-critical-path-zonefabric/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2078-plausible-witness-dag-feature-ablation/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2079-sandboxed-godot-in-zone-server-h2o-via-raw-libriscv/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.230Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2080-slotmap-entity-storage/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2081-three-layer-verification-strategy/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2082-zonefabric-scaling/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2083-zone-server-h2o-replaces-godot-fabriczone/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2084-zstd-compression-for-zone-state/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2085-the-gyre-mud-setting-on-the-loot-action-shell/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.231Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2086-defer-nogod-gossip-zone-authority/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.470Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2087-avatar-ik-sinew-mocap-align-over-mink/DETAILS.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2088-picoquic-picotls-transport-for-zone-server-h2o/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2089-flyio-over-podman-quadlets/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2090-uro-burrito-release/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2091-the-gyre-mud-domain-and-mode-selector/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.232Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2092-rebac-gates-libriscv-guest-access/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2093-compile-taskweft-to-linear-automata/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2095-two-guest-classes-domain-abi-and-bubblewrap/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2097-pubsub-belongs-in-userspace/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.233Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.471Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2099-server-authority-on-fly/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2101-zstd-delta-on-the-wire/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2103-uro-on-ecto-foundationdb/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2105-archive-self-host-era-support-repos/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2106-split-the-archive-into-its-own-repo/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.234Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2107-janet-scripting-over-a-c-taskweft-core/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2108-local-cabi-guests-and-in-tick-fanout/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2109-two-tiers-with-foundationdb-as-the-store/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2110-h2o-libriscv-as-a-rivet-actor/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.472Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2111-convert-the-deployment-words/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2112-lexical-for-the-slash-command-interface/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.235Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2113-foundationdb-on-windows-built-from-source/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2114-prove-the-store-by-breaking-it/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2115-a-planner-domain-document-is-a-cheap-layer-surface/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2116-elixir-epoll-zone-server-in-the-h2o-style/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2117-retire-the-h2o-tier-record-set/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2118-a-baker-replaces-the-godot-editor/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2119-salvage-you-can-hold/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.236Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2120-the-gyre-became-a-settlement-game/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2121-amend-rfd-2111-against-the-tree/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.473Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2122-the-client-is-native/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2123-a-second-webtransport-implementation/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2124-elixir-error-tuples-in-every-reply/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2126-two-see-through-interactors/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2128-the-release-ladder-is-not-automated/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fabric.github.io/multiplayer-fabric-manuals/rfd/2130-state-what-a-repository-is-made-of/index.html</loc>
-    <lastmod>2026-08-25T19:52:02.237Z</lastmod>
+    <lastmod>2026-08-25T20:01:35.474Z</lastmod>
   </url>
 </urlset>
